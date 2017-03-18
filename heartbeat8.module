@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * Contains heartbeat8.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function heartbeat8_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the heartbeat8 module.
+    case 'help.page.heartbeat8':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Heartbeat for Drupal 8') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function heartbeat8_theme() {
+  $theme = [];
+  $theme['heartbeat'] = array(
+    'render element' => 'elements',
+    'file' => 'heartbeat.page.inc',
+    'template' => 'heartbeat',
+  );
+  $theme['heartbeat_content_add_list'] = [
+    'render element' => 'content',
+    'variables' => ['content' => NULL],
+    'file' => 'heartbeat.page.inc',
+  ];
+  return $theme;
+}
+
+/**
+* Implements hook_theme_suggestions_HOOK().
+*/
+function heartbeat8_theme_suggestions_heartbeat(array $variables) {
+  $suggestions = array();
+  $entity = $variables['elements']['#heartbeat'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'heartbeat__' . $sanitized_view_mode;
+  $suggestions[] = 'heartbeat__' . $entity->bundle();
+  $suggestions[] = 'heartbeat__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'heartbeat__' . $entity->id();
+  $suggestions[] = 'heartbeat__' . $entity->id() . '__' . $sanitized_view_mode;
+  return $suggestions;
+}

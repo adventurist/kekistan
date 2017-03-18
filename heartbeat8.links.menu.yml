@@ -1,0 +1,27 @@
+
+# Heartbeat menu items definition
+entity.heartbeat.collection:
+  title: 'Heartbeat'
+  route_name: entity.heartbeat.collection
+  description: 'List Heartbeat (bundles)'
+  parent: system.admin_structure
+  weight: 99
+
+
+# Heartbeat menu items definition
+entity.heartbeat.collection:
+  title: 'Heartbeat list'
+  route_name: entity.heartbeat.collection
+  description: 'List Heartbeat entities'
+  parent: system.admin_structure
+  weight: 100
+
+
+# Heartbeat type menu items definition
+entity.heartbeat_type.collection:
+  title: 'Heartbeat type'
+  route_name: entity.heartbeat_type.collection
+  description: 'List Heartbeat type (bundles)'
+  parent: system.admin_structure
+  weight: 99
+

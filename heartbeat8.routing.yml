@@ -1,0 +1,8 @@
+
+heartbeat8.heartbeat_controller_confirm:
+  path: '/heartbeat/load/{id}'
+  defaults:
+    _controller: '\Drupal\heartbeat8\Controller\HeartbeatController::confirm'
+    _title: 'load'
+  requirements:
+    _permission: 'access content'

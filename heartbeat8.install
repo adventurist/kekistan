@@ -1,0 +1,456 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the node module.
+ */
+
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\user\RoleInterface;
+
+/**
+ * Implements hook_requirements().
+ */
+function heartbeat8_requirements($phase) {
+  $requirements = array();
+  if ($phase === 'runtime') {
+    // Only show rebuild button if there are either 0, or 2 or more, rows
+    // in the {node_access} table, or if there are modules that
+    // implement hook_node_grants().
+    $grant_count = \Drupal::entityManager()->getAccessControlHandler('node')->countGrants();
+    if ($grant_count != 1 || count(\Drupal::moduleHandler()->getImplementations('node_grants')) > 0) {
+      $value = \Drupal::translation()->formatPlural($grant_count, 'One permission in use', '@count permissions in use', array('@count' => $grant_count));
+    }
+    else {
+      $value = t('Disabled');
+    }
+
+    $requirements['node_access'] = array(
+      'title' => t('Node Access Permissions'),
+      'value' => $value,
+      'description' => t('If the site is experiencing problems with permissions to content, you may have to rebuild the permissions cache. Rebuilding will remove all privileges to content and replace them with permissions based on the current modules and settings. Rebuilding may take some time if there is a lot of content or complex permission settings. After rebuilding has completed, content will automatically use the new permissions. <a href=":rebuild">Rebuild permissions</a>', array(
+        ':rebuild' => \Drupal::url('node.configure_rebuild_confirm'),
+      )),
+    );
+  }
+  return $requirements;
+}
+
+/**
+ * Implements hook_schema().
+ * ** //TODO Have not yet set export schema for CTOOLS as CTOOLS is not yet a part of Drupal 8
+ */
+function heartbeat8_schema() {
+  $schema['heartbeat_messages'] = array(
+    'description' => 'Table that contains predefined messages that can be used in heartbeat views.',
+    'fields' => array(
+      'hid' => array(
+        'description' => 'Primary Key: Unique heartbeat_messages event ID.',
+        'type' => 'serial',
+        'not null' => TRUE,
+      ),
+      'message_id' => array(
+        'description' => 'The message id which is unique to identify activity.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+      ),
+      'description' => array(
+        'description' => 'Description and help text',
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big'
+      ),
+      'message' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'Text of log message to be passed into the ) function.',
+        //'alias' => 'message_orig', // Internal heartbeat field/property
+      ),
+      'message_concat' => array(
+        'type' => 'text',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'Text of translatable log message for in concatenated form.',
+        //'alias' => 'message_concat_orig', // Internal heartbeat field/property
+      ),
+      'perms' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 4,
+        'description' => 'Permissions for this message.',
+      ),
+      'group_type' => array(
+        'type' => 'varchar',
+        'length' => 20,
+        'not null' => TRUE,
+        'default' => 'single',
+        'description' => 'The group type of the template',
+      ),
+      'concat_args' => array(
+        'description' => 'Arguments for concatenation message.',
+        'type' => 'blob',
+        'serialize' => TRUE,
+        'not null' => FALSE,
+      ),
+      'variables' => array(
+        'description' => 'Variables to parse into the message (used in message).',
+        'type' => 'blob',
+        'serialize' => TRUE,
+        'not null' => FALSE,
+      ),
+      'attachments' => array(
+        'description' => 'Attachments on messages.',
+        'type' => 'blob',
+        'serialize' => TRUE,
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('hid'),
+    'indexes' => array(
+      'message_id' => array('message_id'),
+    ),
+  );
+
+
+
+  $schema['heartbeat_activity'] = array(
+    'description' => 'Table that contains logs of all user triggerable actions.',
+    'fields' => array(
+      'uaid' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Unique heartbeat_activity event ID.',
+      ),
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+        'description' => 'The {users}.uid of the user who triggered the event (requester).',
+      ),
+      'uid_target' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+        'default' => 0,
+        'description' => 'The target User ID',
+      ),
+      'nid' => array(
+        'description' => 'The Node ID.',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+      'nid_target' => array(
+        'description' => 'The target Node ID (E.g. Group id, node reference, ...).',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+      'cid' => array(
+        'description' => 'The target comment ID (optional).',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => FALSE,
+      ),
+      'access' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'size' => 'tiny',
+        'description' => 'Access for this message to others.',
+        'default' => 0,
+      ),
+      'message_id' => array(
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'The message id which links to the heartbeat message.',
+      ),
+      'timestamp' => array(
+        'description' => 'The activity\'s unix timestamp when action occurred',
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'language' => array(
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => FALSE,
+        'default' => 'en',
+        'description' => 'language for a log".',
+      ),
+      'variables' => array(
+        'type' => 'text',
+        'not null' => FALSE,
+        'size' => 'big',
+        'description' => 'Serialized array of variables that match the message string and that is passed into the ) function.',
+      ),
+      'in_group' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'size' => 'big',
+        'description' => 'Indicates whether the activity is related to a group',
+        'default' => 0,
+    ),
+    'primary key' => array('uaid'),
+    'indexes' => array(
+      'timestamp' => array('timestamp'),
+      'uid' => array('uid'),
+      'message_id' => array('message_id'),
+      'uid_target' => array('uid_target'),
+      'nid' => array('nid'),
+      'nid_target' => array('nid_target'),
+      'cid' => array('cid'),
+      'language' => array('language'),
+      ),
+    ),
+  );
+
+  $schema['heartbeat_activity']['fields']['in_group'] = array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'size' => 'big',
+    'description' => 'Indicates whether the activity is related to a group.',
+    'default' => 0,
+  );
+  $schema['heartbeat_activity']['indexes']['in_group'] = array('in_group');
+  $schema['heartbeat_user_templates'] = heartbeat_install_table_user_templates();
+
+
+  $schema['heartbeat_streams'] = array(
+    'description' => 'Table that contains heartbeat streams.',
+    // CTools export definitions.
+//    'export' => array(
+//      'key' => 'class',
+//      'key name' => 'name',
+//      'primary key' => 'class',
+//      'bulk export' => TRUE,
+//      'identifier' => 'heartbeatstream',
+//      'object' => 'HeartbeatStreamConfig',
+//      'default hook' => 'heartbeat_stream_info',
+//      'load callback' => '_heartbeat_stream_config_load',
+//      'load all callback' => '_heartbeat_stream_config_load_all',
+//      'can disable' => TRUE,
+//      'api' => array(
+//        'owner' => 'heartbeat',
+//        'api' => 'heartbeat',
+//        'minimum_version' => 1,
+//        'current_version' => 1,
+//      ),
+//    ),
+    'fields' => array(
+      'class' => array(
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Class of the stream to load.',
+      ),
+      'real_class' => array(
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Real Class of the stream to load.',
+      ),
+      'name' => array(
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Name of the stream. Cloned streams will have the same object but same cla
+ss.',
+      ),
+      'module' => array(
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'The module that defines the class and where the query builder is located.
+',
+      ),
+      'title' => array(
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Human readable name of the stream.',
+      ),
+      'path' => array(
+        'type' => 'varchar',
+        'length' => 250,
+        'not null' => TRUE,
+        'default' => '',
+        'description' => 'Path to the stream object.',
+      ),
+      'settings' => array(
+        'description' => 'Serialized settings for this stream.',
+        'type' => 'blob',
+        'serialize' => TRUE,
+        'not null' => FALSE,
+      ),
+      'variables' => array(
+        'description' => 'Variables to parse into the message (used in message).',
+        'type' => 'blob',
+        'serialize' => TRUE,
+        'not null' => FALSE,
+      ),
+      'real_class' => array(
+        'type' => 'varchar',
+        'length' => 100,
+        'not null' => TRUE,
+        'default' => '',
+          'description' => 'Real Class of the stream to load',
+      )
+    ),
+    'primary key' => array('class'),
+    'indexes' => array(
+      'name' => array('name'),
+    ),
+  );
+
+  //TODO determine if these foreign keys are to be added
+//  db_add_unique_key('heartbeat_activity', 'uaid', array('uaid'));
+//  db_add_unique_key('heartbeat_activity', 'uaid_uid', array('uaid', 'uid'));
+//  db_add_unique_key('heartbeat_activity', 'uaid_nid', array('uaid', 'nid'));
+//  db_add_unique_key('heartbeat_activity', 'uaid_uid_nid', array('uaid', 'uid', 'nid'))
+
+
+  return $schema;
+
+}
+
+function heartbeat_install_table_user_templates() {
+  return array(
+    'description' => 'Table that connects translations of the same activity.',
+    'fields' => array(
+      'uid' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'The referenced user ID.',
+      ),
+      'message_id' => array(
+        'type' => 'varchar',
+        'length' => 250,
+        'not null' => FALSE,
+        'default' => '',
+        'description' => 'The template message ID.',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        'description' => 'The status of the template.',
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_install().
+ */
+function heartbeat8_install() {
+  // Enable default permissions for system roles.
+  // IMPORTANT: Modules SHOULD NOT automatically grant any user role access
+  // permissions in hook_install().
+  // However, the 'access content' permission is a very special case, since
+  // there is hardly a point in installing the Node module without granting
+  // these permissions. Doing so also allows tests to continue to operate as
+  // expected without first having to manually grant these default permissions.
+  if (\Drupal::moduleHandler()->moduleExists('user')) {
+    user_role_grant_permissions(RoleInterface::ANONYMOUS_ID, array('access content'));
+    user_role_grant_permissions(RoleInterface::AUTHENTICATED_ID, array('access content'));
+  }
+
+  // Populate the node access table.
+  db_insert('node_access')
+    ->fields(array(
+      'nid' => 0,
+      'gid' => 0,
+      'realm' => 'all',
+      'grant_view' => 1,
+      'grant_update' => 0,
+      'grant_delete' => 0,
+    ))
+    ->execute();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function heartbeat8_uninstall() {
+  // Delete remaining general module variables.
+  \Drupal::state()->delete('node.node_access_needs_rebuild');
+}
+
+/**
+ * Add 'revision_translation_affected' field to 'node' entities.
+ */
+function heartbeat8_update_8001() {
+  // Install the definition that this field had in
+  // \Drupal\node\Entity\Node::baseFieldDefinitions()
+  // at the time that this update function was written. If/when code is
+  // deployed that changes that definition, the corresponding module must
+  // implement an update function that invokes
+  // \Drupal::entityDefinitionUpdateManager()->updateFieldStorageDefinition()
+  // with the new definition.
+  $storage_definition = BaseFieldDefinition::create('boolean')
+    ->setLabel(t('Revision translation affected'))
+    ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+    ->setReadOnly(TRUE)
+    ->setRevisionable(TRUE)
+    ->setTranslatable(TRUE);
+
+  \Drupal::entityDefinitionUpdateManager()
+    ->installFieldStorageDefinition('revision_translation_affected', 'node', 'node', $storage_definition);
+}
+
+/**
+ * Remove obsolete indexes from the node schema.
+ */
+function heartbeat8_update_8002() {
+  // The "node__default_langcode" and "node_field__langcode" indexes were
+  // removed from \Drupal\node\NodeStorageSchema in
+  // https://www.drupal.org/node/2261669, but this update function wasn't
+  // added until https://www.drupal.org/node/2542748. Regenerate the related
+  // schemas to ensure they match the currently expected status.
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  // Regenerate entity type indexes, this should drop "node__default_langcode".
+  $manager->updateEntityType($manager->getEntityType('node'));
+  // Regenerate "langcode" indexes, this should drop "node_field__langcode".
+  $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition('langcode', 'node'));
+}
+
+/**
+ * Promote 'status' and 'uid' fields to entity keys.
+ */
+function heartbeat8_update_8003() {
+  // The 'status' and 'uid' fields were added to the 'entity_keys' annotation
+  // of \Drupal\node\Entity\Node in https://www.drupal.org/node/2498919, but
+  // this update function wasn't added until
+  // https://www.drupal.org/node/2542748.
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $entity_type = $manager->getEntityType('node');
+  $entity_keys = $entity_type->getKeys();
+  $entity_keys['status'] = 'status';
+  $entity_keys['uid'] = 'uid';
+  $entity_type->set('entity_keys', $entity_keys);
+  $manager->updateEntityType($entity_type);
+
+  // @todo The above should be enough, since that is the only definition that
+  //   changed. But \Drupal\Core\Entity\Sql\SqlContentEntityStorageSchema varies
+  //   field schema by whether a field is an entity key, so invoke
+  //   EntityDefinitionUpdateManagerInterface::updateFieldStorageDefinition()
+  //   with an unmodified field storage definition to trigger the necessary
+  //   changes. SqlContentEntityStorageSchema::onEntityTypeUpdate() should be
+  //   fixed to automatically handle this.
+  //   See https://www.drupal.org/node/2554245.
+  foreach (array('status', 'uid') as $field_name) {
+    $manager->updateFieldStorageDefinition($manager->getFieldStorageDefinition($field_name, 'node'));
+  }
+}
