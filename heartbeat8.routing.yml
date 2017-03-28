@@ -6,3 +6,10 @@ heartbeat8.heartbeat_controller_confirm:
     _title: 'load'
   requirements:
     _permission: 'access content'
+heartbeat8.templates:
+  path: '/admin/structure/heartbeat/templates/list'
+  defaults:
+    _form: '\Drupal\heartbeat8\Form\TemplateList'
+    _title: 'Heartbeat Templates'
+  requirements:
+    _permission: 'administer content'

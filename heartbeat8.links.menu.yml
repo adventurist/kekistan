@@ -25,3 +25,9 @@ entity.heartbeat_type.collection:
   parent: system.admin_structure
   weight: 99
 
+heartbeat8.template_list:
+  title: 'Heartbeat Templates'
+  description: 'All heartbeat templates'
+  parent: entity.heartbeat.collection
+  route_name: heartbeat8.templates
+  weight: 99
