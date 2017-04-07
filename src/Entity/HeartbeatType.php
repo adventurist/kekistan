@@ -54,4 +54,9 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
    */
   protected $label;
 
+  /**
+   * @var string
+   */
+  protected $description;
+
 }

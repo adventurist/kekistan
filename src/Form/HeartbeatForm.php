@@ -19,6 +19,8 @@ class HeartbeatForm extends ContentEntityForm {
     /* @var $entity \Drupal\heartbeat8\Entity\Heartbeat */
     $form = parent::buildForm($form, $form_state);
 
+    $entity = $this->entity;
+
     if (!$this->entity->isNew()) {
       $form['new_revision'] = array(
         '#type' => 'checkbox',
@@ -26,9 +28,18 @@ class HeartbeatForm extends ContentEntityForm {
         '#default_value' => FALSE,
         '#weight' => 10,
       );
+
+      $form['label'] = [
+        '#type' => 'textfield',
+        '#title' => $this->t('Label'),
+        '#maxlength' => 255,
+        '#default_value' => $entity->label(),
+        '#description' => $this->t("Label for the Heartbeat."),
+        '#required' => TRUE,
+      ];
     }
 
-    $entity = $this->entity;
+
 
     return $form;
   }
