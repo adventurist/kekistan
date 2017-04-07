@@ -1,0 +1,8 @@
+heartbeatAdditions:
+  version: 1.x
+
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings

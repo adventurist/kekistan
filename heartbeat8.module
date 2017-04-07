@@ -6,6 +6,11 @@
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Heartbeat8\Entity\Heartbeat;
+use Drupal\Heartbeat8\Entity\HeartbeatType;
+
+//TODO add constants (HEARTBEAT_NONE, HEARTBEAT_PRIVATE, HEARTBEAT_PUBLIC_TO_ADDRESSEE, HEARTBEAT_PUBLIC_TO_ALL_CONNECTED, HEARTBEAT_PUBLIC_TO_ALL)
+//TODO include Streams (Entities already added with use statements on lines 9-10)
 
 /**
  * Implements hook_help().
@@ -57,3 +62,9 @@ function heartbeat8_theme_suggestions_heartbeat(array $variables) {
   $suggestions[] = 'heartbeat__' . $entity->id() . '__' . $sanitized_view_mode;
   return $suggestions;
 }
+
+
+
+//TODO Add heartbeat language to Javascript
+//TODO Determine necessity of polling
+//Add
