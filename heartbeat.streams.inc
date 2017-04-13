@@ -79,3 +79,19 @@ function heartbeat_stream_views_build(HeartbeatStream &$heartbeatStream, $view_m
 }
 
 
+/**
+ * Load all the stream configuration objects
+ * @param bool $reset
+ *  Indicates whether the stream data needs to be rebuilt
+ */
+
+function heartbeat_stream_config_load_all($reset = FALSE) {
+  $streams = &drupal_static('heartbeat_streams');
+
+  if (!$reset && $object = cache_get('heartbeat_streams')) {
+    $streams = $object->data;
+  } else {
+    //TODO fetch streams with alternative to ctools export
+  }
+}
+
