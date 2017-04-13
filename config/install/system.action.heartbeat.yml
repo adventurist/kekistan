@@ -1,0 +1,11 @@
+id: heartbeat
+label: 'Heartbeat'
+status: true
+langcode: en
+type: user
+plugin: heartbeat
+dependencies:
+  module:
+    - user
+    - heartbeat8
+

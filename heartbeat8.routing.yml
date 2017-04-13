@@ -13,3 +13,11 @@ heartbeat8.templates:
     _title: 'Heartbeat Templates'
   requirements:
     _permission: 'administer content'
+heartbeat8.modaltest.modal:
+  path: '/heartbeat/modaltest/{js}'
+  defaults:
+    _title: Heartbeat Modal
+    _controller: '\Drupal\heartbeat8\Controller\HeartbeatController::openModal'
+  requirements:
+    _permission: 'access content'
+    js: 'nojs|ajax'

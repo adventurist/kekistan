@@ -1,5 +1,7 @@
 <?php
 
+namespace Drupal\heartbeat8\HeartbeatStreamConfig;
+
 /**
  * @file
  *   HeartbeatStream Configuration object
