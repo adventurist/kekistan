@@ -10,3 +10,25 @@ heartbeat8.heartbeat_stream_entity.*:
       label: 'Label'
     uuid:
       type: string
+
+
+#   // CTools export definitions.
+#    'export' => array(
+#      'key' => 'message_id',
+#      'key name' => 'Message ID',
+#      'primary key' => 'message_id',
+#      'bulk export' => TRUE,
+#      'identifier' => 'heartbeatmessagetemplate',
+#      'object' => 'HeartbeatMessageTemplate',
+#      'default hook' => 'heartbeat_template_info',
+#      'list callback' => 'heartbeat_templates_names',
+#      'delete callback' => 'heartbeat_message_template_delete',
+#      //'export callback' => 'heartbeat_message_template_export',
+#      'can disable' => TRUE,
+#      'api' => array(
+#        'owner' => 'heartbeat',
+#        'api' => 'heartbeat',
+#        'minimum_version' => 1,
+#        'current_version' => 1,
+#      ),
+#    ),
