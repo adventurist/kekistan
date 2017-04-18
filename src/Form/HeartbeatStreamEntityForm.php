@@ -15,9 +15,13 @@ class HeartbeatStreamEntityForm extends EntityForm {
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
+    $heartbeat_stream_entity = $this->entity;
+
+    \Drupal::logger('HeartbeatStreamEntityFormDEBUG')->notice('This is getting called');
+
     $form = parent::form($form, $form_state);
 
-    $heartbeat_stream_entity = $this->entity;
+
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -26,6 +30,16 @@ class HeartbeatStreamEntityForm extends EntityForm {
       '#description' => $this->t("Label for the Heartbeat stream entity."),
       '#required' => TRUE,
     );
+//
+//    $form['Message ID'] = array(
+//      '#type' => 'textfield',
+//      '#title' => $this->t('Message ID'),
+//      '#maxlength' => 255,
+//      '#default_value' => $heartbeat_stream_entity->label(),
+//      '#description' => $this->t("Identifier for this Message Stream type"),
+//      '#required' => TRUE,
+//    );
+
 
     $form['id'] = array(
       '#type' => 'machine_name',
@@ -35,6 +49,8 @@ class HeartbeatStreamEntityForm extends EntityForm {
       ),
       '#disabled' => !$heartbeat_stream_entity->isNew(),
     );
+
+
 
     /* You will need additional form elements for your custom properties. */
 

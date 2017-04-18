@@ -51,15 +51,30 @@ class HeartbeatStreamEntity extends ConfigEntityBase implements HeartbeatStreamE
    *
    * @var string
    */
-  protected $label;
+//  protected $label;
 
 
 
-  
+  /*
+   * Sets the unique Message ID
+   *
+   * @param string $messageId
+   *  The unique Message ID to represent
+   *  all messages of this type
+   */
+
 
   public function setMessageId($messageId) {
     // TODO: Implement setMessageId() method.
   }
+
+
+  /*
+  * Gets the unique Message ID
+  *
+  * @return string
+  *  The Stream's Message ID
+  */
 
   public function getMessageId() {
     // TODO: Implement getMessageId() method.

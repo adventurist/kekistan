@@ -23,3 +23,12 @@ heartbeat8.heartbeat_stream_entity.*:
     group_type:
       type: string
       label: 'group_type'
+    concat_args:
+      type: blob
+      label: 'concat_args'
+    variables:
+      type: blob
+      label: 'variables'
+    attachments:
+      type: blob
+      label: 'attachments'

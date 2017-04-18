@@ -10,7 +10,7 @@ entity.heartbeat.collection:
 
 # Heartbeat menu items definition
 entity.heartbeat.collection:
-  title: 'Heartbeat list'
+  title: 'Heartbeat'
   route_name: entity.heartbeat.collection
   description: 'List Heartbeat entities'
   parent: system.admin_structure
