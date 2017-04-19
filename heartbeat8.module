@@ -1,0 +1,24 @@
+<?php
+
+/**
+ * @file
+ * Contains heartbeat8.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function heartbeat8_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the heartbeat8 module.
+    case 'help.page.heartbeat8':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Heartbeat for Drupal 8') . '</p>';
+      return $output;
+
+    default:
+  }
+}
