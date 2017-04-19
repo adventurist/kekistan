@@ -22,6 +22,16 @@ class HeartbeatStreamEntityForm extends EntityForm {
     $form = parent::form($form, $form_state);
 
 
+    $form['id'] = array(
+      '#type' => 'machine_name',
+      '#default_value' => $heartbeat_stream_entity->id(),
+      '#machine_name' => array(
+        'exists' => '\Drupal\heartbeat8\Entity\HeartbeatStreamEntity::load',
+      ),
+      '#disabled' => !$heartbeat_stream_entity->isNew(),
+    );
+
+
     $form['label'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
@@ -40,15 +50,6 @@ class HeartbeatStreamEntityForm extends EntityForm {
 //      '#required' => TRUE,
 //    );
 
-
-    $form['id'] = array(
-      '#type' => 'machine_name',
-      '#default_value' => $heartbeat_stream_entity->id(),
-      '#machine_name' => array(
-        'exists' => '\Drupal\heartbeat8\Entity\HeartbeatStreamEntity::load',
-      ),
-      '#disabled' => !$heartbeat_stream_entity->isNew(),
-    );
 
 
 
