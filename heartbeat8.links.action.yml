@@ -1,0 +1,11 @@
+entity.heartbeat.add_form:
+  route_name: entity.heartbeat.add_form
+  title: 'Add Heartbeat'
+  appears_on:
+    - entity.heartbeat.collection
+entity.heartbeat_stream.add_form:
+  route_name: 'entity.heartbeat_stream.add_form'
+  title: 'Add Heartbeat Stream'
+  appears_on:
+    - entity.heartbeat_stream.collection
+
