@@ -38,6 +38,27 @@ class HeartbeatStreamForm extends EntityForm {
     );
 
 
+    $form['description'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('description'),
+      '#maxlength' => 255,
+      '#default_value' => "Description",
+      '#description' => $this->t("Description of the Heartbeat Stream"),
+      '#required' => TRUE,
+    );
+
+    $form['message'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('message'),
+      '#maxlength' => 255,
+      '#default_value' => "Message",
+      '#description' => $this->t("The structure for messages of this type. Use !exclamation marks before fields and entities"),
+      '#required' => TRUE,
+    );
+
+
+
+
     $form['id'] = array(
       '#type' => 'machine_name',
       '#default_value' => $heartbeat_stream->id(),
