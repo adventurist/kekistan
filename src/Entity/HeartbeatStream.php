@@ -3,14 +3,13 @@
 namespace Drupal\heartbeat8\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\heartbeat8\HeartbeatStreamInterface;
 
 /**
- * Defines the Heartbeat Stream entity.
+ * Defines the Heartbeat stream entity.
  *
  * @ConfigEntityType(
  *   id = "heartbeat_stream",
- *   label = @Translation("Heartbeat Stream"),
+ *   label = @Translation("Heartbeat stream"),
  *   handlers = {
  *     "list_builder" = "Drupal\heartbeat8\HeartbeatStreamListBuilder",
  *     "form" = {
@@ -30,204 +29,236 @@ use Drupal\heartbeat8\HeartbeatStreamInterface;
  *     "uuid" = "uuid"
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/heartbeat/heartbeat_stream/{heartbeat_stream}",
- *     "add-form" = "/admin/structure/heartbeat/heartbeat_stream/add",
- *     "edit-form" = "/admin/structure/heartbeat/heartbeat_stream/{heartbeat_stream}/edit",
- *     "delete-form" = "/admin/structure/heartbeat/heartbeat_stream/{heartbeat_stream}/delete",
- *     "collection" = "/admin/structure/heartbeat/heartbeat_stream"
+ *     "canonical" = "/admin/structure/heartbeat_stream/{heartbeat_stream}",
+ *     "add-form" = "/admin/structure/heartbeat_stream/add",
+ *     "edit-form" = "/admin/structure/heartbeat_stream/{heartbeat_stream}/edit",
+ *     "delete-form" = "/admin/structure/heartbeat_stream/{heartbeat_stream}/delete",
+ *     "collection" = "/admin/structure/heartbeat_stream"
  *   }
  * )
  */
 class HeartbeatStream extends ConfigEntityBase implements HeartbeatStreamInterface {
+
   /**
-   * The Heartbeat Stream ID.
+   * The Heartbeat stream ID.
    *
    * @var string
    */
   protected $id;
-  protected $messageId;
-  protected $hid;
-  protected $description;
-  protected $perms;
-  protected $messageConcat;
-  protected $concatArgs;
-  protected $message;
-  protected $variables;
-  protected $attachments;
-  protected $groupType;
+
   /**
-   * The Heartbeat Stream label.
+   * The Heartbeat stream label.
    *
    * @var string
    */
   protected $label;
 
-  public function setMessageId($messageId) {
-    $this->messageId = $messageId;
-  }
 
-  public function getMessageId() {
-    return $this->messageId;
+  // Class name used.
+  protected $name;
+
+  // Class to variable for ease of read/write.
+  protected $class;
+
+  // Real class to load for cloned streams.
+  protected $real_class;
+
+  // The path to the class.
+  protected $path;
+
+  // Human readable name.
+  protected $title;
+
+  // Module where query builder is located.
+  protected $module;
+
+  // Extra variables.
+  //TODO variables might be put into config api
+  protected $variables;
+
+  // Indicates whether this stream has a block display or not.
+  protected $has_block = TRUE;
+
+  // Max number of items in block display.
+  protected $block_items_max = 25;
+
+  // Number to indicate how a block-pager should be shown.
+  protected $block_show_pager = 0;
+
+  // View mode for the block.
+  protected $block_view_mode = 'default';
+
+  // Maximum number of items in the page display.
+  protected $page_items_max = 50;
+
+  // Boolean to indicate of a page-pager should be shown.
+  protected $page_show_pager = 0;
+
+  // Boolean to indicate if the pager is ajax-driven.
+  protected $page_pager_ajax = 0;
+
+  // View mode for the page.
+  protected $page_view_mode = 'default';
+
+  // Setting for the number of grouped items maximum.
+  protected $show_message_times = 1;
+
+  // Setting for the number of grouped items maximum in a grouped message.
+  protected $show_message_times_grouped = 0;
+
+  // Denied message templates.
+  protected $messages_denied = array();
+
+  // Limit the number of messages by maximum messages to load.
+  protected $num_load_max = 100;
+
+  // Limit the timespan to group messages.
+  protected $grouping_seconds = 7200;
+
+  // Boolean for to skip the viewing user, defaults to false.
+  protected $skip_active_user = FALSE;
+
+  // Timestamp used to poll for newer messages.
+  protected $poll_messages = 0;
+
+  // How to notify there are newer messages.
+  protected $poll_messages_type = 0;
+
+  // Stream path is the path to the stream page (optional).
+  protected $stream_path;
+
+  // Stream user path is the path to a stream on the profile page (optional).
+  protected $stream_profile_path;
+
+  // Settings variable
+  protected $settings;
+
+  /**
+   * @return mixed
+   */
+  public function getName()
+  {
+    return $this->name;
   }
 
   /**
-   * Sets the description of the stream
-   *
-   * @param string $description
-   *  Describing streams of this type
+   * @param mixed $name
    */
-  public function setDescription($description) {
-    $this->description = $description;
+  public function setName($name)
+  {
+    $this->name = $name;
   }
 
   /**
-   * Gets the description of the stream
-   *
-   * @return string
-   *  The Stream's description
+   * @return mixed
    */
-  public function getDescription() {
-    return $this->description;
+  public function getClass()
+  {
+    return $this->class;
   }
 
   /**
-   * Sets the translatable message
-   * This message creates the structure of each message
-   *
-   * @param string $message
-   *  The template message serving as the foundation of each message structure of this stream type
+   * @param mixed $class
    */
-  public function setMessage($message) {
-    $this->message = $message;
+  public function setClass($class)
+  {
+    $this->class = $class;
   }
 
   /**
-   * Gets the translatable message of the stream
-   *
-   * @return string
-   *  The Stream's message
+   * @return mixed
    */
-  public function getMessage() {
-    return $this->message;
+  public function getRealClass()
+  {
+    return $this->real_class;
   }
 
   /**
-   * Sets the translatable concatenated message
-   *
-   * @param string $messageConcat
-   *
+   * @param mixed $real_class
    */
-  public function setMessageConcat($messageConcat) {
-    $this->messageConcat = $messageConcat;
+  public function setRealClass($real_class)
+  {
+    $this->real_class = $real_class;
   }
 
   /**
-   * Gets the concatenated message of the stream
-   *
-   * @return string
-   *  The Stream's concatenated message
+   * @return mixed
    */
-  public function getMessageConcat() {
-    return $this->messageConcat;
+  public function getPath()
+  {
+    return $this->path;
   }
 
   /**
-   * Sets the Permissions for this message stream
-   *
-   * @param int $perms
-   *
+   * @param mixed $path
    */
-  public function setPerms($perms) {
-    $this->perms = $perms;
+  public function setPath($path)
+  {
+    $this->path = $path;
   }
 
   /**
-   * Gets the Permissions of this message stream
-   *
-   * @return int
-   *  The stream's permissions
+   * @return mixed
    */
-  public function getPerms() {
-    return $this->perms;
+  public function getTitle()
+  {
+    return $this->title;
   }
 
   /**
-   * Sets the Group Type for this message stream
-   *
-   * @param string $groupType
-   *
+   * @param mixed $title
    */
-  public function setGroupType($groupType) {
-    $this->groupType = $groupType;
+  public function setTitle($title)
+  {
+    $this->title = $title;
   }
 
   /**
-   * Gets the Group Type of this message stream
-   *
-   * @return string
-   *  The stream's Group Type
+   * @return mixed
    */
-  public function getGroupType() {
-    return $this->groupType;
+  public function getModule()
+  {
+    return $this->module;
   }
 
   /**
-   * Sets the arguments for the concatenated message
-   *
-   * @param string $concatArgs
-   *
+   * @param mixed $module
    */
-  public function setConcatArgs($concatArgs) {
-    $this->concatArgs = $concatArgs;
+  public function setModule($module)
+  {
+    $this->module = $module;
   }
 
   /**
-   * Gets the arguments for the concatenated message
-   *
-   * @return string
-   *  The stream's arguments for the concatenated message
+   * @return mixed
    */
-  public function getConcateArgs() {
-    return $this->concatArgs;
-  }
-
-  /**
-   * Sets the variables for this message stream
-   *
-   * @param string $variables
-   *
-   */
-  public function setVariables($variables) {
-    $this->variables = $variables;
-  }
-
-  /**
-   * Gets the variables of this message stream
-   *
-   * @return string
-   *  The stream's variables
-   */
-  public function getVariables() {
+  public function getVariables()
+  {
     return $this->variables;
   }
 
   /**
-   * Sets the attachments for this message stream
-   *
-   * @param string $attachments
-   *
+   * @param mixed $variables
    */
-  public function setAttachments($attachments) {
-    $this->attachments = $attachments;
+  public function setVariables($variables)
+  {
+    $this->variables = $variables;
   }
 
   /**
-   * Gets the attachments of this message stream
-   *
-   * @return string
-   *  The stream's attachments
+   * @return mixed
    */
-  public function getAttachments() {
-    return $this->attachments;
+  public function getSettings()
+  {
+    return $this->settings;
   }
+
+  /**
+   * @param mixed $settings
+   */
+  public function setSettings($settings)
+  {
+    $this->settings = $settings;
+  }
+
 }

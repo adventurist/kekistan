@@ -13,7 +13,9 @@ use Drupal\Core\Url;
  * @ingroup heartbeat8
  */
 class HeartbeatListBuilder extends EntityListBuilder {
+
   use LinkGeneratorTrait;
+
   /**
    * {@inheritdoc}
    */

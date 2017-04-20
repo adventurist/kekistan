@@ -11,4 +11,5 @@ use Drupal\Core\Entity\ContentEntityDeleteForm;
  */
 class HeartbeatDeleteForm extends ContentEntityDeleteForm {
 
+
 }

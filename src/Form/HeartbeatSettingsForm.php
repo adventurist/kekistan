@@ -13,6 +13,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @ingroup heartbeat8
  */
 class HeartbeatSettingsForm extends FormBase {
+
   /**
    * Returns a unique string identifying the form.
    *
@@ -34,7 +35,6 @@ class HeartbeatSettingsForm extends FormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Empty implementation of the abstract submit class.
   }
-
 
   /**
    * Defines the settings form for Heartbeat entities.

@@ -7,9 +7,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
- * Builds the form to delete Heartbeat stream entities.
+ * Builds the form to delete Heartbeat type entities.
  */
-class HeartbeatStreamDeleteForm extends EntityConfirmFormBase {
+class HeartbeatTypeDeleteForm extends EntityConfirmFormBase {
 
   /**
    * {@inheritdoc}
@@ -22,7 +22,7 @@ class HeartbeatStreamDeleteForm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return new Url('entity.heartbeat_stream.collection');
+    return new Url('entity.heartbeat_type.collection');
   }
 
   /**

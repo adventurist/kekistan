@@ -3,23 +3,20 @@
 namespace Drupal\heartbeat8\Entity;
 
 use Drupal\views\EntityViewsData;
-use Drupal\views\EntityViewsDataInterface;
 
 /**
  * Provides Views data for Heartbeat entities.
  */
-class HeartbeatViewsData extends EntityViewsData implements EntityViewsDataInterface {
+class HeartbeatViewsData extends EntityViewsData {
+
   /**
    * {@inheritdoc}
    */
   public function getViewsData() {
     $data = parent::getViewsData();
 
-    $data['heartbeat']['table']['base'] = array(
-      'field' => 'id',
-      'title' => $this->t('Heartbeat'),
-      'help' => $this->t('The Heartbeat ID.'),
-    );
+    // Additional information for Views integration, such as table joins, can be
+    // put here.
 
     return $data;
   }

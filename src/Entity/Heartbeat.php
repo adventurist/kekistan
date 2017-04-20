@@ -4,10 +4,9 @@ namespace Drupal\heartbeat8\Entity;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
-use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\heartbeat8\HeartbeatInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -18,10 +17,13 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "heartbeat",
  *   label = @Translation("Heartbeat"),
+ *   bundle_label = @Translation("Heartbeat type"),
  *   handlers = {
+ *     "storage" = "Drupal\heartbeat8\HeartbeatStorage",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\heartbeat8\HeartbeatListBuilder",
  *     "views_data" = "Drupal\heartbeat8\Entity\HeartbeatViewsData",
+ *     "translation" = "Drupal\heartbeat8\HeartbeatTranslationHandler",
  *
  *     "form" = {
  *       "default" = "Drupal\heartbeat8\Form\HeartbeatForm",
@@ -35,9 +37,15 @@ use Drupal\user\UserInterface;
  *     },
  *   },
  *   base_table = "heartbeat",
+ *   data_table = "heartbeat_field_data",
+ *   revision_table = "heartbeat_revision",
+ *   revision_data_table = "heartbeat_field_revision",
+ *   translatable = TRUE,
  *   admin_permission = "administer heartbeat entities",
  *   entity_keys = {
  *     "id" = "id",
+ *     "revision" = "vid",
+ *     "bundle" = "type",
  *     "label" = "name",
  *     "uuid" = "uuid",
  *     "uid" = "user_id",
@@ -46,16 +54,25 @@ use Drupal\user\UserInterface;
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/heartbeat/{heartbeat}",
- *     "add-form" = "/admin/structure/heartbeat/add",
+ *     "add-page" = "/admin/structure/heartbeat/add",
+ *     "add-form" = "/admin/structure/heartbeat/add/{heartbeat_type}",
  *     "edit-form" = "/admin/structure/heartbeat/{heartbeat}/edit",
  *     "delete-form" = "/admin/structure/heartbeat/{heartbeat}/delete",
+ *     "version-history" = "/admin/structure/heartbeat/{heartbeat}/revisions",
+ *     "revision" = "/admin/structure/heartbeat/{heartbeat}/revisions/{heartbeat_revision}/view",
+ *     "revision_revert" = "/admin/structure/heartbeat/{heartbeat}/revisions/{heartbeat_revision}/revert",
+ *     "translation_revert" = "/admin/structure/heartbeat/{heartbeat}/revisions/{heartbeat_revision}/revert/{langcode}",
+ *     "revision_delete" = "/admin/structure/heartbeat/{heartbeat}/revisions/{heartbeat_revision}/delete",
  *     "collection" = "/admin/structure/heartbeat",
  *   },
- *   field_ui_base_route = "heartbeat.settings"
+ *   bundle_entity_type = "heartbeat_type",
+ *   field_ui_base_route = "entity.heartbeat_type.edit_form"
  * )
  */
-class Heartbeat extends ContentEntityBase implements HeartbeatInterface {
+class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterface {
+
   use EntityChangedTrait;
+
   /**
    * {@inheritdoc}
    */
@@ -64,6 +81,35 @@ class Heartbeat extends ContentEntityBase implements HeartbeatInterface {
     $values += array(
       'user_id' => \Drupal::currentUser()->id(),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    foreach (array_keys($this->getTranslationLanguages()) as $langcode) {
+      $translation = $this->getTranslation($langcode);
+
+      // If no owner has been set explicitly, make the anonymous user the owner.
+      if (!$translation->getOwner()) {
+        $translation->setOwnerId(0);
+      }
+    }
+
+    // If no revision author has been set explicitly, make the heartbeat owner the
+    // revision author.
+    if (!$this->getRevisionUser()) {
+      $this->setRevisionUserId($this->getOwnerId());
+    }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getType() {
+    return $this->bundle();
   }
 
   /**
@@ -137,7 +183,37 @@ class Heartbeat extends ContentEntityBase implements HeartbeatInterface {
    * {@inheritdoc}
    */
   public function setPublished($published) {
-    $this->set('status', $published ? NODE_PUBLISHED : NODE_NOT_PUBLISHED);
+    $this->set('status', $published ? TRUE : FALSE);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionCreationTime() {
+    return $this->get('revision_timestamp')->value;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionCreationTime($timestamp) {
+    $this->set('revision_timestamp', $timestamp);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getRevisionUser() {
+    return $this->get('revision_uid')->entity;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setRevisionUserId($uid) {
+    $this->set('revision_uid', $uid);
     return $this;
   }
 
@@ -145,14 +221,7 @@ class Heartbeat extends ContentEntityBase implements HeartbeatInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['id'] = BaseFieldDefinition::create('integer')
-      ->setLabel(t('ID'))
-      ->setDescription(t('The ID of the Heartbeat entity.'))
-      ->setReadOnly(TRUE);
-    $fields['uuid'] = BaseFieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The UUID of the Heartbeat entity.'))
-      ->setReadOnly(TRUE);
+    $fields = parent::baseFieldDefinitions($entity_type);
 
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Authored by'))
@@ -160,7 +229,6 @@ class Heartbeat extends ContentEntityBase implements HeartbeatInterface {
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
-      ->setDefaultValueCallback('Drupal\node\Entity\Node::getCurrentUserId')
       ->setTranslatable(TRUE)
       ->setDisplayOptions('view', array(
         'label' => 'hidden',
@@ -183,6 +251,7 @@ class Heartbeat extends ContentEntityBase implements HeartbeatInterface {
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Heartbeat entity.'))
+      ->setRevisionable(TRUE)
       ->setSettings(array(
         'max_length' => 50,
         'text_processing' => 0,
@@ -203,16 +272,8 @@ class Heartbeat extends ContentEntityBase implements HeartbeatInterface {
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
       ->setDescription(t('A boolean indicating whether the Heartbeat is published.'))
+      ->setRevisionable(TRUE)
       ->setDefaultValue(TRUE);
-
-    $fields['langcode'] = BaseFieldDefinition::create('language')
-      ->setLabel(t('Language code'))
-      ->setDescription(t('The language code for the Heartbeat entity.'))
-      ->setDisplayOptions('form', array(
-        'type' => 'language_select',
-        'weight' => 10,
-      ))
-      ->setDisplayConfigurable('form', TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
@@ -221,6 +282,26 @@ class Heartbeat extends ContentEntityBase implements HeartbeatInterface {
     $fields['changed'] = BaseFieldDefinition::create('changed')
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'));
+
+    $fields['revision_timestamp'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Revision timestamp'))
+      ->setDescription(t('The time that the current revision was created.'))
+      ->setQueryable(FALSE)
+      ->setRevisionable(TRUE);
+
+    $fields['revision_uid'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Revision user ID'))
+      ->setDescription(t('The user ID of the author of the current revision.'))
+      ->setSetting('target_type', 'user')
+      ->setQueryable(FALSE)
+      ->setRevisionable(TRUE);
+
+    $fields['revision_translation_affected'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Revision translation affected'))
+      ->setDescription(t('Indicates if the last edit of a translation belongs to current revision.'))
+      ->setReadOnly(TRUE)
+      ->setRevisionable(TRUE)
+      ->setTranslatable(TRUE);
 
     return $fields;
   }

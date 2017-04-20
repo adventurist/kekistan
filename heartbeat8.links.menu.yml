@@ -1,3 +1,4 @@
+
 # Heartbeat menu items definition
 entity.heartbeat.collection:
   title: 'Heartbeat list'
@@ -6,16 +7,21 @@ entity.heartbeat.collection:
   parent: system.admin_structure
   weight: 100
 
-heartbeat.admin.structure.settings:
-  title: Heartbeat settings
-  description: 'Configure Heartbeat entities'
-  route_name: heartbeat.settings
+
+# Heartbeat type menu items definition
+entity.heartbeat_type.collection:
+  title: 'Heartbeat type'
+  route_name: entity.heartbeat_type.collection
+  description: 'List Heartbeat type (bundles)'
   parent: system.admin_structure
-# Heartbeat Stream menu items definition
+  weight: 99
+
+
+# Heartbeat stream menu items definition
 entity.heartbeat_stream.collection:
-  title: 'Heartbeat Stream'
+  title: 'Heartbeat stream'
   route_name: entity.heartbeat_stream.collection
-  description: 'List Heartbeat Stream (bundles)'
+  description: 'List Heartbeat stream (bundles)'
   parent: system.admin_structure
   weight: 99
 

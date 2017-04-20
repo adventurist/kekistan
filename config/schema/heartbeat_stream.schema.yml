@@ -1,6 +1,6 @@
 heartbeat8.heartbeat_stream.*:
   type: config_entity
-  label: 'Heartbeat Stream config'
+  label: 'Heartbeat stream config'
   mapping:
     id:
       type: string
@@ -10,33 +10,27 @@ heartbeat8.heartbeat_stream.*:
       label: 'Label'
     uuid:
       type: string
-    hid:
-      type: serial
-      label: 'hid'
-    message_id:
+    class:
       type: string
-      label: 'message_id'
-    description:
+      label: 'class'
+    real_class:
       type: string
-      label: 'description'
-    message:
+      label: 'real class'
+    name:
       type: string
-      label: 'message'
-    message_concat:
+      label: 'name'
+    module:
       type: string
-      label: 'message_concat'
-    perms:
-      type: integer
-      label: 'perms'
-    group_type:
+      label: 'module'
+    title:
       type: string
-      label: 'group_type'
-    concat_args:
+      label: 'string'
+    path:
+      type: string
+      label: 'path'
+    settings:
       type: blob
-      label: 'concat_args'
+      label: 'settings'
     variables:
       type: blob
       label: 'variables'
-    attachments:
-      type: blob
-      label: 'attachments'

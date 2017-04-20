@@ -1,8 +1,5 @@
 # Heartbeat routing definition
-heartbeat.settings_tab:
-  route_name: heartbeat.settings
-  title: 'Settings'
-  base_route: heartbeat.settings
+
 entity.heartbeat.canonical:
   route_name: entity.heartbeat.canonical
   base_route: entity.heartbeat.canonical
@@ -11,7 +8,12 @@ entity.heartbeat.canonical:
 entity.heartbeat.edit_form:
   route_name: entity.heartbeat.edit_form
   base_route: entity.heartbeat.canonical
-  title: Edit
+  title: 'Edit'
+
+entity.heartbeat.version_history:
+  route_name: entity.heartbeat.version_history
+  base_route: entity.heartbeat.canonical
+  title: 'Revisions'
 
 entity.heartbeat.delete_form:
   route_name:  entity.heartbeat.delete_form

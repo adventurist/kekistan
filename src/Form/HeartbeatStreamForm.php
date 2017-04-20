@@ -11,6 +11,7 @@ use Drupal\Core\Form\FormStateInterface;
  * @package Drupal\heartbeat8\Form
  */
 class HeartbeatStreamForm extends EntityForm {
+
   /**
    * {@inheritdoc}
    */
@@ -18,55 +19,23 @@ class HeartbeatStreamForm extends EntityForm {
     $form = parent::form($form, $form_state);
 
     $heartbeat_stream = $this->entity;
-    $form['label'] = array(
+    $form['label'] = [
       '#type' => 'textfield',
       '#title' => $this->t('Label'),
       '#maxlength' => 255,
       '#default_value' => $heartbeat_stream->label(),
-      '#description' => $this->t("Label for the Heartbeat Stream."),
+      '#description' => $this->t("Label for the Heartbeat stream."),
       '#required' => TRUE,
-    );
+    ];
 
-
-    $form['message_id'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('messageId'),
-      '#maxlength' => 255,
-      '#default_value' => "New Message ID",
-      '#description' => $this->t("Message ID for the Heartbeat Stream."),
-      '#required' => TRUE,
-    );
-
-
-    $form['description'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('description'),
-      '#maxlength' => 255,
-      '#default_value' => "Description",
-      '#description' => $this->t("Description of the Heartbeat Stream"),
-      '#required' => TRUE,
-    );
-
-    $form['message'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('message'),
-      '#maxlength' => 255,
-      '#default_value' => "Message",
-      '#description' => $this->t("The structure for messages of this type. Use !exclamation marks before fields and entities"),
-      '#required' => TRUE,
-    );
-
-
-
-
-    $form['id'] = array(
+    $form['id'] = [
       '#type' => 'machine_name',
       '#default_value' => $heartbeat_stream->id(),
-      '#machine_name' => array(
+      '#machine_name' => [
         'exists' => '\Drupal\heartbeat8\Entity\HeartbeatStream::load',
-      ),
+      ],
       '#disabled' => !$heartbeat_stream->isNew(),
-    );
+    ];
 
     /* You will need additional form elements for your custom properties. */
 
@@ -82,17 +51,17 @@ class HeartbeatStreamForm extends EntityForm {
 
     switch ($status) {
       case SAVED_NEW:
-        drupal_set_message($this->t('Created the %label Heartbeat Stream.', [
+        drupal_set_message($this->t('Created the %label Heartbeat stream.', [
           '%label' => $heartbeat_stream->label(),
         ]));
         break;
 
       default:
-        drupal_set_message($this->t('Saved the %label Heartbeat Stream.', [
+        drupal_set_message($this->t('Saved the %label Heartbeat stream.', [
           '%label' => $heartbeat_stream->label(),
         ]));
     }
-    $form_state->setRedirectUrl($heartbeat_stream->urlInfo('collection'));
+    $form_state->setRedirectUrl($heartbeat_stream->toUrl('collection'));
   }
 
 }

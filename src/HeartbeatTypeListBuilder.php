@@ -6,15 +6,15 @@ use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
 use Drupal\Core\Entity\EntityInterface;
 
 /**
- * Provides a listing of Heartbeat stream entities.
+ * Provides a listing of Heartbeat type entities.
  */
-class HeartbeatStreamListBuilder extends ConfigEntityListBuilder {
+class HeartbeatTypeListBuilder extends ConfigEntityListBuilder {
 
   /**
    * {@inheritdoc}
    */
   public function buildHeader() {
-    $header['label'] = $this->t('Heartbeat stream');
+    $header['label'] = $this->t('Heartbeat type');
     $header['id'] = $this->t('Machine name');
     return $header + parent::buildHeader();
   }

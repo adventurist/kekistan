@@ -13,11 +13,12 @@ use Drupal\Core\Access\AccessResult;
  * @see \Drupal\heartbeat8\Entity\Heartbeat.
  */
 class HeartbeatAccessControlHandler extends EntityAccessControlHandler {
+
   /**
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    /** @var \Drupal\heartbeat8\HeartbeatInterface $entity */
+    /** @var \Drupal\heartbeat8\Entity\HeartbeatInterface $entity */
     switch ($operation) {
       case 'view':
         if (!$entity->isPublished()) {

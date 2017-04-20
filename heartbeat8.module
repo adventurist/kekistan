@@ -2,10 +2,15 @@
 
 /**
  * @file
- * Contains heartbeat8.module..
+ * Contains heartbeat8.module.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Heartbeat8\Entity\Heartbeat;
+use Drupal\Heartbeat8\Entity\HeartbeatType;
+
+//TODO add constants (HEARTBEAT_NONE, HEARTBEAT_PRIVATE, HEARTBEAT_PUBLIC_TO_ADDRESSEE, HEARTBEAT_PUBLIC_TO_ALL_CONNECTED, HEARTBEAT_PUBLIC_TO_ALL)
+//TODO include Streams (Entities already added with use statements on lines 9-10)
 
 /**
  * Implements hook_help().
@@ -16,9 +21,50 @@ function heartbeat8_help($route_name, RouteMatchInterface $route_match) {
     case 'help.page.heartbeat8':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
-      $output .= '<p>' . t('Heartbeat 8') . '</p>';
+      $output .= '<p>' . t('Heartbeat for Drupal 8') . '</p>';
       return $output;
 
     default:
   }
 }
+
+
+/**
+ * Implements hook_theme().
+ */
+function heartbeat8_theme() {
+  $theme = [];
+  $theme['heartbeat'] = array(
+    'render element' => 'elements',
+    'file' => 'heartbeat.page.inc',
+    'template' => 'heartbeat',
+  );
+  $theme['heartbeat_content_add_list'] = [
+    'render element' => 'content',
+    'variables' => ['content' => NULL],
+    'file' => 'heartbeat.page.inc',
+  ];
+  return $theme;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function heartbeat8_theme_suggestions_heartbeat(array $variables) {
+  $suggestions = array();
+  $entity = $variables['elements']['#heartbeat'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'heartbeat__' . $sanitized_view_mode;
+  $suggestions[] = 'heartbeat__' . $entity->bundle();
+  $suggestions[] = 'heartbeat__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'heartbeat__' . $entity->id();
+  $suggestions[] = 'heartbeat__' . $entity->id() . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+
+
+//TODO Add heartbeat language to Javascript
+//TODO Determine necessity of polling
+//Add

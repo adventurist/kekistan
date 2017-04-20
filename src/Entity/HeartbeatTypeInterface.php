@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\heartbeat8;
+namespace Drupal\heartbeat8\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
 /**
- * Provides an interface for defining Heartbeat Stream entities.
+ * Provides an interface for defining Heartbeat type entities.
  */
-interface HeartbeatStreamInterface extends ConfigEntityInterface {
+interface HeartbeatTypeInterface extends ConfigEntityInterface {
 
 
 
