@@ -2,6 +2,7 @@
 
 namespace Drupal\heartbeat8\Form;
 
+use Drupal\heartbeat8;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -19,6 +20,8 @@ class HeartbeatTypeForm extends EntityForm {
     $form = parent::form($form, $form_state);
 
     $heartbeat_type = $this->entity;
+
+    $form['#tree'] = TRUE;
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -49,6 +52,7 @@ class HeartbeatTypeForm extends EntityForm {
       '#required' => TRUE,
     );
 
+
     $form['message'] = array(
       '#type' => 'textfield',
       '#title' => $this->t('message'),
@@ -56,8 +60,77 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => "Message",
       '#description' => $this->t("The structure for messages of this type. Use !exclamation marks before fields and entities"),
       '#required' => TRUE,
+      '#ajax' => [
+        'callback' => '::rebuildMessageArguments',
+        'event' => 'change',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => t('Rebuilding arguments'),
+        ),
+      ]
     );
 
+
+    $form['message_concat'] = array(
+      '#type' => 'textfield',
+      '#title' => $this->t('Message structure in concatenated form'),
+      '#maxlength' => 255,
+      '#default_value' => "Message",
+      '#description' => $this->t("The structure for messages of this type. Use !exclamation marks before fields and entities"),
+      '#required' => FALSE,
+    );
+
+
+    $form['perms'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Permissions'),
+      '#default_value' => 0,
+      '#description' => $this->t("Default permissions to view Heartbeats of this type"),
+      '#options' => array(
+        0 => heartbeat8\HEARTBEAT_NONE,
+        1 => heartbeat8\HEARTBEAT_PRIVATE,
+        2 => heartbeat8\HEARTBEAT_PUBLIC_TO_ADDRESSEE,
+        3 => heartbeat8\HEARTBEAT_PUBLIC_TO_CONNECTED,
+        4 => heartbeat8\HEARTBEAT_PUBLIC_TO_ALL,
+
+      ),
+      '#required' => TRUE,
+    );
+
+
+    $form['group_type'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Group Type'),
+      '#default_value' => 0,
+      '#description' => $this->t("Type of group associated with Heartbeats of this type"),
+      '#options' => array(
+        0 => heartbeat8\HEARTBEAT_GROUP_NONE,
+        1 => heartbeat8\HEARTBEAT_GROUP_SINGLE,
+        2 => heartbeat8\HEARTBEAT_GROUP_SUMMARY,
+      ),
+      '#required' => TRUE,
+    );
+
+    $form['variables'] = array(
+      '#type' => 'fieldset',
+      '#title' => $this->t('Variables to map'),
+      '#prefix' => '<div id="names-fieldset-wrapper">',
+      '#suffix' => '</div>',
+    );
+
+    $messageArguments = $form_state->getTemporaryValue('data_hidden');
+
+    $argNum = count($messageArguments);
+
+    for ($i = 0; $i < $argNum; $i++) {
+
+      $form['variables']['variable'][$i] = array(
+        '#type' => 'textfield',
+        '#title' => t($messageArguments[$i]),
+        '#description' => t('Define message argument'),
+      );
+
+    }
 
     $form['id'] = [
       '#type' => 'machine_name',
@@ -68,7 +141,7 @@ class HeartbeatTypeForm extends EntityForm {
       '#disabled' => !$heartbeat_type->isNew(),
     ];
 
-    /* You will need additional form elements for your custom properties. */
+    $form_state->setCached(FALSE);
 
     return $form;
   }
@@ -95,4 +168,35 @@ class HeartbeatTypeForm extends EntityForm {
     $form_state->setRedirectUrl($heartbeat_type->toUrl('collection'));
   }
 
+
+
+  /**
+   * Custom form validation to rebuild
+   * Form field for mapping Message Arguments
+   */
+
+  public function rebuildMessageArguments(array &$form, FormStateInterface &$form_state) {
+
+    \Drupal::logger('HeartbeatTypeFormDEBUG')->notice('Ajax callback successfully called');
+
+    $messageArgString = $form_state->getValue('message');
+    $messageArguments = explode('!', $messageArgString);
+
+    $argsArray = array();
+
+    foreach ($messageArguments as $argument) {
+
+      if (strlen($argument) > 0) {
+
+        $cleanArgument = substr($argument, 0, strpos($argument, ' '));
+        $argsArray[] = $cleanArgument;
+
+      }
+    }
+
+    $form_state->setTemporaryValue('data_hidden', $argsArray);
+    $form_state->setRebuild();
+
+    return $form;
+  }
 }

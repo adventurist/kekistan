@@ -1,11 +1,11 @@
 
 # Heartbeat menu items definition
 entity.heartbeat.collection:
-  title: 'Heartbeat list'
+  title: 'Heartbeat'
   route_name: entity.heartbeat.collection
   description: 'List Heartbeat entities'
   parent: system.admin_structure
-  weight: 100
+  weight: 98
 
 
 # Heartbeat type menu items definition
@@ -23,5 +23,5 @@ entity.heartbeat_stream.collection:
   route_name: entity.heartbeat_stream.collection
   description: 'List Heartbeat stream (bundles)'
   parent: system.admin_structure
-  weight: 99
+  weight: 100
 
