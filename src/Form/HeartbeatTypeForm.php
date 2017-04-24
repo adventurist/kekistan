@@ -11,18 +11,20 @@ use Drupal\Core\Form\FormStateInterface;
  *
  * @package Drupal\heartbeat8\Form
  */
-class HeartbeatTypeForm extends EntityForm {
+class HeartbeatTypeForm extends EntityForm
+{
 
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
-    $form = parent::form($form, $form_state);
+  public function buildform(array $form, FormStateInterface $form_state)
+  {
+    $form = parent::buildform($form, $form_state);
 
     $form_state->setCached(FALSE);
 
     $heartbeat_type = $this->entity;
-
+    $tokens = \Drupal::token()->getInfo();
     $form['#tree'] = TRUE;
 
     $form['label'] = array(
@@ -143,8 +145,183 @@ class HeartbeatTypeForm extends EntityForm {
       ],
       '#disabled' => !$heartbeat_type->isNew(),
     ];
+    $z = 0;
+    foreach ($tokens['tokens'] as $key => $type) {
+      if (is_array($type)) {
+        if (!is_array(current($type))) {
 
-    return $form;
+          $form[$key] = array(
+            '#type' => 'details',
+            '#title' => t((string)strtoupper($key)),
+            '#collapsible' => TRUE,
+            '#collapsed' => TRUE,
+            '#states' => array(
+              'expanded' => array(
+                ':input[name="'.$key.'"]' => array('value' => 'expand'),
+              ),
+            ),
+          );
+          $s = 0;
+          foreach ($type as $token) {
+            if (!is_array($token)) {
+
+              $form[$key][$token->title] = array(
+                '#type' => 'item',
+//                                    '#title' => t('token'),
+                '#markup' => t((string)$token->title),
+                '#attributes' => array('tabindex' => 20+$z)
+              );
+            } else {
+              foreach ($token as $tkey => $subtoken) {
+
+                $form[$tkey][is_array($subtoken) ? key($subtoken) : $subtoken] = array(
+                  '#type' => 'details',
+                  '#title' => t('token'),
+                  '#collapsible' => TRUE,
+                  '#collapsed' => TRUE,
+                  '#states' => array(
+                    ':input[name="'.is_array($subtoken) ? key($subtoken) : $subtoken.'"]' => array('value' => 'expand2'),
+                  ));
+              }
+            }
+            $s++;
+          }
+          ksort($form[$key]);
+        } else {
+          $form[$key] = array(
+            '#type' => 'details',
+            '#title' => t((string)strtoupper($key)),
+            '#collapsible' => TRUE,
+            '#collapsed' => TRUE,
+            '#states' => array(
+              'expanded' => array(
+                ':input[name="'.$key.'"]' => array('value' => 'expand'),
+              ),
+            ),
+          );
+          foreach ($type as $skey => $subType) {
+            if (is_array($subType)) {
+              $form[$key][$skey] = array(
+                '#type' => 'details',
+                '#title' => t((string)$skey),
+                '#collapsible' => TRUE,
+                '#collapsed' => TRUE,
+                '#states' => array(
+                  'expanded' => array(
+                    ':input[name="'.$skey.'"]' => array('value' => 'expand'),
+                  ),
+                ),
+              );
+              foreach ($subType as $vskey => $token) {
+                if (!is_array($token)) {
+                  $form[$key][$skey][$vskey] = array(
+                    '#type' => 'item',
+//                                            '#title' => t(is_array($token) ? $vskey : $token),
+                    '#markup' => t(is_string($token) ? $token : is_string($vskey) ? $vskey : $key),
+                    '#attributes' => array('tabindex' => 20+$z)
+                  );
+                } else {
+                  $form[$key][$skey][$vskey] = array(
+                    '#type' => 'details',
+                    '#title' => $vskey,
+                    '#collapsible' => TRUE,
+                    '#collapsed' => TRUE,
+                    '#states' => array(
+                      'expanded' => array(
+                        ':input[name="'.$vskey.'"]' => array('value' => 'expand'),
+                      ),
+                    ),
+                  );
+                  foreach ($token as $subKey => $subtoken) {
+                    $form[$key][$skey][$vskey][is_array($subtoken->title) ? $subKey : $subtoken->title] = array(
+                      '#type' => 'item',
+                      '#markup' => t((string)is_array($subtoken) ? $subKey : $subtoken->title),
+                    );
+                  }
+                }
+              }
+              ksort($form[$key][$skey]);
+            }
+          }
+        }
+      } else {
+        $form[$key][$token == null ? 'null' : $token] = array(
+          '#type' => 'details',
+          '#title' => t($token == null ? 'null' : (string)$token),
+          '#markup' => t($token == null ? 'null' : (string)$token),
+        );
+      }
+      $z++;
+    }
+
+
+//    foreach ($data['storeTypes'] as $key => $type) {
+//      if (is_array($type)) {
+//        if (!is_array(current($type))) {
+//
+//    foreach ($tokens['tokens'] as $key => $value) {
+//
+//      if (is_array($value)) {
+//        foreach ($value as $subKey => $subValue) {
+//          if (is_array($subValue)) {
+//            foreach ($subValue as $superKey => $superValue) {
+//              if (is_array($superValue)) {
+//                foreach($superValue as $microKey => $microValue) {
+//                  if (is_array($microValue)) {
+//                    \Drupal::logger()->debug("YOU NEED TO HANDLE CHILD TOKENS AT GREATER DEPTH");
+//                  } else {
+//
+//                  }
+//                }
+//              }
+//            }
+//          }
+//        }
+//      }
+//
+//    }
+
+
+
+
+//
+//          $form[$key] = array(
+//            '#type' => 'details',
+//            '#title' => t(strtoupper($key)),
+//            '#collapsible' => TRUE,
+//            '#collapsed' => TRUE,
+//            '#states' => array(
+//              'expanded' => array(
+//                ':input[name="' . $key . '"]' => array('value' => 'expand'),
+//              ),
+//            ),
+//          );
+//          $s = 0;
+//          foreach ($type as $store) {
+//            if (!is_array($store)) {
+//
+//              $form[$key][$store->title] = array(
+//                '#type' => 'item',
+//                //                                    '#title' => t('Store'),
+//                '#markup' => t($store->title) . '<span class="hidden-nid">' . $store->nid . '</span>',
+//                '#attributes' => array('tabindex' => 20 + $z)
+//              );
+//            } else {
+//              foreach ($store as $key => $subStore) {
+//
+//                $form[$key][is_array($subStore) ? key($subStore) : $subStore] = array(
+//                  '#type' => 'details',
+//                  '#title' => t('Store'),
+//                  '#collapsible' => TRUE,
+//                  '#collapsed' => TRUE,
+//                  '#states' => array(
+//                    ':input[name="' . is_array($subStore) ? key($subStore) : $subStore . '"]' => array('value' => 'expand2'),
+//                  ));
+//              }
+//            }
+//          }
+
+      return $form;
   }
 
   /**
