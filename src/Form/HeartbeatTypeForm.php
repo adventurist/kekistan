@@ -120,20 +120,20 @@ class HeartbeatTypeForm extends EntityForm {
       '#suffix' => '</div>',
     );
 
-    if ($form_state->get('data_hidden') == NULL) $form_state->set('data_hidden', array());
-    $messageArguments = $form_state->get('data_hidden');
-
-    $argNum = count($messageArguments);
-
-    for ($i = 0; $i < $argNum; $i++) {
-
-      $form['variables']['variable'][$i] = array(
-        '#type' => 'textfield',
-        '#title' => t($messageArguments[$i]),
-        '#description' => t('Define message argument'),
-      );
-
-    }
+//    if ($form_state->get('data_hidden') == NULL) $form_state->set('data_hidden', array());
+//    $messageArguments = $form_state->get('data_hidden');
+//
+//    $argNum = count($messageArguments);
+//
+//    for ($i = 0; $i < $argNum; $i++) {
+//
+//      $form['variables']['variable'][$i] = array(
+//        '#type' => 'textfield',
+//        '#title' => t($messageArguments[$i]),
+//        '#description' => t('Define message argument'),
+//      );
+//
+//    }
 
     $form['id'] = [
       '#type' => 'machine_name',
@@ -195,8 +195,23 @@ class HeartbeatTypeForm extends EntityForm {
       }
     }
 
-    $form_state->set('data_hidden', $argsArray);
+//    $form_state->set('data_hidden', $argsArray);
+
+    $argNum = count($argsArray);
+
+    for ($i = 0; $i < $argNum; $i++) {
+
+      $form['variable' . $i] = array(
+        '#type' => 'textfield',
+        '#title' => t($argsArray[$i]),
+        '#description' => t('Define message argument'),
+      );
+
+    }
+
     $form_state->setRebuild();
+
+    return $form;
 
   }
 }
