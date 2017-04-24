@@ -19,6 +19,8 @@ class HeartbeatTypeForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
+    $form_state->setCached(FALSE);
+
     $heartbeat_type = $this->entity;
 
     $form['#tree'] = TRUE;
@@ -118,7 +120,8 @@ class HeartbeatTypeForm extends EntityForm {
       '#suffix' => '</div>',
     );
 
-    $messageArguments = $form_state->getTemporaryValue('data_hidden');
+    if ($form_state->get('data_hidden') == NULL) $form_state->set('data_hidden', array());
+    $messageArguments = $form_state->get('data_hidden');
 
     $argNum = count($messageArguments);
 
@@ -140,8 +143,6 @@ class HeartbeatTypeForm extends EntityForm {
       ],
       '#disabled' => !$heartbeat_type->isNew(),
     ];
-
-    $form_state->setCached(FALSE);
 
     return $form;
   }
@@ -175,7 +176,7 @@ class HeartbeatTypeForm extends EntityForm {
    * Form field for mapping Message Arguments
    */
 
-  public function rebuildMessageArguments(array &$form, FormStateInterface &$form_state) {
+  public function rebuildMessageArguments(array &$form, FormStateInterface $form_state) {
 
     \Drupal::logger('HeartbeatTypeFormDEBUG')->notice('Ajax callback successfully called');
 
@@ -194,9 +195,8 @@ class HeartbeatTypeForm extends EntityForm {
       }
     }
 
-    $form_state->setTemporaryValue('data_hidden', $argsArray);
+    $form_state->set('data_hidden', $argsArray);
     $form_state->setRebuild();
 
-    return $form;
   }
 }
