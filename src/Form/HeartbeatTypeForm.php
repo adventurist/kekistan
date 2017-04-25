@@ -3,6 +3,9 @@
 namespace Drupal\heartbeat8\Form;
 
 use Drupal\heartbeat8;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\HtmlCommand;
+use Drupal\Core\Ajax\InvokeCommand;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -64,14 +67,14 @@ class HeartbeatTypeForm extends EntityForm
       '#default_value' => "Message",
       '#description' => $this->t("The structure for messages of this type. Use !exclamation marks before fields and entities"),
       '#required' => TRUE,
-      '#ajax' => [
-        'callback' => '::rebuildMessageArguments',
-        'event' => 'change',
-        'progress' => array(
-          'type' => 'throbber',
-          'message' => t('Rebuilding arguments'),
-        ),
-      ]
+//      '#ajax' => [
+//        'callback' => '::rebuildMessageArguments',
+//        'event' => 'change',
+//        'progress' => array(
+//          'type' => 'throbber',
+//          'message' => t('Rebuilding arguments'),
+//        ),
+//      ]
     );
 
 
@@ -118,24 +121,38 @@ class HeartbeatTypeForm extends EntityForm
     $form['variables'] = array(
       '#type' => 'fieldset',
       '#title' => $this->t('Variables to map'),
-      '#prefix' => '<div id="names-fieldset-wrapper">',
+      '#prefix' => '<div id="Variables-fieldset-wrapper">',
       '#suffix' => '</div>',
     );
 
-//    if ($form_state->get('data_hidden') == NULL) $form_state->set('data_hidden', array());
-//    $messageArguments = $form_state->get('data_hidden');
-//
-//    $argNum = count($messageArguments);
-//
-//    for ($i = 0; $i < $argNum; $i++) {
-//
-//      $form['variables']['variable'][$i] = array(
-//        '#type' => 'textfield',
-//        '#title' => t($messageArguments[$i]),
-//        '#description' => t('Define message argument'),
-//      );
-//
-//    }
+    $messageArguments = $form_state->get('data_hidden');
+
+    if ($messageArguments === NULL) { $messageArguments = $form_state->set('data_hidden', array()); }
+
+    $argNum = count($messageArguments);
+
+    for ($i = 0; $i < $argNum; $i++) {
+
+      if (is_array($messageArguments) && $messageArguments[$i] != null) {
+
+        $form['variables'][$i] = array(
+          '#type' => 'textfield',
+          '#title' => t($messageArguments[$i]),
+          '#description' => t('Map value to this variable'),
+        );
+
+      }
+    }
+
+    $form['variables']['rebuildArgs'] = [
+      '#type' => 'submit',
+      '#value' => t('Rebuild Arguments'),
+      '#submit' => array('::rebuildMessageArguments'),
+      '#ajax' => [
+        'callback' => '::rebuildMessageArguments',
+        'wrapper' => 'Variables-fieldset-wrapper',
+      ],
+    ];
 
     $form['id'] = [
       '#type' => 'machine_name',
@@ -145,6 +162,9 @@ class HeartbeatTypeForm extends EntityForm
       ],
       '#disabled' => !$heartbeat_type->isNew(),
     ];
+
+
+    //Build temporary token form for developmental assistance
     $z = 0;
     foreach ($tokens['tokens'] as $key => $type) {
       if (is_array($type)) {
@@ -167,7 +187,6 @@ class HeartbeatTypeForm extends EntityForm
 
               $form[$key][$token->title] = array(
                 '#type' => 'item',
-//                                    '#title' => t('token'),
                 '#markup' => t((string)$token->title),
                 '#attributes' => array('tabindex' => 20+$z)
               );
@@ -254,74 +273,9 @@ class HeartbeatTypeForm extends EntityForm
       $z++;
     }
 
+    $form_state->setCached(FALSE);
 
-//    foreach ($data['storeTypes'] as $key => $type) {
-//      if (is_array($type)) {
-//        if (!is_array(current($type))) {
-//
-//    foreach ($tokens['tokens'] as $key => $value) {
-//
-//      if (is_array($value)) {
-//        foreach ($value as $subKey => $subValue) {
-//          if (is_array($subValue)) {
-//            foreach ($subValue as $superKey => $superValue) {
-//              if (is_array($superValue)) {
-//                foreach($superValue as $microKey => $microValue) {
-//                  if (is_array($microValue)) {
-//                    \Drupal::logger()->debug("YOU NEED TO HANDLE CHILD TOKENS AT GREATER DEPTH");
-//                  } else {
-//
-//                  }
-//                }
-//              }
-//            }
-//          }
-//        }
-//      }
-//
-//    }
-
-
-
-
-//
-//          $form[$key] = array(
-//            '#type' => 'details',
-//            '#title' => t(strtoupper($key)),
-//            '#collapsible' => TRUE,
-//            '#collapsed' => TRUE,
-//            '#states' => array(
-//              'expanded' => array(
-//                ':input[name="' . $key . '"]' => array('value' => 'expand'),
-//              ),
-//            ),
-//          );
-//          $s = 0;
-//          foreach ($type as $store) {
-//            if (!is_array($store)) {
-//
-//              $form[$key][$store->title] = array(
-//                '#type' => 'item',
-//                //                                    '#title' => t('Store'),
-//                '#markup' => t($store->title) . '<span class="hidden-nid">' . $store->nid . '</span>',
-//                '#attributes' => array('tabindex' => 20 + $z)
-//              );
-//            } else {
-//              foreach ($store as $key => $subStore) {
-//
-//                $form[$key][is_array($subStore) ? key($subStore) : $subStore] = array(
-//                  '#type' => 'details',
-//                  '#title' => t('Store'),
-//                  '#collapsible' => TRUE,
-//                  '#collapsed' => TRUE,
-//                  '#states' => array(
-//                    ':input[name="' . is_array($subStore) ? key($subStore) : $subStore . '"]' => array('value' => 'expand2'),
-//                  ));
-//              }
-//            }
-//          }
-
-      return $form;
+     return $form;
   }
 
   /**
@@ -347,20 +301,21 @@ class HeartbeatTypeForm extends EntityForm
   }
 
 
-
   /**
    * Custom form validation to rebuild
    * Form field for mapping Message Arguments
    */
 
   public function rebuildMessageArguments(array &$form, FormStateInterface $form_state) {
-
+$testing = 'isatest';
     \Drupal::logger('HeartbeatTypeFormDEBUG')->notice('Ajax callback successfully called');
 
     $messageArgString = $form_state->getValue('message');
     $messageArguments = explode('!', $messageArgString);
 
-    $argsArray = array();
+    $argsArray = $form_state->get('data_hidden');
+
+    if ($argsArray === null) $argsArray = array();
 
     foreach ($messageArguments as $argument) {
 
@@ -372,23 +327,16 @@ class HeartbeatTypeForm extends EntityForm
       }
     }
 
-//    $form_state->set('data_hidden', $argsArray);
-
-    $argNum = count($argsArray);
-
-    for ($i = 0; $i < $argNum; $i++) {
-
-      $form['variable' . $i] = array(
-        '#type' => 'textfield',
-        '#title' => t($argsArray[$i]),
-        '#description' => t('Define message argument'),
-      );
-
-    }
-
+    $form_state->set('data_hidden', $argsArray);
     $form_state->setRebuild();
 
-    return $form;
+    return $form['variables'];
 
   }
+
+  public function prepareVariables(&$form, FormStateInterface $form_state) {
+    return $form['variables'];
+  }
+
+
 }
