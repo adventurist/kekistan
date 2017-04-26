@@ -307,21 +307,17 @@ class HeartbeatTypeForm extends EntityForm
    */
 
   public function rebuildMessageArguments(array &$form, FormStateInterface $form_state) {
-$testing = 'isatest';
-    \Drupal::logger('HeartbeatTypeFormDEBUG')->notice('Ajax callback successfully called');
 
     $messageArgString = $form_state->getValue('message');
-    $messageArguments = explode('!', $messageArgString);
+    $messageArguments = array_slice(explode('!', $messageArgString), 1);
 
-    $argsArray = $form_state->get('data_hidden');
-
-    if ($argsArray === null) $argsArray = array();
+    $argsArray = array();
 
     foreach ($messageArguments as $argument) {
 
       if (strlen($argument) > 0) {
 
-        $cleanArgument = substr($argument, 0, strpos($argument, ' '));
+        $cleanArgument = strpos($argument, ' ') ? substr($argument, 0, strpos($argument, ' ')) : $argument;
         $argsArray[] = $cleanArgument;
 
       }
