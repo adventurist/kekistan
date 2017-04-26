@@ -56,6 +56,12 @@ class HeartbeatTypeForm extends EntityForm {
     $this->treeBuilder = $tree_builder;
     $this->renderer = $renderer;
 
+    $this->tokenTree = $this->renderer->render($this->treeBuilder->buildAllRenderable([
+      'click_insert' => TRUE,
+      'show_restricted' => TRUE,
+      'show_nested' => FALSE,
+    ]));
+
   }
 
 
@@ -198,12 +204,6 @@ class HeartbeatTypeForm extends EntityForm {
         'wrapper' => 'Variables-fieldset-wrapper',
       ],
     ];
-
-    if ($this->tokenTree == null) $this->tokenTree = $this->renderer->render($this->treeBuilder->buildAllRenderable([
-      'click_insert' => TRUE,
-      'show_restricted' => TRUE,
-      'show_nested' => FALSE,
-    ]));
 
     $form['tokens'] = array(
       '#prefix' => '<div id="token-tree"></div>',
