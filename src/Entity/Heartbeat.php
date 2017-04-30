@@ -45,7 +45,7 @@ use Drupal\user\UserInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "vid",
- *     "bundle" = "type",
+ *     "bundle" = "heartbeat_type",
  *     "label" = "name",
  *     "uuid" = "uuid",
  *     "uid" = "user_id",
@@ -305,5 +305,23 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
     return $fields;
   }
+
+  /**
+   * Returns the node type label for the passed node.
+   *
+   * @param \Drupal\heartbeat8\Entity\HeartbeatInterface $heartbeat
+   *   A heartbeat entity to return the heartbeat type's label for.
+   *
+   * @return string|false
+   *   The heartbeat type label or FALSE if the heartbeat type is not found.
+   *
+   * @todo Add this as generic helper method for config entities representing
+   *   entity bundles.
+   */
+  public function heartbeat_get_type(HeartbeatInterface $heartbeat) {
+    $type = HeartbeatType::load($heartbeat->bundle());
+    return $type ? $type->label() : FALSE;
+  }
+
 
 }

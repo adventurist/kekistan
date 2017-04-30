@@ -4,6 +4,7 @@ namespace Drupal\heartbeat8\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\heartbeat8\Entity;
 
 /**
  * Form controller for Heartbeat edit forms.

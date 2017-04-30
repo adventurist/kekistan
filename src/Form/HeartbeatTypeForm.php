@@ -47,7 +47,6 @@ class HeartbeatTypeForm extends EntityForm {
    * param [ mixed $args [, $... ]]
    * @param TreeBuilder $tree_builder
    * @param Renderer $renderer
-   * @link http://php.net/manual/en/language.oop5.decon.php
    * @throws \Exception
    */
   public function __construct(TreeBuilder $tree_builder, Renderer $renderer) {
@@ -69,9 +68,7 @@ class HeartbeatTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function buildform(array $form, FormStateInterface $form_state)
-  {
-    $form = parent::buildform($form, $form_state);
+  public function form(array $form, FormStateInterface $form_state) {
 
     $form_state->setCached(FALSE);
 
@@ -95,7 +92,7 @@ class HeartbeatTypeForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => $this->t('messageId'),
       '#maxlength' => 255,
-      '#default_value' => "New Message ID",
+      '#default_value' => $heartbeat_type->getMessageId(),
       '#description' => $this->t("Message ID for the Heartbeat Type."),
       '#required' => TRUE,
     );
@@ -105,7 +102,7 @@ class HeartbeatTypeForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => $this->t('description'),
       '#maxlength' => 255,
-      '#default_value' => "Description",
+      '#default_value' => $heartbeat_type->getDescription(),
       '#description' => $this->t("Description of the Heartbeat Type"),
       '#required' => TRUE,
     );
@@ -115,7 +112,7 @@ class HeartbeatTypeForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => $this->t('message'),
       '#maxlength' => 255,
-      '#default_value' => "Message",
+      '#default_value' => $heartbeat_type->getMessage(),
       '#description' => $this->t("The structure for messages of this type. Use !exclamation marks before fields and entities"),
       '#required' => TRUE,
     );
@@ -125,7 +122,7 @@ class HeartbeatTypeForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => $this->t('Message structure in concatenated form'),
       '#maxlength' => 255,
-      '#default_value' => "Message",
+      '#default_value' => $heartbeat_type->getMessageConcat(),
       '#description' => $this->t("The structure for messages of this type. Use !exclamation marks before fields and entities"),
       '#required' => FALSE,
     );
@@ -134,7 +131,7 @@ class HeartbeatTypeForm extends EntityForm {
     $form['perms'] = array(
       '#type' => 'select',
       '#title' => $this->t('Permissions'),
-      '#default_value' => 0,
+      '#default_value' => $heartbeat_type->getPerms(),
       '#description' => $this->t("Default permissions to view Heartbeats of this type"),
       '#options' => array(
         0 => heartbeat8\HEARTBEAT_NONE,
@@ -331,7 +328,7 @@ class HeartbeatTypeForm extends EntityForm {
 
     $form_state->setCached(FALSE);
 
-     return $form;
+    return parent::form($form, $form_state, $heartbeat_type);
   }
 
   /**
@@ -339,6 +336,12 @@ class HeartbeatTypeForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $heartbeat_type = $this->entity;
+
+    $heartbeat_type->set('description', $form_state->getValue('description'));
+    $heartbeat_type->set('description', $form_state->getValue('description'));
+    $heartbeat_type->set('message', $form_state->getValue('message'));
+    $heartbeat_type->set('perms', $form_state->getValue('perms'));
+//    $heartbeat_type
     $status = $heartbeat_type->save();
 
     switch ($status) {
@@ -405,7 +408,7 @@ class HeartbeatTypeForm extends EntityForm {
 //    $color = 'pink';
     // Add a command, InvokeCommand, which allows for custom jQuery commands.
     // In this case, we alter the color of the description.
-    $ajax_response->addCommand(new InvokeCommand('#token-tree', 'css', array('display', 'block')));
+    $ajax_response->addCommand(new InvokeCommand('.token-tree', 'css', array('display', 'block')));
 
     // Return the AjaxResponse Object.
     return $ajax_response;

@@ -1,4 +1,5 @@
 treeTable:
+  version: 1.x
   css:
     theme:
       css/heartbeat8.css: {}
