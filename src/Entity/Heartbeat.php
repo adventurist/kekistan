@@ -45,7 +45,7 @@ use Drupal\user\UserInterface;
  *   entity_keys = {
  *     "id" = "id",
  *     "revision" = "vid",
- *     "bundle" = "heartbeat_type",
+ *     "bundle" = "type",
  *     "label" = "name",
  *     "uuid" = "uuid",
  *     "uid" = "user_id",
@@ -323,5 +323,20 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     return $type ? $type->label() : FALSE;
   }
 
+
+  /**
+   * Updates all heartbeat activities of one type to be of another type.
+   *
+   * @param string $old_id
+   *   The current heartbeat type of the activities.
+   * @param string $new_id
+   *   The new heartbeat type of the activities.
+   *
+   * @return
+   *   The number of activities whose heartbeat type field was modified.
+   */
+  function heartbeat_type_update_nodes($old_id, $new_id) {
+    return \Drupal::entityManager()->getStorage('heartbeat')->updateType($old_id, $new_id);
+  }
 
 }
