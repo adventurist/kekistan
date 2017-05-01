@@ -1,2 +1,5 @@
-#services:
-#  heartbeat8
+services:
+  heartbeat8.heartbeattype:
+    class: Drupal\heartbeat8\HeartbeatTypeServices
+    arguments: ['@entity.query']
+

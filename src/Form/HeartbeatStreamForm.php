@@ -2,6 +2,7 @@
 
 namespace Drupal\heartbeat8\Form;
 
+use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
@@ -27,6 +28,14 @@ class HeartbeatStreamForm extends ContentEntityForm {
         '#weight' => 10,
       );
     }
+//    $query = Database::getConnection()->select('heartbeat_type')
+    $form['types'] = array(
+      '#type' => 'checkboxes',
+      '#options' => array(
+
+      ),
+      '#title' => $this->t('Please select all the Heartbeat Types you wish to include in this stream'),
+    );
 
     $entity = $this->entity;
 
