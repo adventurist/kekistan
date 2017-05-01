@@ -115,4 +115,103 @@ interface HeartbeatStreamInterface extends RevisionableInterface, RevisionLogInt
    */
   public function setRevisionUserId($uid);
 
+
+  /**
+   * @return mixed
+   */
+
+  public function getClass();
+
+  /**
+   * @param mixed $class
+   */
+
+  public function setClass($class);
+
+  /**
+   * @return mixed
+   */
+
+  public function getRealClass();
+
+  /**
+   * @param mixed $real_class
+   */
+
+  public function setRealClass($real_class);
+
+  /**
+   * @return mixed
+   */
+
+  public function getPath();
+
+  /**
+   * @param mixed $path
+   */
+
+  public function setPath($path);
+
+  /**
+   * @return mixed
+   */
+
+  public function getTitle();
+
+  /**
+   * @param mixed $title
+   */
+
+  public function setTitle($title);
+
+  /**
+   * @return mixed
+   */
+
+  public function getModule();
+
+  /**
+   * @param mixed $module
+   */
+
+  public function setModule($module);
+
+  /**
+   * @return mixed
+   */
+
+  public function getVariables();
+
+  /**
+   * @param mixed $variables
+   */
+
+  public function setVariables($variables);
+
+  /**
+   * @return mixed
+   */
+
+  public function getSettings();
+
+  /**
+   * @param mixed $settings
+   */
+
+  public function setSettings($settings);
+
+
+  /**
+   * @return mixed
+   */
+  public function getTypes();
+
+
+  /**
+   * @param $heartbeat_types
+   * @return mixed
+   */
+
+  public function setTypes($heartbeat_types);
+
 }

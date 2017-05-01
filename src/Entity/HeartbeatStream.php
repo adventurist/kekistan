@@ -201,6 +201,138 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
     return $this;
   }
 
+
+
+  /**
+   * @return mixed
+   */
+  public function getClass()
+  {
+    // TODO: Implement getClass() method.
+  }
+
+  /**
+   * @param mixed $class
+   */
+  public function setClass($class)
+  {
+    // TODO: Implement setClass() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getRealClass()
+  {
+    // TODO: Implement getRealClass() method.
+  }
+
+  /**
+   * @param mixed $real_class
+   */
+  public function setRealClass($real_class)
+  {
+    // TODO: Implement setRealClass() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getPath()
+  {
+    // TODO: Implement getPath() method.
+  }
+
+  /**
+   * @param mixed $path
+   */
+  public function setPath($path)
+  {
+    // TODO: Implement setPath() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getTitle()
+  {
+    // TODO: Implement getTitle() method.
+  }
+
+  /**
+   * @param mixed $title
+   */
+  public function setTitle($title)
+  {
+    // TODO: Implement setTitle() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getModule()
+  {
+    // TODO: Implement getModule() method.
+  }
+
+  /**
+   * @param mixed $module
+   */
+  public function setModule($module)
+  {
+    // TODO: Implement setModule() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getVariables()
+  {
+    // TODO: Implement getVariables() method.
+  }
+
+  /**
+   * @param mixed $variables
+   */
+  public function setVariables($variables)
+  {
+    // TODO: Implement setVariables() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getSettings()
+  {
+    // TODO: Implement getSettings() method.
+  }
+
+  /**
+   * @param mixed $settings
+   */
+  public function setSettings($settings)
+  {
+    // TODO: Implement setSettings() method.
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getTypes()
+  {
+    // TODO: Implement getTypes() method.
+  }
+
+  /**
+   * @param $heartbeat_types
+   * @return mixed
+   */
+  public function setTypes($heartbeat_types)
+  {
+    // TODO: Implement setTypes() method.
+  }
+
+
   /**
    * {@inheritdoc}
    */
@@ -279,6 +411,14 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
       ->setSetting('target_type', 'user')
       ->setQueryable(FALSE)
       ->setRevisionable(TRUE);
+
+    $fields['types'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Heartbeat Types'))
+      ->setDescription(t('The Heartbeat Types included in this stream'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'heartbeat_type')
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED);
+
 
     return $fields;
   }
