@@ -2,42 +2,33 @@
 
 namespace Drupal\heartbeat8\Form;
 
-use Drupal\Core\Entity\EntityForm;
+use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Class HeartbeatStreamForm.
+ * Form controller for Heartbeat stream edit forms.
  *
- * @package Drupal\heartbeat8\Form
+ * @ingroup heartbeat8
  */
-class HeartbeatStreamForm extends EntityForm {
+class HeartbeatStreamForm extends ContentEntityForm {
 
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, FormStateInterface $form_state) {
-    $form = parent::form($form, $form_state);
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    /* @var $entity \Drupal\heartbeat8\Entity\HeartbeatStream */
+    $form = parent::buildForm($form, $form_state);
 
-    $heartbeat_stream = $this->entity;
-    $form['label'] = [
-      '#type' => 'textfield',
-      '#title' => $this->t('Label'),
-      '#maxlength' => 255,
-      '#default_value' => $heartbeat_stream->label(),
-      '#description' => $this->t("Label for the Heartbeat stream."),
-      '#required' => TRUE,
-    ];
+    if (!$this->entity->isNew()) {
+      $form['new_revision'] = array(
+        '#type' => 'checkbox',
+        '#title' => $this->t('Create new revision'),
+        '#default_value' => FALSE,
+        '#weight' => 10,
+      );
+    }
 
-    $form['id'] = [
-      '#type' => 'machine_name',
-      '#default_value' => $heartbeat_stream->id(),
-      '#machine_name' => [
-        'exists' => '\Drupal\heartbeat8\Entity\HeartbeatStream::load',
-      ],
-      '#disabled' => !$heartbeat_stream->isNew(),
-    ];
-
-    /* You will need additional form elements for your custom properties. */
+    $entity = $this->entity;
 
     return $form;
   }
@@ -46,22 +37,35 @@ class HeartbeatStreamForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    $heartbeat_stream = $this->entity;
-    $status = $heartbeat_stream->save();
+    $entity = &$this->entity;
+
+    // Save as a new revision if requested to do so.
+    if (!$form_state->isValueEmpty('new_revision') && $form_state->getValue('new_revision') != FALSE) {
+      $entity->setNewRevision();
+
+      // If a new revision is created, save the current user as revision author.
+      $entity->setRevisionCreationTime(REQUEST_TIME);
+      $entity->setRevisionUserId(\Drupal::currentUser()->id());
+    }
+    else {
+      $entity->setNewRevision(FALSE);
+    }
+
+    $status = parent::save($form, $form_state);
 
     switch ($status) {
       case SAVED_NEW:
         drupal_set_message($this->t('Created the %label Heartbeat stream.', [
-          '%label' => $heartbeat_stream->label(),
+          '%label' => $entity->label(),
         ]));
         break;
 
       default:
         drupal_set_message($this->t('Saved the %label Heartbeat stream.', [
-          '%label' => $heartbeat_stream->label(),
+          '%label' => $entity->label(),
         ]));
     }
-    $form_state->setRedirectUrl($heartbeat_stream->toUrl('collection'));
+    $form_state->setRedirect('entity.heartbeat_stream.canonical', ['heartbeat_stream' => $entity->id()]);
   }
 
 }

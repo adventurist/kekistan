@@ -15,3 +15,8 @@ entity.heartbeat_stream.add_form:
   appears_on:
     - entity.heartbeat_stream.collection
 
+entity.heartbeat_stream.add_form:
+  route_name: entity.heartbeat_stream.add_form
+  title: 'Add Heartbeat stream'
+  appears_on:
+    - entity.heartbeat_stream.collection

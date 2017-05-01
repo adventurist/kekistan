@@ -2,263 +2,285 @@
 
 namespace Drupal\heartbeat8\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Field\BaseFieldDefinition;
+use Drupal\Core\Entity\RevisionableContentEntityBase;
+use Drupal\Core\Entity\EntityChangedTrait;
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the Heartbeat stream entity.
  *
- * @ConfigEntityType(
+ * @ingroup heartbeat8
+ *
+ * @ContentEntityType(
  *   id = "heartbeat_stream",
  *   label = @Translation("Heartbeat stream"),
  *   handlers = {
+ *     "storage" = "Drupal\heartbeat8\HeartbeatStreamStorage",
+ *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\heartbeat8\HeartbeatStreamListBuilder",
+ *     "views_data" = "Drupal\heartbeat8\Entity\HeartbeatStreamViewsData",
+ *
  *     "form" = {
+ *       "default" = "Drupal\heartbeat8\Form\HeartbeatStreamForm",
  *       "add" = "Drupal\heartbeat8\Form\HeartbeatStreamForm",
  *       "edit" = "Drupal\heartbeat8\Form\HeartbeatStreamForm",
- *       "delete" = "Drupal\heartbeat8\Form\HeartbeatStreamDeleteForm"
+ *       "delete" = "Drupal\heartbeat8\Form\HeartbeatStreamDeleteForm",
  *     },
+ *     "access" = "Drupal\heartbeat8\HeartbeatStreamAccessControlHandler",
  *     "route_provider" = {
  *       "html" = "Drupal\heartbeat8\HeartbeatStreamHtmlRouteProvider",
  *     },
  *   },
- *   config_prefix = "heartbeat_stream",
- *   admin_permission = "administer site configuration",
+ *   base_table = "heartbeat_stream",
+ *   revision_table = "heartbeat_stream_revision",
+ *   revision_data_table = "heartbeat_stream_field_revision",
+ *   admin_permission = "administer heartbeat stream entities",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "revision" = "vid",
+ *     "label" = "name",
+ *     "uuid" = "uuid",
+ *     "uid" = "user_id",
+ *     "langcode" = "langcode",
+ *     "status" = "status",
  *   },
  *   links = {
- *     "canonical" = "/admin/structure/heartbeat_stream/{heartbeat_stream}",
- *     "add-form" = "/admin/structure/heartbeat_stream/add",
- *     "edit-form" = "/admin/structure/heartbeat_stream/{heartbeat_stream}/edit",
- *     "delete-form" = "/admin/structure/heartbeat_stream/{heartbeat_stream}/delete",
- *     "collection" = "/admin/structure/heartbeat_stream"
- *   }
+ *     "canonical" = "/admin/structure/heartbeatstream/heartbeat_stream/{heartbeat_stream}",
+ *     "add-form" = "/admin/structure/heartbeatstream/heartbeat_stream/add",
+ *     "edit-form" = "/admin/structure/heartbeatstream/heartbeat_stream/{heartbeat_stream}/edit",
+ *     "delete-form" = "/admin/structure/heartbeatstream/heartbeat_stream/{heartbeat_stream}/delete",
+ *     "version-history" = "/admin/structure/heartbeatstream/heartbeat_stream/{heartbeat_stream}/revisions",
+ *     "revision" = "/admin/structure/heartbeatstream/heartbeat_stream/{heartbeat_stream}/revisions/{heartbeat_stream_revision}/view",
+ *     "revision_delete" = "/admin/structure/heartbeatstream/heartbeat_stream/{heartbeat_stream}/revisions/{heartbeat_stream_revision}/delete",
+ *     "collection" = "/admin/structure/heartbeatstream/heartbeat_stream",
+ *   },
+ *   field_ui_base_route = "heartbeat_stream.settings"
  * )
  */
-class HeartbeatStream extends ConfigEntityBase implements HeartbeatStreamInterface {
+class HeartbeatStream extends RevisionableContentEntityBase implements HeartbeatStreamInterface {
+
+  use EntityChangedTrait;
 
   /**
-   * The Heartbeat stream ID.
-   *
-   * @var string
+   * {@inheritdoc}
    */
-  protected $id;
-
-  /**
-   * The Heartbeat stream label.
-   *
-   * @var string
-   */
-  protected $label;
-
-
-  // Class name used.
-  protected $name;
-
-  // Class to variable for ease of read/write.
-  protected $class;
-
-  // Real class to load for cloned streams.
-  protected $real_class;
-
-  // The path to the class.
-  protected $path;
-
-  // Human readable name.
-  protected $title;
-
-  // Module where query builder is located.
-  protected $module;
-
-  // Extra variables.
-  //TODO variables might be put into config api
-  protected $variables;
-
-  // Indicates whether this stream has a block display or not.
-  protected $has_block = TRUE;
-
-  // Max number of items in block display.
-  protected $block_items_max = 25;
-
-  // Number to indicate how a block-pager should be shown.
-  protected $block_show_pager = 0;
-
-  // View mode for the block.
-  protected $block_view_mode = 'default';
-
-  // Maximum number of items in the page display.
-  protected $page_items_max = 50;
-
-  // Boolean to indicate of a page-pager should be shown.
-  protected $page_show_pager = 0;
-
-  // Boolean to indicate if the pager is ajax-driven.
-  protected $page_pager_ajax = 0;
-
-  // View mode for the page.
-  protected $page_view_mode = 'default';
-
-  // Setting for the number of grouped items maximum.
-  protected $show_message_times = 1;
-
-  // Setting for the number of grouped items maximum in a grouped message.
-  protected $show_message_times_grouped = 0;
-
-  // Denied message templates.
-  protected $messages_denied = array();
-
-  // Limit the number of messages by maximum messages to load.
-  protected $num_load_max = 100;
-
-  // Limit the timespan to group messages.
-  protected $grouping_seconds = 7200;
-
-  // Boolean for to skip the viewing user, defaults to false.
-  protected $skip_active_user = FALSE;
-
-  // Timestamp used to poll for newer messages.
-  protected $poll_messages = 0;
-
-  // How to notify there are newer messages.
-  protected $poll_messages_type = 0;
-
-  // Stream path is the path to the stream page (optional).
-  protected $stream_path;
-
-  // Stream user path is the path to a stream on the profile page (optional).
-  protected $stream_profile_path;
-
-  // Settings variable
-  protected $settings;
-
-  /**
-   * @return mixed
-   */
-  public function getName()
-  {
-    return $this->name;
+  public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
+    parent::preCreate($storage_controller, $values);
+    $values += array(
+      'user_id' => \Drupal::currentUser()->id(),
+    );
   }
 
   /**
-   * @param mixed $name
+   * {@inheritdoc}
    */
-  public function setName($name)
-  {
-    $this->name = $name;
+  public function preSave(EntityStorageInterface $storage) {
+    parent::preSave($storage);
+
+    foreach (array_keys($this->getTranslationLanguages()) as $langcode) {
+      $translation = $this->getTranslation($langcode);
+
+      // If no owner has been set explicitly, make the anonymous user the owner.
+      if (!$translation->getOwner()) {
+        $translation->setOwnerId(0);
+      }
+    }
+
+    // If no revision author has been set explicitly, make the heartbeat_stream owner the
+    // revision author.
+    if (!$this->getRevisionUser()) {
+      $this->setRevisionUserId($this->getOwnerId());
+    }
   }
 
   /**
-   * @return mixed
+   * {@inheritdoc}
    */
-  public function getClass()
-  {
-    return $this->class;
+  public function getName() {
+    return $this->get('name')->value;
   }
 
   /**
-   * @param mixed $class
+   * {@inheritdoc}
    */
-  public function setClass($class)
-  {
-    $this->class = $class;
+  public function setName($name) {
+    $this->set('name', $name);
+    return $this;
   }
 
   /**
-   * @return mixed
+   * {@inheritdoc}
    */
-  public function getRealClass()
-  {
-    return $this->real_class;
+  public function getCreatedTime() {
+    return $this->get('created')->value;
   }
 
   /**
-   * @param mixed $real_class
+   * {@inheritdoc}
    */
-  public function setRealClass($real_class)
-  {
-    $this->real_class = $real_class;
+  public function setCreatedTime($timestamp) {
+    $this->set('created', $timestamp);
+    return $this;
   }
 
   /**
-   * @return mixed
+   * {@inheritdoc}
    */
-  public function getPath()
-  {
-    return $this->path;
+  public function getOwner() {
+    return $this->get('user_id')->entity;
   }
 
   /**
-   * @param mixed $path
+   * {@inheritdoc}
    */
-  public function setPath($path)
-  {
-    $this->path = $path;
+  public function getOwnerId() {
+    return $this->get('user_id')->target_id;
   }
 
   /**
-   * @return mixed
+   * {@inheritdoc}
    */
-  public function getTitle()
-  {
-    return $this->title;
+  public function setOwnerId($uid) {
+    $this->set('user_id', $uid);
+    return $this;
   }
 
   /**
-   * @param mixed $title
+   * {@inheritdoc}
    */
-  public function setTitle($title)
-  {
-    $this->title = $title;
+  public function setOwner(UserInterface $account) {
+    $this->set('user_id', $account->id());
+    return $this;
   }
 
   /**
-   * @return mixed
+   * {@inheritdoc}
    */
-  public function getModule()
-  {
-    return $this->module;
+  public function isPublished() {
+    return (bool) $this->getEntityKey('status');
   }
 
   /**
-   * @param mixed $module
+   * {@inheritdoc}
    */
-  public function setModule($module)
-  {
-    $this->module = $module;
+  public function setPublished($published) {
+    $this->set('status', $published ? TRUE : FALSE);
+    return $this;
   }
 
   /**
-   * @return mixed
+   * {@inheritdoc}
    */
-  public function getVariables()
-  {
-    return $this->variables;
+  public function getRevisionCreationTime() {
+    return $this->get('revision_timestamp')->value;
   }
 
   /**
-   * @param mixed $variables
+   * {@inheritdoc}
    */
-  public function setVariables($variables)
-  {
-    $this->variables = $variables;
+  public function setRevisionCreationTime($timestamp) {
+    $this->set('revision_timestamp', $timestamp);
+    return $this;
   }
 
   /**
-   * @return mixed
+   * {@inheritdoc}
    */
-  public function getSettings()
-  {
-    return $this->settings;
+  public function getRevisionUser() {
+    return $this->get('revision_uid')->entity;
   }
 
   /**
-   * @param mixed $settings
+   * {@inheritdoc}
    */
-  public function setSettings($settings)
-  {
-    $this->settings = $settings;
+  public function setRevisionUserId($uid) {
+    $this->set('revision_uid', $uid);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+    $fields = parent::baseFieldDefinitions($entity_type);
+
+    $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Authored by'))
+      ->setDescription(t('The user ID of author of the Heartbeat stream entity.'))
+      ->setRevisionable(TRUE)
+      ->setSetting('target_type', 'user')
+      ->setSetting('handler', 'default')
+      ->setTranslatable(TRUE)
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'author',
+        'weight' => 0,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'entity_reference_autocomplete',
+        'weight' => 5,
+        'settings' => array(
+          'match_operator' => 'CONTAINS',
+          'size' => '60',
+          'autocomplete_type' => 'tags',
+          'placeholder' => '',
+        ),
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['name'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Name'))
+      ->setDescription(t('The name of the Heartbeat stream entity.'))
+      ->setRevisionable(TRUE)
+      ->setSettings(array(
+        'max_length' => 50,
+        'text_processing' => 0,
+      ))
+      ->setDefaultValue('')
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'string',
+        'weight' => -4,
+      ))
+      ->setDisplayOptions('form', array(
+        'type' => 'string_textfield',
+        'weight' => -4,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
+    $fields['status'] = BaseFieldDefinition::create('boolean')
+      ->setLabel(t('Publishing status'))
+      ->setDescription(t('A boolean indicating whether the Heartbeat stream is published.'))
+      ->setRevisionable(TRUE)
+      ->setDefaultValue(TRUE);
+
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time that the entity was created.'));
+
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the entity was last edited.'));
+
+    $fields['revision_timestamp'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Revision timestamp'))
+      ->setDescription(t('The time that the current revision was created.'))
+      ->setQueryable(FALSE)
+      ->setRevisionable(TRUE);
+
+    $fields['revision_uid'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Revision user ID'))
+      ->setDescription(t('The user ID of the author of the current revision.'))
+      ->setSetting('target_type', 'user')
+      ->setQueryable(FALSE)
+      ->setRevisionable(TRUE);
+
+    return $fields;
   }
 
 }

@@ -31,3 +31,36 @@ revert all heartbeat revisions:
 delete all heartbeat revisions:
   title: 'Delete all revisions'
   description: 'Role requires permission to <em>view Heartbeat revisions</em> and <em>delete rights</em> for heartbeat entities in question or <em>administer heartbeat entities</em>.'
+add heartbeat stream entities:
+  title: 'Create new Heartbeat stream entities'
+
+administer heartbeat stream entities:
+  title: 'Administer Heartbeat stream entities'
+  description: 'Allow to access the administration form to configure Heartbeat stream entities.'
+  restrict access: true
+
+delete heartbeat stream entities:
+  title: 'Delete Heartbeat stream entities'
+
+edit heartbeat stream entities:
+  title: 'Edit Heartbeat stream entities'
+
+access heartbeat stream overview:
+  title: 'Access the Heartbeat stream overview page'
+
+view published heartbeat stream entities:
+  title: 'View published Heartbeat stream entities'
+
+view unpublished heartbeat stream entities:
+  title: 'View unpublished Heartbeat stream entities'
+
+view all heartbeat stream revisions:
+  title: 'View all Heartbeat stream revisions'
+
+revert all heartbeat stream revisions:
+  title: 'Revert all Heartbeat stream revisions'
+  description: 'Role requires permission <em>view Heartbeat stream revisions</em> and <em>edit rights</em> for heartbeat stream entities in question or <em>administer heartbeat stream entities</em>.'
+
+delete all heartbeat stream revisions:
+  title: 'Delete all revisions'
+  description: 'Role requires permission to <em>view Heartbeat stream revisions</em> and <em>delete rights</em> for heartbeat stream entities in question or <em>administer heartbeat stream entities</em>.'

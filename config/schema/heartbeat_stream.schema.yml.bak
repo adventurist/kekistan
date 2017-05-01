@@ -1,5 +1,5 @@
 heartbeat8.heartbeat_stream.*:
-  type: config_entity
+  type: content_entity
   label: 'Heartbeat stream config'
   mapping:
     id:
