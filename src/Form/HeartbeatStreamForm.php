@@ -2,9 +2,11 @@
 
 namespace Drupal\heartbeat8\Form;
 
+use Drupal\heartbeat8\HeartbeatTypeServices;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for Heartbeat stream edit forms.
@@ -12,6 +14,40 @@ use Drupal\Core\Form\FormStateInterface;
  * @ingroup heartbeat8
  */
 class HeartbeatStreamForm extends ContentEntityForm {
+
+  protected $heartbeatTypeService;
+
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static($container->get('heartbeat8.heartbeattype'));
+  }
+
+
+  /**
+   * PHP 5 allows developers to declare constructor methods for classes.
+   * Classes which have a constructor method call this method on each newly-created object,
+   * so it is suitable for any initialization that the object may need before it is used.
+   *
+   * Note: Parent constructors are not called implicitly if the child class defines a constructor.
+   * In order to run a parent constructor, a call to parent::__construct() within the child constructor is required.
+   *
+   * param [ mixed $args [, $... ]]
+   * @param TreeBuilder $tree_builder
+   * @param Renderer $renderer
+   * @throws \Exception
+   */
+  public function __construct(HeartbeatTypeServices $heartbeatTypeService) {
+
+    $this->heartbeatTypeService = $heartbeatTypeService;
+
+  }
+
+
+
 
   /**
    * {@inheritdoc}
@@ -28,13 +64,14 @@ class HeartbeatStreamForm extends ContentEntityForm {
         '#weight' => 10,
       );
     }
-//    $query = Database::getConnection()->select('heartbeat_type')
+    
     $form['types'] = array(
-      '#type' => 'checkboxes',
-      '#options' => array(
 
-      ),
+      '#type' => 'checkboxes',
+      '#options' => $this->heartbeatTypeService->getTypes(),
+      
       '#title' => $this->t('Please select all the Heartbeat Types you wish to include in this stream'),
+
     );
 
     $entity = $this->entity;
