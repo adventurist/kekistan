@@ -26,6 +26,8 @@ class HeartbeatTypeForm extends EntityForm {
 
   private $tokenTree;
 
+  private $treeAdded = false;
+
 
 
   /**
@@ -179,14 +181,17 @@ class HeartbeatTypeForm extends EntityForm {
           '#type' => 'textfield',
           '#title' => t($messageArguments[$i]),
           '#description' => t('Map value to this variable'),
-          '#ajax' => [
+          '#default_value' =>
+            isset($heartbeat_type->getVariables()[0]) && !empty($heartbeat_type->getVariables[0]) ?
+              $heartbeat_type->getVariables[$i] : '',
+          '#ajax' => !$this->treeAdded ? [
             'callback' => '::tokenSelectDialog',
             'event' => 'focus',
             'progress' => array(
               'type' => 'throbber',
               'message' => t('Rebuilding arguments'),
             ),
-          ]
+          ] : [],
         );
 
       }
@@ -341,6 +346,8 @@ class HeartbeatTypeForm extends EntityForm {
     $heartbeat_type->set('description', $form_state->getValue('description'));
     $heartbeat_type->set('message', $form_state->getValue('message'));
     $heartbeat_type->set('perms', $form_state->getValue('perms'));
+    $heartbeat_type->set('messageId', $form_state->getValue('message_id'));
+    $heartbeat_type->set('variables', $form_state->getValue('variables'));
 //    $heartbeat_type
     $status = $heartbeat_type->save();
 
@@ -409,7 +416,7 @@ class HeartbeatTypeForm extends EntityForm {
     // Add a command, InvokeCommand, which allows for custom jQuery commands.
     // In this case, we alter the color of the description.
     $ajax_response->addCommand(new InvokeCommand('.token-tree', 'css', array('display', 'block')));
-
+    $this->treeAdded = TRUE;
     // Return the AjaxResponse Object.
     return $ajax_response;
   }
