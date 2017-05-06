@@ -66,6 +66,12 @@ class HeartbeatTypeForm extends EntityForm {
   }
 
 
+  public function buildForm(array $form, FormStateInterface $form_state) {
+
+    $doStuff = 'stuff';
+    return parent::buildForm($form, $form_state);
+  }
+
 
   /**
    * {@inheritdoc}
@@ -86,16 +92,6 @@ class HeartbeatTypeForm extends EntityForm {
       '#maxlength' => 255,
       '#default_value' => $heartbeat_type->label(),
       '#description' => $this->t("Label for the Heartbeat Type."),
-      '#required' => TRUE,
-    );
-
-
-    $form['message_id'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('messageId'),
-      '#maxlength' => 255,
-      '#default_value' => $heartbeat_type->getMessageId(),
-      '#description' => $this->t("Message ID for the Heartbeat Type."),
       '#required' => TRUE,
     );
 
@@ -136,11 +132,11 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => $heartbeat_type->getPerms(),
       '#description' => $this->t("Default permissions to view Heartbeats of this type"),
       '#options' => array(
-        0 => heartbeat8\HEARTBEAT_NONE,
-        1 => heartbeat8\HEARTBEAT_PRIVATE,
-        2 => heartbeat8\HEARTBEAT_PUBLIC_TO_ADDRESSEE,
-        3 => heartbeat8\HEARTBEAT_PUBLIC_TO_CONNECTED,
-        4 => heartbeat8\HEARTBEAT_PUBLIC_TO_ALL,
+          'None' => heartbeat8\HEARTBEAT_NONE,
+        'Private' => heartbeat8\HEARTBEAT_PRIVATE,
+        'Public to Addressee' => heartbeat8\HEARTBEAT_PUBLIC_TO_ADDRESSEE,
+        'Public to Connected' => heartbeat8\HEARTBEAT_PUBLIC_TO_CONNECTED,
+        'Public to All' => heartbeat8\HEARTBEAT_PUBLIC_TO_ALL,
 
       ),
       '#required' => TRUE,
@@ -153,9 +149,9 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => 0,
       '#description' => $this->t("Type of group associated with Heartbeats of this type"),
       '#options' => array(
-        0 => heartbeat8\HEARTBEAT_GROUP_NONE,
-        1 => heartbeat8\HEARTBEAT_GROUP_SINGLE,
-        2 => heartbeat8\HEARTBEAT_GROUP_SUMMARY,
+        'None' => heartbeat8\HEARTBEAT_GROUP_NONE,
+        'Single' => heartbeat8\HEARTBEAT_GROUP_SINGLE,
+        'Group' => heartbeat8\HEARTBEAT_GROUP_SUMMARY,
       ),
       '#required' => TRUE,
     );
@@ -169,7 +165,9 @@ class HeartbeatTypeForm extends EntityForm {
 
     $messageArguments = $form_state->get('data_hidden');
 
-    if ($messageArguments === NULL) { $messageArguments = $form_state->set('data_hidden', array()); }
+    if ($messageArguments === NULL) {
+      $messageArguments = $this->extractMessageArguments($heartbeat_type->getMessage());
+    }
 
     $argNum = count($messageArguments);
 
@@ -177,13 +175,18 @@ class HeartbeatTypeForm extends EntityForm {
 
       if (is_array($messageArguments) && $messageArguments[$i] != null) {
 
+        $variableValue =
+          isset($heartbeat_type->getVariables()[$i])
+          &&
+          !empty($heartbeat_type->getVariables()[$i])
+            ?
+          $heartbeat_type->getVariables()[$i] : '';
+
         $form['variables'][$i] = array(
           '#type' => 'textfield',
           '#title' => t($messageArguments[$i]),
           '#description' => t('Map value to this variable'),
-          '#default_value' =>
-            isset($heartbeat_type->getVariables()[0]) && !empty($heartbeat_type->getVariables[0]) ?
-              $heartbeat_type->getVariables[$i] : '',
+          '#default_value' =>$variableValue,
           '#ajax' => !$this->treeAdded ? [
             'callback' => '::tokenSelectDialog',
             'event' => 'focus',
@@ -221,116 +224,6 @@ class HeartbeatTypeForm extends EntityForm {
       '#disabled' => !$heartbeat_type->isNew(),
     ];
 
-
-    //Build temporary token form for developmental assistance
-    $z = 0;
-//    foreach ($tokens['tokens'] as $key => $type) {
-//      if (is_array($type)) {
-//        if (!is_array(current($type))) {
-//
-//          $form[$key] = array(
-//            '#type' => 'details',
-//            '#title' => t((string)strtoupper($key)),
-//            '#collapsible' => TRUE,
-//            '#collapsed' => TRUE,
-//            '#states' => array(
-//              'expanded' => array(
-//                ':input[name="'.$key.'"]' => array('value' => 'expand'),
-//              ),
-//            ),
-//          );
-//          $s = 0;
-//          foreach ($type as $token) {
-//            if (!is_array($token)) {
-//
-//              $form[$key][$token->title] = array(
-//                '#type' => 'item',
-//                '#markup' => t((string)$token->title),
-//                '#attributes' => array('tabindex' => 20+$z)
-//              );
-//            } else {
-//              foreach ($token as $tkey => $subtoken) {
-//
-//                $form[$tkey][is_array($subtoken) ? key($subtoken) : $subtoken] = array(
-//                  '#type' => 'details',
-//                  '#title' => t('token'),
-//                  '#collapsible' => TRUE,
-//                  '#collapsed' => TRUE,
-//                  '#states' => array(
-//                    ':input[name="'.is_array($subtoken) ? key($subtoken) : $subtoken.'"]' => array('value' => 'expand2'),
-//                  ));
-//              }
-//            }
-//            $s++;
-//          }
-//          ksort($form[$key]);
-//        } else {
-//          $form[$key] = array(
-//            '#type' => 'details',
-//            '#title' => t((string)strtoupper($key)),
-//            '#collapsible' => TRUE,
-//            '#collapsed' => TRUE,
-//            '#states' => array(
-//              'expanded' => array(
-//                ':input[name="'.$key.'"]' => array('value' => 'expand'),
-//              ),
-//            ),
-//          );
-//          foreach ($type as $skey => $subType) {
-//            if (is_array($subType)) {
-//              $form[$key][$skey] = array(
-//                '#type' => 'details',
-//                '#title' => t((string)$skey),
-//                '#collapsible' => TRUE,
-//                '#collapsed' => TRUE,
-//                '#states' => array(
-//                  'expanded' => array(
-//                    ':input[name="'.$skey.'"]' => array('value' => 'expand'),
-//                  ),
-//                ),
-//              );
-//              foreach ($subType as $vskey => $token) {
-//                if (!is_array($token)) {
-//                  $form[$key][$skey][$vskey] = array(
-//                    '#type' => 'item',
-////                                            '#title' => t(is_array($token) ? $vskey : $token),
-//                    '#markup' => t(is_string($token) ? $token : is_string($vskey) ? $vskey : $key),
-//                    '#attributes' => array('tabindex' => 20+$z)
-//                  );
-//                } else {
-//                  $form[$key][$skey][$vskey] = array(
-//                    '#type' => 'details',
-//                    '#title' => $vskey,
-//                    '#collapsible' => TRUE,
-//                    '#collapsed' => TRUE,
-//                    '#states' => array(
-//                      'expanded' => array(
-//                        ':input[name="'.$vskey.'"]' => array('value' => 'expand'),
-//                      ),
-//                    ),
-//                  );
-//                  foreach ($token as $subKey => $subtoken) {
-//                    $form[$key][$skey][$vskey][is_array($subtoken->title) ? $subKey : $subtoken->title] = array(
-//                      '#type' => 'item',
-//                      '#markup' => t((string)is_array($subtoken) ? $subKey : $subtoken->title),
-//                    );
-//                  }
-//                }
-//              }
-//              ksort($form[$key][$skey]);
-//            }
-//          }
-//        }
-//      } else {
-//        $form[$key][$token == null ? 'null' : $token] = array(
-//          '#type' => 'details',
-//          '#title' => t($token == null ? 'null' : (string)$token),
-//          '#markup' => t($token == null ? 'null' : (string)$token),
-//        );
-//      }
-//      $z++;
-//    }
-
     $form_state->setCached(FALSE);
 
     return parent::form($form, $form_state, $heartbeat_type);
@@ -343,10 +236,8 @@ class HeartbeatTypeForm extends EntityForm {
     $heartbeat_type = $this->entity;
 
     $heartbeat_type->set('description', $form_state->getValue('description'));
-    $heartbeat_type->set('description', $form_state->getValue('description'));
     $heartbeat_type->set('message', $form_state->getValue('message'));
     $heartbeat_type->set('perms', $form_state->getValue('perms'));
-    $heartbeat_type->set('messageId', $form_state->getValue('message_id'));
     $heartbeat_type->set('variables', $form_state->getValue('variables'));
 //    $heartbeat_type
     $status = $heartbeat_type->save();
@@ -377,17 +268,7 @@ class HeartbeatTypeForm extends EntityForm {
     $messageArgString = $form_state->getValue('message');
     $messageArguments = array_slice(explode('!', $messageArgString), 1);
 
-    $argsArray = array();
-
-    foreach ($messageArguments as $argument) {
-
-      if (strlen($argument) > 0) {
-
-        $cleanArgument = strpos($argument, ' ') ? substr($argument, 0, strpos($argument, ' ')) : $argument;
-        $argsArray[] = $cleanArgument;
-
-      }
-    }
+    $argsArray = $this->extractMessageArguments($messageArguments);
 
     $form_state->set('data_hidden', $argsArray);
     $form_state->setRebuild();
@@ -400,6 +281,23 @@ class HeartbeatTypeForm extends EntityForm {
     return $form['variables'];
   }
 
+
+  private function extractMessageArguments($message) {
+    $messageArguments = array_slice(explode('!', $message), 1);
+
+    $argsArray = array();
+
+    foreach ($messageArguments as $argument) {
+
+      if (strlen($argument) > 0) {
+
+        $cleanArgument = strpos($argument, ' ') ? substr($argument, 0, strpos($argument, ' ')) : $argument;
+        $argsArray[] = $cleanArgument;
+
+      }
+    }
+    return $argsArray;
+  }
 
   public function tokenSelectDialog(array &$form, FormStateInterface $form_state) {
     // Instantiate an AjaxResponse Object to return.
