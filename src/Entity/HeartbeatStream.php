@@ -60,9 +60,21 @@ use Drupal\user\UserInterface;
  *   field_ui_base_route = "heartbeat_stream.settings"
  * )
  */
+
 class HeartbeatStream extends RevisionableContentEntityBase implements HeartbeatStreamInterface {
 
   use EntityChangedTrait;
+
+
+
+  protected $class;
+  protected $realClass;
+  protected $name;
+  protected $module;
+  protected $title;
+  protected $path;
+  protected $settings;
+  protected $variables;
 
   /**
    * {@inheritdoc}
