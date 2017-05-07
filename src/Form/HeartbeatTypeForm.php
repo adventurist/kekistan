@@ -132,11 +132,11 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => $heartbeat_type->getPerms(),
       '#description' => $this->t("Default permissions to view Heartbeats of this type"),
       '#options' => array(
-          'None' => heartbeat8\HEARTBEAT_NONE,
-        'Private' => heartbeat8\HEARTBEAT_PRIVATE,
-        'Public to Addressee' => heartbeat8\HEARTBEAT_PUBLIC_TO_ADDRESSEE,
-        'Public to Connected' => heartbeat8\HEARTBEAT_PUBLIC_TO_CONNECTED,
-        'Public to All' => heartbeat8\HEARTBEAT_PUBLIC_TO_ALL,
+        heartbeat8\HEARTBEAT_NONE => 'None',
+        heartbeat8\HEARTBEAT_PRIVATE => 'Private',
+        heartbeat8\HEARTBEAT_PUBLIC_TO_ADDRESSEE => 'Public to Addressee',
+        heartbeat8\HEARTBEAT_PUBLIC_TO_CONNECTED => 'Public to Connected',
+        heartbeat8\HEARTBEAT_PUBLIC_TO_ALL => 'Public to All',
 
       ),
       '#required' => TRUE,
@@ -149,9 +149,9 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => 0,
       '#description' => $this->t("Type of group associated with Heartbeats of this type"),
       '#options' => array(
-        'None' => heartbeat8\HEARTBEAT_GROUP_NONE,
-        'Single' => heartbeat8\HEARTBEAT_GROUP_SINGLE,
-        'Group' => heartbeat8\HEARTBEAT_GROUP_SUMMARY,
+        heartbeat8\HEARTBEAT_GROUP_NONE => 'None',
+        heartbeat8\HEARTBEAT_GROUP_SINGLE =>'Single',
+        heartbeat8\HEARTBEAT_GROUP_SUMMARY => 'Group',
       ),
       '#required' => TRUE,
     );
