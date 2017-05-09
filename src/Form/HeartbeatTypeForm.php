@@ -266,9 +266,8 @@ class HeartbeatTypeForm extends EntityForm {
   public function rebuildMessageArguments(array &$form, FormStateInterface $form_state) {
 
     $messageArgString = $form_state->getValue('message');
-    $messageArguments = array_slice(explode('!', $messageArgString), 1);
 
-    $argsArray = $this->extractMessageArguments($messageArguments);
+    $argsArray = $this->extractMessageArguments($messageArgString);
 
     $form_state->set('data_hidden', $argsArray);
     $form_state->setRebuild();

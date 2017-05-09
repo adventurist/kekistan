@@ -2,6 +2,7 @@
 
 namespace Drupal\heartbeat8\Entity;
 
+use Drupal\heartbeat8\Entity\HeartbeatType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
@@ -46,6 +47,7 @@ use Drupal\user\UserInterface;
  *     "uid" = "user_id",
  *     "langcode" = "langcode",
  *     "status" = "status",
+ *     "types" = "types",
  *   },
  *   links = {
  *     "canonical" = "/admin/structure/heartbeatstream/heartbeat_stream/{heartbeat_stream}",
@@ -66,7 +68,6 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
   use EntityChangedTrait;
 
 
-
   protected $class;
   protected $realClass;
   protected $name;
@@ -75,6 +76,119 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
   protected $path;
   protected $settings;
   protected $variables;
+  protected $types;
+
+  /**
+   * @return array
+   */
+  public function getTypes() {
+    return $this->types;
+  }
+
+  /**
+   * @param array use Drupal\heartbeat8\Entity\HeartbeatType $types
+   */
+  public function setTypes($types) {
+    $this->types = $types;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getClass() {
+    return $this->class;
+  }
+
+  /**
+   * @param mixed $class
+   */
+  public function setClass($class) {
+    $this->class = $class;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getRealClass() {
+    return $this->realClass;
+  }
+
+  /**
+   * @param mixed $realClass
+   */
+  public function setRealClass($realClass) {
+    $this->realClass = $realClass;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getModule() {
+    return $this->module;
+  }
+
+  /**
+   * @param mixed $module
+   */
+  public function setModule($module) {
+    $this->module = $module;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getTitle() {
+    return $this->title;
+  }
+
+  /**
+   * @param mixed $title
+   */
+  public function setTitle($title) {
+    $this->title = $title;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getPath() {
+    return $this->path;
+  }
+
+  /**
+   * @param mixed $path
+   */
+  public function setPath($path) {
+    $this->path = $path;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getSettings() {
+    return $this->settings;
+  }
+
+  /**
+   * @param mixed $settings
+   */
+  public function setSettings($settings) {
+    $this->settings = $settings;
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getVariables() {
+    return $this->variables;
+  }
+
+  /**
+   * @param mixed $variables
+   */
+  public function setVariables($variables) {
+    $this->variables = $variables;
+  }
 
   /**
    * {@inheritdoc}
@@ -213,136 +327,6 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
     return $this;
   }
 
-
-
-  /**
-   * @return mixed
-   */
-  public function getClass()
-  {
-    // TODO: Implement getClass() method.
-  }
-
-  /**
-   * @param mixed $class
-   */
-  public function setClass($class)
-  {
-    // TODO: Implement setClass() method.
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getRealClass()
-  {
-    // TODO: Implement getRealClass() method.
-  }
-
-  /**
-   * @param mixed $real_class
-   */
-  public function setRealClass($real_class)
-  {
-    // TODO: Implement setRealClass() method.
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getPath()
-  {
-    // TODO: Implement getPath() method.
-  }
-
-  /**
-   * @param mixed $path
-   */
-  public function setPath($path)
-  {
-    // TODO: Implement setPath() method.
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getTitle()
-  {
-    // TODO: Implement getTitle() method.
-  }
-
-  /**
-   * @param mixed $title
-   */
-  public function setTitle($title)
-  {
-    // TODO: Implement setTitle() method.
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getModule()
-  {
-    // TODO: Implement getModule() method.
-  }
-
-  /**
-   * @param mixed $module
-   */
-  public function setModule($module)
-  {
-    // TODO: Implement setModule() method.
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getVariables()
-  {
-    // TODO: Implement getVariables() method.
-  }
-
-  /**
-   * @param mixed $variables
-   */
-  public function setVariables($variables)
-  {
-    // TODO: Implement setVariables() method.
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getSettings()
-  {
-    // TODO: Implement getSettings() method.
-  }
-
-  /**
-   * @param mixed $settings
-   */
-  public function setSettings($settings)
-  {
-    // TODO: Implement setSettings() method.
-  }
-
-  /**
-   * @return mixed
-   */
-  public function getTypes()
-  {
-    // TODO: Implement getTypes() method.
-  }
-
-  /**
-   * @param $heartbeat_types
-   * @return mixed
-   */
-  public function setTypes($heartbeat_types)
-  {
-    // TODO: Implement setTypes() method.
-  }
 
 
   /**

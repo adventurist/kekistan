@@ -2,7 +2,12 @@
 
 namespace Drupal\heartbeat8\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\EntityManager;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
 use Drupal\heartbeat8\HeartbeatTypeServices;
+use Drupal\heartbeat8\Entity\HeartbeatStream;
+use Drupal\heartbeat8\Entity\HeartbeatType;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -23,7 +28,12 @@ class HeartbeatStreamForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('heartbeat8.heartbeattype'));
+    return new static(
+      $container->get('heartbeat8.heartbeattype'),
+      $container->get('entity.manager'),
+      $container->get('entity_type.bundle.info'),
+      $container->get('datetime.time')
+    );
   }
 
 
@@ -40,8 +50,8 @@ class HeartbeatStreamForm extends ContentEntityForm {
    * @param Renderer $renderer
    * @throws \Exception
    */
-  public function __construct(HeartbeatTypeServices $heartbeatTypeService) {
-
+  public function __construct(HeartbeatTypeServices $heartbeatTypeService, EntityManager $entityManager) {
+    parent::__construct($entityManager);
     $this->heartbeatTypeService = $heartbeatTypeService;
 
   }
@@ -64,12 +74,12 @@ class HeartbeatStreamForm extends ContentEntityForm {
         '#weight' => 10,
       );
     }
-    
+
     $form['types'] = array(
 
       '#type' => 'checkboxes',
       '#options' => $this->heartbeatTypeService->getTypes(),
-      
+
       '#title' => $this->t('Please select all the Heartbeat Types you wish to include in this stream'),
 
     );
@@ -95,6 +105,12 @@ class HeartbeatStreamForm extends ContentEntityForm {
     }
     else {
       $entity->setNewRevision(FALSE);
+    }
+    if ($entity instanceof HeartbeatStream) {
+      $heartbeatTypes = $form_state->getValue('types');
+      $entity->set('types', $heartbeatTypes);
+      $entity->setTypes($heartbeatTypes);
+      $entity->save();
     }
 
     $status = parent::save($form, $form_state);
