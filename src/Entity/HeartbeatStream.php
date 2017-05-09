@@ -89,105 +89,106 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
    * @param array use Drupal\heartbeat8\Entity\HeartbeatType $types
    */
   public function setTypes($types) {
-    $this->types = $types;
+    $this->set('types', $types);
+    return $this;
   }
 
   /**
    * @return mixed
    */
   public function getClass() {
-    return $this->class;
+    return $this->get('class');
   }
 
   /**
    * @param mixed $class
    */
   public function setClass($class) {
-    $this->class = $class;
+    $this->set('class', $class);
   }
 
   /**
    * @return mixed
    */
   public function getRealClass() {
-    return $this->realClass;
+    return $this->get('realClass');
   }
 
   /**
    * @param mixed $realClass
    */
   public function setRealClass($realClass) {
-    $this->realClass = $realClass;
+    $this->set('realClass', $realClass);
   }
 
   /**
    * @return mixed
    */
   public function getModule() {
-    return $this->module;
+    return $this->get('module');
   }
 
   /**
    * @param mixed $module
    */
   public function setModule($module) {
-    $this->module = $module;
+    $this->set('module', $module);
   }
 
   /**
    * @return mixed
    */
   public function getTitle() {
-    return $this->title;
+    return $this->get('title');
   }
 
   /**
    * @param mixed $title
    */
   public function setTitle($title) {
-    $this->title = $title;
+    $this->set('title', $title);
   }
 
   /**
    * @return mixed
    */
   public function getPath() {
-    return $this->path;
+    return $this->get('path');
   }
 
   /**
    * @param mixed $path
    */
   public function setPath($path) {
-    $this->path = $path;
+    $this->set('path', $path);
   }
 
   /**
    * @return mixed
    */
   public function getSettings() {
-    return $this->settings;
+    return $this->get('settings');
   }
 
   /**
    * @param mixed $settings
    */
   public function setSettings($settings) {
-    $this->settings = $settings;
+    $this->set('settings ', $settings);
   }
 
   /**
    * @return mixed
    */
   public function getVariables() {
-    return $this->variables;
+    return $this->get('variables');
   }
 
   /**
    * @param mixed $variables
    */
   public function setVariables($variables) {
-    $this->variables = $variables;
+    $this->set('variables', $variables);
   }
 
   /**
@@ -411,9 +412,10 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
     $fields['types'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Heartbeat Types'))
       ->setDescription(t('The Heartbeat Types included in this stream'))
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setRequired(TRUE)
       ->setRevisionable(TRUE)
-      ->setSetting('target_type', 'heartbeat_type')
-      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED);
+      ->setSetting('target_type', 'heartbeat_type');
 
 
     return $fields;

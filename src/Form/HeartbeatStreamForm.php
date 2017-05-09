@@ -106,10 +106,12 @@ class HeartbeatStreamForm extends ContentEntityForm {
     else {
       $entity->setNewRevision(FALSE);
     }
+
     if ($entity instanceof HeartbeatStream) {
-      $heartbeatTypes = $form_state->getValue('types');
-      $entity->set('types', $heartbeatTypes);
-      $entity->setTypes($heartbeatTypes);
+
+      foreach ($form_state->getValue('types') as $type) {
+        $entity->set('types', $type);
+      }
       $entity->save();
     }
 
