@@ -84,7 +84,6 @@ class HeartbeatStreamForm extends ContentEntityForm {
 
     );
 
-    $entity = $this->entity;
 
     return $form;
   }
@@ -110,7 +109,7 @@ class HeartbeatStreamForm extends ContentEntityForm {
     if ($entity instanceof HeartbeatStream) {
 
       foreach ($form_state->getValue('types') as $type) {
-        $entity->set('types', $type);
+        $entity->get('types')->appendItem($type);
       }
       $entity->save();
     }

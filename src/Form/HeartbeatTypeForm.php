@@ -187,14 +187,14 @@ class HeartbeatTypeForm extends EntityForm {
           '#title' => t($messageArguments[$i]),
           '#description' => t('Map value to this variable'),
           '#default_value' =>$variableValue,
-          '#ajax' => !$this->treeAdded ? [
-            'callback' => '::tokenSelectDialog',
-            'event' => 'focus',
-            'progress' => array(
-              'type' => 'throbber',
-              'message' => t('Rebuilding arguments'),
-            ),
-          ] : [],
+//          '#ajax' => !$this->treeAdded ? [
+//            'callback' => '::tokenSelectDialog',
+//            'event' => 'focus',
+//            'progress' => array(
+//              'type' => 'throbber',
+//              'message' => t('Rebuilding arguments'),
+//            ),
+//          ] : [],
         );
 
       }
