@@ -3,3 +3,7 @@ services:
     class: Drupal\heartbeat8\HeartbeatTypeServices
     arguments: ['@entity.query']
 
+  heartbeatstream:
+    class: Drupal\heartbeat8\HeartbeatStreamServices
+    arguments: ["@entity_type.manager", "@entity_type.repository"]
+
