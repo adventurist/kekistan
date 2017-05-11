@@ -8,6 +8,7 @@
 namespace Drupal\heartbeat8;
 
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\heartbeat8\Entity\Heartbeat;
 use Drupal\heartbeat8\Entity\HeartbeatType;
 
@@ -86,6 +87,20 @@ function heartbeat8_theme_suggestions_heartbeat(array $variables) {
   return $suggestions;
 }
 
+/**
+ * Implements hook_entity_insert().
+ */
+function heartbeat8_entity_insert(EntityInterface $entity) {
+
+  $heartbeatTypeService = \Drupal::service('heartbeat8.heartbeattype');
+
+  foreach ($heartbeatTypeService->getTypes() as $type) {
+    $heartbeatTypeEntity = \Drupal::entityTypeManager()->getStorage('heartbeat_type')->load($type);
+
+
+  }
+
+}
 
 
 //TODO Add heartbeat language to Javascript

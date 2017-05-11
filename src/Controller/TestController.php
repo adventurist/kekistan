@@ -60,6 +60,11 @@ class TestController extends ControllerBase {
       $arg .= '   ' . $i . '. ' . $heartbeatType['target_id'];
       $i++;
     }
+
+    $heartbeatTypeService = \Drupal::service('heartbeat8.heartbeattype');
+    foreach ($heartbeatTypeService->getTypes() as $type) {
+      $heartbeatTypeEntity = \Drupal::entityTypeManager()->getStorage('heartbeat_type')->load($type);
+    }
     $emptyVariable = 'not empty';
 
     return [
