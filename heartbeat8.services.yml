@@ -5,5 +5,9 @@ services:
 
   heartbeatstream:
     class: Drupal\heartbeat8\HeartbeatStreamServices
-    arguments: ["@entity_type.manager", "@entity_type.repository"]
+    arguments: ["@entity_type.manager", "@entity_type.repository", '@entity.query']
+
+  heartbeatstreamalt:
+    class: Drupal\heartbeat8\HeartbeatAltServices
+    arguments: ['@entity.query', '@entity.manager', '@entity_type.manager', '@entity_type.repository', '@heartbeat8.heartbeattype']
 

@@ -5,12 +5,15 @@
  * Contains heartbeat8.module.
  */
 
-namespace Drupal\heartbeat8;
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\node\NodeInterface;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Entity;
 use Drupal\heartbeat8\Entity\Heartbeat;
 use Drupal\heartbeat8\Entity\HeartbeatType;
+
 
 //TODO include Streams (Entities already added with use statements on lines 9-10)
 
@@ -92,16 +95,24 @@ function heartbeat8_theme_suggestions_heartbeat(array $variables) {
  */
 function heartbeat8_entity_insert(EntityInterface $entity) {
 
-  $heartbeatTypeService = \Drupal::service('heartbeat8.heartbeattype');
+  $thisiswhere = 'ithappens';
+  $nid = $entity->id();
 
-  foreach ($heartbeatTypeService->getTypes() as $type) {
-    $heartbeatTypeEntity = \Drupal::entityTypeManager()->getStorage('heartbeat_type')->load($type);
+  if ($nid) {
+    $heartbeatTypeService = \Drupal::service('heartbeat8.heartbeattype');
+
+    foreach ($heartbeatTypeService->getTypes() as $type) {
+      $heartbeatTypeEntity = \Drupal::entityTypeManager()->getStorage('heartbeat_type')->load($type);
 
 
+    }
   }
 
-}
+  \Drupal::logger('content')->notice('Entity Insert
+   called !');
 
+
+}
 
 //TODO Add heartbeat language to Javascript
 //TODO Determine necessity of polling

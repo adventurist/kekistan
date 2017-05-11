@@ -17,14 +17,14 @@ class TestController extends ControllerBase {
   /**
    * Drupal\heartbeat8\HeartbeatTypeServices definition.
    *
-   * @var Drupal\heartbeat8\HeartbeatTypeServices
+   * @var HeartbeatTypeServices
    */
   protected $heartbeat8_heartbeattype;
 
   /**
    * Drupal\heartbeat8\HeartbeatStreamServices definition.
    *
-   * @var Drupal\heartbeat8\HeartbeatStreamServices
+   * @var HeartbeatStreamServices
    */
   protected $heartbeatstream;
   /**
@@ -53,12 +53,20 @@ class TestController extends ControllerBase {
    */
   public function start($arg) {
 
-    $streamEntity = $this->heartbeatstream->getEntityById(1);
-    $types = $streamEntity->get('types');
-    $i = 1;
-    foreach($types->getValue() as $heartbeatType) {
-      $arg .= '   ' . $i . '. ' . $heartbeatType['target_id'];
-      $i++;
+    $streamEntities = $this->heartbeatstream->loadAllEntities()->execute();
+
+    foreach ($streamEntities as $streamEntityId) {
+
+      $streamEntity = $this->heartbeatstream->getEntityById($streamEntityId);
+      $types = $streamEntity->get('types');
+      $arg .= 'Stream::   ' . $streamEntity->id();
+
+      $i = 1;
+
+      foreach ($types->getValue() as $heartbeatType) {
+        $arg .= '   ' . $i . '. ' . $heartbeatType['target_id'];
+        $i++;
+      }
     }
 
     $heartbeatTypeService = \Drupal::service('heartbeat8.heartbeattype');
