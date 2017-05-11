@@ -4,6 +4,7 @@ namespace Drupal\heartbeat8\Form;
 
 use Drupal\Core\Render\Renderer;
 use Drupal\heartbeat8;
+use Drupal\heartbeat8\Entity;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\InvokeCommand;
@@ -29,12 +30,14 @@ class HeartbeatTypeForm extends EntityForm {
   private $treeAdded = false;
 
 
-
   /**
    * {@inheritdoc}
+   * @throws \Exception
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('token.tree_builder'), $container->get('renderer'));
+    return new static(
+      $container->get('token.tree_builder'),
+      $container->get('renderer'));
   }
 
 
@@ -132,11 +135,11 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => $heartbeat_type->getPerms(),
       '#description' => $this->t("Default permissions to view Heartbeats of this type"),
       '#options' => array(
-        heartbeat8\HEARTBEAT_NONE => 'None',
-        heartbeat8\HEARTBEAT_PRIVATE => 'Private',
-        heartbeat8\HEARTBEAT_PUBLIC_TO_ADDRESSEE => 'Public to Addressee',
-        heartbeat8\HEARTBEAT_PUBLIC_TO_CONNECTED => 'Public to Connected',
-        heartbeat8\HEARTBEAT_PUBLIC_TO_ALL => 'Public to All',
+        HEARTBEAT_NONE => 'None',
+        HEARTBEAT_PRIVATE => 'Private',
+        HEARTBEAT_PUBLIC_TO_ADDRESSEE => 'Public to Addressee',
+        HEARTBEAT_PUBLIC_TO_CONNECTED => 'Public to Connected',
+        HEARTBEAT_PUBLIC_TO_ALL => 'Public to All',
 
       ),
       '#required' => TRUE,
@@ -149,9 +152,9 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => 0,
       '#description' => $this->t("Type of group associated with Heartbeats of this type"),
       '#options' => array(
-        heartbeat8\HEARTBEAT_GROUP_NONE => 'None',
-        heartbeat8\HEARTBEAT_GROUP_SINGLE =>'Single',
-        heartbeat8\HEARTBEAT_GROUP_SUMMARY => 'Group',
+        HEARTBEAT_GROUP_NONE => 'None',
+        HEARTBEAT_GROUP_SINGLE =>'Single',
+        HEARTBEAT_GROUP_SUMMARY => 'Group',
       ),
       '#required' => TRUE,
     );

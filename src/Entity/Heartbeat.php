@@ -69,6 +69,31 @@ use Drupal\user\UserInterface;
  *   field_ui_base_route = "entity.heartbeat_type.edit_form"
  * )
  */
+
+// Always block from display
+const HEARTBEAT_NONE = -1;
+
+// Display only activity messages that are mine or addressed to me
+const HEARTBEAT_PRIVATE = 0;
+
+// Only the person that is chosen by the actor, can see the message
+const HEARTBEAT_PUBLIC_TO_ADDRESSEE = 1;
+
+// Display activity message of all my user relations, described in contributed modules
+const HEARTBEAT_PUBLIC_TO_CONNECTED = 2;
+
+// Everyone can see this activity message, unless this type of message is set to private
+const HEARTBEAT_PUBLIC_TO_ALL = 4;
+
+
+//Group Types
+
+const HEARTBEAT_GROUP_NONE = 11;
+const HEARTBEAT_GROUP_SINGLE = 12;
+const HEARTBEAT_GROUP_SUMMARY = 13;
+
+
+
 class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterface {
 
   use EntityChangedTrait;
