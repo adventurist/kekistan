@@ -53,7 +53,7 @@ class TestController extends ControllerBase {
    */
   public function start($arg) {
 
-    $streamEntities = $this->heartbeatstream->loadAllEntities()->execute();
+    $streamEntities = $this->heartbeatstream->loadAllEntities();
 
     foreach ($streamEntities as $streamEntityId) {
 

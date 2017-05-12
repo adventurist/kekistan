@@ -72,10 +72,10 @@ function heartbeat8_theme_suggestions_heartbeat(array $variables) {
  */
 function heartbeat8_entity_insert(EntityInterface $entity) {
 
-  $thisiswhere = 'ithappens';
   $nid = $entity->id();
 
   if ($nid) {
+
     $heartbeatTypeService = \Drupal::service('heartbeat8.heartbeattype');
 
     foreach ($heartbeatTypeService->getTypes() as $type) {
@@ -84,10 +84,6 @@ function heartbeat8_entity_insert(EntityInterface $entity) {
 
     }
   }
-
-  \Drupal::logger('content')->notice('Entity Insert
-   called !');
-
 
 }
 

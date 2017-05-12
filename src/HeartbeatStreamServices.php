@@ -75,9 +75,7 @@ class HeartbeatStreamServices {
    * @return mixed
    */
   public function loadAllEntities() {
-    $jigga = $this->entityQuery->get('heartbeat_stream');
-    $jiggais =' nada';
-    return $jigga;
+    return $this->entityQuery->get('heartbeat_stream')->execute();
   }
 
 
