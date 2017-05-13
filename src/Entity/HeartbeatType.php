@@ -110,7 +110,7 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
    *  The template message serving as the foundation of each message structure of this stream type
    */
   public function setMessage($message) {
-    $this->message = $message;
+    $this->set('message', $message);
   }
 
   /**
@@ -120,7 +120,7 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
    *  The Stream's message
    */
   public function getMessage() {
-    return $this->message;
+    return $this->get('message');
   }
 
   /**

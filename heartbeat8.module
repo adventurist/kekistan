@@ -11,6 +11,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity;
+use Drupal\heartbeat8\Entity\FILE_FIELD;
 use Drupal\heartbeat8\Entity\Heartbeat;
 use Drupal\heartbeat8\Entity\HeartbeatType;
 
@@ -72,19 +73,52 @@ function heartbeat8_theme_suggestions_heartbeat(array $variables) {
  */
 function heartbeat8_entity_insert(EntityInterface $entity) {
 
+if ($entity instanceof \Drupal\node\Entity\Node) {
+
   $nid = $entity->id();
+  $user = $entity->getOwner();
+  $type = $entity->getEntityTypeId();
+  $media = HeartBeat::mediaFieldTypes($entity->getFields());
+
+  /** @noinspection NestedTernaryOperatorInspection */
+  /** @noinspection ArrayCastingEquivalentInspection */
+  $variables = array(
+    '!nid' => $nid,
+    '!entityType' => $type,
+    '!uid' => $user->id(),
+    '!user' => $user->getAccountName(),
+    'media' => $media,
+  );
+
+}
 
   if ($nid) {
 
     $heartbeatTypeService = \Drupal::service('heartbeat8.heartbeattype');
 
     foreach ($heartbeatTypeService->getTypes() as $type) {
-      $heartbeatTypeEntity = \Drupal::entityTypeManager()->getStorage('heartbeat_type')->load($type);
+
+      $heartbeatTypeEntity = $heartbeatTypeService->load($type);
+
+      $messageTemplate = Heartbeat::buildMessage($heartbeatTypeEntity, $media);
+
+//      $translatedMessage = t($messageTemplate);
+
+      $heartbeatMarkup = Heartbeat::parseMessage($messageTemplate, $variables);
+
+//      $heartbeatActivity = new Heartbeat();
+//      $heartbeatActivity->setName();
+//      $heartbeatActivity->save();
 
 
     }
   }
 
+}
+
+function heartbeat8_node_presave(NodeInterface $node) {
+  $uid = $node->getOwnerId();
+  $stuffTOdo = null;
 }
 
 //TODO Add heartbeat language to Javascript

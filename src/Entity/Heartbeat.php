@@ -92,6 +92,8 @@ const HEARTBEAT_GROUP_NONE = 11;
 const HEARTBEAT_GROUP_SINGLE = 12;
 const HEARTBEAT_GROUP_SUMMARY = 13;
 
+const FILE_FIELD = 'Drupal\file\Plugin\Field\FieldType\FileFieldItemList';
+
 
 
 class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterface {
@@ -107,6 +109,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       'user_id' => \Drupal::currentUser()->id(),
     );
   }
+
 
   /**
    * {@inheritdoc}
@@ -360,8 +363,122 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return
    *   The number of activities whose heartbeat type field was modified.
    */
-  function heartbeat_type_update_nodes($old_id, $new_id) {
+  public function heartbeat_type_update_nodes($old_id, $new_id) {
     return \Drupal::entityManager()->getStorage('heartbeat')->updateType($old_id, $new_id);
+  }
+
+
+  /**
+   * Builds a message template for a given HeartbeatType
+   *
+   * @param HeartbeatType $heartbeatType
+   * @param null $mediaData
+   * @return null|string
+   */
+  public static function buildMessage(HeartbeatType $heartbeatType, $mediaData = NULL) {
+//!username has added !node_type !node_title. <a href="/node/"><img src="/sites/default/files/!node_image"/></a>
+
+    /** @noinspection NestedTernaryOperatorInspection */
+    $message = $heartbeatType->get('message') . '<a href="/node/!nid">';
+    $message .= $mediaData ? self::buildMediaMarkup($mediaData) : '';
+    $message .= '</a>';
+
+    return $message;
+  }
+
+
+  private static function buildMediaMarkup($mediaData) {
+
+    $markup = '';
+
+    foreach ($mediaData as $media) {
+      $markup .= self::mediaTag($media->type, $media->path);
+    }
+
+    return $markup;
+  }
+
+  private static function mediaTag($type, $filePath) {
+    return '<'. $type . ' src="' . $filePath . '" / >';
+  }
+
+
+  /**
+   * Returns class of argument
+   *
+   * @param $field
+   * @return string
+   */
+  public static function findClass($field) {
+    return get_class($field);
+  }
+
+
+  /**
+   * Returns an array of classes for array argument
+   * @param $fields
+   * @return array
+   */
+  public static function findAllMedia($fields) {
+    return array_map(array(get_called_class(), 'findClass'), $fields);
+  }
+
+
+  /**
+   * Returns all media types for an array of fields
+   *
+   * @param $fields
+   * @return array
+   */
+  public static function mediaFieldTypes($fields) {
+
+    $types = array();
+
+    foreach ($fields as $field) {
+      if ($field instanceof \Drupal\file\Plugin\Field\FieldType\FileFieldItemList) {
+
+        if ($field->getFieldDefinition()->getType() === 'image' ||
+            $field->getFieldDefinition()->getType() === 'video' ||
+            $field->getFieldDefinition()->getType() === 'audio') {
+
+          $fieldValue = $field->getValue();
+          $fileId = $fieldValue[0]['target_id'];
+          $file = \Drupal::entityTypeManager()->getStorage('file')->load($fileId);
+
+          if ($file !== NULL && is_object($file)) {
+
+            $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $file->url());
+            $types[] = $mediaObject;
+
+          } else {
+            continue;
+          }
+        }
+      }
+    }
+    return $types;
+  }
+
+
+  /**
+   * Parses a HeartbeatType message template and maps
+   * variable values onto matching keywords
+   *
+   * @param $translatedMessage
+   * @param $variables
+   * @return string
+   */
+  public static function parseMessage($translatedMessage, $variables) {
+    return strtr($translatedMessage, $variables);
+  }
+
+  public static function createHeartbeatMedia($type, $path) {
+
+    $mediaObject = new \stdClass();
+    $mediaObject->type = $type;
+    $mediaObject->path = $path;
+
+    return $mediaObject;
   }
 
 }
