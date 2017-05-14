@@ -1,4 +1,4 @@
 <?php
 
-$options['uri'] = 'http://twitcher.ca';
+$options['uri'] = 'http://kekistanrepublic.com';
 
