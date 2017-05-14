@@ -485,8 +485,19 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   public static function getEntityNames($entityTypes) {
     $names = array();
     foreach ($entityTypes as $type) {
-      $names[] = $type->getLabel()->getUntranslatedString();
+
+      if (($type->getBaseTable() === 'node') ||
+          ($type->getBaseTable() === 'user')
+        ||
+          ($type->getStorageClass() !== NULL &&
+            strpos($type->getStorageClass(), $type->getLabel()->getUntranslatedString())
+          )
+      ) {
+        $names[] = $type->id();
+      }
     }
+
+    sort($names);
 
     return $names;
   }

@@ -125,6 +125,24 @@ class HeartbeatTypeForm extends EntityForm {
       '#options' => array($this->entityTypes
       ),
       '#required' => TRUE,
+      '#ajax' => [
+        'callback' => '::getBundlesForEntity',
+        'event' => 'change',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => t('Getting bundles'),
+        ),
+      ]
+    );
+
+    $bundles = $form_state->get('entity_bundles');
+
+    $form['entity_bundles'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Entity Bundles'),
+//      '#default_value' => $heartbeat_type->getEntityType(),
+      '#description' => $this->t("Primary Entity Type for this Heartbeat Type"),
+      '#options' => array($bundles),
     );
 
 
@@ -208,7 +226,7 @@ class HeartbeatTypeForm extends EntityForm {
           '#type' => 'textfield',
           '#title' => t($messageArguments[$i]),
           '#description' => t('Map value to this variable'),
-          '#default_value' =>$variableValue,
+          '#default_value' => $variableValue,
 //          '#ajax' => !$this->treeAdded ? [
 //            'callback' => '::tokenSelectDialog',
 //            'event' => 'focus',
@@ -318,6 +336,31 @@ class HeartbeatTypeForm extends EntityForm {
       }
     }
     return $argsArray;
+  }
+
+  /**
+   * Custom form validation to rebuild
+   * Form field for mapping Message Arguments
+   */
+
+  public function getBundlesForEntity(array &$form, FormStateInterface $form_state) {
+
+    $entityType = $this->entityTypes[$form_state->getValue('entity_type')];
+
+    $entity = $this->entityTypeManager->getStorage($entityType);
+    $bundleTypeName = $entity->getEntityType()->getBundleEntityType();
+    $bundles = $this->entityTypeManager->getStorage($bundleTypeName)->loadMultiple();
+    $bundleNames = array();
+
+    foreach ($bundles as $bundle) {
+      $bundleNames = $bundle->id();
+    }
+
+    $form_state->set('entityBundles', $bundleNames);
+    $form_state->setRebuild();
+
+    return $form['entity_bundles'];
+
   }
 
   public function tokenSelectDialog(array &$form, FormStateInterface $form_state) {
