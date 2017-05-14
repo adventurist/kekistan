@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat;
+namespace Drupal\heartbeat8;
 
 use Drupal\content_translation\ContentTranslationHandler;
 

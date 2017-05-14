@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\heartbeat\Form;
+namespace Drupal\heartbeat8\Form;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\heartbeat\Entity\HeartbeatStreamInterface;
+use Drupal\heartbeat8\Entity\HeartbeatStreamInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for reverting a Heartbeat stream revision.
  *
- * @ingroup heartbeat
+ * @ingroup heartbeat8
  */
 class HeartbeatStreamRevisionRevertForm extends ConfirmFormBase {
 
@@ -21,7 +21,7 @@ class HeartbeatStreamRevisionRevertForm extends ConfirmFormBase {
   /**
    * The Heartbeat stream revision.
    *
-   * @var \Drupal\heartbeat\Entity\HeartbeatStreamInterface
+   * @var \Drupal\heartbeat8\Entity\HeartbeatStreamInterface
    */
   protected $revision;
 
@@ -130,12 +130,12 @@ class HeartbeatStreamRevisionRevertForm extends ConfirmFormBase {
   /**
    * Prepares a revision to be reverted.
    *
-   * @param \Drupal\heartbeat\Entity\HeartbeatStreamInterface $revision
+   * @param \Drupal\heartbeat8\Entity\HeartbeatStreamInterface $revision
    *   The revision to be reverted.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The current state of the form.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatStreamInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatStreamInterface
    *   The prepared revision ready to be stored.
    */
   protected function prepareRevertedRevision(HeartbeatStreamInterface $revision, FormStateInterface $form_state) {

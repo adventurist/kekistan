@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @file
+ * Contains heartbeat8.module.
+ */
+
+namespace Drupal\heartbeat8;
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\heartbeat8\Entity\Heartbeat;
+use Drupal\heartbeat8\Entity\HeartbeatType;
+
+//TODO include Streams (Entities already added with use statements on lines 9-10)
+
+// Always block from display
+const HEARTBEAT_NONE = -1;
+
+// Display only activity messages that are mine or addressed to me
+const HEARTBEAT_PRIVATE = 0;
+
+// Only the person that is chosen by the actor, can see the message
+const HEARTBEAT_PUBLIC_TO_ADDRESSEE = 1;
+
+// Display activity message of all my user relations, described in contributed modules
+const HEARTBEAT_PUBLIC_TO_CONNECTED = 2;
+
+// Everyone can see this activity message, unless this type of message is set to private
+const HEARTBEAT_PUBLIC_TO_ALL = 4;
+
+
+//Group Types
+
+const HEARTBEAT_GROUP_NONE = 11;
+const HEARTBEAT_GROUP_SINGLE = 12;
+const HEARTBEAT_GROUP_SUMMARY = 13;
+
+/**
+ * Implements hook_help().
+ */
+function heartbeat8_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the heartbeat8 module.
+    case 'help.page.heartbeat8':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Heartbeat for Drupal 8') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+
+/**
+ * Implements hook_theme().
+ */
+function heartbeat8_theme() {
+  $theme = [];
+  $theme['heartbeat'] = array(
+    'render element' => 'elements',
+    'file' => 'heartbeat.page.inc',
+    'template' => 'heartbeat',
+  );
+  $theme['heartbeat_content_add_list'] = [
+    'render element' => 'content',
+    'variables' => ['content' => NULL],
+    'file' => 'heartbeat.page.inc',
+  ];
+  return $theme;
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function heartbeat8_theme_suggestions_heartbeat(array $variables) {
+  $suggestions = array();
+  $entity = $variables['elements']['#heartbeat'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'heartbeat__' . $sanitized_view_mode;
+  $suggestions[] = 'heartbeat__' . $entity->bundle();
+  $suggestions[] = 'heartbeat__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'heartbeat__' . $entity->id();
+  $suggestions[] = 'heartbeat__' . $entity->id() . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+
+
+//TODO Add heartbeat language to Javascript
+//TODO Determine necessity of polling
+//Add

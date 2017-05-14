@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat\Entity;
+namespace Drupal\heartbeat8\Entity;
 
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Entity\RevisionableInterface;
@@ -12,7 +12,7 @@ use Drupal\user\EntityOwnerInterface;
 /**
  * Provides an interface for defining Heartbeat stream entities.
  *
- * @ingroup heartbeat
+ * @ingroup heartbeat8
  */
 interface HeartbeatStreamInterface extends RevisionableInterface, RevisionLogInterface, EntityChangedInterface, EntityOwnerInterface {
 
@@ -32,7 +32,7 @@ interface HeartbeatStreamInterface extends RevisionableInterface, RevisionLogInt
    * @param string $name
    *   The Heartbeat stream name.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatStreamInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatStreamInterface
    *   The called Heartbeat stream entity.
    */
   public function setName($name);
@@ -51,7 +51,7 @@ interface HeartbeatStreamInterface extends RevisionableInterface, RevisionLogInt
    * @param int $timestamp
    *   The Heartbeat stream creation timestamp.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatStreamInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatStreamInterface
    *   The called Heartbeat stream entity.
    */
   public function setCreatedTime($timestamp);
@@ -72,7 +72,7 @@ interface HeartbeatStreamInterface extends RevisionableInterface, RevisionLogInt
    * @param bool $published
    *   TRUE to set this Heartbeat stream to published, FALSE to set it to unpublished.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatStreamInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatStreamInterface
    *   The called Heartbeat stream entity.
    */
   public function setPublished($published);
@@ -91,7 +91,7 @@ interface HeartbeatStreamInterface extends RevisionableInterface, RevisionLogInt
    * @param int $timestamp
    *   The UNIX timestamp of when this revision was created.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatStreamInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatStreamInterface
    *   The called Heartbeat stream entity.
    */
   public function setRevisionCreationTime($timestamp);
@@ -110,7 +110,7 @@ interface HeartbeatStreamInterface extends RevisionableInterface, RevisionLogInt
    * @param int $uid
    *   The user ID of the revision author.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatStreamInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatStreamInterface
    *   The called Heartbeat stream entity.
    */
   public function setRevisionUserId($uid);

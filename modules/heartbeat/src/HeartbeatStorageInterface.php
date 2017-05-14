@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\heartbeat;
+namespace Drupal\heartbeat8;
 
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\heartbeat\Entity\HeartbeatInterface;
+use Drupal\heartbeat8\Entity\HeartbeatInterface;
 
 /**
  * Defines the storage handler class for Heartbeat entities.
@@ -13,14 +13,14 @@ use Drupal\heartbeat\Entity\HeartbeatInterface;
  * This extends the base storage class, adding required special handling for
  * Heartbeat entities.
  *
- * @ingroup heartbeat
+ * @ingroup heartbeat8
  */
 interface HeartbeatStorageInterface extends ContentEntityStorageInterface {
 
   /**
    * Gets a list of Heartbeat revision IDs for a specific Heartbeat.
    *
-   * @param \Drupal\heartbeat\Entity\HeartbeatInterface $entity
+   * @param \Drupal\heartbeat8\Entity\HeartbeatInterface $entity
    *   The Heartbeat entity.
    *
    * @return int[]
@@ -42,7 +42,7 @@ interface HeartbeatStorageInterface extends ContentEntityStorageInterface {
   /**
    * Counts the number of revisions in the default language.
    *
-   * @param \Drupal\heartbeat\Entity\HeartbeatInterface $entity
+   * @param \Drupal\heartbeat8\Entity\HeartbeatInterface $entity
    *   The Heartbeat entity.
    *
    * @return int

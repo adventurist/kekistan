@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat;
+namespace Drupal\heartbeat8;
 
 use Drupal\Core\Entity\EntityAccessControlHandler;
 use Drupal\Core\Entity\EntityInterface;
@@ -10,7 +10,7 @@ use Drupal\Core\Access\AccessResult;
 /**
  * Access controller for the Heartbeat stream entity.
  *
- * @see \Drupal\heartbeat\Entity\HeartbeatStream.
+ * @see \Drupal\heartbeat8\Entity\HeartbeatStream.
  */
 class HeartbeatStreamAccessControlHandler extends EntityAccessControlHandler {
 
@@ -18,7 +18,7 @@ class HeartbeatStreamAccessControlHandler extends EntityAccessControlHandler {
    * {@inheritdoc}
    */
   protected function checkAccess(EntityInterface $entity, $operation, AccountInterface $account) {
-    /** @var \Drupal\heartbeat\Entity\HeartbeatStreamInterface $entity */
+    /** @var \Drupal\heartbeat8\Entity\HeartbeatStreamInterface $entity */
     switch ($operation) {
       case 'view':
         if (!$entity->isPublished()) {

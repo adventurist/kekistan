@@ -2,16 +2,16 @@
 # In order to to create pages it is necessary to define routes for them.
 # A route maps a URL path to a controller. It defines what function
 # or method will be called when a URL is accessed.
-# If the user accesses http://drupal8.dev//heartbeat/test/{arg}, the routing
+# If the user accesses http://drupal8.dev//heartbeat8/test/{arg}, the routing
 # system will look for a route with that path. In this case it will find a
 # match, and execute the _controller callback. In this case the callback is
 # defined as a classname
-# ("\Drupal\heartbeat\Controller\TestController")
+# ("\Drupal\heartbeat8\Controller\TestController")
 # and a method ("start").
-heartbeat.test_controller_start:
-  path: '/heartbeat/test/{arg}'
+heartbeat8.test_controller_start:
+  path: '/heartbeat8/test/{arg}'
   defaults:
-    _controller: '\Drupal\heartbeat\Controller\TestController::start'
+    _controller: '\Drupal\heartbeat8\Controller\TestController::start'
     _title: 'run'
   requirements:
     _permission: 'access content'

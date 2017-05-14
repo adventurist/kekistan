@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\heartbeat\Form;
+namespace Drupal\heartbeat8\Form;
 
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\heartbeat\HeartbeatTypeServices;
-use Drupal\heartbeat\Entity\HeartbeatStream;
-use Drupal\heartbeat\Entity\HeartbeatType;
+use Drupal\heartbeat8\HeartbeatTypeServices;
+use Drupal\heartbeat8\Entity\HeartbeatStream;
+use Drupal\heartbeat8\Entity\HeartbeatType;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
@@ -16,7 +16,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Form controller for Heartbeat stream edit forms.
  *
- * @ingroup heartbeat
+ * @ingroup heartbeat8
  */
 class HeartbeatStreamForm extends ContentEntityForm {
 
@@ -29,7 +29,7 @@ class HeartbeatStreamForm extends ContentEntityForm {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('heartbeat.heartbeattype'),
+      $container->get('heartbeat8.heartbeattype'),
       $container->get('entity.manager'),
       $container->get('entity_type.bundle.info'),
       $container->get('datetime.time')
@@ -63,7 +63,7 @@ class HeartbeatStreamForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\heartbeat\Entity\HeartbeatStream */
+    /* @var $entity \Drupal\heartbeat8\Entity\HeartbeatStream */
     $form = parent::buildForm($form, $form_state);
 
     if (!$this->entity->isNew()) {

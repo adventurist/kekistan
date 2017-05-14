@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat;
+namespace Drupal\heartbeat8;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
@@ -89,7 +89,7 @@ class HeartbeatStreamHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route
         ->setDefaults([
           '_title' => "{$entity_type->getLabel()} revisions",
-          '_controller' => '\Drupal\heartbeat\Controller\HeartbeatStreamController::revisionOverview',
+          '_controller' => '\Drupal\heartbeat8\Controller\HeartbeatStreamController::revisionOverview',
         ])
         ->setRequirement('_permission', 'access heartbeat stream revisions')
         ->setOption('_admin_route', TRUE);
@@ -112,8 +112,8 @@ class HeartbeatStreamHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route($entity_type->getLinkTemplate('revision'));
       $route
         ->setDefaults([
-          '_controller' => '\Drupal\heartbeat\Controller\HeartbeatStreamController::revisionShow',
-          '_title_callback' => '\Drupal\heartbeat\Controller\HeartbeatStreamController::revisionPageTitle',
+          '_controller' => '\Drupal\heartbeat8\Controller\HeartbeatStreamController::revisionShow',
+          '_title_callback' => '\Drupal\heartbeat8\Controller\HeartbeatStreamController::revisionPageTitle',
         ])
         ->setRequirement('_permission', 'access heartbeat stream revisions')
         ->setOption('_admin_route', TRUE);
@@ -136,7 +136,7 @@ class HeartbeatStreamHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route($entity_type->getLinkTemplate('revision_revert'));
       $route
         ->setDefaults([
-          '_form' => '\Drupal\heartbeat\Form\HeartbeatStreamRevisionRevertForm',
+          '_form' => '\Drupal\heartbeat8\Form\HeartbeatStreamRevisionRevertForm',
           '_title' => 'Revert to earlier revision',
         ])
         ->setRequirement('_permission', 'revert all heartbeat stream revisions')
@@ -160,7 +160,7 @@ class HeartbeatStreamHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route($entity_type->getLinkTemplate('revision_delete'));
       $route
         ->setDefaults([
-          '_form' => '\Drupal\heartbeat\Form\HeartbeatStreamRevisionDeleteForm',
+          '_form' => '\Drupal\heartbeat8\Form\HeartbeatStreamRevisionDeleteForm',
           '_title' => 'Delete earlier revision',
         ])
         ->setRequirement('_permission', 'delete all heartbeat stream revisions')
@@ -184,7 +184,7 @@ class HeartbeatStreamHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route("/admin/structure/{$entity_type->id()}/settings");
       $route
         ->setDefaults([
-          '_form' => 'Drupal\heartbeat\Form\HeartbeatStreamSettingsForm',
+          '_form' => 'Drupal\heartbeat8\Form\HeartbeatStreamSettingsForm',
           '_title' => "{$entity_type->getLabel()} settings",
         ])
         ->setRequirement('_permission', $entity_type->getAdminPermission())

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat\Entity;
+namespace Drupal\heartbeat8\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 

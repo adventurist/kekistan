@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat\Entity;
+namespace Drupal\heartbeat8\Entity;
 
 use Drupal\Core\Entity\RevisionLogInterface;
 use Drupal\Core\Entity\RevisionableInterface;
@@ -12,7 +12,7 @@ use Drupal\user\EntityOwnerInterface;
 /**
  * Provides an interface for defining Heartbeat entities.
  *
- * @ingroup heartbeat
+ * @ingroup heartbeat8
  */
 interface HeartbeatInterface extends RevisionableInterface, RevisionLogInterface, EntityChangedInterface, EntityOwnerInterface {
 
@@ -40,7 +40,7 @@ interface HeartbeatInterface extends RevisionableInterface, RevisionLogInterface
    * @param string $name
    *   The Heartbeat name.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatInterface
    *   The called Heartbeat entity.
    */
   public function setName($name);
@@ -59,7 +59,7 @@ interface HeartbeatInterface extends RevisionableInterface, RevisionLogInterface
    * @param int $timestamp
    *   The Heartbeat creation timestamp.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatInterface
    *   The called Heartbeat entity.
    */
   public function setCreatedTime($timestamp);
@@ -80,7 +80,7 @@ interface HeartbeatInterface extends RevisionableInterface, RevisionLogInterface
    * @param bool $published
    *   TRUE to set this Heartbeat to published, FALSE to set it to unpublished.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatInterface
    *   The called Heartbeat entity.
    */
   public function setPublished($published);
@@ -99,7 +99,7 @@ interface HeartbeatInterface extends RevisionableInterface, RevisionLogInterface
    * @param int $timestamp
    *   The UNIX timestamp of when this revision was created.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatInterface
    *   The called Heartbeat entity.
    */
   public function setRevisionCreationTime($timestamp);
@@ -118,7 +118,7 @@ interface HeartbeatInterface extends RevisionableInterface, RevisionLogInterface
    * @param int $uid
    *   The user ID of the revision author.
    *
-   * @return \Drupal\heartbeat\Entity\HeartbeatInterface
+   * @return \Drupal\heartbeat8\Entity\HeartbeatInterface
    *   The called Heartbeat entity.
    */
   public function setRevisionUserId($uid);

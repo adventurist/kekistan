@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat\Entity;
+namespace Drupal\heartbeat8\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 
@@ -11,14 +11,14 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   id = "heartbeat_stream",
  *   label = @Translation("Heartbeat stream"),
  *   handlers = {
- *     "list_builder" = "Drupal\heartbeat\HeartbeatStreamListBuilder",
+ *     "list_builder" = "Drupal\heartbeat8\HeartbeatStreamListBuilder",
  *     "form" = {
- *       "add" = "Drupal\heartbeat\Form\HeartbeatStreamForm",
- *       "edit" = "Drupal\heartbeat\Form\HeartbeatStreamForm",
- *       "delete" = "Drupal\heartbeat\Form\HeartbeatStreamDeleteForm"
+ *       "add" = "Drupal\heartbeat8\Form\HeartbeatStreamForm",
+ *       "edit" = "Drupal\heartbeat8\Form\HeartbeatStreamForm",
+ *       "delete" = "Drupal\heartbeat8\Form\HeartbeatStreamDeleteForm"
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\heartbeat\HeartbeatStreamHtmlRouteProvider",
+ *       "html" = "Drupal\heartbeat8\HeartbeatStreamHtmlRouteProvider",
  *     },
  *   },
  *   config_prefix = "heartbeat_stream",

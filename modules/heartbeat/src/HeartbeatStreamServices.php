@@ -1,60 +1,45 @@
 <?php
 
-namespace Drupal\heartbeat;
+namespace Drupal\heartbeat8;
 
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeRepository;
-use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
  * Class HeartbeatStreamServices.
  *
- * @package Drupal\heartbeat
+ * @package Drupal\heartbeat8
  */
 class HeartbeatStreamServices {
 
   /**
    * Drupal\Core\Entity\EntityTypeManager definition.
    *
-   * @var EntityTypeManager
+   * @var Drupal\Core\Entity\EntityTypeManager
    */
-  protected $entityTypeManager;
+  protected $entity_type_manager;
 
   /**
    * Drupal\Core\Entity\EntityTypeRepository definition.
    *
-   * @var EntityTypeRepository
+   * @var Drupal\Core\Entity\EntityTypeRepository
    */
-  protected $entityTypeRepository;
-
-  /**
-   * Drupal\Core\Entity\Query\QueryFactory definition.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $entityQuery;
-
-
+  protected $entity_type_repository;
   /**
    * Constructor.
-   * @param EntityTypeManager $entityTypeManager
-   * @param EntityTypeRepository $entityTypeRepository
-   * @param QueryFactory $entityQuery
    */
-  public function __construct(EntityTypeManager $entityTypeManager, EntityTypeRepository $entityTypeRepository, QueryFactory $entityQuery) {
-    $this->entityTypeManager = $entityTypeManager;
-    $this->entityTypeRepository = $entityTypeRepository;
-    $this->entityQuery = $entityQuery;
+  public function __construct(EntityTypeManager $entity_type_manager, EntityTypeRepository $entity_type_repository) {
+    $this->entity_type_manager = $entity_type_manager;
+    $this->entity_type_repository = $entity_type_repository;
   }
 
   /**
    * Returns a loaded HeartbeatStream entity
    * @param $id
    * @return \Drupal\Core\Entity\EntityInterface|null
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function getEntityById($id) {
-    return $this->entityTypeManager->getStorage('heartbeat_stream')->load($id);
+    return $this->entity_type_manager->getStorage('heartbeat_stream')->load($id);
   }
 
 
@@ -63,19 +48,9 @@ class HeartbeatStreamServices {
    * HeartbeatStream specified by ID
    * @param $id
    * @return mixed
-   * @throws \Drupal\Component\Plugin\Exception\InvalidPluginDefinitionException
    */
   public function getTypesById($id) {
-    return $this->entityTypeManager->getStorage('heartbeat_stream')->load($id)->get('types');
-  }
-
-  /**
-   * Returns an array of HeartbeatStream entities
-   * HeartbeatStream specified by ID
-   * @return mixed
-   */
-  public function loadAllEntities() {
-    return $this->entityQuery->get('heartbeat_stream')->execute();
+    return $this->entity_type_manager->getStorage('heartbeat_stream')->load($id)->get('types');
   }
 
 

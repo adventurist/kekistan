@@ -1,18 +1,18 @@
 <?php
 
-namespace Drupal\heartbeat\Form;
+namespace Drupal\heartbeat8\Form;
 
 use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Language\LanguageManagerInterface;
-use Drupal\heartbeat\Entity\HeartbeatStreamInterface;
+use Drupal\heartbeat8\Entity\HeartbeatStreamInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for reverting a Heartbeat stream revision for a single translation.
  *
- * @ingroup heartbeat
+ * @ingroup heartbeat8
  */
 class HeartbeatStreamRevisionRevertTranslationForm extends HeartbeatStreamRevisionRevertForm {
 
@@ -93,7 +93,7 @@ class HeartbeatStreamRevisionRevertTranslationForm extends HeartbeatStreamRevisi
   protected function prepareRevertedRevision(HeartbeatStreamInterface $revision, FormStateInterface $form_state) {
     $revert_untranslated_fields = $form_state->getValue('revert_untranslated_fields');
 
-    /** @var \Drupal\heartbeat\Entity\HeartbeatStreamInterface $default_revision */
+    /** @var \Drupal\heartbeat8\Entity\HeartbeatStreamInterface $default_revision */
     $latest_revision = $this->HeartbeatStreamStorage->load($revision->id());
     $latest_revision_translation = $latest_revision->getTranslation($this->langcode);
 
