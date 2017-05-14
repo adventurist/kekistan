@@ -1,8 +1,8 @@
 <?php
 
-namespace Drupal\heartbeat8\Entity;
+namespace Drupal\heartbeat\Entity;
 
-use Drupal\heartbeat8\Entity\HeartbeatType;
+use Drupal\heartbeat\Entity\HeartbeatType;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
@@ -13,26 +13,26 @@ use Drupal\user\UserInterface;
 /**
  * Defines the Heartbeat stream entity.
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  *
  * @ContentEntityType(
  *   id = "heartbeat_stream",
  *   label = @Translation("Heartbeat stream"),
  *   handlers = {
- *     "storage" = "Drupal\heartbeat8\HeartbeatStreamStorage",
+ *     "storage" = "Drupal\heartbeat\HeartbeatStreamStorage",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\heartbeat8\HeartbeatStreamListBuilder",
- *     "views_data" = "Drupal\heartbeat8\Entity\HeartbeatStreamViewsData",
+ *     "list_builder" = "Drupal\heartbeat\HeartbeatStreamListBuilder",
+ *     "views_data" = "Drupal\heartbeat\Entity\HeartbeatStreamViewsData",
  *
  *     "form" = {
- *       "default" = "Drupal\heartbeat8\Form\HeartbeatStreamForm",
- *       "add" = "Drupal\heartbeat8\Form\HeartbeatStreamForm",
- *       "edit" = "Drupal\heartbeat8\Form\HeartbeatStreamForm",
- *       "delete" = "Drupal\heartbeat8\Form\HeartbeatStreamDeleteForm",
+ *       "default" = "Drupal\heartbeat\Form\HeartbeatStreamForm",
+ *       "add" = "Drupal\heartbeat\Form\HeartbeatStreamForm",
+ *       "edit" = "Drupal\heartbeat\Form\HeartbeatStreamForm",
+ *       "delete" = "Drupal\heartbeat\Form\HeartbeatStreamDeleteForm",
  *     },
- *     "access" = "Drupal\heartbeat8\HeartbeatStreamAccessControlHandler",
+ *     "access" = "Drupal\heartbeat\HeartbeatStreamAccessControlHandler",
  *     "route_provider" = {
- *       "html" = "Drupal\heartbeat8\HeartbeatStreamHtmlRouteProvider",
+ *       "html" = "Drupal\heartbeat\HeartbeatStreamHtmlRouteProvider",
  *     },
  *   },
  *   base_table = "heartbeat_stream",
@@ -86,7 +86,7 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
   }
 
   /**
-   * @param array use Drupal\heartbeat8\Entity\HeartbeatType $types
+   * @param array use Drupal\heartbeat\Entity\HeartbeatType $types
    */
   public function setTypes($types) {
     $this->set('types', $types);

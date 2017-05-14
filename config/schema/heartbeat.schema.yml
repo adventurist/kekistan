@@ -1,4 +1,4 @@
-heartbeat8.heartbeat_type.*:
+heartbeat.heartbeat_type.*:
   type: config_entity
   label: 'Heartbeat type config'
   mapping:

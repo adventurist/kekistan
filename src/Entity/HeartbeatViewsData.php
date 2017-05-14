@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8\Entity;
+namespace Drupal\heartbeat\Entity;
 
 use Drupal\views\EntityViewsData;
 

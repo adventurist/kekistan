@@ -1,10 +1,10 @@
 <?php
 
-namespace Drupal\heartbeat8\Entity;
+namespace Drupal\heartbeat\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\heartbeat8\HeartbeatTypeListBuilder;
+use Drupal\heartbeat\HeartbeatTypeListBuilder;
 
 /**
  * Defines the Heartbeat type entity.
@@ -13,14 +13,14 @@ use Drupal\heartbeat8\HeartbeatTypeListBuilder;
  *   id = "heartbeat_type",
  *   label = @Translation("Heartbeat type"),
  *   handlers = {
- *     "list_builder" = "Drupal\heartbeat8\HeartbeatTypeListBuilder",
+ *     "list_builder" = "Drupal\heartbeat\HeartbeatTypeListBuilder",
  *     "form" = {
- *       "add" = "Drupal\heartbeat8\Form\HeartbeatTypeForm",
- *       "edit" = "Drupal\heartbeat8\Form\HeartbeatTypeForm",
- *       "delete" = "Drupal\heartbeat8\Form\HeartbeatTypeDeleteForm"
+ *       "add" = "Drupal\heartbeat\Form\HeartbeatTypeForm",
+ *       "edit" = "Drupal\heartbeat\Form\HeartbeatTypeForm",
+ *       "delete" = "Drupal\heartbeat\Form\HeartbeatTypeDeleteForm"
  *     },
  *     "route_provider" = {
- *       "html" = "Drupal\heartbeat8\HeartbeatTypeHtmlRouteProvider",
+ *       "html" = "Drupal\heartbeat\HeartbeatTypeHtmlRouteProvider",
  *     },
  *   },
  *   config_prefix = "heartbeat_type",
@@ -58,6 +58,7 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
   protected $variables;
   protected $attachments;
   protected $groupType;
+  protected $mainEntity;
 
 
   protected $entityManager;
@@ -320,5 +321,23 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
 
     // Clear the heartbeat type cache to reflect the removal.
     $storage->resetCache(array_keys($entities));
+  }
+
+  /**
+   * Sets the main Entity Type of the Heartbeat Type
+   *
+   * @param string $entityType
+   *  Describing entity type used in this Heartbeat Type
+   */
+  public function setMainEntity($mainEntity) {
+    $this->set('mainEntity', $mainEntity);
+  }
+
+  /**
+   * @return mixed|null
+   *
+   */
+  public function getMainEntity() {
+    return $this->get('mainEntity');
   }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8\Entity;
+namespace Drupal\heartbeat\Entity;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -12,28 +12,28 @@ use Drupal\user\UserInterface;
 /**
  * Defines the Heartbeat entity.
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  *
  * @ContentEntityType(
  *   id = "heartbeat",
  *   label = @Translation("Heartbeat"),
  *   bundle_label = @Translation("Heartbeat type"),
  *   handlers = {
- *     "storage" = "Drupal\heartbeat8\HeartbeatStorage",
+ *     "storage" = "Drupal\heartbeat\HeartbeatStorage",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\heartbeat8\HeartbeatListBuilder",
- *     "views_data" = "Drupal\heartbeat8\Entity\HeartbeatViewsData",
- *     "translation" = "Drupal\heartbeat8\HeartbeatTranslationHandler",
+ *     "list_builder" = "Drupal\heartbeat\HeartbeatListBuilder",
+ *     "views_data" = "Drupal\heartbeat\Entity\HeartbeatViewsData",
+ *     "translation" = "Drupal\heartbeat\HeartbeatTranslationHandler",
  *
  *     "form" = {
- *       "default" = "Drupal\heartbeat8\Form\HeartbeatForm",
- *       "add" = "Drupal\heartbeat8\Form\HeartbeatForm",
- *       "edit" = "Drupal\heartbeat8\Form\HeartbeatForm",
- *       "delete" = "Drupal\heartbeat8\Form\HeartbeatDeleteForm",
+ *       "default" = "Drupal\heartbeat\Form\HeartbeatForm",
+ *       "add" = "Drupal\heartbeat\Form\HeartbeatForm",
+ *       "edit" = "Drupal\heartbeat\Form\HeartbeatForm",
+ *       "delete" = "Drupal\heartbeat\Form\HeartbeatDeleteForm",
  *     },
- *     "access" = "Drupal\heartbeat8\HeartbeatAccessControlHandler",
+ *     "access" = "Drupal\heartbeat\HeartbeatAccessControlHandler",
  *     "route_provider" = {
- *       "html" = "Drupal\heartbeat8\HeartbeatHtmlRouteProvider",
+ *       "html" = "Drupal\heartbeat\HeartbeatHtmlRouteProvider",
  *     },
  *   },
  *   base_table = "heartbeat",
@@ -337,7 +337,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   /**
    * Returns the node type label for the passed node.
    *
-   * @param \Drupal\heartbeat8\Entity\HeartbeatInterface $heartbeat
+   * @param \Drupal\heartbeat\Entity\HeartbeatInterface $heartbeat
    *   A heartbeat entity to return the heartbeat type's label for.
    *
    * @return string|false
@@ -481,4 +481,13 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     return $mediaObject;
   }
 
+
+  public static function getEntityNames($entityTypes) {
+    $names = array();
+    foreach ($entityTypes as $type) {
+      $names[] = $type->getLabel()->getUntranslatedString();
+    }
+
+    return $names;
+  }
 }

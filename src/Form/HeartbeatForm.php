@@ -1,15 +1,15 @@
 <?php
 
-namespace Drupal\heartbeat8\Form;
+namespace Drupal\heartbeat\Form;
 
 use Drupal\Core\Entity\ContentEntityForm;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\heartbeat8\Entity;
+use Drupal\heartbeat\Entity;
 
 /**
  * Form controller for Heartbeat edit forms.
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  */
 class HeartbeatForm extends ContentEntityForm {
 
@@ -17,7 +17,7 @@ class HeartbeatForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    /* @var $entity \Drupal\heartbeat8\Entity\Heartbeat */
+    /* @var $entity \Drupal\heartbeat\Entity\Heartbeat */
     $form = parent::buildForm($form, $form_state);
 
     if (!$this->entity->isNew()) {

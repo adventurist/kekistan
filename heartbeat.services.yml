@@ -1,0 +1,13 @@
+services:
+  heartbeat.heartbeattype:
+    class: Drupal\heartbeat\HeartbeatTypeServices
+    arguments: ['@entity_type.manager', '@entity.query']
+
+  heartbeatstream:
+    class: Drupal\heartbeat\HeartbeatStreamServices
+    arguments: ["@entity_type.manager", "@entity_type.repository", '@entity.query']
+
+  heartbeatstreamalt:
+    class: Drupal\heartbeat\HeartbeatAltServices
+    arguments: ['@entity.query', '@entity.manager', '@entity_type.manager', '@entity_type.repository', '@heartbeat.heartbeattype']
+

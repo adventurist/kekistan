@@ -11,7 +11,7 @@ use Drupal\user\RoleInterface;
 /**
  * Implements hook_requirements().
  */
-function heartbeat8_requirements($phase) {
+function heartbeat_requirements($phase) {
   $requirements = array();
   if ($phase === 'runtime') {
     // Only show rebuild button if there are either 0, or 2 or more, rows
@@ -40,7 +40,7 @@ function heartbeat8_requirements($phase) {
  * Implements hook_schema().
  * ** //TODO Have not yet set export schema for CTOOLS as CTOOLS is not yet a part of Drupal 8
  */
-function heartbeat8_schema() {
+function heartbeat_schema() {
   $schema['heartbeat_messages'] = array(
     'description' => 'Table that contains predefined messages that can be used in heartbeat views.',
     'fields' => array(

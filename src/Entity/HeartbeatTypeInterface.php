@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8\Entity;
+namespace Drupal\heartbeat\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 
@@ -41,12 +41,31 @@ interface HeartbeatTypeInterface extends ConfigEntityInterface {
   public function setDescription($description);
 
   /**
-   * Gets the description of the stream
+   * Gets the description of the HeartbeatType
    *
    * @return string
    *  The Stream's description
    */
+
   public function getDescription();
+
+  /**
+   * Sets the main Entity Type of the Heartbeat Type
+   *
+   * @param string $entityType
+   *  Describing entity type used in this Heartbeat Type
+   */
+
+  public function setMainEntity($mainEntity);
+
+  /**
+   * Gets the main Entity Type of the Heartbeat Type
+   *
+   * @return string
+   *  The Heartbeat Type's main Entity Type
+   */
+
+  public function getMainEntity();
 
   /**
    * Sets the translatable message
@@ -55,6 +74,7 @@ interface HeartbeatTypeInterface extends ConfigEntityInterface {
    * @param string $message
    *  The template message serving as the foundation of each message structure of this stream type
    */
+
 
   public function setMessage($message);
 

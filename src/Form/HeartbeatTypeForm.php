@@ -1,10 +1,11 @@
 <?php
 
-namespace Drupal\heartbeat8\Form;
+namespace Drupal\heartbeat\Form;
 
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Render\Renderer;
-use Drupal\heartbeat8;
-use Drupal\heartbeat8\Entity;
+use Drupal\heartbeat;
+use Drupal\heartbeat\Entity;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\InvokeCommand;
@@ -17,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Class HeartbeatTypeForm.
  *
  * @property \Drupal\Component\Render\MarkupInterface|string tokenTree
- * @package Drupal\heartbeat8\Form
+ * @package Drupal\heartbeat\Form
  */
 class HeartbeatTypeForm extends EntityForm {
 
@@ -26,6 +27,10 @@ class HeartbeatTypeForm extends EntityForm {
   protected $renderer;
 
   private $tokenTree;
+
+  protected $entityTypeManager;
+
+  protected $entityTypes;
 
   private $treeAdded = false;
 
@@ -37,7 +42,8 @@ class HeartbeatTypeForm extends EntityForm {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('token.tree_builder'),
-      $container->get('renderer'));
+      $container->get('renderer'),
+      $container->get('entity_type.manager'));
   }
 
 
@@ -54,11 +60,12 @@ class HeartbeatTypeForm extends EntityForm {
    * @param Renderer $renderer
    * @throws \Exception
    */
-  public function __construct(TreeBuilder $tree_builder, Renderer $renderer) {
+  public function __construct(TreeBuilder $tree_builder, Renderer $renderer, EntityTypeManager $entityTypeManager) {
 
 
     $this->treeBuilder = $tree_builder;
     $this->renderer = $renderer;
+    $this->entityTypeManager = $entityTypeManager;
 
     $this->tokenTree = $this->renderer->render($this->treeBuilder->buildAllRenderable([
       'click_insert' => TRUE,
@@ -71,6 +78,7 @@ class HeartbeatTypeForm extends EntityForm {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    $this->entityTypes = Entity\Heartbeat::getEntityNames($this->entityTypeManager->getDefinitions());
     $doStuff = 'stuff';
     return parent::buildForm($form, $form_state);
   }
@@ -87,7 +95,7 @@ class HeartbeatTypeForm extends EntityForm {
     $tokens = \Drupal::token()->getInfo();
     $form['#tree'] = TRUE;
 
-    $form['#attached']['library'] = 'heartbeat8/treeTable';
+    $form['#attached']['library'] = 'heartbeat/treeTable';
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -105,6 +113,17 @@ class HeartbeatTypeForm extends EntityForm {
       '#maxlength' => 255,
       '#default_value' => $heartbeat_type->getDescription(),
       '#description' => $this->t("Description of the Heartbeat Type"),
+      '#required' => TRUE,
+    );
+
+
+    $form['entity_type'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Entity Type'),
+//      '#default_value' => $heartbeat_type->getEntityType(),
+      '#description' => $this->t("Primary Entity Type for this Heartbeat Type"),
+      '#options' => array($this->entityTypes
+      ),
       '#required' => TRUE,
     );
 
@@ -222,7 +241,7 @@ class HeartbeatTypeForm extends EntityForm {
       '#type' => 'machine_name',
       '#default_value' => $heartbeat_type->id(),
       '#machine_name' => [
-        'exists' => '\Drupal\heartbeat8\Entity\HeartbeatType::load',
+        'exists' => '\Drupal\heartbeat\Entity\HeartbeatType::load',
       ],
       '#disabled' => !$heartbeat_type->isNew(),
     ];

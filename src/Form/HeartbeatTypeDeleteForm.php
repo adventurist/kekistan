@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8\Form;
+namespace Drupal\heartbeat\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;

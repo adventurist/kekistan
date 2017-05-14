@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8;
+namespace Drupal\heartbeat;
 
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Entity\Routing\AdminHtmlRouteProvider;
@@ -93,7 +93,7 @@ class HeartbeatHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route
         ->setDefaults([
           '_title' => "{$entity_type->getLabel()} revisions",
-          '_controller' => '\Drupal\heartbeat8\Controller\HeartbeatController::revisionOverview',
+          '_controller' => '\Drupal\heartbeat\Controller\HeartbeatController::revisionOverview',
         ])
         ->setRequirement('_permission', 'access heartbeat revisions')
         ->setOption('_admin_route', TRUE);
@@ -116,8 +116,8 @@ class HeartbeatHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route($entity_type->getLinkTemplate('revision'));
       $route
         ->setDefaults([
-          '_controller' => '\Drupal\heartbeat8\Controller\HeartbeatController::revisionShow',
-          '_title_callback' => '\Drupal\heartbeat8\Controller\HeartbeatController::revisionPageTitle',
+          '_controller' => '\Drupal\heartbeat\Controller\HeartbeatController::revisionShow',
+          '_title_callback' => '\Drupal\heartbeat\Controller\HeartbeatController::revisionPageTitle',
         ])
         ->setRequirement('_permission', 'access heartbeat revisions')
         ->setOption('_admin_route', TRUE);
@@ -140,7 +140,7 @@ class HeartbeatHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route($entity_type->getLinkTemplate('revision_revert'));
       $route
         ->setDefaults([
-          '_form' => '\Drupal\heartbeat8\Form\HeartbeatRevisionRevertForm',
+          '_form' => '\Drupal\heartbeat\Form\HeartbeatRevisionRevertForm',
           '_title' => 'Revert to earlier revision',
         ])
         ->setRequirement('_permission', 'revert all heartbeat revisions')
@@ -164,7 +164,7 @@ class HeartbeatHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route($entity_type->getLinkTemplate('revision_delete'));
       $route
         ->setDefaults([
-          '_form' => '\Drupal\heartbeat8\Form\HeartbeatRevisionDeleteForm',
+          '_form' => '\Drupal\heartbeat\Form\HeartbeatRevisionDeleteForm',
           '_title' => 'Delete earlier revision',
         ])
         ->setRequirement('_permission', 'delete all heartbeat revisions')
@@ -188,7 +188,7 @@ class HeartbeatHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route($entity_type->getLinkTemplate('translation_revert'));
       $route
         ->setDefaults([
-          '_form' => '\Drupal\heartbeat8\Form\HeartbeatRevisionRevertTranslationForm',
+          '_form' => '\Drupal\heartbeat\Form\HeartbeatRevisionRevertTranslationForm',
           '_title' => 'Revert to earlier revision of a translation',
         ])
         ->setRequirement('_permission', 'revert all heartbeat revisions')
@@ -212,7 +212,7 @@ class HeartbeatHtmlRouteProvider extends AdminHtmlRouteProvider {
       $route = new Route("/admin/structure/{$entity_type->id()}/settings");
       $route
         ->setDefaults([
-          '_form' => 'Drupal\heartbeat8\Form\HeartbeatSettingsForm',
+          '_form' => 'Drupal\heartbeat\Form\HeartbeatSettingsForm',
           '_title' => "{$entity_type->getLabel()} settings",
         ])
         ->setRequirement('_permission', $entity_type->getAdminPermission())

@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\heartbeat8;
+namespace Drupal\heartbeat;
 
 use Drupal\Core\Entity\Sql\SqlContentEntityStorage;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\heartbeat8\Entity\HeartbeatStreamInterface;
+use Drupal\heartbeat\Entity\HeartbeatStreamInterface;
 
 /**
  * Defines the storage handler class for Heartbeat stream entities.
@@ -13,7 +13,7 @@ use Drupal\heartbeat8\Entity\HeartbeatStreamInterface;
  * This extends the base storage class, adding required special handling for
  * Heartbeat stream entities.
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  */
 class HeartbeatStreamStorage extends SqlContentEntityStorage implements HeartbeatStreamStorageInterface {
 

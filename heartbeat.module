@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains heartbeat8.module.
+ * Contains heartbeat.module.
  */
 
 
@@ -11,19 +11,19 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity;
-use Drupal\heartbeat8\Entity\FILE_FIELD;
-use Drupal\heartbeat8\Entity\Heartbeat;
-use Drupal\heartbeat8\Entity\HeartbeatType;
+use Drupal\heartbeat\Entity\FILE_FIELD;
+use Drupal\heartbeat\Entity\Heartbeat;
+use Drupal\heartbeat\Entity\HeartbeatType;
 
 
 
 /**
  * Implements hook_help().
  */
-function heartbeat8_help($route_name, RouteMatchInterface $route_match) {
+function heartbeat_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
-    // Main module help for the heartbeat8 module.
-    case 'help.page.heartbeat8':
+    // Main module help for the heartbeat module.
+    case 'help.page.heartbeat':
       $output = '';
       $output .= '<h3>' . t('About') . '</h3>';
       $output .= '<p>' . t('Heartbeat for Drupal 8') . '</p>';
@@ -37,7 +37,7 @@ function heartbeat8_help($route_name, RouteMatchInterface $route_match) {
 /**
  * Implements hook_theme().
  */
-function heartbeat8_theme() {
+function heartbeat_theme() {
   $theme = [];
   $theme['heartbeat'] = array(
     'render element' => 'elements',
@@ -55,7 +55,7 @@ function heartbeat8_theme() {
 /**
  * Implements hook_theme_suggestions_HOOK().
  */
-function heartbeat8_theme_suggestions_heartbeat(array $variables) {
+function heartbeat_theme_suggestions_heartbeat(array $variables) {
   $suggestions = array();
   $entity = $variables['elements']['#heartbeat'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
@@ -71,7 +71,7 @@ function heartbeat8_theme_suggestions_heartbeat(array $variables) {
 /**
  * Implements hook_entity_insert().
  */
-function heartbeat8_entity_insert(EntityInterface $entity) {
+function heartbeat_entity_insert(EntityInterface $entity) {
 
 if ($entity instanceof \Drupal\node\Entity\Node) {
 
@@ -94,7 +94,7 @@ if ($entity instanceof \Drupal\node\Entity\Node) {
 
   if ($nid) {
 
-    $heartbeatTypeService = \Drupal::service('heartbeat8.heartbeattype');
+    $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
 
     foreach ($heartbeatTypeService->getTypes() as $type) {
 
@@ -116,7 +116,7 @@ if ($entity instanceof \Drupal\node\Entity\Node) {
 
 }
 
-function heartbeat8_node_presave(NodeInterface $node) {
+function heartbeat_node_presave(NodeInterface $node) {
   $uid = $node->getOwnerId();
   $stuffTOdo = null;
 }

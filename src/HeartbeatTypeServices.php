@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\heartbeat8;
+namespace Drupal\heartbeat;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\Query\QueryFactory;
 
 /**
  * Class HeartbeatTypeServices.
  *
- * @package Drupal\heartbeat8
+ * @package Drupal\heartbeat
  */
 class HeartbeatTypeServices {
 

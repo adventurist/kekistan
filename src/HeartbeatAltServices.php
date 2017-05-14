@@ -1,16 +1,16 @@
 <?php
 
-namespace Drupal\heartbeat8;
+namespace Drupal\heartbeat;
 use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeRepository;
-use Drupal\heartbeat8\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatTypeServices;
 
 /**
  * Class HeartbeatAltServices.
  *
- * @package Drupal\heartbeat8
+ * @package Drupal\heartbeat
  */
 class HeartbeatAltServices {
 
@@ -39,20 +39,20 @@ class HeartbeatAltServices {
 //   */
 //  protected $;
 //  /**
-//   * Drupal\heartbeat8\HeartbeatTypeServices definition.
+//   * Drupal\heartbeat\HeartbeatTypeServices definition.
 //   *
-//   * @var \Drupal\heartbeat8\HeartbeatTypeServices
+//   * @var \Drupal\heartbeat\HeartbeatTypeServices
 //   */
 //  protected $;
 //  /**
 //   * Constructor.
 //   */
-//  public function __construct(QueryFactory $entity_query, EntityManager $entity_manager, EntityTypeManager $entity_type_manager, EntityTypeRepository $entity_type_repository, HeartbeatTypeServices $heartbeat8_heartbeattype) {
+//  public function __construct(QueryFactory $entity_query, EntityManager $entity_manager, EntityTypeManager $entity_type_manager, EntityTypeRepository $entity_type_repository, HeartbeatTypeServices $heartbeat_heartbeattype) {
 //    $this-> = $entity_query;
 //    $this-> = $entity_manager;
 //    $this-> = $entity_type_manager;
 //    $this-> = $entity_type_repository;
-//    $this-> = $heartbeat8_heartbeattype;
+//    $this-> = $heartbeat_heartbeattype;
 //  }
 
 }

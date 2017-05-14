@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8;
+namespace Drupal\heartbeat;
 
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeRepository;
@@ -9,7 +9,7 @@ use Drupal\Core\Entity\Query\QueryFactory;
 /**
  * Class HeartbeatStreamServices.
  *
- * @package Drupal\heartbeat8
+ * @package Drupal\heartbeat
  */
 class HeartbeatStreamServices {
 

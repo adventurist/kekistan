@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8\Form;
+namespace Drupal\heartbeat\Form;
 
 use Drupal\Core\Database\Connection;
 use Drupal\Core\Entity\EntityStorageInterface;
@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Provides a form for deleting a Heartbeat stream revision.
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  */
 class HeartbeatStreamRevisionDeleteForm extends ConfirmFormBase {
 
@@ -20,7 +20,7 @@ class HeartbeatStreamRevisionDeleteForm extends ConfirmFormBase {
   /**
    * The Heartbeat stream revision.
    *
-   * @var \Drupal\heartbeat8\Entity\HeartbeatStreamInterface
+   * @var \Drupal\heartbeat\Entity\HeartbeatStreamInterface
    */
   protected $revision;
 
