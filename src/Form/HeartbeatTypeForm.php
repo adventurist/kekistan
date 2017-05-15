@@ -80,6 +80,7 @@ class HeartbeatTypeForm extends EntityForm {
 
     $this->entityTypes = Entity\Heartbeat::getEntityNames($this->entityTypeManager->getDefinitions());
     $doStuff = 'stuff';
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -92,7 +93,6 @@ class HeartbeatTypeForm extends EntityForm {
     $form_state->setCached(FALSE);
 
     $heartbeat_type = $this->entity;
-    $tokens = \Drupal::token()->getInfo();
     $form['#tree'] = TRUE;
 
     $form['#attached']['library'] = 'heartbeat/treeTable';
@@ -125,24 +125,45 @@ class HeartbeatTypeForm extends EntityForm {
       '#options' => array($this->entityTypes
       ),
       '#required' => TRUE,
-      '#ajax' => [
-        'callback' => '::getBundlesForEntity',
-        'event' => 'change',
-        'progress' => array(
-          'type' => 'throbber',
-          'message' => t('Getting bundles'),
-        ),
-      ]
+//      '#ajax' => [
+//        'callback' => '::getBundlesForEntity',
+//        'event' => 'change',
+//        'progress' => array(
+//          'type' => 'throbber',
+//          'message' => t('Getting bundles'),
+//        ),
+//      ],
+//      '#submit' => array('::getBundlesForEntity'),
     );
 
     $bundles = $form_state->get('entity_bundles');
 
     $form['entity_bundles'] = array(
+      '#type' => 'container',
+      '#prefix' => '<div id="entity-bundles">',
+      '#suffix' => '</div>'
+    );
+
+    $form['entity_bundles']['getBundles'] = [
+      '#type' => 'submit',
+      '#value' => t('Getting bundles'),
+      '#submit' => array('::getBundlesForEntity'),
+      '#ajax' => [
+        'callback' => '::getBundlesForEntity',
+        'wrapper' => 'entity-bundles',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => t('Getting bundles'),
+        ),
+      ],
+    ];
+
+    $form['entity_bundles']['list'] = array(
       '#type' => 'select',
       '#title' => $this->t('Entity Bundles'),
 //      '#default_value' => $heartbeat_type->getEntityType(),
-      '#description' => $this->t("Primary Entity Type for this Heartbeat Type"),
-      '#options' => array($bundles),
+      '#description' => $this->t("Any bundles available to the specified entity"),
+      '#options' => $bundles,
     );
 
 
@@ -353,10 +374,11 @@ class HeartbeatTypeForm extends EntityForm {
     $bundleNames = array();
 
     foreach ($bundles as $bundle) {
-      $bundleNames = $bundle->id();
+      $bundleNames[] = $bundle->id();
     }
 
-    $form_state->set('entityBundles', $bundleNames);
+    $form_state->set('entity_bundles', $bundleNames);
+//    $form['entity_bundles']['#options'] = array($bundleNames);
     $form_state->setRebuild();
 
     return $form['entity_bundles'];
@@ -381,6 +403,16 @@ class HeartbeatTypeForm extends EntityForm {
     $this->treeAdded = TRUE;
     // Return the AjaxResponse Object.
     return $ajax_response;
+  }
+
+
+  public function getBundlesAlternate(array &$form, FormStateInterface $form_state) {
+    $ajax_response = new AjaxResponse();
+
+    $AddChartForm = \Drupal::formBuilder()->getForm('Drupal\heartbeat\Form\HeartbeatTypeForm');
+
+    $ajax_response->addCommand(new HtmlCommand('#formarea', $AddChartForm));
+
   }
 
 }
