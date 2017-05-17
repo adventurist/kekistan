@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8\Form;
+namespace Drupal\heartbeat\Form;
 
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -8,9 +8,9 @@ use Drupal\Core\Form\FormStateInterface;
 /**
  * Class HeartbeatStreamSettingsForm.
  *
- * @package Drupal\heartbeat8\Form
+ * @package Drupal\heartbeat\Form
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  */
 class HeartbeatStreamSettingsForm extends FormBase {
 

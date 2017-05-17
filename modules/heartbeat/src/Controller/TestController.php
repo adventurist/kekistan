@@ -1,37 +1,37 @@
 <?php
 
-namespace Drupal\heartbeat8\Controller;
+namespace Drupal\heartbeat\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\heartbeat8\HeartbeatTypeServices;
-use Drupal\heartbeat8\HeartbeatStreamServices;
+use Drupal\heartbeat\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatStreamServices;
 
 /**
  * Class TestController.
  *
- * @package Drupal\heartbeat8\Controller
+ * @package Drupal\heartbeat\Controller
  */
 class TestController extends ControllerBase {
 
   /**
-   * Drupal\heartbeat8\HeartbeatTypeServices definition.
+   * Drupal\heartbeat\HeartbeatTypeServices definition.
    *
-   * @var Drupal\heartbeat8\HeartbeatTypeServices
+   * @var HeartbeatTypeServices
    */
-  protected $heartbeat8_heartbeattype;
+  protected $heartbeat_heartbeattype;
 
   /**
-   * Drupal\heartbeat8\HeartbeatStreamServices definition.
+   * Drupal\heartbeat\HeartbeatStreamServices definition.
    *
-   * @var Drupal\heartbeat8\HeartbeatStreamServices
+   * @var HeartbeatStreamServices
    */
   protected $heartbeatstream;
   /**
    * {@inheritdoc}
    */
-  public function __construct(HeartbeatTypeServices $heartbeat8_heartbeattype, HeartbeatStreamServices $heartbeatstream) {
-    $this->heartbeat8_heartbeattype = $heartbeat8_heartbeattype;
+  public function __construct(HeartbeatTypeServices $heartbeat_heartbeattype, HeartbeatStreamServices $heartbeatstream) {
+    $this->heartbeat_heartbeattype = $heartbeat_heartbeattype;
     $this->heartbeatstream = $heartbeatstream;
   }
 
@@ -40,7 +40,7 @@ class TestController extends ControllerBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('heartbeat8.heartbeattype'),
+      $container->get('heartbeat.heartbeattype'),
       $container->get('heartbeatstream')
     );
   }
@@ -53,12 +53,25 @@ class TestController extends ControllerBase {
    */
   public function start($arg) {
 
-    $streamEntity = $this->heartbeatstream->getEntityById(1);
-    $types = $streamEntity->get('types');
-    $i = 1;
-    foreach($types->getValue() as $heartbeatType) {
-      $arg .= '   ' . $i . '. ' . $heartbeatType['target_id'];
-      $i++;
+    $streamEntities = $this->heartbeatstream->loadAllEntities();
+
+    foreach ($streamEntities as $streamEntityId) {
+
+      $streamEntity = $this->heartbeatstream->getEntityById($streamEntityId);
+      $types = $streamEntity->get('types');
+      $arg .= 'Stream::   ' . $streamEntity->id();
+
+      $i = 1;
+
+      foreach ($types->getValue() as $heartbeatType) {
+        $arg .= '   ' . $i . '. ' . $heartbeatType['target_id'];
+        $i++;
+      }
+    }
+
+    $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
+    foreach ($heartbeatTypeService->getTypes() as $type) {
+      $heartbeatTypeEntity = \Drupal::entityTypeManager()->getStorage('heartbeat_type')->load($type);
     }
     $emptyVariable = 'not empty';
 

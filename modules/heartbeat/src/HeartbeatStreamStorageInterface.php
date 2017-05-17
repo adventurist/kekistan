@@ -1,11 +1,11 @@
 <?php
 
-namespace Drupal\heartbeat8;
+namespace Drupal\heartbeat;
 
 use Drupal\Core\Entity\ContentEntityStorageInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Language\LanguageInterface;
-use Drupal\heartbeat8\Entity\HeartbeatStreamInterface;
+use Drupal\heartbeat\Entity\HeartbeatStreamInterface;
 
 /**
  * Defines the storage handler class for Heartbeat stream entities.
@@ -13,14 +13,14 @@ use Drupal\heartbeat8\Entity\HeartbeatStreamInterface;
  * This extends the base storage class, adding required special handling for
  * Heartbeat stream entities.
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  */
 interface HeartbeatStreamStorageInterface extends ContentEntityStorageInterface {
 
   /**
    * Gets a list of Heartbeat stream revision IDs for a specific Heartbeat stream.
    *
-   * @param \Drupal\heartbeat8\Entity\HeartbeatStreamInterface $entity
+   * @param \Drupal\heartbeat\Entity\HeartbeatStreamInterface $entity
    *   The Heartbeat stream entity.
    *
    * @return int[]
@@ -42,7 +42,7 @@ interface HeartbeatStreamStorageInterface extends ContentEntityStorageInterface 
   /**
    * Counts the number of revisions in the default language.
    *
-   * @param \Drupal\heartbeat8\Entity\HeartbeatStreamInterface $entity
+   * @param \Drupal\heartbeat\Entity\HeartbeatStreamInterface $entity
    *   The Heartbeat stream entity.
    *
    * @return int

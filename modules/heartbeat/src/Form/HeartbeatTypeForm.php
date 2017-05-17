@@ -1,9 +1,11 @@
 <?php
 
-namespace Drupal\heartbeat8\Form;
+namespace Drupal\heartbeat\Form;
 
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Render\Renderer;
-use Drupal\heartbeat8;
+use Drupal\heartbeat;
+use Drupal\heartbeat\Entity;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;
 use Drupal\Core\Ajax\InvokeCommand;
@@ -16,7 +18,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Class HeartbeatTypeForm.
  *
  * @property \Drupal\Component\Render\MarkupInterface|string tokenTree
- * @package Drupal\heartbeat8\Form
+ * @package Drupal\heartbeat\Form
  */
 class HeartbeatTypeForm extends EntityForm {
 
@@ -26,15 +28,24 @@ class HeartbeatTypeForm extends EntityForm {
 
   private $tokenTree;
 
+  protected $entityTypeManager;
+
+  protected $entityTypes;
+
   private $treeAdded = false;
 
+  private $messageMap = array();
 
 
   /**
    * {@inheritdoc}
+   * @throws \Exception
    */
   public static function create(ContainerInterface $container) {
-    return new static($container->get('token.tree_builder'), $container->get('renderer'));
+    return new static(
+      $container->get('token.tree_builder'),
+      $container->get('renderer'),
+      $container->get('entity_type.manager'));
   }
 
 
@@ -51,11 +62,12 @@ class HeartbeatTypeForm extends EntityForm {
    * @param Renderer $renderer
    * @throws \Exception
    */
-  public function __construct(TreeBuilder $tree_builder, Renderer $renderer) {
+  public function __construct(TreeBuilder $tree_builder, Renderer $renderer, EntityTypeManager $entityTypeManager) {
 
 
     $this->treeBuilder = $tree_builder;
     $this->renderer = $renderer;
+    $this->entityTypeManager = $entityTypeManager;
 
     $this->tokenTree = $this->renderer->render($this->treeBuilder->buildAllRenderable([
       'click_insert' => TRUE,
@@ -68,7 +80,9 @@ class HeartbeatTypeForm extends EntityForm {
 
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    $this->entityTypes = Entity\Heartbeat::getEntityNames($this->entityTypeManager->getDefinitions());
     $doStuff = 'stuff';
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -81,10 +95,9 @@ class HeartbeatTypeForm extends EntityForm {
     $form_state->setCached(FALSE);
 
     $heartbeat_type = $this->entity;
-    $tokens = \Drupal::token()->getInfo();
     $form['#tree'] = TRUE;
 
-    $form['#attached']['library'] = 'heartbeat8/treeTable';
+    $form['#attached']['library'] = 'heartbeat/treeTable';
 
     $form['label'] = array(
       '#type' => 'textfield',
@@ -103,6 +116,56 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => $heartbeat_type->getDescription(),
       '#description' => $this->t("Description of the Heartbeat Type"),
       '#required' => TRUE,
+    );
+
+
+    $form['entity_type'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Entity Type'),
+//      '#default_value' => $heartbeat_type->getEntityType(),
+      '#description' => $this->t("Primary Entity Type for this Heartbeat Type"),
+      '#options' => array($this->entityTypes
+      ),
+      '#required' => TRUE,
+//      '#ajax' => [
+//        'callback' => '::getBundlesForEntity',
+//        'event' => 'change',
+//        'progress' => array(
+//          'type' => 'throbber',
+//          'message' => t('Getting bundles'),
+//        ),
+//      ],
+//      '#submit' => array('::getBundlesForEntity'),
+    );
+
+    $bundles = $form_state->get('entity_bundles');
+
+    $form['entity_bundles'] = array(
+      '#type' => 'container',
+      '#prefix' => '<div id="entity-bundles">',
+      '#suffix' => '</div>'
+    );
+
+    $form['entity_bundles']['getBundles'] = [
+      '#type' => 'submit',
+      '#value' => t('Getting bundles'),
+      '#submit' => array('::getBundlesForEntity'),
+      '#ajax' => [
+        'callback' => '::getBundlesForEntity',
+        'wrapper' => 'entity-bundles',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => t('Getting bundles'),
+        ),
+      ],
+    ];
+
+    $form['entity_bundles']['list'] = array(
+      '#type' => 'select',
+      '#title' => $this->t('Entity Bundles'),
+//      '#default_value' => $heartbeat_type->getEntityType(),
+      '#description' => $this->t("Any bundles available to the specified entity"),
+      '#options' => $bundles,
     );
 
 
@@ -132,11 +195,11 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => $heartbeat_type->getPerms(),
       '#description' => $this->t("Default permissions to view Heartbeats of this type"),
       '#options' => array(
-        heartbeat8\HEARTBEAT_NONE => 'None',
-        heartbeat8\HEARTBEAT_PRIVATE => 'Private',
-        heartbeat8\HEARTBEAT_PUBLIC_TO_ADDRESSEE => 'Public to Addressee',
-        heartbeat8\HEARTBEAT_PUBLIC_TO_CONNECTED => 'Public to Connected',
-        heartbeat8\HEARTBEAT_PUBLIC_TO_ALL => 'Public to All',
+        HEARTBEAT_NONE => 'None',
+        HEARTBEAT_PRIVATE => 'Private',
+        HEARTBEAT_PUBLIC_TO_ADDRESSEE => 'Public to Addressee',
+        HEARTBEAT_PUBLIC_TO_CONNECTED => 'Public to Connected',
+        HEARTBEAT_PUBLIC_TO_ALL => 'Public to All',
 
       ),
       '#required' => TRUE,
@@ -149,9 +212,9 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => 0,
       '#description' => $this->t("Type of group associated with Heartbeats of this type"),
       '#options' => array(
-        heartbeat8\HEARTBEAT_GROUP_NONE => 'None',
-        heartbeat8\HEARTBEAT_GROUP_SINGLE =>'Single',
-        heartbeat8\HEARTBEAT_GROUP_SUMMARY => 'Group',
+        HEARTBEAT_GROUP_NONE => 'None',
+        HEARTBEAT_GROUP_SINGLE =>'Single',
+        HEARTBEAT_GROUP_SUMMARY => 'Group',
       ),
       '#required' => TRUE,
     );
@@ -186,7 +249,7 @@ class HeartbeatTypeForm extends EntityForm {
           '#type' => 'textfield',
           '#title' => t($messageArguments[$i]),
           '#description' => t('Map value to this variable'),
-          '#default_value' =>$variableValue,
+          '#default_value' => $variableValue,
 //          '#ajax' => !$this->treeAdded ? [
 //            'callback' => '::tokenSelectDialog',
 //            'event' => 'focus',
@@ -219,7 +282,7 @@ class HeartbeatTypeForm extends EntityForm {
       '#type' => 'machine_name',
       '#default_value' => $heartbeat_type->id(),
       '#machine_name' => [
-        'exists' => '\Drupal\heartbeat8\Entity\HeartbeatType::load',
+        'exists' => '\Drupal\heartbeat\Entity\HeartbeatType::load',
       ],
       '#disabled' => !$heartbeat_type->isNew(),
     ];
@@ -234,12 +297,14 @@ class HeartbeatTypeForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $heartbeat_type = $this->entity;
-
+    $mapValue = $form_state->getValue('messageMap');
+    $mapObj = $form_state->get('messageMap');
     $heartbeat_type->set('description', $form_state->getValue('description'));
     $heartbeat_type->set('message', $form_state->getValue('message'));
     $heartbeat_type->set('perms', $form_state->getValue('perms'));
     $heartbeat_type->set('variables', $form_state->getValue('variables'));
-//    $heartbeat_type
+    $heartbeat_type->set('arguments', json_encode($form_state->get('messageMap')));
+
     $status = $heartbeat_type->save();
 
     switch ($status) {
@@ -267,13 +332,22 @@ class HeartbeatTypeForm extends EntityForm {
 
     $messageArgString = $form_state->getValue('message');
 
-    $argsArray = $this->extractMessageArguments($messageArgString);
+    if ($form_state != NULL) {
+      $argsArray = $this->extractMessageArguments($messageArgString, $form_state);
 
-    $form_state->set('data_hidden', $argsArray);
-    $form_state->setRebuild();
+      foreach ($argsArray as $key => $arg) {
+        $this->messageMap[$key] = '!' . $arg;
+      }
 
-    return $form['variables'];
+      $form_state->set('messageMapKey', $this->messageMap);
+      $form_state->set('data_hidden', $argsArray);
+      $form_state->setRebuild();
 
+      return $form['variables'];
+
+    } else {
+      return NULL;
+    }
   }
 
   public function prepareVariables(&$form, FormStateInterface $form_state) {
@@ -282,6 +356,9 @@ class HeartbeatTypeForm extends EntityForm {
 
 
   private function extractMessageArguments($message) {
+//TODO find solution for trailing exclamation marks being wrongly interpreted
+    //ie parse each word in string and reconstruct string prior to exploding it on
+    //exclamation marks again
     $messageArguments = array_slice(explode('!', $message), 1);
 
     $argsArray = array();
@@ -292,10 +369,58 @@ class HeartbeatTypeForm extends EntityForm {
 
         $cleanArgument = strpos($argument, ' ') ? substr($argument, 0, strpos($argument, ' ')) : $argument;
         $argsArray[] = $cleanArgument;
+        $this->messageMap[] = '!' . $cleanArgument;
 
       }
     }
+
     return $argsArray;
+  }
+
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+
+    $messageMapKeysget = $form_state->get('messageMapKey');
+
+    if ($variables = $form_state->getValue('variables')) {
+
+      $num = count($variables);
+
+      for ($i = 0; $i < $num; $i++) {
+        if (!is_string($variables[$i])) { continue; }
+          $this->messageMap[$messageMapKeysget[$i]] = $variables[$i];
+      }
+
+      $form_state->set('messageMap', $this->messageMap);
+
+      parent::submitForm($form, $form_state);
+
+    }
+  }
+
+  /**
+   * Custom form validation to rebuild
+   * Form field for mapping Message Arguments
+   */
+
+  public function getBundlesForEntity(array &$form, FormStateInterface $form_state) {
+
+    $entityType = $this->entityTypes[$form_state->getValue('entity_type')];
+
+    $entity = $this->entityTypeManager->getStorage($entityType);
+    $bundleTypeName = $entity->getEntityType()->getBundleEntityType();
+    $bundles = $this->entityTypeManager->getStorage($bundleTypeName)->loadMultiple();
+    $bundleNames = array();
+
+    foreach ($bundles as $bundle) {
+      $bundleNames[] = $bundle->id();
+    }
+
+    $form_state->set('entity_bundles', $bundleNames);
+//    $form['entity_bundles']['#options'] = array($bundleNames);
+    $form_state->setRebuild();
+
+    return $form['entity_bundles'];
+
   }
 
   public function tokenSelectDialog(array &$form, FormStateInterface $form_state) {
@@ -316,6 +441,16 @@ class HeartbeatTypeForm extends EntityForm {
     $this->treeAdded = TRUE;
     // Return the AjaxResponse Object.
     return $ajax_response;
+  }
+
+
+  public function getBundlesAlternate(array &$form, FormStateInterface $form_state) {
+    $ajax_response = new AjaxResponse();
+
+    $AddChartForm = \Drupal::formBuilder()->getForm('Drupal\heartbeat\Form\HeartbeatTypeForm');
+
+    $ajax_response->addCommand(new HtmlCommand('#formarea', $AddChartForm));
+
   }
 
 }

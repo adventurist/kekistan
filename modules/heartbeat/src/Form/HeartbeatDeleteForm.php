@@ -1,13 +1,13 @@
 <?php
 
-namespace Drupal\heartbeat8\Form;
+namespace Drupal\heartbeat\Form;
 
 use Drupal\Core\Entity\ContentEntityDeleteForm;
 
 /**
  * Provides a form for deleting Heartbeat entities.
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  */
 class HeartbeatDeleteForm extends ContentEntityDeleteForm {
 

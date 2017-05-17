@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8\Entity;
+namespace Drupal\heartbeat\Entity;
 
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -12,28 +12,28 @@ use Drupal\user\UserInterface;
 /**
  * Defines the Heartbeat entity.
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  *
  * @ContentEntityType(
  *   id = "heartbeat",
  *   label = @Translation("Heartbeat"),
  *   bundle_label = @Translation("Heartbeat type"),
  *   handlers = {
- *     "storage" = "Drupal\heartbeat8\HeartbeatStorage",
+ *     "storage" = "Drupal\heartbeat\HeartbeatStorage",
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\heartbeat8\HeartbeatListBuilder",
- *     "views_data" = "Drupal\heartbeat8\Entity\HeartbeatViewsData",
- *     "translation" = "Drupal\heartbeat8\HeartbeatTranslationHandler",
+ *     "list_builder" = "Drupal\heartbeat\HeartbeatListBuilder",
+ *     "views_data" = "Drupal\heartbeat\Entity\HeartbeatViewsData",
+ *     "translation" = "Drupal\heartbeat\HeartbeatTranslationHandler",
  *
  *     "form" = {
- *       "default" = "Drupal\heartbeat8\Form\HeartbeatForm",
- *       "add" = "Drupal\heartbeat8\Form\HeartbeatForm",
- *       "edit" = "Drupal\heartbeat8\Form\HeartbeatForm",
- *       "delete" = "Drupal\heartbeat8\Form\HeartbeatDeleteForm",
+ *       "default" = "Drupal\heartbeat\Form\HeartbeatForm",
+ *       "add" = "Drupal\heartbeat\Form\HeartbeatForm",
+ *       "edit" = "Drupal\heartbeat\Form\HeartbeatForm",
+ *       "delete" = "Drupal\heartbeat\Form\HeartbeatDeleteForm",
  *     },
- *     "access" = "Drupal\heartbeat8\HeartbeatAccessControlHandler",
+ *     "access" = "Drupal\heartbeat\HeartbeatAccessControlHandler",
  *     "route_provider" = {
- *       "html" = "Drupal\heartbeat8\HeartbeatHtmlRouteProvider",
+ *       "html" = "Drupal\heartbeat\HeartbeatHtmlRouteProvider",
  *     },
  *   },
  *   base_table = "heartbeat",
@@ -69,6 +69,33 @@ use Drupal\user\UserInterface;
  *   field_ui_base_route = "entity.heartbeat_type.edit_form"
  * )
  */
+
+// Always block from display
+const HEARTBEAT_NONE = -1;
+
+// Display only activity messages that are mine or addressed to me
+const HEARTBEAT_PRIVATE = 0;
+
+// Only the person that is chosen by the actor, can see the message
+const HEARTBEAT_PUBLIC_TO_ADDRESSEE = 1;
+
+// Display activity message of all my user relations, described in contributed modules
+const HEARTBEAT_PUBLIC_TO_CONNECTED = 2;
+
+// Everyone can see this activity message, unless this type of message is set to private
+const HEARTBEAT_PUBLIC_TO_ALL = 4;
+
+
+//Group Types
+
+const HEARTBEAT_GROUP_NONE = 11;
+const HEARTBEAT_GROUP_SINGLE = 12;
+const HEARTBEAT_GROUP_SUMMARY = 13;
+
+const FILE_FIELD = 'Drupal\file\Plugin\Field\FieldType\FileFieldItemList';
+
+
+
 class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterface {
 
   use EntityChangedTrait;
@@ -82,6 +109,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       'user_id' => \Drupal::currentUser()->id(),
     );
   }
+
 
   /**
    * {@inheritdoc}
@@ -309,7 +337,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   /**
    * Returns the node type label for the passed node.
    *
-   * @param \Drupal\heartbeat8\Entity\HeartbeatInterface $heartbeat
+   * @param \Drupal\heartbeat\Entity\HeartbeatInterface $heartbeat
    *   A heartbeat entity to return the heartbeat type's label for.
    *
    * @return string|false
@@ -335,8 +363,142 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return
    *   The number of activities whose heartbeat type field was modified.
    */
-  function heartbeat_type_update_nodes($old_id, $new_id) {
+  public function heartbeat_type_update_nodes($old_id, $new_id) {
     return \Drupal::entityManager()->getStorage('heartbeat')->updateType($old_id, $new_id);
   }
 
+
+  /**
+   * Builds a message template for a given HeartbeatType
+   *
+   * @param HeartbeatType $heartbeatType
+   * @param null $mediaData
+   * @return null|string
+   */
+  public static function buildMessage(HeartbeatType $heartbeatType, $mediaData = NULL) {
+//!username has added !node_type !node_title. <a href="/node/"><img src="/sites/default/files/!node_image"/></a>
+
+    /** @noinspection NestedTernaryOperatorInspection */
+    $message = $heartbeatType->get('message') . '<a href="/node/!nid">';
+    $message .= $mediaData ? self::buildMediaMarkup($mediaData) : '';
+    $message .= '</a>';
+
+    return $message;
+  }
+
+
+  private static function buildMediaMarkup($mediaData) {
+
+    $markup = '';
+
+    foreach ($mediaData as $media) {
+      $markup .= self::mediaTag($media->type, $media->path);
+    }
+
+    return $markup;
+  }
+
+  private static function mediaTag($type, $filePath) {
+    return '<'. $type . ' src="' . $filePath . '" / >';
+  }
+
+
+  /**
+   * Returns class of argument
+   *
+   * @param $field
+   * @return string
+   */
+  public static function findClass($field) {
+    return get_class($field);
+  }
+
+
+  /**
+   * Returns an array of classes for array argument
+   * @param $fields
+   * @return array
+   */
+  public static function findAllMedia($fields) {
+    return array_map(array(get_called_class(), 'findClass'), $fields);
+  }
+
+
+  /**
+   * Returns all media types for an array of fields
+   *
+   * @param $fields
+   * @return array
+   */
+  public static function mediaFieldTypes($fields) {
+
+    $types = array();
+
+    foreach ($fields as $field) {
+      if ($field instanceof \Drupal\file\Plugin\Field\FieldType\FileFieldItemList) {
+
+        if ($field->getFieldDefinition()->getType() === 'image' ||
+            $field->getFieldDefinition()->getType() === 'video' ||
+            $field->getFieldDefinition()->getType() === 'audio') {
+
+          $fieldValue = $field->getValue();
+          $fileId = $fieldValue[0]['target_id'];
+          $file = \Drupal::entityTypeManager()->getStorage('file')->load($fileId);
+
+          if ($file !== NULL && is_object($file)) {
+
+            $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $file->url());
+            $types[] = $mediaObject;
+
+          } else {
+            continue;
+          }
+        }
+      }
+    }
+    return $types;
+  }
+
+
+  /**
+   * Parses a HeartbeatType message template and maps
+   * variable values onto matching keywords
+   *
+   * @param $translatedMessage
+   * @param $variables
+   * @return string
+   */
+  public static function parseMessage($translatedMessage, $variables) {
+    return strtr($translatedMessage, $variables);
+  }
+
+  public static function createHeartbeatMedia($type, $path) {
+
+    $mediaObject = new \stdClass();
+    $mediaObject->type = $type;
+    $mediaObject->path = $path;
+
+    return $mediaObject;
+  }
+
+
+  public static function getEntityNames($entityTypes) {
+    $names = array();
+    foreach ($entityTypes as $type) {
+
+      if (($type->getBaseTable() === 'node') ||
+          ($type->getBaseTable() === 'user')
+        ||
+          ($type->getStorageClass() !== NULL &&
+            strpos($type->getStorageClass(), $type->getLabel()->getUntranslatedString())
+          )
+      ) {
+        $names[] = $type->id();
+      }
+    }
+
+    sort($names);
+
+    return $names;
+  }
 }

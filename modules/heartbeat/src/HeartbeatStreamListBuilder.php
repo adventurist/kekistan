@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\heartbeat8;
+namespace Drupal\heartbeat;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
@@ -10,7 +10,7 @@ use Drupal\Core\Url;
 /**
  * Defines a class to build a listing of Heartbeat stream entities.
  *
- * @ingroup heartbeat8
+ * @ingroup heartbeat
  */
 class HeartbeatStreamListBuilder extends EntityListBuilder {
 
@@ -29,7 +29,7 @@ class HeartbeatStreamListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var $entity \Drupal\heartbeat8\Entity\HeartbeatStream */
+    /* @var $entity \Drupal\heartbeat\Entity\HeartbeatStream */
     $row['id'] = $entity->id();
     $row['name'] = $this->l(
       $entity->label(),

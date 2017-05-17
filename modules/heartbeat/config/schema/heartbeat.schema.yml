@@ -1,4 +1,4 @@
-heartbeat8.heartbeat_type.*:
+heartbeat.heartbeat_type.*:
   type: config_entity
   label: 'Heartbeat type config'
   mapping:
@@ -31,9 +31,9 @@ heartbeat8.heartbeat_type.*:
     group_type:
       type: string
       label: 'group_type'
-    concat_args:
+    arguments:
       type: blob
-      label: 'concat_args'
+      label: 'arguments'
     variables:
       type: blob
       label: 'variables'

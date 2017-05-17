@@ -11,7 +11,7 @@ use Drupal\user\RoleInterface;
 /**
  * Implements hook_requirements().
  */
-function heartbeat8_requirements($phase) {
+function heartbeat_requirements($phase) {
   $requirements = array();
   if ($phase === 'runtime') {
     // Only show rebuild button if there are either 0, or 2 or more, rows
@@ -40,7 +40,7 @@ function heartbeat8_requirements($phase) {
  * Implements hook_schema().
  * ** //TODO Have not yet set export schema for CTOOLS as CTOOLS is not yet a part of Drupal 8
  */
-function heartbeat8_schema() {
+function heartbeat_schema() {
   $schema['heartbeat_messages'] = array(
     'description' => 'Table that contains predefined messages that can be used in heartbeat views.',
     'fields' => array(
@@ -90,7 +90,7 @@ function heartbeat8_schema() {
         'default' => 'single',
         'description' => 'The group type of the template',
       ),
-      'concat_args' => array(
+      'concatargs' => array(
         'description' => 'Arguments for concatenation message.',
         'type' => 'blob',
         'serialize' => TRUE,
@@ -117,7 +117,7 @@ function heartbeat8_schema() {
 
 
 
-  $schema['heartbeat_activity'] = array(
+  $schema['heartbeat'] = array(
     'description' => 'Table that contains logs of all user triggerable actions.',
     'fields' => array(
       'uaid' => array(
@@ -224,7 +224,7 @@ function heartbeat8_schema() {
   $schema['heartbeat_user_templates'] = heartbeat_install_table_user_templates();
 
 
-  $schema['heartbeat_streams'] = array(
+  $schema['heartbeat_stream'] = array(
     'description' => 'Table that contains heartbeat streams.',
     // CTools export definitions.
 //    'export' => array(

@@ -1,19 +1,19 @@
 <?php
 
-namespace Drupal\heartbeat8\Controller;
+namespace Drupal\heartbeat\Controller;
 
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Url;
-use Drupal\heartbeat8\Entity\HeartbeatInterface;
+use Drupal\heartbeat\Entity\HeartbeatInterface;
 
 /**
  * Class HeartbeatController.
  *
  *  Returns responses for Heartbeat routes.
  *
- * @package Drupal\heartbeat8\Controller
+ * @package Drupal\heartbeat\Controller
  */
 class HeartbeatController extends ControllerBase implements ContainerInjectionInterface {
 
@@ -50,7 +50,7 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
   /**
    * Generates an overview table of older revisions of a Heartbeat .
    *
-   * @param \Drupal\heartbeat8\Entity\HeartbeatInterface $heartbeat
+   * @param \Drupal\heartbeat\Entity\HeartbeatInterface $heartbeat
    *   A Heartbeat  object.
    *
    * @return array
@@ -77,7 +77,7 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
     $latest_revision = TRUE;
 
     foreach (array_reverse($vids) as $vid) {
-      /** @var \Drupal\heartbeat8\HeartbeatInterface $revision */
+      /** @var \Drupal\heartbeat\HeartbeatInterface $revision */
       $revision = $heartbeat_storage->loadRevision($vid);
       // Only show revisions that are affected by the language that is being
       // displayed.
