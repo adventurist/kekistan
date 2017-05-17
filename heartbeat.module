@@ -82,23 +82,33 @@ if ($entity instanceof \Drupal\node\Entity\Node) {
 
   /** @noinspection NestedTernaryOperatorInspection */
   /** @noinspection ArrayCastingEquivalentInspection */
-  $variables = array(
-    '!nid' => $nid,
-    '!entityType' => $type,
-    '!uid' => $user->id(),
-    '!user' => $user->getAccountName(),
-    'media' => $media,
-  );
+//  $variables = array(
+//    '!nid' => $nid,
+//    '!entityType' => $type,
+//    '!uid' => $user->id(),
+//    '!user' => $user->getAccountName(),
+//    'media' => $media,
+//  );
 
 }
 
   if ($nid) {
 
     $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
+    $tokenService= \Drupal::service('token');
 
     foreach ($heartbeatTypeService->getTypes() as $type) {
 
       $heartbeatTypeEntity = $heartbeatTypeService->load($type);
+      $arguments = json_decode($heartbeatTypeEntity->getArguments());
+      $argKeys = array_keys($arguments);
+
+      foreach ($arguments as $key => $argument) {
+        $variables[$key] = $argument;
+      }
+
+      $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
+      $replacedMessageString = $tokenService->replace($preparsedMessageString, array('node' => $entity, 'user' => $user));
 
       $messageTemplate = Heartbeat::buildMessage($heartbeatTypeEntity, $media);
 

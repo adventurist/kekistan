@@ -53,7 +53,7 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
   protected $description;
   protected $perms;
   protected $messageConcat;
-  protected $concatArgs;
+  protected $arguments;
   protected $message;
   protected $variables;
   protected $attachments;
@@ -187,11 +187,12 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
   /**
    * Sets the arguments for the concatenated message
    *
-   * @param string $concatArgs
+   * @param string $arguments
    *
    */
-  public function setConcatArgs($concatArgs) {
-    $this->concatArgs = $concatArgs;
+  public function setArguments($arguments) {
+    $this->set('arguments', $arguments);
+//    $this->arguments = $arguments;
   }
 
   /**
@@ -200,8 +201,9 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
    * @return string
    *  The stream's arguments for the concatenated message
    */
-  public function getConcateArgs() {
-    return $this->concatArgs;
+  public function getArguments() {
+    return $this->get('arguments');
+//    return $this->arguments;
   }
 
   /**
@@ -340,4 +342,6 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
   public function getMainEntity() {
     return $this->get('mainEntity');
   }
+
+
 }

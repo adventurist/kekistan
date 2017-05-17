@@ -31,9 +31,9 @@ heartbeat.heartbeat_type.*:
     group_type:
       type: string
       label: 'group_type'
-    concat_args:
+    arguments:
       type: blob
-      label: 'concat_args'
+      label: 'arguments'
     variables:
       type: blob
       label: 'variables'

@@ -156,7 +156,7 @@ interface HeartbeatTypeInterface extends ConfigEntityInterface {
    */
 
 
-  public function setConcatArgs($concatArgs);
+  public function setArguments($arguments);
 
 
   /**
@@ -166,7 +166,7 @@ interface HeartbeatTypeInterface extends ConfigEntityInterface {
    *  The stream's arguments for the concatenated message
    */
 
-  public function getConcateArgs();
+  public function getArguments();
 
 
 

@@ -34,6 +34,8 @@ class HeartbeatTypeForm extends EntityForm {
 
   private $treeAdded = false;
 
+  private $messageMap = array();
+
 
   /**
    * {@inheritdoc}
@@ -295,12 +297,14 @@ class HeartbeatTypeForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $heartbeat_type = $this->entity;
-
+    $mapValue = $form_state->getValue('messageMap');
+    $mapObj = $form_state->get('messageMap');
     $heartbeat_type->set('description', $form_state->getValue('description'));
     $heartbeat_type->set('message', $form_state->getValue('message'));
     $heartbeat_type->set('perms', $form_state->getValue('perms'));
     $heartbeat_type->set('variables', $form_state->getValue('variables'));
-//    $heartbeat_type
+    $heartbeat_type->set('arguments', json_encode($form_state->get('messageMap')));
+
     $status = $heartbeat_type->save();
 
     switch ($status) {
@@ -328,13 +332,22 @@ class HeartbeatTypeForm extends EntityForm {
 
     $messageArgString = $form_state->getValue('message');
 
-    $argsArray = $this->extractMessageArguments($messageArgString);
+    if ($form_state != NULL) {
+      $argsArray = $this->extractMessageArguments($messageArgString, $form_state);
 
-    $form_state->set('data_hidden', $argsArray);
-    $form_state->setRebuild();
+      foreach ($argsArray as $key => $arg) {
+        $this->messageMap[$key] = '!' . $arg;
+      }
 
-    return $form['variables'];
+      $form_state->set('messageMapKey', $this->messageMap);
+      $form_state->set('data_hidden', $argsArray);
+      $form_state->setRebuild();
 
+      return $form['variables'];
+
+    } else {
+      return NULL;
+    }
   }
 
   public function prepareVariables(&$form, FormStateInterface $form_state) {
@@ -343,6 +356,9 @@ class HeartbeatTypeForm extends EntityForm {
 
 
   private function extractMessageArguments($message) {
+//TODO find solution for trailing exclamation marks being wrongly interpreted
+    //ie parse each word in string and reconstruct string prior to exploding it on
+    //exclamation marks again
     $messageArguments = array_slice(explode('!', $message), 1);
 
     $argsArray = array();
@@ -353,10 +369,32 @@ class HeartbeatTypeForm extends EntityForm {
 
         $cleanArgument = strpos($argument, ' ') ? substr($argument, 0, strpos($argument, ' ')) : $argument;
         $argsArray[] = $cleanArgument;
+        $this->messageMap[] = '!' . $cleanArgument;
 
       }
     }
+
     return $argsArray;
+  }
+
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+
+    $messageMapKeysget = $form_state->get('messageMapKey');
+
+    if ($variables = $form_state->getValue('variables')) {
+
+      $num = count($variables);
+
+      for ($i = 0; $i < $num; $i++) {
+        if (!is_string($variables[$i])) { continue; }
+          $this->messageMap[$messageMapKeysget[$i]] = $variables[$i];
+      }
+
+      $form_state->set('messageMap', $this->messageMap);
+
+      parent::submitForm($form, $form_state);
+
+    }
   }
 
   /**
