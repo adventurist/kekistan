@@ -48,7 +48,8 @@ use Drupal\user\UserInterface;
  *     "bundle" = "type",
  *     "label" = "name",
  *     "uuid" = "uuid",
- *     "uid" = "user_id",
+ *     "uid" = "uid",
+ *     "nid" = "nid",
  *     "langcode" = "langcode",
  *     "status" = "status",
  *   },
@@ -105,9 +106,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    */
   public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
-    $values += array(
-      'user_id' => \Drupal::currentUser()->id(),
-    );
   }
 
 
@@ -156,6 +154,27 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   }
 
   /**
+   * Gets the Heartbeat message.
+   *
+   * @return string
+   *   Message of the Heartbeat.
+   */
+  public function getMessage() {
+    return $this->get('message');
+  }
+
+  /**
+   * Sets the Heartbeat Message.
+   *
+   * @param $name
+   * @return
+   * @internal param string $message The Heartbeat Message
+   */
+  public function setMessage($message) {
+    $this->set('message', $message);
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getCreatedTime() {
@@ -174,21 +193,21 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * {@inheritdoc}
    */
   public function getOwner() {
-    return $this->get('user_id')->entity;
+    return $this->get('uid')->entity;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getOwnerId() {
-    return $this->get('user_id')->target_id;
+    return $this->get('uid')->target_id;
   }
 
   /**
    * {@inheritdoc}
    */
   public function setOwnerId($uid) {
-    $this->set('user_id', $uid);
+    $this->set('uid', $uid);
     return $this;
   }
 
@@ -196,7 +215,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * {@inheritdoc}
    */
   public function setOwner(UserInterface $account) {
-    $this->set('user_id', $account->id());
+    $this->set('uid', $account->id());
     return $this;
   }
 
@@ -251,7 +270,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Authored by'))
       ->setDescription(t('The user ID of author of the Heartbeat entity.'))
       ->setRevisionable(TRUE)
@@ -276,6 +295,13 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['nid'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Node'))
+      ->setDescription(t('The content associated with this Heartbeat'))
+      ->setSetting('target_type', 'node')
+      ->setSetting('handler', 'default')
+      ->setRevisionable(TRUE);
+
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Heartbeat entity.'))
@@ -296,6 +322,12 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
+
+
+    $fields['message'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Message'))
+      ->setDescription(t('The message of the Heartbeat entity.'))
+      ->setRevisionable(TRUE);
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
@@ -503,4 +535,49 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
     return $names;
   }
+
+  /**
+   * Gets the Heartbeat user.
+   *
+   * @return int
+   *   The uid of the Heartbeat's user.
+   */
+  public function getUid()
+  {
+    // TODO: Implement getUid() method.
+  }
+
+  /**
+   * Sets the Heartbeat user.
+   *
+   * @param int uid
+   *   The Heartbeat user.
+   *
+   */
+  public function setUid($uid)
+  {
+    // TODO: Implement setUid() method.
+  }
+
+  /**
+   * Gets the Heartbeat's associated node nid.
+   *
+   * @return int
+   *   The nid of the Heartbeat's associated node.
+   */
+  public function getNid() {
+    return $this->get('nid');
+  }
+
+  /**
+   * Sets the Heartbeat user.
+   *
+   * @param int uid
+   *   The Heartbeat user.
+   *
+   */
+  public function setNid($nid) {
+    $this->set('nid', $nid);
+  }
+
 }

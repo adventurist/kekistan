@@ -46,6 +46,59 @@ interface HeartbeatInterface extends RevisionableInterface, RevisionLogInterface
   public function setName($name);
 
   /**
+   * Gets the Heartbeat message.
+   *
+   * @return string
+   *   Message of the Heartbeat.
+   */
+  public function getMessage();
+
+  /**
+   * Sets the Heartbeat Message.
+   *
+   * @param $name
+   * @return
+   * @internal param string $message The Heartbeat Message
+   */
+  public function setMessage($message);
+
+
+  /**
+   * Gets the Heartbeat user.
+   *
+   * @return int
+   *   The uid of the Heartbeat's user.
+   */
+  public function getUid();
+
+  /**
+   * Sets the Heartbeat user.
+   *
+   * @param int uid
+   *   The Heartbeat user.
+   *
+   */
+  public function setUid($uid);
+
+
+  /**
+   * Gets the Heartbeat's associated node nid.
+   *
+   * @return int
+   *   The nid of the Heartbeat's associated node.
+   */
+  public function getNid();
+
+  /**
+   * Sets the Heartbeat user.
+   *
+   * @param int uid
+   *   The Heartbeat user.
+   *
+   */
+  public function setNid($nid);
+
+  /**
    * Gets the Heartbeat creation timestamp.
    *
    * @return int

@@ -117,101 +117,114 @@ function heartbeat_schema() {
 
 
 
-  $schema['heartbeat'] = array(
-    'description' => 'Table that contains logs of all user triggerable actions.',
-    'fields' => array(
-      'uaid' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Unique heartbeat_activity event ID.',
-      ),
-      'uid' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-        'description' => 'The {users}.uid of the user who triggered the event (requester).',
-      ),
-      'uid_target' => array(
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-        'default' => 0,
-        'description' => 'The target User ID',
-      ),
-      'nid' => array(
-        'description' => 'The Node ID.',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      ),
-      'nid_target' => array(
-        'description' => 'The target Node ID (E.g. Group id, node reference, ...).',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      ),
-      'cid' => array(
-        'description' => 'The target comment ID (optional).',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => FALSE,
-      ),
-      'access' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'size' => 'tiny',
-        'description' => 'Access for this message to others.',
-        'default' => 0,
-      ),
-      'message_id' => array(
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-        'default' => '',
-        'description' => 'The message id which links to the heartbeat message.',
-      ),
-      'timestamp' => array(
-        'description' => 'The activity\'s unix timestamp when action occurred',
-        'type' => 'int',
-        'unsigned' => TRUE,
-        'not null' => TRUE,
-        'default' => 0,
-      ),
-      'language' => array(
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => FALSE,
-        'default' => 'en',
-        'description' => 'language for a log".',
-      ),
-      'variables' => array(
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big',
-        'description' => 'Serialized array of variables that match the message string and that is passed into the ) function.',
-      ),
-      'in_group' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        'size' => 'big',
-        'description' => 'Indicates whether the activity is related to a group',
-        'default' => 0,
-      ),
-    ),
-    'primary key' => array('uaid'),
-    'indexes' => array(
-      'timestamp' => array('timestamp'),
-      'uid' => array('uid'),
-      'message_id' => array('message_id'),
-      'uid_target' => array('uid_target'),
-      'nid' => array('nid'),
-      'nid_target' => array('nid_target'),
-      'cid' => array('cid'),
-      'language' => array('language'),
-      ),
-
-  );
+//  $schema['heartbeat'] = array(
+//    'description' => 'Table that contains logs of all user triggerable actions.',
+//    'fields' => array(
+//      'id' => array(
+//        'type' => 'serial',
+//        'not null' => TRUE,
+//        'description' => 'Primary Key: Unique heartbeat_activity event ID.',
+//      ),
+//      'uid' => array(
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//        'default' => 0,
+//        'description' => 'The {users}.uid of the user who triggered the event (requester).',
+//      ),
+//      'uid_target' => array(
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => FALSE,
+//        'default' => 0,
+//        'description' => 'The target User ID',
+//      ),
+//      'nid' => array(
+//        'description' => 'The Node ID.',
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => FALSE,
+//      ),
+//      'nid_target' => array(
+//        'description' => 'The target Node ID (E.g. Group id, node reference, ...).',
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => FALSE,
+//      ),
+//      'cid' => array(
+//        'description' => 'The target comment ID (optional).',
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => FALSE,
+//      ),
+//      'vid' => array(
+//        'description' => 'The revision ID.',
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => FALSE,
+//      ),
+//      'access' => array(
+//        'type' => 'int',
+//        'not null' => TRUE,
+//        'size' => 'tiny',
+//        'description' => 'Access for this message to others.',
+//        'default' => 0,
+//      ),
+//      'message_id' => array(
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'default' => '',
+//        'description' => 'The message id which links to the heartbeat message.',
+//      ),
+//      'timestamp' => array(
+//        'description' => 'The activity\'s unix timestamp when action occurred',
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => TRUE,
+//        'default' => 0,
+//      ),
+//      'language' => array(
+//        'type' => 'varchar',
+//        'length' => 12,
+//        'not null' => FALSE,
+//        'default' => 'en',
+//        'description' => 'language for a log".',
+//      ),
+//      'type' => array(
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'default' => '',
+//        'description' => 'The Heartbeat Type of this Heartbeat Message',
+//      ),
+////      'variables' => array(
+////        'type' => 'text',
+////        'not null' => FALSE,
+////        'size' => 'big',
+////        'description' => 'Serialized array of variables that match the message string and that is passed into the ) function.',
+////      ),
+//      'in_group' => array(
+//        'type' => 'int',
+//        'not null' => TRUE,
+//        'size' => 'big',
+//        'description' => 'Indicates whether the activity is related to a group',
+//        'default' => 0,
+//      ),
+//    ),
+//    'primary key' => array('id'),
+//    'indexes' => array(
+//      'timestamp' => array('timestamp'),
+//      'uid' => array('uid'),
+//      'message_id' => array('message_id'),
+//      'uid_target' => array('uid_target'),
+//      'nid' => array('nid'),
+//      'nid_target' => array('nid_target'),
+//      'cid' => array('cid'),
+//      'language' => array('language'),
+//      ),
+//
+//  );
 
   $schema['heartbeat_activity']['fields']['in_group'] = array(
     'type' => 'int',
@@ -246,6 +259,17 @@ function heartbeat_schema() {
 //      ),
 //    ),
     'fields' => array(
+      //TODO find out if we need id or vid fields in this table
+//      'id' => array(
+//        'type' => 'serial',
+//        'not null' => TRUE,
+//        'description' => 'Primary Key: Unique heartbeat_activity event ID.',
+//      ),
+//      'vid' => array(
+//        'type' => 'int',
+//        'not null' => TRUE,
+//        'description' => 'The Revision ID',
+//      ),
       'class' => array(
         'type' => 'varchar',
         'length' => 100,
@@ -273,8 +297,7 @@ ss.',
         'length' => 100,
         'not null' => TRUE,
         'default' => '',
-        'description' => 'The module that defines the class and where the query builder is located.
-',
+        'description' => 'The module that defines the class and where the query builder is located.',
       ),
       'title' => array(
         'type' => 'varchar',
@@ -302,13 +325,6 @@ ss.',
         'serialize' => TRUE,
         'not null' => FALSE,
       ),
-      'real_class' => array(
-        'type' => 'varchar',
-        'length' => 100,
-        'not null' => TRUE,
-        'default' => '',
-          'description' => 'Real Class of the stream to load',
-      )
     ),
     'primary key' => array('class'),
     'indexes' => array(
