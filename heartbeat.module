@@ -108,17 +108,21 @@ if ($entity instanceof \Drupal\node\Entity\Node) {
       }
 
       $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
-      $replacedMessageString = $tokenService->replace($preparsedMessageString, array('node' => $entity, 'user' => $user));
 
-      $messageTemplate = Heartbeat::buildMessage($heartbeatTypeEntity, $media);
+      $entities = array(
+        'node' => $entity,
+        'user' => $user,
+      );
+
+      $messageTemplate = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $media);
 
 //      $translatedMessage = t($messageTemplate);
 
       $heartbeatMarkup = Heartbeat::parseMessage($messageTemplate, $variables);
 
-//      $heartbeatActivity = new Heartbeat();
-//      $heartbeatActivity->setName();
-//      $heartbeatActivity->save();
+      $heartbeatActivity = new Heartbeat();
+      $heartbeatActivity->setName();
+      $heartbeatActivity->save();
 
 
     }

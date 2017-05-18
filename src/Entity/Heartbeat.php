@@ -375,11 +375,11 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @param null $mediaData
    * @return null|string
    */
-  public static function buildMessage(HeartbeatType $heartbeatType, $mediaData = NULL) {
+  public static function buildMessage(\Drupal\token\Token $tokenService, $preparsedMessage, $entities = NULL, $mediaData = NULL) {
 //!username has added !node_type !node_title. <a href="/node/"><img src="/sites/default/files/!node_image"/></a>
-
+    $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/node/[node:nid]">', $entities);
     /** @noinspection NestedTernaryOperatorInspection */
-    $message = $heartbeatType->get('message') . '<a href="/node/!nid">';
+    $message = $parsedMessage;
     $message .= $mediaData ? self::buildMediaMarkup($mediaData) : '';
     $message .= '</a>';
 
@@ -399,6 +399,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   }
 
   private static function mediaTag($type, $filePath) {
+    //TODO put this into new method
+    if ($type == 'image') { $type = 'img';}
     return '<'. $type . ' src="' . $filePath . '" / >';
   }
 
