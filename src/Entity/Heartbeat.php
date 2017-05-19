@@ -482,8 +482,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
           $file = \Drupal::entityTypeManager()->getStorage('file')->load($fileId);
 
           if ($file !== NULL && is_object($file)) {
-
-            $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $file->toUrl());
+            $url = \Drupal\Core\Url::fromUri($file->getFileUri());
+            $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $url->getUri());
             $types[] = $mediaObject;
 
           } else {
