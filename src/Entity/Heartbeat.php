@@ -324,7 +324,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       ->setDisplayConfigurable('view', TRUE);
 
 
-    $fields['message'] = BaseFieldDefinition::create('string')
+    $fields['message'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Message'))
       ->setDescription(t('The message of the Heartbeat entity.'))
       ->setRevisionable(TRUE);
@@ -408,7 +408,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return null|string
    */
   public static function buildMessage(\Drupal\token\Token $tokenService, $preparsedMessage, $entities = NULL, $mediaData = NULL) {
-//!username has added !node_type !node_title. <a href="/node/"><img src="/sites/default/files/!node_image"/></a>
+
     $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/node/[node:nid]">', $entities);
     /** @noinspection NestedTernaryOperatorInspection */
     $message = $parsedMessage;
@@ -463,6 +463,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    *
    * @param $fields
    * @return array
+   * @throws \Drupal\Core\Entity\Exception\UndefinedLinkTemplateException
+   * @throws \Drupal\Core\Entity\EntityMalformedException
    */
   public static function mediaFieldTypes($fields) {
 
@@ -481,7 +483,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
           if ($file !== NULL && is_object($file)) {
 
-            $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $file->url());
+            $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $file->toUrl());
             $types[] = $mediaObject;
 
           } else {
