@@ -15,3 +15,11 @@ heartbeat.test_controller_start:
     _title: 'run'
   requirements:
     _permission: 'access content'
+
+heartbeat.stream_test_controller_stream:
+  path: '/nodeactivity'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\StreamTestController::stream'
+    _title: 'stream'
+  requirements:
+    _permission: 'access content'

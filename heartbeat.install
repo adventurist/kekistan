@@ -237,100 +237,100 @@ function heartbeat_schema() {
   $schema['heartbeat_user_templates'] = heartbeat_install_table_user_templates();
 
 
-  $schema['heartbeat_stream'] = array(
-    'description' => 'Table that contains heartbeat streams.',
-    // CTools export definitions.
-//    'export' => array(
-//      'key' => 'class',
-//      'key name' => 'name',
-//      'primary key' => 'class',
-//      'bulk export' => TRUE,
-//      'identifier' => 'heartbeatstream',
-//      'object' => 'HeartbeatStreamConfig',
-//      'default hook' => 'heartbeat_stream_info',
-//      'load callback' => '_heartbeat_stream_config_load',
-//      'load all callback' => '_heartbeat_stream_config_load_all',
-//      'can disable' => TRUE,
-//      'api' => array(
-//        'owner' => 'heartbeat',
-//        'api' => 'heartbeat',
-//        'minimum_version' => 1,
-//        'current_version' => 1,
+//  $schema['heartbeat_stream'] = array(
+//    'description' => 'Table that contains heartbeat streams.',
+//    // CTools export definitions.
+////    'export' => array(
+////      'key' => 'class',
+////      'key name' => 'name',
+////      'primary key' => 'class',
+////      'bulk export' => TRUE,
+////      'identifier' => 'heartbeatstream',
+////      'object' => 'HeartbeatStreamConfig',
+////      'default hook' => 'heartbeat_stream_info',
+////      'load callback' => '_heartbeat_stream_config_load',
+////      'load all callback' => '_heartbeat_stream_config_load_all',
+////      'can disable' => TRUE,
+////      'api' => array(
+////        'owner' => 'heartbeat',
+////        'api' => 'heartbeat',
+////        'minimum_version' => 1,
+////        'current_version' => 1,
+////      ),
+////    ),
+//    'fields' => array(
+//      //TODO find out if we need id or vid fields in this table
+////      'id' => array(
+////        'type' => 'serial',
+////        'not null' => TRUE,
+////        'description' => 'Primary Key: Unique heartbeat_activity event ID.',
+////      ),
+////      'vid' => array(
+////        'type' => 'int',
+////        'not null' => TRUE,
+////        'description' => 'The Revision ID',
+////      ),
+//      'class' => array(
+//        'type' => 'varchar',
+//        'length' => 100,
+//        'not null' => TRUE,
+//        'default' => '',
+//        'description' => 'Class of the stream to load.',
+//      ),
+//      'real_class' => array(
+//        'type' => 'varchar',
+//        'length' => 100,
+//        'not null' => TRUE,
+//        'default' => '',
+//        'description' => 'Real Class of the stream to load.',
+//      ),
+//      'name' => array(
+//        'type' => 'varchar',
+//        'length' => 100,
+//        'not null' => TRUE,
+//        'default' => '',
+//        'description' => 'Name of the stream. Cloned streams will have the same object but same cla
+//ss.',
+//      ),
+//      'module' => array(
+//        'type' => 'varchar',
+//        'length' => 100,
+//        'not null' => TRUE,
+//        'default' => '',
+//        'description' => 'The module that defines the class and where the query builder is located.',
+//      ),
+//      'title' => array(
+//        'type' => 'varchar',
+//        'length' => 100,
+//        'not null' => TRUE,
+//        'default' => '',
+//        'description' => 'Human readable name of the stream.',
+//      ),
+//      'path' => array(
+//        'type' => 'varchar',
+//        'length' => 250,
+//        'not null' => TRUE,
+//        'default' => '',
+//        'description' => 'Path to the stream object.',
+//      ),
+//      'settings' => array(
+//        'description' => 'Serialized settings for this stream.',
+//        'type' => 'blob',
+//        'serialize' => TRUE,
+//        'not null' => FALSE,
+//      ),
+//      'variables' => array(
+//        'description' => 'Variables to parse into the message (used in message).',
+//        'type' => 'blob',
+//        'serialize' => TRUE,
+//        'not null' => FALSE,
 //      ),
 //    ),
-    'fields' => array(
-      //TODO find out if we need id or vid fields in this table
-//      'id' => array(
-//        'type' => 'serial',
-//        'not null' => TRUE,
-//        'description' => 'Primary Key: Unique heartbeat_activity event ID.',
-//      ),
-//      'vid' => array(
-//        'type' => 'int',
-//        'not null' => TRUE,
-//        'description' => 'The Revision ID',
-//      ),
-      'class' => array(
-        'type' => 'varchar',
-        'length' => 100,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Class of the stream to load.',
-      ),
-      'real_class' => array(
-        'type' => 'varchar',
-        'length' => 100,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Real Class of the stream to load.',
-      ),
-      'name' => array(
-        'type' => 'varchar',
-        'length' => 100,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Name of the stream. Cloned streams will have the same object but same cla
-ss.',
-      ),
-      'module' => array(
-        'type' => 'varchar',
-        'length' => 100,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'The module that defines the class and where the query builder is located.',
-      ),
-      'title' => array(
-        'type' => 'varchar',
-        'length' => 100,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Human readable name of the stream.',
-      ),
-      'path' => array(
-        'type' => 'varchar',
-        'length' => 250,
-        'not null' => TRUE,
-        'default' => '',
-        'description' => 'Path to the stream object.',
-      ),
-      'settings' => array(
-        'description' => 'Serialized settings for this stream.',
-        'type' => 'blob',
-        'serialize' => TRUE,
-        'not null' => FALSE,
-      ),
-      'variables' => array(
-        'description' => 'Variables to parse into the message (used in message).',
-        'type' => 'blob',
-        'serialize' => TRUE,
-        'not null' => FALSE,
-      ),
-    ),
-    'primary key' => array('class'),
-    'indexes' => array(
-      'name' => array('name'),
-    ),
-  );
+//    'primary key' => array('class'),
+//    'indexes' => array(
+//      'name' => array('name'),
+//    ),
+//  );
 
   //TODO determine if these foreign keys are to be added
 //  db_add_unique_key('heartbeat_activity', 'uaid', array('uaid'));
@@ -366,4 +366,21 @@ function heartbeat_install_table_user_templates() {
       ),
     ),
   );
+}
+
+function heartbeat_uninstall() {
+  $entities = \Drupal::service("entity.query")->get("heartbeat")->execute();
+  foreach($entities as $entity) {
+    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
+    $heartbeat->delete();
+  }
+
+  $entities = \Drupal::service("entity.query")->get("heartbeat_stream")->execute();
+
+  foreach($entities as $entity) {
+    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
+    $heartbeat->delete();
+  }
+
+
 }

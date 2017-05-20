@@ -11,3 +11,6 @@ services:
     class: Drupal\heartbeat\HeartbeatAltServices
     arguments: ['@entity.query', '@entity.manager', '@entity_type.manager', '@entity_type.repository', '@heartbeat.heartbeattype']
 
+  heartbeat:
+    class: Drupal\heartbeat\HeartbeatService
+    arguments: ['@entity_type.manager', '@entity.query', '@heartbeatstream']

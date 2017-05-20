@@ -49,6 +49,12 @@ function heartbeat_theme() {
     'variables' => ['content' => NULL],
     'file' => 'heartbeat.page.inc',
   ];
+  $theme['heartbeat_stream'] = [
+    'variables' => array(
+      'messages' => NULL,
+      'zilla' => 2,
+    )
+  ];
   return $theme;
 }
 
@@ -124,7 +130,6 @@ function heartbeat_entity_insert(EntityInterface $entity) {
         ]);
 
         $heartbeatActivity->setMessage($heartbeatMessage);
-
         $heartbeatActivity->save();
 
       }

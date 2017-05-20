@@ -1,0 +1,25 @@
+{#
+/**
+ * @file heartbeat-stream.html.twig
+ * Default theme implementation to present Heartbeat stream data.
+ *
+ * This template is used when viewing Heartbeat stream pages.
+ *
+ *
+ * Available variables:
+ * - content: A list of content items. Use 'content' to print all content, or
+ * - attributes: HTML attributes for the container element.
+ *
+ * @see template_preprocess_heartbeat_stream()
+ *
+ * @ingroup themeable
+ */
+#}
+<div{{ attributes.addClass('heartbeat-stream') }}>
+  {% if content %}
+    {{- content -}}
+  {% endif %}
+  {% for message in messages %}
+    Message: {{ message }}
+  <h1> jigga man </h1>
+</div>
