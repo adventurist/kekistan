@@ -433,7 +433,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   private static function mediaTag($type, $filePath) {
     //TODO put this into new method
     if ($type == 'image') { $type = 'img';}
-    return '<'. $type . ' src="' . $filePath . '" / >';
+    return '<'. $type . ' src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" / >';
   }
 
 

@@ -19,7 +19,9 @@
   {% if content %}
     {{- content -}}
   {% endif %}
+  {% autoescape false %}
   {% for message in messages %}
-    Message: {{ message }}
-  <h1> jigga man </h1>
+    {{ message }} <br>
+  {% endfor %}
+  {% endautoescape %}
 </div>

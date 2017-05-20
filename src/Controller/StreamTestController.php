@@ -89,7 +89,7 @@ class StreamTestController extends ControllerBase {
 
     return [
       '#theme' => 'heartbeat_stream',
-      '#messages' => $messages,
+      '#messages' => array_reverse($messages),
     ];
   }
 
