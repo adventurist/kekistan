@@ -14,3 +14,9 @@ services:
   heartbeat:
     class: Drupal\heartbeat\HeartbeatService
     arguments: ['@entity_type.manager', '@entity.query', '@heartbeatstream']
+  heartbeat.event:
+    class: Drupal\heartbeat\EventSubscriber\HeartbeatEventSubscriber
+    arguments: ['@flag', '@heartbeat.heartbeattype', '@heartbeatstream', '@heartbeat']
+    tags:
+      - { name: event_subscriber }
+
