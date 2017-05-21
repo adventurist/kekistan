@@ -304,7 +304,7 @@ class HeartbeatTypeForm extends EntityForm {
     $heartbeat_type->set('perms', $form_state->getValue('perms'));
     $heartbeat_type->set('variables', $form_state->getValue('variables'));
     $heartbeat_type->set('arguments', json_encode($form_state->get('messageMap')));
-
+    $heartbeat_type->set('mainentity', $this->entityTypes[$form_state->getValue('entity_type')]);
     $status = $heartbeat_type->save();
 
     switch ($status) {

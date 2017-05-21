@@ -58,7 +58,7 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
   protected $variables;
   protected $attachments;
   protected $groupType;
-  protected $mainEntity;
+  protected $mainentity;
 
 
   protected $entityManager;
@@ -328,11 +328,11 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
   /**
    * Sets the main Entity Type of the Heartbeat Type
    *
-   * @param string $entityType
+   * @param string $mainentity
    *  Describing entity type used in this Heartbeat Type
    */
-  public function setMainEntity($mainEntity) {
-    $this->set('mainEntity', $mainEntity);
+  public function setMainEntity($mainentity) {
+    $this->set('mainentity', $mainentity);
   }
 
   /**
@@ -340,7 +340,7 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
    *
    */
   public function getMainEntity() {
-    return $this->get('mainEntity');
+    return $this->get('mainentity');
   }
 
 

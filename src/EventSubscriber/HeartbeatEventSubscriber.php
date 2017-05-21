@@ -68,9 +68,54 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
    * @param GetResponseEvent $event
    */
   public function flag_entity_flagged(Event $event) {
-    $stophere = null;
-    $flagging = $event->getFlagging();
+//    $stophere = null;
+//    $flagging = $event->getFlagging();
+//    if ($flagging->getFlagId() == 'friendship') {
+//      $entity = $this->flagService->getFlagById($flagging->getFlagId());
+//
+//      $user = $flagging->getOwner();
+//
+//
+//      if ($entity->id() && $user->isAuthenticated()) {
+//
+//        $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
+//        $tokenService = \Drupal::service('token');
+//
+//        foreach ($heartbeatTypeService->getTypes() as $type) {
+//
+//          $heartbeatTypeEntity = $heartbeatTypeService->load($type);
+//          $arguments = json_decode($heartbeatTypeEntity->getArguments());
+//
+//          foreach ($arguments as $key => $argument) {
+//            $variables[$key] = $argument;
+//          }
+//
+//          $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
+//
+//          $entities = array(
+//            'node' => $entity,
+//            'user' => $user,
+//          );
+//
+//          $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $media);
+//
+//          //      $translatedMessage = t($messageTemplate);
+//
+//          $heartbeatActivity = Heartbeat::create([
+//            'type' => $heartbeatTypeEntity->id(),
+//            'uid' => $user->id(),
+//            'nid' => $entity->id(),
+//            'name' => 'Dev Test',
+//          ]);
+//
+//          $heartbeatActivity->setMessage($heartbeatMessage);
+//          $heartbeatActivity->save();
+//
+//        }
+//      }
+//    }
     drupal_set_message('Event flag.entity_flagged thrown by Subscriber in module heartbeat.', 'status', TRUE);
+    return $event;
   }
   /**
    * This method is called whenever the flag.entity_unflagged event is

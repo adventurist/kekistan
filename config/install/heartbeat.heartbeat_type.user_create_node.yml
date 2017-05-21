@@ -7,6 +7,7 @@ label: 'User Create Node'
 hid: null
 message_id: null
 description: 'Records the event of a user creating a node'
+mainentity: 'node'
 message: '!user has created a node: !nodetitle'
 message_concat: ''
 perms: 0
