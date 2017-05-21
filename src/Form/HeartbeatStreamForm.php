@@ -27,6 +27,15 @@ class HeartbeatStreamForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
+
+
+
+
+
+
+
+
+
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('heartbeat.heartbeattype'),
@@ -64,6 +73,10 @@ class HeartbeatStreamForm extends ContentEntityForm {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     /* @var $entity \Drupal\heartbeat\Entity\HeartbeatStream */
+
+    if ($entity == NULL) {
+      $entity = &$this->entity;
+    }
     $form = parent::buildForm($form, $form_state);
 
     if (!$this->entity->isNew()) {
@@ -79,11 +92,14 @@ class HeartbeatStreamForm extends ContentEntityForm {
 
       '#type' => 'checkboxes',
       '#options' => $this->heartbeatTypeService->getTypes(),
-
       '#title' => $this->t('Please select all the Heartbeat Types you wish to include in this stream'),
-
     );
 
+    $form['path'] = array(
+      '#type' => 'textfield',
+      '#description' => 'The relative url path for this Heartbeat Stream',
+      '#default' => $entity->getPath(),
+    );
 
     return $form;
   }
@@ -111,6 +127,9 @@ class HeartbeatStreamForm extends ContentEntityForm {
       foreach ($form_state->getValue('types') as $type) {
         $entity->get('types')->appendItem($type);
       }
+
+      $entity->setPath($form_state->getValue('path'));
+
       $entity->save();
     }
 

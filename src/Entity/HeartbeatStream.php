@@ -361,6 +361,12 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['path'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Path'))
+      ->setSettings(array(
+        'max_length' => 255,
+      ));
+
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
       ->setDescription(t('The name of the Heartbeat stream entity.'))

@@ -74,67 +74,67 @@ function heartbeat_theme_suggestions_heartbeat(array $variables) {
   return $suggestions;
 }
 
+
+
+
 /**
  * Implements hook_entity_insert().
  */
 function heartbeat_entity_insert(EntityInterface $entity) {
 
-  if ($entity instanceof \Drupal\node\Entity\Node) {
+  switch (true) {
+    case $entity instanceof \Drupal\node\Entity\Node:
 
-    $nid = $entity->id();
-    $user = $entity->getOwner();
-    $type = $entity->getEntityTypeId();
-    $media = HeartBeat::mediaFieldTypes($entity->getFields());
+      $user = $entity->getOwner();
+      $media = HeartBeat::mediaFieldTypes($entity->getFields());
 
-    /** @noinspection NestedTernaryOperatorInspection */
-    /** @noinspection ArrayCastingEquivalentInspection */
-  //  $variables = array(
-  //    '!nid' => $nid,
-  //    '!entityType' => $type,
-  //    '!uid' => $user->id(),
-  //    '!user' => $user->getAccountName(),
-  //    'media' => $media,
-  //  );
+      if ($entity->id() && $user->isAuthenticated()) {
 
+        $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
+        $tokenService = \Drupal::service('token');
 
-    if ($entity->id() && $user->isAuthenticated()) {
+        foreach ($heartbeatTypeService->getTypes() as $type) {
 
-      $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
-      $tokenService = \Drupal::service('token');
+          $heartbeatTypeEntity = $heartbeatTypeService->load($type);
+          $arguments = json_decode($heartbeatTypeEntity->getArguments());
 
-      foreach ($heartbeatTypeService->getTypes() as $type) {
+          foreach ($arguments as $key => $argument) {
+            $variables[$key] = $argument;
+          }
 
-        $heartbeatTypeEntity = $heartbeatTypeService->load($type);
-        $arguments = json_decode($heartbeatTypeEntity->getArguments());
+          $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
 
-        foreach ($arguments as $key => $argument) {
-          $variables[$key] = $argument;
+          $entities = array(
+            'node' => $entity,
+            'user' => $user,
+          );
+
+          $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $media);
+
+          //      $translatedMessage = t($messageTemplate);
+
+          $heartbeatActivity = Heartbeat::create([
+            'type' => $heartbeatTypeEntity->id(),
+            'uid' => $user->id(),
+            'nid' => $entity->id(),
+            'name' => 'Dev Test',
+          ]);
+
+          $heartbeatActivity->setMessage($heartbeatMessage);
+          $heartbeatActivity->save();
+
         }
-
-        $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
-
-        $entities = array(
-          'node' => $entity,
-          'user' => $user,
-        );
-
-        $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $media);
-
-  //      $translatedMessage = t($messageTemplate);
-
-        $heartbeatActivity = Heartbeat::create([
-          'type' => $heartbeatTypeEntity->id(),
-          'uid' => $user->id(),
-          'nid' => $entity->id(),
-          'name' => 'Dev Test',
-        ]);
-
-        $heartbeatActivity->setMessage($heartbeatMessage);
-        $heartbeatActivity->save();
-
       }
-    }
+
+      break;
+    case $entity instanceof \Drupal\user\Entity\User:
+//      $userService = \Drupal\User\Entity\user
+
+      break;
+    case $entity instanceof \Drupal\flag\Entity\Flag:
+      break;
   }
+
 
 }
 
