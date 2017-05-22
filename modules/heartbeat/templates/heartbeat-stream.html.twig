@@ -15,13 +15,15 @@
  * @ingroup themeable
  */
 #}
-<div{{ attributes.addClass('heartbeat-stream') }}>
+<div class="heartbeat-stream">
   {% if content %}
     {{- content -}}
   {% endif %}
   {% autoescape false %}
   {% for message in messages %}
-    {{ message }} <br>
+    <div{{ attributes.addClass('heartbeat-message') }}>
+      {{ message }} <br>
+    </div>
   {% endfor %}
   {% endautoescape %}
 </div>
