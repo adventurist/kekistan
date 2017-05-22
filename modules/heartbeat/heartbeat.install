@@ -41,200 +41,128 @@ function heartbeat_requirements($phase) {
  * ** //TODO Have not yet set export schema for CTOOLS as CTOOLS is not yet a part of Drupal 8
  */
 function heartbeat_schema() {
-  $schema['heartbeat_messages'] = array(
-    'description' => 'Table that contains predefined messages that can be used in heartbeat views.',
+//  $schema['heartbeat_messages'] = array(
+//    'description' => 'Table that contains predefined messages that can be used in heartbeat views.',
+//    'fields' => array(
+//      'hid' => array(
+//        'description' => 'Primary Key: Unique heartbeat_messages event ID.',
+//        'type' => 'serial',
+//        'not null' => TRUE,
+//      ),
+//      'message_id' => array(
+//        'description' => 'The message id which is unique to identify activity.',
+//        'type' => 'varchar',
+//        'length' => 255,
+//        'not null' => FALSE,
+//        'default' => '',
+//      ),
+//      'description' => array(
+//        'description' => 'Description and help text',
+//        'type' => 'text',
+//        'not null' => FALSE,
+//        'size' => 'big'
+//      ),
+//      'message' => array(
+//        'type' => 'text',
+//        'not null' => TRUE,
+//        'size' => 'big',
+//        'description' => 'Text of log message to be passed into the ) function.',
+//        //'alias' => 'message_orig', // Internal heartbeat field/property
+//      ),
+//      'message_concat' => array(
+//        'type' => 'text',
+//        'not null' => TRUE,
+//        'size' => 'big',
+//        'description' => 'Text of translatable log message for in concatenated form.',
+//        //'alias' => 'message_concat_orig', // Internal heartbeat field/property
+//      ),
+//      'perms' => array(
+//        'type' => 'int',
+//        'unsigned' => TRUE,
+//        'not null' => FALSE,
+//        'default' => 4,
+//        'description' => 'Permissions for this message.',
+//      ),
+//      'group_type' => array(
+//        'type' => 'varchar',
+//        'length' => 20,
+//        'not null' => TRUE,
+//        'default' => 'single',
+//        'description' => 'The group type of the template',
+//      ),
+//      'concatargs' => array(
+//        'description' => 'Arguments for concatenation message.',
+//        'type' => 'blob',
+//        'serialize' => TRUE,
+//        'not null' => FALSE,
+//      ),
+//      'variables' => array(
+//        'description' => 'Variables to parse into the message (used in message).',
+//        'type' => 'blob',
+//        'serialize' => TRUE,
+//        'not null' => FALSE,
+//      ),
+//      'attachments' => array(
+//        'description' => 'Attachments on messages.',
+//        'type' => 'blob',
+//        'serialize' => TRUE,
+//        'not null' => FALSE,
+//      ),
+//    ),
+//    'primary key' => array('hid'),
+//    'indexes' => array(
+//      'message_id' => array('message_id'),
+//    ),
+//  );
+
+  $schema['heartbeat_friendship'] = array(
     'fields' => array(
-      'hid' => array(
-        'description' => 'Primary Key: Unique heartbeat_messages event ID.',
+      'id' => array(
         'type' => 'serial',
         'not null' => TRUE,
       ),
-      'message_id' => array(
-        'description' => 'The message id which is unique to identify activity.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-        'default' => '',
-      ),
-      'description' => array(
-        'description' => 'Description and help text',
-        'type' => 'text',
-        'not null' => FALSE,
-        'size' => 'big'
-      ),
-      'message' => array(
-        'type' => 'text',
+      'uid' => array(
+        'type' => 'int',
+        'unsigned' => TRUE,
         'not null' => TRUE,
-        'size' => 'big',
-        'description' => 'Text of log message to be passed into the ) function.',
-        //'alias' => 'message_orig', // Internal heartbeat field/property
+        'default' => 0,
       ),
-      'message_concat' => array(
-        'type' => 'text',
-        'not null' => TRUE,
-        'size' => 'big',
-        'description' => 'Text of translatable log message for in concatenated form.',
-        //'alias' => 'message_concat_orig', // Internal heartbeat field/property
-      ),
-      'perms' => array(
+      'uid_target' => array(
         'type' => 'int',
         'unsigned' => TRUE,
         'not null' => FALSE,
-        'default' => 4,
-        'description' => 'Permissions for this message.',
+        'default' => 0,
       ),
-      'group_type' => array(
-        'type' => 'varchar',
-        'length' => 20,
+      'status' => array(
+        'type' => 'int',
         'not null' => TRUE,
-        'default' => 'single',
-        'description' => 'The group type of the template',
+        'size' => 'tiny',
+        'default' => -1,
       ),
-      'concatargs' => array(
-        'description' => 'Arguments for concatenation message.',
-        'type' => 'blob',
-        'serialize' => TRUE,
-        'not null' => FALSE,
-      ),
-      'variables' => array(
-        'description' => 'Variables to parse into the message (used in message).',
-        'type' => 'blob',
-        'serialize' => TRUE,
-        'not null' => FALSE,
-      ),
-      'attachments' => array(
-        'description' => 'Attachments on messages.',
-        'type' => 'blob',
-        'serialize' => TRUE,
-        'not null' => FALSE,
+      'created' => array(
+        'type' => 'int',
+        'not null' => TRUE,
       ),
     ),
-    'primary key' => array('hid'),
-    'indexes' => array(
-      'message_id' => array('message_id'),
-    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'uid_relation' => array('uid', 'uid_target')
+    )
   );
-
-
-
-//  $schema['heartbeat'] = array(
-//    'description' => 'Table that contains logs of all user triggerable actions.',
-//    'fields' => array(
-//      'id' => array(
-//        'type' => 'serial',
-//        'not null' => TRUE,
-//        'description' => 'Primary Key: Unique heartbeat_activity event ID.',
-//      ),
-//      'uid' => array(
-//        'type' => 'int',
-//        'unsigned' => TRUE,
-//        'not null' => TRUE,
-//        'default' => 0,
-//        'description' => 'The {users}.uid of the user who triggered the event (requester).',
-//      ),
-//      'uid_target' => array(
-//        'type' => 'int',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//        'default' => 0,
-//        'description' => 'The target User ID',
-//      ),
-//      'nid' => array(
-//        'description' => 'The Node ID.',
-//        'type' => 'int',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//      ),
-//      'nid_target' => array(
-//        'description' => 'The target Node ID (E.g. Group id, node reference, ...).',
-//        'type' => 'int',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//      ),
-//      'cid' => array(
-//        'description' => 'The target comment ID (optional).',
-//        'type' => 'int',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//      ),
-//      'vid' => array(
-//        'description' => 'The revision ID.',
-//        'type' => 'int',
-//        'unsigned' => TRUE,
-//        'not null' => FALSE,
-//      ),
-//      'access' => array(
-//        'type' => 'int',
-//        'not null' => TRUE,
-//        'size' => 'tiny',
-//        'description' => 'Access for this message to others.',
-//        'default' => 0,
-//      ),
-//      'message_id' => array(
-//        'type' => 'varchar',
-//        'length' => 255,
-//        'not null' => FALSE,
-//        'default' => '',
-//        'description' => 'The message id which links to the heartbeat message.',
-//      ),
-//      'timestamp' => array(
-//        'description' => 'The activity\'s unix timestamp when action occurred',
-//        'type' => 'int',
-//        'unsigned' => TRUE,
-//        'not null' => TRUE,
-//        'default' => 0,
-//      ),
-//      'language' => array(
-//        'type' => 'varchar',
-//        'length' => 12,
-//        'not null' => FALSE,
-//        'default' => 'en',
-//        'description' => 'language for a log".',
-//      ),
-//      'type' => array(
-//        'type' => 'varchar',
-//        'length' => 255,
-//        'not null' => FALSE,
-//        'default' => '',
-//        'description' => 'The Heartbeat Type of this Heartbeat Message',
-//      ),
-////      'variables' => array(
-////        'type' => 'text',
-////        'not null' => FALSE,
-////        'size' => 'big',
-////        'description' => 'Serialized array of variables that match the message string and that is passed into the ) function.',
-////      ),
-//      'in_group' => array(
-//        'type' => 'int',
-//        'not null' => TRUE,
-//        'size' => 'big',
-//        'description' => 'Indicates whether the activity is related to a group',
-//        'default' => 0,
-//      ),
-//    ),
-//    'primary key' => array('id'),
 //    'indexes' => array(
-//      'timestamp' => array('timestamp'),
-//      'uid' => array('uid'),
-//      'message_id' => array('message_id'),
-//      'uid_target' => array('uid_target'),
-//      'nid' => array('nid'),
-//      'nid_target' => array('nid_target'),
-//      'cid' => array('cid'),
-//      'language' => array('language'),
-//      ),
-//
+//      'created' => array('created'),
+//    ),
 //  );
 
-  $schema['heartbeat_activity']['fields']['in_group'] = array(
-    'type' => 'int',
-    'not null' => TRUE,
-    'size' => 'big',
-    'description' => 'Indicates whether the activity is related to a group.',
-    'default' => 0,
-  );
-  $schema['heartbeat_activity']['indexes']['in_group'] = array('in_group');
-  $schema['heartbeat_user_templates'] = heartbeat_install_table_user_templates();
+//  $schema['heartbeat_activity']['fields']['in_group'] = array(
+//    'type' => 'int',
+//    'not null' => TRUE,
+//    'size' => 'big',
+//    'description' => 'Indicates whether the activity is related to a group.',
+//    'default' => 0,
+//  );
+//  $schema['heartbeat_activity']['indexes']['in_group'] = array('in_group');
+//  $schema['heartbeat_user_templates'] = heartbeat_install_table_user_templates();
 
 
 //  $schema['heartbeat_stream'] = array(
@@ -333,7 +261,7 @@ function heartbeat_schema() {
 //  );
 
   //TODO determine if these foreign keys are to be added
-//  db_add_unique_key('heartbeat_activity', 'uaid', array('uaid'));
+//  db_add_unique_key('heartbeat_act/ivity', 'uaid', array('uaid'));
 //  db_add_unique_key('heartbeat_activity', 'uaid_uid', array('uaid', 'uid'));
 //  db_add_unique_key('heartbeat_activity', 'uaid_nid', array('uaid', 'nid'));
 //  db_add_unique_key('heartbeat_activity', 'uaid_uid_nid', array('uaid', 'uid', 'nid'))
@@ -369,18 +297,16 @@ function heartbeat_install_table_user_templates() {
 }
 
 function heartbeat_uninstall() {
-  $entities = \Drupal::service("entity.query")->get("heartbeat")->execute();
-  foreach($entities as $entity) {
-    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
-    $heartbeat->delete();
-  }
-
-  $entities = \Drupal::service("entity.query")->get("heartbeat_stream")->execute();
-
-  foreach($entities as $entity) {
-    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
-    $heartbeat->delete();
-  }
-
-
+//  $entities = \Drupal::service("entity.query")->get("heartbeat")->execute();
+//  foreach($entities as $entity) {
+//    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
+//    $heartbeat->delete();
+//  }
+//
+//  $entities = \Drupal::service("entity.query")->get("heartbeat_stream")->execute();
+//
+//  foreach($entities as $entity) {
+//    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
+//    $heartbeat->delete();
+//  }
 }

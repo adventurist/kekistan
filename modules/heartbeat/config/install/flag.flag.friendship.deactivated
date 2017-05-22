@@ -1,0 +1,33 @@
+uuid: 3e253d24-c0a3-4b9a-9816-fdc0cab7287e
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: friendship
+label: Friendship
+bundles: {  }
+entity_type: user
+global: false
+weight: 0
+flag_short: 'Befriend this cat'
+flag_long: 'Become friends with this mofo'
+flag_message: Fam
+unflag_short: 'Unfriend this cuck'
+unflag_long: 'Throw our friendship away'
+unflag_message: Cuck
+unflag_denied_text: ''
+flag_type: 'entity:user'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links:
+    full: full
+    token: token
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+  show_on_profile: true
+linkTypeConfig: {  }
+

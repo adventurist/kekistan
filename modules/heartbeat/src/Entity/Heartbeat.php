@@ -7,7 +7,9 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\token\TokenServiceProvider;
+use Drupal\Core\Url;
+use Drupal\Core\Link;
+use Drupal\Core\Database\Database;
 use Drupal\user\UserInterface;
 
 /**
@@ -108,7 +110,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   public static function preCreate(EntityStorageInterface $storage_controller, array &$values) {
     parent::preCreate($storage_controller, $values);
   }
-
 
   /**
    * {@inheritdoc}
@@ -410,14 +411,14 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    */
   public static function buildMessage(\Drupal\token\Token $tokenService, $preparsedMessage, $entities = NULL, $entityType, $mediaData = NULL) {
     $options = null;
-    if ($entityType == 'flag') {
-//      $options = [
-//        'callback' => '\Drupal\heartbeat\Entity\Heartbeat::handleMultipleEntities',
-//      ];
+    if ($entityType === 'flag') {
+
       $returnMessage = self::handleMultipleEntities($tokenService, $preparsedMessage, $entities);
+//      $returnMessage = "jigga";
       return strlen($returnMessage) > 0 ? $returnMessage : "Error creating message";
 
     }
+
     $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/node/[node:nid]">', $entities);
     /** @noinspection NestedTernaryOperatorInspection */
     $message = $parsedMessage;
@@ -449,7 +450,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     $tokens = $tokenService->scan($message);
 
     foreach($tokens as $key => $token) {
-      echo 'jigga';
       foreach ($token as $type) {
         if (substr_count($message, $type) > 1) {
           foreach ($entities as $entityKey => $entityValue) {
@@ -469,35 +469,53 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
                   $i++;
                 }
                 if (count($replacements) == 2) {
-                  $rebuiltMessage = $replacements[0] . $messageArray[1] . $replacements[1];
+                  $uid = $entityValue->entities[0]->id();
+                  $uid_target = $entityValue->entities[1]->id();
+                  $query = Database::getConnection()->query('
+                    SELECT status
+                    FROM heartbeat_friendship
+                    WHERE uid = :uid AND uid_target = :uid_target', array(
+                      ':uid' => $uid,
+                      ':uid_target' => $uid_target
+                    )
+                  );
+                  if ($query->fetchCol()[0] < 1) {
+                    $messageArray[1] = ' has requested friendship with ';
+                  }
+
+                  $user1Link = Link::fromTextAndUrl($replacements[0], $entityValue->entities[0]->toUrl());
+                  $user2Link = Link::fromTextAndUrl($replacements[1], $entityValue->entities[1]->toUrl());
+
+                  $rebuiltMessage = $user1Link->toString() . $messageArray[1] . $user2Link->toString();
                   return $rebuiltMessage;
                 }
-
               }
             }
           }
         }
       }
-
     }
+    return null;
   }
 
+
+  /**
+   * Helper method to identify the number of times a word is repeated in a phrase
+   *
+   * @param $phrase
+   * @return array
+   */
   public static function getWordRepeats($phrase) {
     $counts = array();
       $words = explode(' ', $phrase);
       foreach ($words as $word) {
+        if (!array_key_exists($word, $counts)) {
+          $counts[$word] = 0;
+        }
         $word = preg_replace("#[^a-zA-Z\-]#", "", $word);
-        $counts[$word] += 1;
+        ++$counts[$word];
       }
     return $counts;
-  }
-
-
-  function user_mail_tokens(&$replacements, $data, $options) {
-    if (isset($data['user'])) {
-      $replacements['[user:one-time-login-url]'] = user_pass_reset_url($data['user'], $options);
-      $replacements['[user:cancel-url]'] = user_cancel_url($data['user'], $options);
-    }
   }
 
 
@@ -546,7 +564,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
           $file = \Drupal::entityTypeManager()->getStorage('file')->load($fileId);
 
           if ($file !== NULL && is_object($file)) {
-            $url = \Drupal\Core\Url::fromUri($file->getFileUri());
+            $url = Url::fromUri($file->getFileUri());
             $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $url->getUri());
             $types[] = $mediaObject;
 
@@ -601,6 +619,30 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
     return $names;
   }
+
+
+  /**
+   * Updates the friendship status of these two users
+   *
+   * @param $uid
+   * @param $uid_target
+   * @param $unixtime
+   * @param $friendStatus
+   * @return \Drupal\Core\Database\StatementInterface|int|null
+   */
+  public static function updateFriendship($uid, $uid_target, $unixtime, $friendStatus) {
+    $query = Database::getConnection()->upsert('heartbeat_friendship')
+      ->fields(array(
+        'uid' => $uid,
+        'uid_target' => $uid_target,
+        'created' => $unixtime,
+        'status' => $friendStatus,
+      ))
+      ->key('uid_relation');
+    return $query->execute();
+  }
+
+
 
   /**
    * Gets the Heartbeat user.
