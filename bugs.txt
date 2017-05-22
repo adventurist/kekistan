@@ -1,0 +1,1 @@
+1. Sometimes messageMap arguments have integers as keys in HeartbeatTypeForm

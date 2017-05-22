@@ -5,6 +5,8 @@ namespace Drupal\heartbeat\EventSubscriber;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Drupal\flag\FlagService;
+use Drupal\user\Entity\User;
+use Drupal\heartbeat\Entity\Heartbeat;
 use Drupal\heartbeat\HeartbeatTypeServices;
 use Drupal\heartbeat\HeartbeatStreamServices;
 use Drupal\heartbeat\HeartbeatService;
@@ -68,52 +70,65 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
    * @param GetResponseEvent $event
    */
   public function flag_entity_flagged(Event $event) {
-//    $stophere = null;
-//    $flagging = $event->getFlagging();
-//    if ($flagging->getFlagId() == 'friendship') {
-//      $entity = $this->flagService->getFlagById($flagging->getFlagId());
-//
-//      $user = $flagging->getOwner();
-//
-//
-//      if ($entity->id() && $user->isAuthenticated()) {
-//
-//        $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
-//        $tokenService = \Drupal::service('token');
-//
-//        foreach ($heartbeatTypeService->getTypes() as $type) {
-//
-//          $heartbeatTypeEntity = $heartbeatTypeService->load($type);
-//          $arguments = json_decode($heartbeatTypeEntity->getArguments());
-//
-//          foreach ($arguments as $key => $argument) {
-//            $variables[$key] = $argument;
-//          }
-//
-//          $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
-//
-//          $entities = array(
-//            'node' => $entity,
-//            'user' => $user,
-//          );
-//
-//          $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $media);
-//
-//          //      $translatedMessage = t($messageTemplate);
-//
-//          $heartbeatActivity = Heartbeat::create([
-//            'type' => $heartbeatTypeEntity->id(),
-//            'uid' => $user->id(),
-//            'nid' => $entity->id(),
-//            'name' => 'Dev Test',
-//          ]);
-//
-//          $heartbeatActivity->setMessage($heartbeatMessage);
-//          $heartbeatActivity->save();
-//
-//        }
-//      }
-//    }
+    $stophere = null;
+    $flagging = $event->getFlagging();
+    if ($flagging->getFlagId() == 'friendship') {
+      $entity = $this->flagService->getFlagById($flagging->getFlagId());
+
+      $user = $flagging->getOwner();
+
+
+      if ($entity->id() && $user->isAuthenticated()) {
+
+        $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
+        $tokenService = \Drupal::service('token');
+
+        foreach ($heartbeatTypeService->getTypes() as $type) {
+
+          $heartbeatTypeEntity = $heartbeatTypeService->load($type);
+
+          if ($heartbeatTypeEntity->getMainEntity() == "flagging") {
+            $arguments = json_decode($heartbeatTypeEntity->getArguments());
+//            $entityTypeFlagging = $flagging->getEntityType();
+//            $id = $entityTypeFlagging->id();
+//            $id_other = $flagging->get('entity_id');
+//            $entityTypeId = $flagging->getEntityTypeId();
+//            $flaggable = $flagging->getFlaggableId();
+            $user2 = User::load($flagging->getFlaggableId());
+
+
+            foreach ($arguments as $key => $argument) {
+              $variables[$key] = $argument;
+            }
+
+            $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
+            $entitiesObj = new \stdClass();
+            $entitiesObj->type = 'user';
+            $entitiesObj->entities = [$user, $user2];
+            $entities = array(
+              'flagging' => $entity,
+              'user' => $entitiesObj,
+            );
+
+            $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), null);
+
+            //      $translatedMessage = t($messageTemplate);
+
+            $heartbeatActivity = Heartbeat::create([
+              'type' => $heartbeatTypeEntity->id(),
+              'uid' => $user->id(),
+              'nid' => $entity->id(),
+              'name' => 'Dev Test',
+            ]);
+
+            $heartbeatActivity->setMessage($heartbeatMessage);
+            $heartbeatActivity->save();
+
+          }
+        }
+      }
+    }
+
     drupal_set_message('Event flag.entity_flagged thrown by Subscriber in module heartbeat.', 'status', TRUE);
     return $event;
   }
