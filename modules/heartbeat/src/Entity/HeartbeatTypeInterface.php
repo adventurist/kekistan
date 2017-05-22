@@ -52,11 +52,11 @@ interface HeartbeatTypeInterface extends ConfigEntityInterface {
   /**
    * Sets the main Entity Type of the Heartbeat Type
    *
-   * @param string $entityType
+   * @param string $mainentity
    *  Describing entity type used in this Heartbeat Type
    */
 
-  public function setMainEntity($mainEntity);
+  public function setMainEntity($mainentity);
 
   /**
    * Gets the main Entity Type of the Heartbeat Type
@@ -151,7 +151,7 @@ interface HeartbeatTypeInterface extends ConfigEntityInterface {
   /**
    * Sets the arguments for the concatenated message
    *
-   * @param string $concatArgs
+   * @param string $arguments
    *
    */
 

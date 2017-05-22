@@ -19,6 +19,9 @@ heartbeat.heartbeat_type.*:
     description:
       type: string
       label: 'description'
+    mainentity:
+      type: string
+      label: 'Main Entity'
     message:
       type: string
       label: 'message'

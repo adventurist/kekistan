@@ -7,6 +7,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\token\TokenServiceProvider;
 use Drupal\user\UserInterface;
 
 /**
@@ -407,8 +408,16 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @param null $mediaData
    * @return null|string
    */
-  public static function buildMessage(\Drupal\token\Token $tokenService, $preparsedMessage, $entities = NULL, $mediaData = NULL) {
+  public static function buildMessage(\Drupal\token\Token $tokenService, $preparsedMessage, $entities = NULL, $entityType, $mediaData = NULL) {
+    $options = null;
+    if ($entityType == 'flag') {
+//      $options = [
+//        'callback' => '\Drupal\heartbeat\Entity\Heartbeat::handleMultipleEntities',
+//      ];
+      $returnMessage = self::handleMultipleEntities($tokenService, $preparsedMessage, $entities);
+      return strlen($returnMessage) > 0 ? $returnMessage : "Error creating message";
 
+    }
     $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/node/[node:nid]">', $entities);
     /** @noinspection NestedTernaryOperatorInspection */
     $message = $parsedMessage;
@@ -434,6 +443,61 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     //TODO put this into new method
     if ($type == 'image') { $type = 'img';}
     return '<'. $type . ' src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" / >';
+  }
+
+  protected static function handleMultipleEntities(\Drupal\token\token $tokenService, $message, $entities) {
+    $tokens = $tokenService->scan($message);
+
+    foreach($tokens as $key => $token) {
+      echo 'jigga';
+      foreach ($token as $type) {
+        if (substr_count($message, $type) > 1) {
+          foreach ($entities as $entityKey => $entityValue) {
+            if ($entityValue instanceof \stdClass && count($entityValue->entities) > 1) {
+              if ($key == $entityValue->type) {
+                $messageArray = explode($type, $message);
+                $stringRebuild = array();
+                $replacements = array();
+                $i = 0;
+                foreach ($entityValue->entities as $entity) {
+                  $stringRebuild[] = $tokenService->replace($message, array($key => $entity));
+                  foreach (self::getWordRepeats($stringRebuild[$i]) as $word => $num) {
+                    if ($num > 1 && !strpos($messageArray[1], $word)) {
+                      $replacements[] = $word;
+                    }
+                  }
+                  $i++;
+                }
+                if (count($replacements) == 2) {
+                  $rebuiltMessage = $replacements[0] . $messageArray[1] . $replacements[1];
+                  return $rebuiltMessage;
+                }
+
+              }
+            }
+          }
+        }
+      }
+
+    }
+  }
+
+  public static function getWordRepeats($phrase) {
+    $counts = array();
+      $words = explode(' ', $phrase);
+      foreach ($words as $word) {
+        $word = preg_replace("#[^a-zA-Z\-]#", "", $word);
+        $counts[$word] += 1;
+      }
+    return $counts;
+  }
+
+
+  function user_mail_tokens(&$replacements, $data, $options) {
+    if (isset($data['user'])) {
+      $replacements['[user:one-time-login-url]'] = user_pass_reset_url($data['user'], $options);
+      $replacements['[user:cancel-url]'] = user_cancel_url($data['user'], $options);
+    }
   }
 
 
