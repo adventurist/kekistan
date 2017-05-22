@@ -410,14 +410,14 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    */
   public static function buildMessage(\Drupal\token\Token $tokenService, $preparsedMessage, $entities = NULL, $entityType, $mediaData = NULL) {
     $options = null;
-    if ($entityType == 'flag') {
-//      $options = [
-//        'callback' => '\Drupal\heartbeat\Entity\Heartbeat::handleMultipleEntities',
-//      ];
+    if ($entityType === 'flag') {
+
       $returnMessage = self::handleMultipleEntities($tokenService, $preparsedMessage, $entities);
+//      $returnMessage = "jigga";
       return strlen($returnMessage) > 0 ? $returnMessage : "Error creating message";
 
     }
+
     $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/node/[node:nid]">', $entities);
     /** @noinspection NestedTernaryOperatorInspection */
     $message = $parsedMessage;
@@ -449,7 +449,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     $tokens = $tokenService->scan($message);
 
     foreach($tokens as $key => $token) {
-      echo 'jigga';
       foreach ($token as $type) {
         if (substr_count($message, $type) > 1) {
           foreach ($entities as $entityKey => $entityValue) {
@@ -472,22 +471,24 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
                   $rebuiltMessage = $replacements[0] . $messageArray[1] . $replacements[1];
                   return $rebuiltMessage;
                 }
-
               }
             }
           }
         }
       }
-
     }
+    return null;
   }
 
   public static function getWordRepeats($phrase) {
     $counts = array();
       $words = explode(' ', $phrase);
       foreach ($words as $word) {
+        if (!array_key_exists($word, $counts)) {
+          $counts[$word] = 0;
+        }
         $word = preg_replace("#[^a-zA-Z\-]#", "", $word);
-        $counts[$word] += 1;
+        ++$counts[$word];
       }
     return $counts;
   }
