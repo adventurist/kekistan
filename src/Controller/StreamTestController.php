@@ -103,7 +103,7 @@ class StreamTestController extends ControllerBase {
    */
   public function friendstream() {
     $messages = array();
-    $types = $this->heartbeatStreamService->getTypesById(3);
+    $types = $this->heartbeatStreamService->getTypesById(2);
     foreach ($types as $type) {
       if ($type != null) {
 

@@ -138,11 +138,13 @@ function heartbeat_entity_insert(EntityInterface $entity) {
 
 }
 
-function heartbeat_node_presave(NodeInterface $node) {
-  $uid = $node->getOwnerId();
-  $stuffTOdo = null;
-}
+/**
+ * Implements hook_ajax_render_alter().
+ */
+function heartbeat_ajax_render_alter(array &$data)
+{
 
+}
 //TODO Add heartbeat language to Javascript
 //TODO Determine necessity of polling
 //Add

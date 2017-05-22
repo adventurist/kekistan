@@ -111,6 +111,8 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
               $variables[$key] = $argument;
             }
 
+            Heartbeat::updateFriendship($user->id(), $user2->id(), time(), $friendStatus);
+
             $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
             $entitiesObj = new \stdClass();
             $entitiesObj->type = 'user';
@@ -122,15 +124,16 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
 
             $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), null);
 
-//            $heartbeatActivity = Heartbeat::create([
-//              'type' => $heartbeatTypeEntity->id(),
-//              'uid' => $user->id(),
-//              'nid' => $entity->id(),
-//              'name' => 'Dev Test',
-//            ]);
+            $heartbeatActivity = Heartbeat::create([
+              'type' => $heartbeatTypeEntity->id(),
+              'uid' => $user->id(),
+              'nid' => $entity->id(),
+              'name' => 'Dev Test',
+            ]);
 
-//            $heartbeatActivity->setMessage($heartbeatMessage);
-//            $heartbeatActivity->save();
+            $heartbeatActivity->setMessage($heartbeatMessage);
+            $heartbeatActivity->save();
+
           }
         }
       }
