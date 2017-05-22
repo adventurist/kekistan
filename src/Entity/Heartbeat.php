@@ -414,7 +414,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 //      $options = [
 //        'callback' => '\Drupal\heartbeat\Entity\Heartbeat::handleMultipleEntities',
 //      ];
-      self::handleMultipleEntities($tokenService, $preparsedMessage, $entities);
+      $returnMessage = self::handleMultipleEntities($tokenService, $preparsedMessage, $entities);
+      return strlen($returnMessage) > 0 ? $returnMessage : "Error creating message";
 
     }
     $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/node/[node:nid]">', $entities);
@@ -456,12 +457,21 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
               if ($key == $entityValue->type) {
                 $messageArray = explode($type, $message);
                 $stringRebuild = array();
+                $replacements = array();
                 $i = 0;
                 foreach ($entityValue->entities as $entity) {
                   $stringRebuild[] = $tokenService->replace($message, array($key => $entity));
-                  $repeated = self::getWordRepeats($stringRebuild[$i]);
+                  foreach (self::getWordRepeats($stringRebuild[$i]) as $word => $num) {
+                    if ($num > 1 && !strpos($messageArray[1], $word)) {
+                      $replacements[] = $word;
+                    }
+                  }
+                  $i++;
                 }
-                $nullhere = 'stop';
+                if (count($replacements) == 2) {
+                  $rebuiltMessage = $replacements[0] . $messageArray[1] . $replacements[1];
+                  return $rebuiltMessage;
+                }
 
               }
             }
@@ -472,15 +482,13 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     }
   }
 
-  public static function getWordRepeats($phrases) {
+  public static function getWordRepeats($phrase) {
     $counts = array();
-    foreach ($phrases as $phrase) {
       $words = explode(' ', $phrase);
       foreach ($words as $word) {
         $word = preg_replace("#[^a-zA-Z\-]#", "", $word);
         $counts[$word] += 1;
       }
-    }
     return $counts;
   }
 
