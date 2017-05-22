@@ -94,4 +94,34 @@ class StreamTestController extends ControllerBase {
     ];
   }
 
+
+  /**
+   * Stream.
+   *
+   * @return string
+   *   Return Hello string.
+   */
+  public function friendstream() {
+    $messages = array();
+    $types = $this->heartbeatStreamService->getTypesById(3);
+    foreach ($types as $type) {
+      if ($type != null) {
+
+        $heartbeatType = $type->getValue();
+
+        $heartbeats = $this->heartbeatService->loadByType($heartbeatType);
+
+        foreach($heartbeats as $heartbeat) {
+          $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+        }
+      }
+    }
+
+    return [
+      '#theme' => 'heartbeat_stream',
+      '#messages' => array_reverse($messages),
+      '#attached' => array('library' => 'heartbeat/heartbeat')
+    ];
+  }
+
 }

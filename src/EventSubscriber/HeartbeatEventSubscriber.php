@@ -11,6 +11,10 @@ use Drupal\heartbeat\HeartbeatTypeServices;
 use Drupal\heartbeat\HeartbeatStreamServices;
 use Drupal\heartbeat\HeartbeatService;
 
+const NOT_FRIEND = -1;
+const PENDING = 0;
+const FRIEND = 1;
+
 /**
  * Class HeartbeatEventSubscriber.
  *
@@ -68,11 +72,13 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
    * dispatched.
    *
    * @param GetResponseEvent $event
+   * @return GetResponseEvent|Event
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function flag_entity_flagged(Event $event) {
-    $stophere = null;
+    $friendStatus = NOT_FRIEND;
     $flagging = $event->getFlagging();
-    if ($flagging->getFlagId() == 'friendship') {
+    if ($flagging->getFlagId() === 'friendship') {
       $entity = $this->flagService->getFlagById($flagging->getFlagId());
 
       $user = $flagging->getOwner();
@@ -87,15 +93,28 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
 
           $heartbeatTypeEntity = $heartbeatTypeService->load($type);
 
-          if ($heartbeatTypeEntity->getMainEntity() == "flagging") {
-            $arguments = json_decode($heartbeatTypeEntity->getArguments());
-//            $entityTypeFlagging = $flagging->getEntityType();
-//            $id = $entityTypeFlagging->id();
-//            $id_other = $flagging->get('entity_id');
-//            $entityTypeId = $flagging->getEntityTypeId();
-//            $flaggable = $flagging->getFlaggableId();
-            $user2 = User::load($flagging->getFlaggableId());
+          if ($heartbeatTypeEntity->getMainEntity() === "flagging") {
 
+            $arguments = json_decode($heartbeatTypeEntity->getArguments());
+            $user2 = User::load($flagging->getFlaggableId());
+            $targetUserFriendships = $this->flagService->getFlagFlaggings($entity, $user2);
+
+            foreach ($targetUserFriendships as $friendship) {
+              if ($friendship->getFlaggableId() === $user->id()) {
+                $friendStatus = FRIEND;
+                break;
+              }
+            }
+
+            $friendStatus = $friendStatus == FRIEND ? FRIEND : PENDING;
+
+            if ($friendStatus === FRIEND) {
+              drupal_set_message($user->getUsername() . ' is now friends with ' . $user2->getUsername());
+            } else if ($friendStatus === PENDING) {
+              drupal_set_message($user->getUsername() . ' has requested friendship with ' . $user2->getUsername());
+            } else {
+              drupal_set_message($user->getUsername() . ' is unable to request friendship with ' . $user2->getUsername());
+            }
 
             foreach ($arguments as $key => $argument) {
               $variables[$key] = $argument;
@@ -112,8 +131,6 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
 
             $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), null);
 
-            //      $translatedMessage = t($messageTemplate);
-
             $heartbeatActivity = Heartbeat::create([
               'type' => $heartbeatTypeEntity->id(),
               'uid' => $user->id(),
@@ -123,7 +140,6 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
 
             $heartbeatActivity->setMessage($heartbeatMessage);
             $heartbeatActivity->save();
-
           }
         }
       }
@@ -132,6 +148,7 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
     drupal_set_message('Event flag.entity_flagged thrown by Subscriber in module heartbeat.', 'status', TRUE);
     return $event;
   }
+
   /**
    * This method is called whenever the flag.entity_unflagged event is
    * dispatched.

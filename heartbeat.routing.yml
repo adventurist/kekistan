@@ -23,3 +23,11 @@ heartbeat.stream_test_controller_stream:
     _title: 'stream'
   requirements:
     _permission: 'access content'
+
+heartbeat.stream_test_controller_friendstream:
+  path: '/friendactivity'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\StreamTestController::friendstream'
+    _title: 'Friendship'
+  requirements:
+    _permission: 'access content'
