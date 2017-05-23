@@ -631,15 +631,31 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return \Drupal\Core\Database\StatementInterface|int|null
    */
   public static function updateFriendship($uid, $uid_target, $unixtime, $friendStatus) {
-    $query = Database::getConnection()->upsert('heartbeat_friendship')
-      ->fields(array(
-        'uid' => $uid,
-        'uid_target' => $uid_target,
-        'created' => $unixtime,
-        'status' => $friendStatus,
-      ))
-      ->key('uid_relation');
-    return $query->execute();
+//    $query = Database::getConnection()->upsert('heartbeat_friendship')
+//      ->fields(array(
+//        'uid' => $uid,
+//        'uid_target' => $uid_target,
+//        'created' => $unixtime,
+//        'status' => $friendStatus,
+//      ))
+//      ->key('uid_relation');
+//    return $query->execute();
+    $update = Database::getConnection()->update('heartbeat_friendship')
+      ->fields(['status' => $friendStatus])
+      ->condition('uid', $uid, '=')
+      ->condition('uid_target', $uid_target, '=');
+    if (!$update->execute()) {
+      $insert = Database::getConnection()->insert('heartbeat_friendship')
+        ->fields([
+          'uid' => $uid,
+          'uid_target' => $uid_target,
+          'created' => $unixtime,
+          'status' => $friendStatus
+        ]);
+      if (!$insert->execute()) {
+        \Drupal::logger('Heartbeat')->error('Unable to update friendship between %uid and %uid_target', array('%uid' => $uid, '%uid_target' => $uid_target));
+      }
+    }
   }
 
 
