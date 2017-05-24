@@ -31,3 +31,19 @@ heartbeat.stream_test_controller_friendstream:
     _title: 'Friendship'
   requirements:
     _permission: 'access content'
+
+heartbeat.stream_test_controller_tweetstream:
+  path: '/tweetactivity'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\StreamTestController::tweetstream'
+    _title: 'Tweetship'
+  requirements:
+    _permission: 'access content'
+
+heartbeat.stream_test_controller_superherostream:
+  path: '/superheroactivity'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\StreamTestController::superherostream'
+    _title: 'Superhero Worship'
+  requirements:
+    _permission: 'access content'

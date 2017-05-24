@@ -111,9 +111,25 @@ function heartbeat_entity_insert(EntityInterface $entity) {
               'node' => $entity,
               'user' => $user,
             );
-
-            if (array_key_exists($heartbeatTypeEntity->getMainEntity(), $heartbeatTypeService->getEntityBundles($entity->getEntityType()))) {
+            $bundle = $entity->bundle();
+            $hbTypeBundle = $heartbeatTypeEntity->getBundle();
+            if (array_key_exists($heartbeatTypeEntity->getBundle(), $heartbeatTypeService->getEntityBundles($entity->getEntityType()))
+            &&
+            $entity->bundle() === $heartbeatTypeEntity->getBundle()) {
     //TODO handle logic for bundle-specific Heartbeat types based on the Node entity
+              $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
+
+
+              $heartbeatActivity = Heartbeat::create([
+                'type' => $heartbeatTypeEntity->id(),
+                'uid' => $user->id(),
+                'nid' => $entity->id(),
+                'name' => 'Dev Test',
+              ]);
+
+              $heartbeatActivity->setMessage($heartbeatMessage);
+              $heartbeatActivity->save();
+              break;
             }
 
             $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
@@ -144,6 +160,21 @@ function heartbeat_entity_insert(EntityInterface $entity) {
 
 
 }
+
+//public function saveHeartbeatMessage($entity, $tokenService, $preparsedMessageString, $entities, $entityTypeId, $media) {
+//  $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
+//
+//
+//  $heartbeatActivity = Heartbeat::create([
+//    'type' => $heartbeatTypeEntity->id(),
+//    'uid' => $user->id(),
+//    'nid' => $entity->id(),
+//    'name' => 'Dev Test',
+//  ]);
+//
+//  $heartbeatActivity->setMessage($heartbeatMessage);
+//  $heartbeatActivity->save();
+//}
 
 /**
  * Implements hook_ajax_render_alter().
