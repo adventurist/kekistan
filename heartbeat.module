@@ -96,41 +96,43 @@ function heartbeat_entity_insert(EntityInterface $entity) {
         foreach ($heartbeatTypeService->getTypes() as $type) {
 
           $heartbeatTypeEntity = $heartbeatTypeService->load($type);
-          $arguments = json_decode($heartbeatTypeEntity->getArguments());
 
-          foreach ($arguments as $key => $argument) {
-            $variables[$key] = $argument;
+          if ($heartbeatTypeEntity->getMainEntity() == 'node') {
+
+            $arguments = json_decode($heartbeatTypeEntity->getArguments());
+
+            foreach ($arguments as $key => $argument) {
+              $variables[$key] = $argument;
+            }
+
+            $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
+
+            $entities = array(
+              'node' => $entity,
+              'user' => $user,
+            );
+
+            if (array_key_exists($heartbeatTypeEntity->getMainEntity(), $heartbeatTypeService->getEntityBundles($entity->getEntityType()))) {
+    //TODO handle logic for bundle-specific Heartbeat types based on the Node entity
+            }
+
+            $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
+
+            //      $translatedMessage = t($messageTemplate);
+
+            $heartbeatActivity = Heartbeat::create([
+              'type' => $heartbeatTypeEntity->id(),
+              'uid' => $user->id(),
+              'nid' => $entity->id(),
+              'name' => 'Dev Test',
+            ]);
+
+            $heartbeatActivity->setMessage($heartbeatMessage);
+            $heartbeatActivity->save();
+
           }
-
-          $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
-
-          $entities = array(
-            'node' => $entity,
-            'user' => $user,
-          );
-
-          if (array_key_exists($heartbeatTypeEntity->getMainEntity(), $heartbeatTypeService->getEntityBundles($entity->getEntityType()))) {
-$stophere = null;
-          }
-
-
-          $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
-
-          //      $translatedMessage = t($messageTemplate);
-
-          $heartbeatActivity = Heartbeat::create([
-            'type' => $heartbeatTypeEntity->id(),
-            'uid' => $user->id(),
-            'nid' => $entity->id(),
-            'name' => 'Dev Test',
-          ]);
-
-          $heartbeatActivity->setMessage($heartbeatMessage);
-          $heartbeatActivity->save();
-
         }
       }
-
       break;
     case $entity instanceof \Drupal\user\Entity\User:
 //      $userService = \Drupal\User\Entity\user
