@@ -22,12 +22,15 @@ heartbeat.heartbeat_type.*:
     mainentity:
       type: string
       label: 'Main Entity'
+    bundle:
+      type: string
+      label: 'Bundle'
     message:
       type: string
       label: 'message'
-    message_concat:
-      type: string
-      label: 'message_concat'
+#    message_concat:
+#      type: string
+#      label: 'message_concat'
     perms:
       type: integer
       label: 'perms'
@@ -40,9 +43,9 @@ heartbeat.heartbeat_type.*:
     variables:
       type: blob
       label: 'variables'
-    attachments:
-      type: blob
-      label: 'attachments'
+#    attachments:
+#      type: blob
+#      label: 'attachments'
 heartbeat.friendship.*:
   type: config_entity
   label: 'Heartbeat Friendship config'

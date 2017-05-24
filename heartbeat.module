@@ -109,7 +109,12 @@ function heartbeat_entity_insert(EntityInterface $entity) {
             'user' => $user,
           );
 
-          $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $media);
+          if (array_key_exists($heartbeatTypeEntity->getMainEntity(), $heartbeatTypeService->getEntityBundles($entity->getEntityType()))) {
+$stophere = null;
+          }
+
+
+          $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
 
           //      $translatedMessage = t($messageTemplate);
 

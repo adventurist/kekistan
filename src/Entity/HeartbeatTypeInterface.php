@@ -88,24 +88,24 @@ interface HeartbeatTypeInterface extends ConfigEntityInterface {
   public function getMessage();
 
 
-  /**
-   * Sets the translatable concatenated message
-   *
-   * @param string $messageConcat
-   *
-   */
-
-  public function setMessageConcat($messageConcat);
-
-
-  /**
-   * Gets the concatenated message of the stream
-   *
-   * @return string
-   *  The Stream's concatenated message
-   */
-
-  public function getMessageConcat();
+//  /**
+//   * Sets the translatable concatenated message
+//   *
+//   * @param string $messageConcat
+//   *
+//   */
+//
+//  public function setMessageConcat($messageConcat);
+//
+//
+//  /**
+//   * Gets the concatenated message of the stream
+//   *
+//   * @return string
+//   *  The Stream's concatenated message
+//   */
+//
+//  public function getMessageConcat();
 
 
   /**
@@ -190,24 +190,44 @@ interface HeartbeatTypeInterface extends ConfigEntityInterface {
   public function getVariables();
 
 
-
   /**
-   * Sets the attachments for this message stream
+   * Sets the bundle targeted for this Heartbeat type
    *
-   * @param string $attachments
+   * @param string $variables
    *
    */
 
-  public function setAttachments($attachments);
+  public function setBundle($bundle);
 
 
   /**
-   * Gets the attachments of this message stream
+   * Gets the bundle of this Heartbeat type
    *
    * @return string
-   *  The stream's attachments
+   *  The stream's variables
    */
 
-  public function getAttachments();
+  public function getBundle();
+
+
+
+//  /**
+//   * Sets the attachments for this message stream
+//   *
+//   * @param string $attachments
+//   *
+//   */
+//
+//  public function setAttachments($attachments);
+//
+//
+//  /**
+//   * Gets the attachments of this message stream
+//   *
+//   * @return string
+//   *  The stream's attachments
+//   */
+//
+//  public function getAttachments();
 
 }

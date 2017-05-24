@@ -124,25 +124,25 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
     return $this->get('message');
   }
 
-  /**
-   * Sets the translatable concatenated message
-   *
-   * @param string $messageConcat
-   *
-   */
-  public function setMessageConcat($messageConcat) {
-    $this->messageConcat = $messageConcat;
-  }
-
-  /**
-   * Gets the concatenated message of the stream
-   *
-   * @return string
-   *  The Stream's concatenated message
-   */
-  public function getMessageConcat() {
-    return $this->messageConcat;
-  }
+//  /**
+//   * Sets the translatable concatenated message
+//   *
+//   * @param string $messageConcat
+//   *
+//   */
+//  public function setMessageConcat($messageConcat) {
+//    $this->messageConcat = $messageConcat;
+//  }
+//
+//  /**
+//   * Gets the concatenated message of the stream
+//   *
+//   * @return string
+//   *  The Stream's concatenated message
+//   */
+//  public function getMessageConcat() {
+//    return $this->messageConcat;
+//  }
 
   /**
    * Sets the Permissions for this message stream
@@ -226,25 +226,25 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
     return $this->variables;
   }
 
-  /**
-   * Sets the attachments for this message stream
-   *
-   * @param string $attachments
-   *
-   */
-  public function setAttachments($attachments) {
-    $this->attachments = $attachments;
-  }
-
-  /**
-   * Gets the attachments of this message stream
-   *
-   * @return string
-   *  The stream's attachments
-   */
-  public function getAttachments() {
-    return $this->attachments;
-  }
+//  /**
+//   * Sets the attachments for this message stream
+//   *
+//   * @param string $attachments
+//   *
+//   */
+//  public function setAttachments($attachments) {
+//    $this->attachments = $attachments;
+//  }
+//
+//  /**
+//   * Gets the attachments of this message stream
+//   *
+//   * @return string
+//   *  The stream's attachments
+//   */
+//  public function getAttachments() {
+//    return $this->attachments;
+//  }
 
   /**
    * @inheritDoc
@@ -344,4 +344,23 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
   }
 
 
+  /**
+   * Sets the bundle targeted for this Heartbeat type
+   *
+   * @param string $variables
+   *
+   */
+  public function setBundle($bundle) {
+    $this->set('bundle', $bundle);
+  }
+
+  /**
+   * Gets the bundle of this Heartbeat type
+   *
+   * @return string
+   *  The stream's variables
+   */
+  public function getBundle() {
+    return $this->get('bundle');
+  }
 }

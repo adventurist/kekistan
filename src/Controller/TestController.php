@@ -53,6 +53,8 @@ class TestController extends ControllerBase {
    */
   public function start($arg) {
 
+    $node = \Drupal\node\Entity\Node::load(186);
+
     $streamEntities = $this->heartbeatstream->loadAllEntities();
 
     foreach ($streamEntities as $streamEntityId) {
@@ -70,6 +72,11 @@ class TestController extends ControllerBase {
     }
 
     $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
+
+    $entityBundleInfo = $node->bundle();
+    $entityType = $node->getEntityType();
+    $availableBundles = $heartbeatTypeService->getEntityBundles($node->getEntityType());
+
     foreach ($heartbeatTypeService->getTypes() as $type) {
       $heartbeatTypeEntity = \Drupal::entityTypeManager()->getStorage('heartbeat_type')->load($type);
     }
