@@ -94,7 +94,7 @@ class HeartbeatStreamController extends ControllerBase {
     }
     return [
       '#theme' => 'heartbeat_stream',
-      '#messages' => array_reverse($messages),
+      '#messages' => $messages,
       '#attached' => array('library' => 'heartbeat/heartbeat')
     ];
 
