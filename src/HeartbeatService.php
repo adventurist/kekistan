@@ -48,5 +48,9 @@ class HeartbeatService {
   public function loadByType($type) {
     return $this->entityTypeManager->getStorage("heartbeat")->loadMultiple($this->entityQuery->get('heartbeat')->condition('type', $type)->execute());
   }
+
+  public function loadByTypes($types) {
+    return $this->entityTypeManager->getStorage("heartbeat")->loadMultiple($this->entityQuery->get('heartbeat')->condition('type', $types, 'IN')->sort('created', 'DESC')->execute());
+  }
 }
 

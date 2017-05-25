@@ -130,22 +130,25 @@ function heartbeat_entity_insert(EntityInterface $entity) {
               $heartbeatActivity->setMessage($heartbeatMessage);
               $heartbeatActivity->save();
               continue;
+            } else if ($heartbeatTypeEntity->getBundle() === null || trim($heartbeatTypeEntity->getBundle()) === '') {
+
+              $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
+
+              //      $translatedMessage = t($messageTemplate);
+
+              $heartbeatActivity = Heartbeat::create([
+                'type' => $heartbeatTypeEntity->id(),
+                'uid' => $user->id(),
+                'nid' => $entity->id(),
+                'name' => 'Dev Test',
+              ]);
+
+              $heartbeatActivity->setMessage($heartbeatMessage);
+              $heartbeatActivity->save();
+
+            } else {
+              continue;
             }
-
-            $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
-
-            //      $translatedMessage = t($messageTemplate);
-
-            $heartbeatActivity = Heartbeat::create([
-              'type' => $heartbeatTypeEntity->id(),
-              'uid' => $user->id(),
-              'nid' => $entity->id(),
-              'name' => 'Dev Test',
-            ]);
-
-            $heartbeatActivity->setMessage($heartbeatMessage);
-            $heartbeatActivity->save();
-
           }
         }
       }

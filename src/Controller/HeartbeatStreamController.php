@@ -79,18 +79,17 @@ class HeartbeatStreamController extends ControllerBase {
   public function createRoute($heartbeatStreamId) {
 
     $messages = array();
+    $heartbeatTypes = array();
     $types = $this->heartbeatStreamService->getTypesById($heartbeatStreamId);
     foreach ($types as $type) {
-      if ($type != null) {
-
-        $heartbeatType = $type->getValue();
-
-        $heartbeats = $this->heartbeatService->loadByType($heartbeatType);
-
-        foreach($heartbeats as $heartbeat) {
-          $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
-        }
+      if ($type != null && strlen($type->getValue()['target_id']) > 1) {
+        $heartbeatTypes[] = $type->getValue()['target_id'];
       }
+    }
+    $heartbeats = $this->heartbeatService->loadByTypes($heartbeatTypes);
+
+    foreach($heartbeats as $heartbeat) {
+      $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
     }
     return [
       '#theme' => 'heartbeat_stream',
