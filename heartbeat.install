@@ -302,11 +302,11 @@ function heartbeat_uninstall() {
 //    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
 //    $heartbeat->delete();
 //  }
-//
+
 //  $entities = \Drupal::service("entity.query")->get("heartbeat_stream")->execute();
 //
 //  foreach($entities as $entity) {
-//    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
+//    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat_stream")->load($entity);
 //    $heartbeat->delete();
 //  }
 }

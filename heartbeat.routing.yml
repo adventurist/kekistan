@@ -16,34 +16,45 @@ heartbeat.test_controller_start:
   requirements:
     _permission: 'access content'
 
-heartbeat.stream_test_controller_stream:
-  path: '/nodeactivity'
-  defaults:
-    _controller: '\Drupal\heartbeat\Controller\StreamTestController::stream'
-    _title: 'stream'
-  requirements:
-    _permission: 'access content'
+#heartbeat.stream_test_controller_stream:
+#  path: '/nodeactivity'
+#  defaults:
+#    _controller: '\Drupal\heartbeat\Controller\StreamTestController::stream'
+#    _title: 'stream'
+#  requirements:
+#    _permission: 'access content'
+#
+#heartbeat.stream_test_controller_friendstream:
+#  path: '/friendactivity'
+#  defaults:
+#    _controller: '\Drupal\heartbeat\Controller\StreamTestController::friendstream'
+#    _title: 'Friendship'
+#  requirements:
+#    _permission: 'access content'
+#
+#heartbeat.stream_test_controller_tweetstream:
+#  path: '/tweetactivity'
+#  defaults:
+#    _controller: '\Drupal\heartbeat\Controller\StreamTestController::tweetstream'
+#    _title: 'Tweetship'
+#  requirements:
+#    _permission: 'access content'
+#
+#heartbeat.stream_test_controller_superherostream:
+#  path: '/superheroactivity'
+#  defaults:
+#    _controller: '\Drupal\heartbeat\Controller\StreamTestController::superherostream'
+#    _title: 'Superhero Worship'
+#  requirements:
+#    _permission: 'access content'
 
-heartbeat.stream_test_controller_friendstream:
-  path: '/friendactivity'
-  defaults:
-    _controller: '\Drupal\heartbeat\Controller\StreamTestController::friendstream'
-    _title: 'Friendship'
-  requirements:
-    _permission: 'access content'
+route_callbacks:
+  - '\Drupal\heartbeat\Routing\HeartbeatRouteController::getRoutes'
 
-heartbeat.stream_test_controller_tweetstream:
-  path: '/tweetactivity'
-  defaults:
-    _controller: '\Drupal\heartbeat\Controller\StreamTestController::tweetstream'
-    _title: 'Tweetship'
-  requirements:
-    _permission: 'access content'
-
-heartbeat.stream_test_controller_superherostream:
-  path: '/superheroactivity'
-  defaults:
-    _controller: '\Drupal\heartbeat\Controller\StreamTestController::superherostream'
-    _title: 'Superhero Worship'
-  requirements:
-    _permission: 'access content'
+#heartbeat.heartbeat_stream.routes:
+#  path: '/heartbeat/hello'
+#  defaults:
+#    _controller: '\Drupal\heartbeat\Controller\HeartbeatRouteController::getRoutes'
+#    _title: 'getRoutes'
+#  requirements:
+#    _permission: 'access content'

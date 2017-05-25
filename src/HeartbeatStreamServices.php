@@ -79,4 +79,11 @@ class HeartbeatStreamServices {
   }
 
 
+  /*
+   * Load all available HeartbeatStream entities
+   */
+  public function getAllStreams() {
+    return $this->entityTypeManager->getStorage('heartbeat_stream')->loadMultiple($this->loadAllEntities());
+  }
+
 }
