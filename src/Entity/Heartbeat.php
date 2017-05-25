@@ -7,6 +7,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Utility\Token;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Database\Database;
@@ -409,7 +410,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @param null $mediaData
    * @return null|string
    */
-  public static function buildMessage(\Drupal\token\Token $tokenService, $preparsedMessage, $entities = NULL, $entityType, $mediaData = NULL) {
+  public static function buildMessage(Token $tokenService, $preparsedMessage, $entities = NULL, $entityType, $mediaData = NULL) {
     $options = null;
     if ($entityType === 'flag') {
 
