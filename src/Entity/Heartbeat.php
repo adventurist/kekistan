@@ -447,7 +447,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     return '<'. $type . ' src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" / >';
   }
 
-  protected static function handleMultipleEntities(\Drupal\token\token $tokenService, $message, $entities) {
+  protected static function handleMultipleEntities(Token $tokenService, $message, $entities) {
     $tokens = $tokenService->scan($message);
 
     foreach($tokens as $key => $token) {
