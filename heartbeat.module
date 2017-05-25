@@ -129,7 +129,7 @@ function heartbeat_entity_insert(EntityInterface $entity) {
 
               $heartbeatActivity->setMessage($heartbeatMessage);
               $heartbeatActivity->save();
-              break;
+              continue;
             }
 
             $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
