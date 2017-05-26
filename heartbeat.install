@@ -297,16 +297,16 @@ function heartbeat_install_table_user_templates() {
 }
 
 function heartbeat_uninstall() {
-//  $entities = \Drupal::service("entity.query")->get("heartbeat")->execute();
-//  foreach($entities as $entity) {
-//    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
-//    $heartbeat->delete();
-//  }
+  $entities = \Drupal::service("entity.query")->get("heartbeat")->execute();
+  foreach($entities as $entity) {
+    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
+    $heartbeat->delete();
+  }
 
-//  $entities = \Drupal::service("entity.query")->get("heartbeat_stream")->execute();
-//
-//  foreach($entities as $entity) {
-//    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat_stream")->load($entity);
-//    $heartbeat->delete();
-//  }
+  $entities = \Drupal::service("entity.query")->get("heartbeat_stream")->execute();
+
+  foreach($entities as $entity) {
+    $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat_stream")->load($entity);
+    $heartbeat->delete();
+  }
 }

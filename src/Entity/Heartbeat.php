@@ -606,7 +606,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     foreach ($entityTypes as $type) {
 
       if (($type->getBaseTable() === 'node') ||
-          ($type->getBaseTable() === 'user')
+          ($type->getBaseTable() === 'user') ||
+        ($type->getBaseTable() === 'status')
         ||
           ($type->getStorageClass() !== NULL &&
             strpos($type->getStorageClass(), $type->getLabel()->getUntranslatedString())
