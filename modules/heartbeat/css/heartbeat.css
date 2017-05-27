@@ -4,5 +4,13 @@
 
 
 .heartbeat-message {
-  border: 1px solid black;
+  border: 1px solid #dfdfdf;
+  padding: 16px;
 }
+
+.heartbeat-message img {
+  max-width: 286px;
+  margin: 8px;
+  display: block;
+}
+

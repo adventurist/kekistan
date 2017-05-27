@@ -79,4 +79,15 @@ class HeartbeatStreamServices {
   }
 
 
+  /*
+   * Load all available HeartbeatStream entities
+   */
+  public function getAllStreams() {
+    return $this->entityTypeManager->getStorage('heartbeat_stream')->loadMultiple($this->loadAllEntities());
+  }
+
+  public function createStreamForUids($uids) {
+    return $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('uid', $uids, 'IN')->sort('created', 'DESC')->execute());
+  }
+
 }

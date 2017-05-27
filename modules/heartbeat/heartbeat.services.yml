@@ -1,7 +1,7 @@
 services:
   heartbeat.heartbeattype:
     class: Drupal\heartbeat\HeartbeatTypeServices
-    arguments: ['@entity_type.manager', '@entity.query']
+    arguments: ['@entity_type.manager', '@entity_type.bundle.info', '@entity.query']
 
   heartbeatstream:
     class: Drupal\heartbeat\HeartbeatStreamServices
@@ -14,6 +14,7 @@ services:
   heartbeat:
     class: Drupal\heartbeat\HeartbeatService
     arguments: ['@entity_type.manager', '@entity.query', '@heartbeatstream']
+
   heartbeat.event:
     class: Drupal\heartbeat\EventSubscriber\HeartbeatEventSubscriber
     arguments: ['@flag', '@heartbeat.heartbeattype', '@heartbeatstream', '@heartbeat']

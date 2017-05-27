@@ -1,0 +1,16 @@
+# Status menu items definition
+entity.status.collection:
+  title: 'Status list'
+  route_name: entity.status.collection
+  description: 'List Status entities'
+  parent: system.admin_structure
+  weight: 100
+
+# Status type menu items definition
+entity.status_type.collection:
+  title: 'Status type'
+  route_name: entity.status_type.collection
+  description: 'List Status type (bundles)'
+  parent: system.admin_structure
+  weight: 99
+

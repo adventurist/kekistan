@@ -179,14 +179,14 @@ class HeartbeatTypeForm extends EntityForm {
     );
 
 
-    $form['message_concat'] = array(
-      '#type' => 'textfield',
-      '#title' => $this->t('Message structure in concatenated form'),
-      '#maxlength' => 255,
-      '#default_value' => $heartbeat_type->getMessageConcat(),
-      '#description' => $this->t("The structure for messages of this type. Use !exclamation marks before fields and entities"),
-      '#required' => FALSE,
-    );
+//    $form['message_concat'] = array(
+//      '#type' => 'textfield',
+//      '#title' => $this->t('Message structure in concatenated form'),
+//      '#maxlength' => 255,
+//      '#default_value' => $heartbeat_type->getMessageConcat(),
+//      '#description' => $this->t("The structure for messages of this type. Use !exclamation marks before fields and entities"),
+//      '#required' => FALSE,
+//    );
 
 
     $form['perms'] = array(
@@ -297,14 +297,16 @@ class HeartbeatTypeForm extends EntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $heartbeat_type = $this->entity;
-    $mapValue = $form_state->getValue('messageMap');
-    $mapObj = $form_state->get('messageMap');
+$bundleArray = $form_state->get('entity_bundles');
+$bundleChoice = $form_state->getValue('entity_bundles');
     $heartbeat_type->set('description', $form_state->getValue('description'));
     $heartbeat_type->set('message', $form_state->getValue('message'));
     $heartbeat_type->set('perms', $form_state->getValue('perms'));
     $heartbeat_type->set('variables', $form_state->getValue('variables'));
     $heartbeat_type->set('arguments', json_encode($form_state->get('messageMap')));
     $heartbeat_type->set('mainentity', $this->entityTypes[$form_state->getValue('entity_type')]);
+    $heartbeat_type->set('bundle', $form_state->get('entity_bundles')[$form_state->getValue('entity_bundles')['list']]);
+
     $status = $heartbeat_type->save();
 
     switch ($status) {

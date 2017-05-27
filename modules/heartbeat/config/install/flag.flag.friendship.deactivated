@@ -11,11 +11,11 @@ entity_type: user
 global: false
 weight: 0
 flag_short: 'Befriend this cat'
-flag_long: 'Become friends with this mofo'
+flag_long: 'Become friends with this wonderful human being'
 flag_message: Fam
-unflag_short: 'Unfriend this cuck'
+unflag_short: 'Unfriend this terrible terrible person'
 unflag_long: 'Throw our friendship away'
-unflag_message: Cuck
+unflag_message: Not friend
 unflag_denied_text: ''
 flag_type: 'entity:user'
 link_type: ajax_link

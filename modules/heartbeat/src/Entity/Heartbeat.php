@@ -7,6 +7,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\RevisionableContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Utility\Token;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Database\Database;
@@ -409,7 +410,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @param null $mediaData
    * @return null|string
    */
-  public static function buildMessage(\Drupal\token\Token $tokenService, $preparsedMessage, $entities = NULL, $entityType, $mediaData = NULL) {
+  public static function buildMessage(Token $tokenService, $preparsedMessage, $entities = NULL, $entityType, $mediaData = NULL) {
     $options = null;
     if ($entityType === 'flag') {
 
@@ -446,7 +447,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     return '<'. $type . ' src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" / >';
   }
 
-  protected static function handleMultipleEntities(\Drupal\token\token $tokenService, $message, $entities) {
+  protected static function handleMultipleEntities(Token $tokenService, $message, $entities) {
     $tokens = $tokenService->scan($message);
 
     foreach($tokens as $key => $token) {
@@ -605,7 +606,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     foreach ($entityTypes as $type) {
 
       if (($type->getBaseTable() === 'node') ||
-          ($type->getBaseTable() === 'user')
+          ($type->getBaseTable() === 'user') ||
+        ($type->getBaseTable() === 'status')
         ||
           ($type->getStorageClass() !== NULL &&
             strpos($type->getStorageClass(), $type->getLabel()->getUntranslatedString())
@@ -631,15 +633,31 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return \Drupal\Core\Database\StatementInterface|int|null
    */
   public static function updateFriendship($uid, $uid_target, $unixtime, $friendStatus) {
-    $query = Database::getConnection()->upsert('heartbeat_friendship')
-      ->fields(array(
-        'uid' => $uid,
-        'uid_target' => $uid_target,
-        'created' => $unixtime,
-        'status' => $friendStatus,
-      ))
-      ->key('uid_relation');
-    return $query->execute();
+//    $query = Database::getConnection()->upsert('heartbeat_friendship')
+//      ->fields(array(
+//        'uid' => $uid,
+//        'uid_target' => $uid_target,
+//        'created' => $unixtime,
+//        'status' => $friendStatus,
+//      ))
+//      ->key('uid_relation');
+//    return $query->execute();
+    $update = Database::getConnection()->update('heartbeat_friendship')
+      ->fields(['status' => $friendStatus])
+      ->condition('uid', $uid, '=')
+      ->condition('uid_target', $uid_target, '=');
+    if (!$update->execute()) {
+      $insert = Database::getConnection()->insert('heartbeat_friendship')
+        ->fields([
+          'uid' => $uid,
+          'uid_target' => $uid_target,
+          'created' => $unixtime,
+          'status' => $friendStatus
+        ]);
+      if (!$insert->execute()) {
+        \Drupal::logger('Heartbeat')->error('Unable to update friendship between %uid and %uid_target', array('%uid' => $uid, '%uid_target' => $uid_target));
+      }
+    }
   }
 
 

@@ -74,9 +74,8 @@ class HeartbeatStreamForm extends ContentEntityForm {
   public function buildForm(array $form, FormStateInterface $form_state) {
     /* @var $entity \Drupal\heartbeat\Entity\HeartbeatStream */
 
-    if ($entity == NULL) {
-      $entity = &$this->entity;
-    }
+    $entity = &$this->entity;
+
     $form = parent::buildForm($form, $form_state);
 
     if (!$this->entity->isNew()) {
