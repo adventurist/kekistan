@@ -411,22 +411,46 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return null|string
    */
   public static function buildMessage(Token $tokenService, $preparsedMessage, $entities = NULL, $entityType, $mediaData = NULL) {
-    $options = null;
-    if ($entityType === 'flag') {
 
-      $returnMessage = self::handleMultipleEntities($tokenService, $preparsedMessage, $entities);
-//      $returnMessage = "jigga";
-      return strlen($returnMessage) > 0 ? $returnMessage : "Error creating message";
+    switch (true) {
+
+      case $entityType === 'node':
+
+        $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/node/[node:nid]">', $entities);
+        /** @noinspection NestedTernaryOperatorInspection */
+        $message = $parsedMessage;
+        $message .= $mediaData ? self::buildMediaMarkup($mediaData) : '';
+        $message .= '</a>';
+
+        return $message;
+        break;
+
+      case $entityType === 'status':
+
+        $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/admin/structure/' . $entityType . '/[' . $entityType . ':id]">', $entities);
+        /** @noinspection NestedTernaryOperatorInspection */
+        $message = $parsedMessage;
+        $message .= $mediaData ? self::buildMediaMarkup($mediaData) : 'Post';
+        $message .= '</a>';
+
+        return $message;
+
+        break;
+
+      case $entityType === 'user':
+
+        break;
+
+      case $entityType === 'flag':
+
+        $returnMessage = self::handleMultipleEntities($tokenService, $preparsedMessage, $entities);
+
+        return strlen($returnMessage) > 0 ? $returnMessage : "Error creating message";
+
+        break;
 
     }
 
-    $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/node/[node:nid]">', $entities);
-    /** @noinspection NestedTernaryOperatorInspection */
-    $message = $parsedMessage;
-    $message .= $mediaData ? self::buildMediaMarkup($mediaData) : '';
-    $message .= '</a>';
-
-    return $message;
   }
 
 
