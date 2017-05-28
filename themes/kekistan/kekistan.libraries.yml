@@ -38,3 +38,8 @@ ie8:
   header: true
   js:
     js/selectivizr-min.js: { browsers: { IE: 'lte IE 8', '!IE': false }, minified: true, preprocess: false }
+custom:
+  version: VERSION
+  css:
+   theme:
+    css/custom.css: {}

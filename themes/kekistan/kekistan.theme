@@ -11,6 +11,7 @@ use Drupal\Core\Cache\CacheableMetadata;
  * Prepares variables for the html.html.twig template.
  */
 function kekistan_preprocess_html(&$variables) {
+$variables['#attached']['library'][] = 'kekistan/custom';
   try {
     $variables['is_front'] = \Drupal::service('path.matcher')->isFrontPage();
   }

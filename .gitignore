@@ -1,4 +1,5 @@
 drush/
 sites/default/settings.php
-sites/default/files
+sites/default/files/js
+sites/default/files/css
 sites/default/files/php
