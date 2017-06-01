@@ -112,16 +112,15 @@ class HeartbeatStreamServices {
 
   public function createStreamForUidsByType($uids, $type) {
     $stream = $this->entityTypeManager->getStorage('heartbeat_stream')->load(array_values($this->loadStream($type))[0]);
+    if ($stream !== null) {
+      $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('type', array_column($stream->getTypes(), 'target_id'), 'IN')->condition('uid', $uids, 'IN')->sort('created', 'DESC')->execute());
 
-    $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('type', array_column($stream->getTypes(), 'target_id'), 'IN')->condition('uid', $uids, 'IN')->sort('created', 'DESC')->execute());
+      $this->lastId = call_user_func('end', array_keys($beats));
 
-    $this->lastId = call_user_func('end', array_keys($beats));
+      $this->configFactory->getEditable('heartbeat_update_feed.settings')->set('lastId', $this->lastId)->set('update', false)->set('timestamp', array_values($beats)[0]->getRevisionCreationTime())->save();
 
-    $this->configFactory->getEditable('heartbeat_update_feed')->set('timestamp', $this->lastId)->set('update', false)->save();
-
-    $this->latestTimestamp = array_values($beats)[0]->getRevisionCreationTime();
-
-    return $beats;
+      return $beats;
+    }
   }
 
   public function updateStreamForUidsByType($uids, $type) {
