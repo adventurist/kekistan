@@ -682,6 +682,18 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         \Drupal::logger('Heartbeat')->error('Unable to update friendship between %uid and %uid_target', array('%uid' => $uid, '%uid_target' => $uid_target));
       }
     }
+    if ($friendStatus === 1) {
+      $insert2 = Database::getConnection()->insert('heartbeat_friendship')
+        ->fields([
+          'uid' => $uid_target,
+          'uid_target' => $uid,
+          'created' => $unixtime,
+          'status' => $friendStatus
+        ]);
+      if (!$insert2->execute()) {
+        \Drupal::logger('Heartbeat')->error('Unable to update friendship between %uid and %uid_target', array('%uid' => $uid_target, '%uid_target' => $uid));
+      }
+    }
   }
 
 
