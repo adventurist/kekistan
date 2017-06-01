@@ -1,27 +1,37 @@
-/*hyperlinks*/
-.site-name a {
-  color: rgba(27, 22, 22, 0.78);
-}
-
-header#header {
-    background: rgb(211, 216, 195);
-}
-
-element.style {
-  background-color: #c0c5be;
-}
-
-
-#block-kekistan-branding img {
-  max-width: 280px;
-}
-
-
 /*place the account to right and branding logo to left in header*/
 nav#block-kekistan-account-menu {
     float: right;
 }
 div#block-kekistan-branding {
   float: left;
+  margin-bottom: 15px;
 }
 
+/*logo image*/
+#block-kekistan-branding img {
+  max-width: 280px;
+}
+
+/*header background*/
+header#header {
+  background: rgb(211, 216, 195);
+}
+
+element.style {
+  background-color: #c0c5be;
+}
+
+/*left side menu bar*/
+nav#block-kekistan-main-menu {
+  margin-top: 15px;
+}
+
+/*left side menu search*/
+div#block-kekistan-search {
+  margin-top: 30px;
+}
+
+/*hyperlinks*/
+.site-name a {
+  color: rgba(27, 22, 22, 0.78);
+}
