@@ -14,5 +14,13 @@ element.style {
 
 #block-kekistan-branding img {
   max-width: 280px;
+}
 
+
+/*place the account to right and branding logo to left in header*/
+nav#block-kekistan-account-menu{
+    float: right;
+}
+nav#block-kekistan-account-menu {
+  float: left
 }
