@@ -18,9 +18,10 @@ element.style {
 
 
 /*place the account to right and branding logo to left in header*/
-nav#block-kekistan-account-menu -{
+nav#block-kekistan-account-menu {
     float: right;
 }
 div#block-kekistan-branding {
   float: left;
 }
+
