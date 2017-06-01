@@ -4,7 +4,6 @@ namespace Drupal\heartbeat\Form;
 
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Render\Renderer;
-use Drupal\heartbeat;
 use Drupal\heartbeat\Entity;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\HtmlCommand;

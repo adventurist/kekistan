@@ -58,3 +58,19 @@ route_callbacks:
 #    _title: 'getRoutes'
 #  requirements:
 #    _permission: 'access content'
+
+heartbeat.heartbeat_feed_form:
+  path: '/heartbeat/form/heartbeat_feed'
+  defaults:
+    _form: '\Drupal\heartbeat\Form\HeartbeatFeedForm'
+    _title: 'HeartbeatFeedForm'
+  requirements:
+    _access: 'TRUE'
+
+heartbeat.render_feed:
+  path: '/heartbeat/render_feed/{arg}'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::renderFeed'
+    _title: 'Render Feed'
+  requirements:
+    _permission: 'access content'

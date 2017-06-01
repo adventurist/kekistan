@@ -81,7 +81,7 @@ function heartbeat_theme_suggestions_heartbeat(array $variables) {
  * Implements hook_entity_insert().
  */
 function heartbeat_entity_insert(EntityInterface $entity) {
-
+$bundleSaved = false;
   switch (true) {
     case $entity instanceof \Drupal\node\Entity\Node:
 
@@ -128,7 +128,9 @@ function heartbeat_entity_insert(EntityInterface $entity) {
               ]);
 
               $heartbeatActivity->setMessage($heartbeatMessage);
-              $heartbeatActivity->save();
+              if ($heartbeatActivity->save()) {
+                $bundleSaved = true;
+              }
               continue;
             } else if ($heartbeatTypeEntity->getBundle() === null || trim($heartbeatTypeEntity->getBundle()) === '') {
 
@@ -141,6 +143,7 @@ function heartbeat_entity_insert(EntityInterface $entity) {
                 'uid' => $user->id(),
                 'nid' => $entity->id(),
                 'name' => 'Dev Test',
+                'status' => !$bundleSaved ? 1 : 0,
               ]);
 
               $heartbeatActivity->setMessage($heartbeatMessage);
@@ -175,7 +178,7 @@ function heartbeat_entity_insert(EntityInterface $entity) {
 
 
 function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, $user, $mainEntity) {
-
+  $bundleSaved = false;
   if ($entity->id() && $user->isAuthenticated()) {
 
     $media = HeartBeat::mediaFieldTypes($entity->getFields());
@@ -215,7 +218,9 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
           ]);
 
           $heartbeatActivity->setMessage($heartbeatMessage);
-          $heartbeatActivity->save();
+          if ($heartbeatActivity->save()) {
+            $bundleSaved = true;
+          }
           continue;
         } else if ($heartbeatTypeEntity->getBundle() === null || trim($heartbeatTypeEntity->getBundle()) === '') {
 
@@ -228,6 +233,7 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
             'uid' => $user->id(),
             'nid' => $entity->id(),
             'name' => 'Dev Test',
+            'status' => !$bundleSaved ? 1 : 0,
           ]);
 
           $heartbeatActivity->setMessage($heartbeatMessage);
@@ -240,6 +246,7 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
       }
     }
   }
+  \Drupal::service('config.factory')->getEditable('heartbeat_update_feed.settings')->set('update', true)->save();
 }
 
 
@@ -268,3 +275,8 @@ function heartbeat_ajax_render_alter(array &$data) {
 //TODO Add heartbeat language to Javascript
 //TODO Determine necessity of polling
 //Add
+
+//TODO implement polling in JS using Drupal Settings
+//$variables['#attached']['drupalSettings']['heartbeatData'] = $mydata;
+//^ will become available in JS as:
+//settings.heartbeatData, data

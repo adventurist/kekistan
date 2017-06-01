@@ -3,6 +3,7 @@
 namespace Drupal\heartbeat\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+//use Drupal\Core\Asset\AssetResolver;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Database;
@@ -81,7 +82,12 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
    */
   public function build() {
 
+    $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_feed.settings');
+
+    $feed = $myConfig->get('message');
+
     $messages = array();
+
     $query = Database::getConnection()->select('heartbeat_friendship', 'hf')
       ->fields('hf',['uid_target'])
       ->condition('hf.uid', \Drupal::currentUser()->id())->execute();
@@ -91,14 +97,24 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       foreach ($result as $uid) {
         $uids[] = $uid->uid_target;
       }
-      foreach($this->heartbeatStreamServices->createStreamForUids($uids) as $heartbeat) {
-        $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+      if ($feed !== null) {
+        foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
+          $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+        }
+      } else {
+        foreach ($this->heartbeatStreamServices->createStreamForUids($uids) as $heartbeat) {
+          $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+        }
       }
 
       return [
         '#theme' => 'heartbeat_stream',
         '#messages' => $messages,
-        '#attached' => array('library' => 'heartbeat/heartbeat')
+        '#attached' => array(
+          'library' => 'heartbeat/heartbeat',
+          'drupalSettings' => ['activeFeed' => 'jigga']
+        ),
+        '#cache' => array('max-age' => 0)
       ];
 
     }

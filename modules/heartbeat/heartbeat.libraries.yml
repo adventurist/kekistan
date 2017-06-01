@@ -8,3 +8,10 @@ heartbeat:
   css:
     theme:
       css/heartbeat.css: {}
+  js:
+    js/heartbeat.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings

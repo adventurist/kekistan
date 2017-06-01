@@ -162,4 +162,17 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
     return $build;
   }
 
+  public function renderFeed($arg) {
+    $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_feed.settings');
+    $myConfig->set('message', $arg)->save();
+    \Drupal::logger('HeartbeatController')->debug('My argument is %arg', ['%arg' => $arg]);
+
+    return \Drupal\block\BlockViewBuilder::lazyBuilder('heartbeatblock', 'teaser');
+  }
+
+
+  public function updateFeed($arg) {
+
+  }
+
 }
