@@ -11,3 +11,8 @@ element.style {
   background-color: #c0c5be;
 }
 
+
+#block-kekistan-branding img {
+  max-width: 280px;
+
+}
