@@ -1,0 +1,10 @@
+treeTable:
+  version: 1.x
+  css:
+    theme:
+      css/heartbeat.css: {}
+heartbeat:
+  version: 1.x
+  css:
+    theme:
+      css/heartbeat.css: {}
