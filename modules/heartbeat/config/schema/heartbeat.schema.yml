@@ -65,3 +65,22 @@ heartbeat.friendship.*:
     created:
       type: integer
       label: 'Created timestamp'
+
+heartbeat_feed.config:
+  type: config_object
+  label: 'Active Feed Choice'
+  mapping:
+    message:
+      type: text
+      label: 'Feed Choice'
+
+heartbeat_update_feed.config:
+  type: config_object
+  label: 'Feed Update Parameters'
+  mapping:
+    timestamp:
+      type: integer
+      label: 'The last timestamp available'
+    update:
+      type: boolean
+      label: 'Assert whether or not to update the feed'

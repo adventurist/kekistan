@@ -14,3 +14,70 @@
   display: block;
 }
 
+
+/*Main Feed Form*/
+#heartbeat-feed-form input[type="radio"] {
+    -webkit-appearance: none;
+    display: inline-block;
+}
+
+#heartbeat-feed-form .form-type-radio {
+    display: inline-block;
+    position: relative;
+    border-right: 1px solid white;
+
+}
+#heartbeat-feed-form input.form-radio {
+    background: #12ff00;
+    min-width: 100%;
+    margin-bottom:0;
+    padding: 0em 22em 2.5em 0em;
+    font-weight: 700;
+    display: inline-block;
+}
+
+#heartbeat-feed-form input.form-radio:hover {
+   background: #1E6100;
+ }
+
+
+#heartbeat-feed-form input[type="radio"]:checked {
+   background: #003b00;
+ }
+
+#heartbeat-feed-form label {
+    font-size:1rem;
+    font-weight: 700;
+    color: white;
+    position:absolute;
+    /*top:50%;;*/
+    /*left:50%;*/
+    display:inline-block;
+    width:auto;
+    transform:translate(5%, -150%);
+}
+
+#heartbeat-feed-form .form-item-feedtabs {
+    display: inline-block;
+}
+
+/*Heartbeat feed re-render block
+Temporarily hiding all irrelevant content */
+
+.heartbeat-stream a.visually-hidden,
+.heartbeat-stream #toolbar-administration,
+.heartbeat-stream header,
+.heartbeat-stream footer,
+.heartbeat-stream .highlighted,
+.heartbeat-stream .region-breadcrumb,
+.heartbeat-stream #sidebar-first,
+.heartbeat-stream .block-page-title-block { display: none}
+
+.heartbeat-stream #content {
+  margin-left: 0;
+}
+
+heartbeat-stream section.section {
+  padding: 0;
+ }
+
