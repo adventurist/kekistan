@@ -172,6 +172,7 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
 
 
   public function updateFeed($arg) {
+    \Drupal::logger('HeartbeatController::updater')->debug('Jigga what is %arg', ['%arg' => $arg]);
 
   }
 

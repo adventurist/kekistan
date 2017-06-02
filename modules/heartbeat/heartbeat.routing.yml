@@ -74,3 +74,20 @@ heartbeat.render_feed:
     _title: 'Render Feed'
   requirements:
     _permission: 'access content'
+
+heartbeat.update_feed:
+  path: '/heartbeat/update_feed/{arg}'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::updateFeed'
+    _title: 'Update Feed'
+  requirements:
+    _permission: 'access content'
+
+heartbeat.heartbeat_update_feed_form:
+  path: '/heartbeat/form/heartbeat_update_feed'
+  defaults:
+    _form: '\Drupal\heartbeat\Form\HeartbeatUpdateFeedForm'
+    _title: 'HeartbeatUpdateFeedForm'
+  requirements:
+    _access: 'TRUE'
+  

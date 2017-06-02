@@ -61,17 +61,24 @@
     display: inline-block;
 }
 
+#heartbeat-feed-form .form-item-feedsearch,
+#heartbeat-feed-form #edit-submit {
+  display: none;
+}
+
 /*Heartbeat feed re-render block
 Temporarily hiding all irrelevant content */
 
-.heartbeat-stream a.visually-hidden,
-.heartbeat-stream #toolbar-administration,
-.heartbeat-stream header,
-.heartbeat-stream footer,
-.heartbeat-stream .highlighted,
-.heartbeat-stream .region-breadcrumb,
-.heartbeat-stream #sidebar-first,
-.heartbeat-stream .block-page-title-block { display: none}
+#block-heartbeatblock a.visually-hidden,
+#block-heartbeatblock #toolbar-administration,
+#block-heartbeatblock header,
+#block-heartbeatblock footer,
+#block-heartbeatblock .highlighted,
+#block-heartbeatblock .region-breadcrumb,
+#block-heartbeatblock #sidebar-first,
+#block-heartbeatblock .block-page-title-block,
+#block-heartbeatblock #block-kekistan-breadcrumbs,
+#block-heartbeatblock #block-kekistan-page-title { display: none}
 
 .heartbeat-stream #content {
   margin-left: 0;

@@ -1,5 +1,7 @@
 <?php
+
 namespace Drupal\heartbeat\Ajax;
+
 /**
  * Created by IntelliJ IDEA.
  * User: logicp
@@ -19,8 +21,10 @@ class UpdateFeedCommand implements CommandInterface {
     public function render() {
 
         return array(
-            'command' => 'selectFeed',
-            'feed' => $this->message
+            'command' => 'updateFeed',
+            'feed' => $this->message->feed,
+            'update' => $this->message->update,
+          'timestamp' => $this->message->timestamp,
         );
     }
 }

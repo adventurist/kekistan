@@ -8,12 +8,15 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Form\FormState;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity;
 use Drupal\heartbeat\Entity\FILE_FIELD;
 use Drupal\heartbeat\Entity\Heartbeat;
+use GuzzleHttp\Exception\RequestException;
 use Drupal\heartbeat\Entity\HeartbeatType;
+use Drupal\heartbeat\Ajax\UpdateFeedCommand;
 
 
 
@@ -148,12 +151,12 @@ $bundleSaved = false;
 
               $heartbeatActivity->setMessage($heartbeatMessage);
               $heartbeatActivity->save();
-
             } else {
               continue;
             }
           }
         }
+        updateFeeds();
       }
       break;
     case $entity instanceof \Drupal\user\Entity\User:
@@ -246,10 +249,58 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
       }
     }
   }
-  \Drupal::service('config.factory')->getEditable('heartbeat_update_feed.settings')->set('update', true)->save();
+  updateFeeds();
+
 }
 
+function updateFeeds() {
+  $configFactory = \Drupal::service('config.factory');
+  $updateFeedConfig = $configFactory->getEditable('heartbeat_update_feed.settings');
+  $feedConfig = $configFactory->get('heartbeat_feed.settings');
 
+//  $form = \Drupal::formBuilder()->getForm('\Drupal\heartbeat\Form\HeartbeatUpdateFeedForm');
+
+//  $form_state = new FormState();
+//  $form_state->set('timestamp', $updateFeedConfig->get('timestamp'));
+
+//  \Drupal::formBuilder()->submitForm('\Drupal\heartbeat\Form\HeartbeatUpdateFeedForm', $form_state);
+
+//  $errors = $form_state->getErrors();
+
+
+  //  $updateFeedConfig->set('update', true)->save();
+//  $feedUpdateConfig = new stdClass();
+//  $feedUpdateConfig->feed = $feedConfig->get('message');
+//  $feedUpdateConfig->update = true;
+//  $feedUpdateConfig->timestamp = $updateFeedConfig->get('timestamp');
+
+
+//  $curlQuery = '/heartbeat/update_feed/' . $updateFeedConfig->get('timestamp');
+  //Set options for the curl request
+
+//  try {
+//    $response = \Drupal::httpClient()->get($curlQuery, array('headers' => array('Accept' => 'text/plain')));
+//    $data = (string) $response->getBody();
+//    if (empty($data)) {
+//      $stophere = null;
+//
+//    }
+//  }
+//  catch (RequestException $e) {
+//    return FALSE;
+//  }
+
+
+//  $curlOptions = array(
+//    'headers' => array(
+//      'X-DataSource-Auth' => 'a',
+//      'method' => 'POST',
+//    ),
+//  );
+//  //Perform the request and decode the results
+//  $result = chr_curl_http_request($curlQuery, $curlOptions);
+
+}
 //public function saveHeartbeatMessage($entity, $tokenService, $preparsedMessageString, $entities, $entityTypeId, $media) {
 //  $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
 //
@@ -272,6 +323,15 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
 function heartbeat_ajax_render_alter(array &$data) {
 
 }
+
+/**
+ * Implements hook_entity_bundle_create().
+ */
+function heartbeat_entity_bundle_create($entity_type_id, $bundle)
+{
+
+}
+
 //TODO Add heartbeat language to Javascript
 //TODO Determine necessity of polling
 //Add

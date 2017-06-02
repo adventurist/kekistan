@@ -97,12 +97,20 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       foreach ($result as $uid) {
         $uids[] = $uid->uid_target;
       }
+    }
       if ($feed !== null) {
-        foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
-          $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+        if ($uids !== null && count($uids) > 0) {
+          foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
+            $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+          }
+        } else {
+          foreach ($this->heartbeatStreamServices->createStreamByType($feed) as $heartbeat) {
+            $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+          }
         }
       } else {
-        foreach ($this->heartbeatStreamServices->createStreamForUids($uids) as $heartbeat) {
+//        foreach ($this->heartbeatStreamServices->createStreamForUids($uids) as $heartbeat) {
+        foreach ($this->heartbeatStreamServices->loadAllStreams() as $heartbeat) {
           $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
         }
       }
@@ -118,7 +126,4 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       ];
 
     }
-
-  }
-
 }

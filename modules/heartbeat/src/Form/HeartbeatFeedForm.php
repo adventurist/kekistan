@@ -2,6 +2,7 @@
 
 namespace Drupal\heartbeat\Form;
 
+use Drupal\Core\Form\FormAjaxException;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Render\Element\Ajax;
@@ -107,11 +108,6 @@ class HeartbeatFeedForm extends FormBase {
       '#type' => 'search',
     ];
 
-    $form['hidden-data'] = [
-        '#type' => 'textfield',
-        '#value' => $form_state->get('hidden-data')
-    ];
-
 
     $form['submit'] = [
         '#type' => 'submit',
@@ -149,6 +145,11 @@ class HeartbeatFeedForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // Display result.
+    $stophere = null;
+    $stopthere = null;
+
+    \Drupal::logger('HeartbeatFeedForm::submitForm')->debug('Jigga what is %arg', ['%arg' => $arg]);
+
     foreach ($form_state->getValues() as $key => $value) {
         drupal_set_message($key . ': ' . $value);
     }
