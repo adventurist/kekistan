@@ -154,7 +154,7 @@ class HeartbeatStreamServices {
           $types[] = $value;
         }
       }
-      $uids[] = $currentUid;
+//      $uids[] = $currentUid;
       $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('type', $types, 'IN')->condition('uid', $uids, 'IN')->sort('created', 'DESC')->execute());
 
       if (count($beats) > 0) {

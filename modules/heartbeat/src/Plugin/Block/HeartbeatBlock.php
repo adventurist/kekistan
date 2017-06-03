@@ -77,8 +77,10 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $container->get('heartbeat')
     );
   }
+
   /**
    * {@inheritdoc}
+   * @throws \Drupal\Core\Database\InvalidQueryException
    */
   public function build() {
 
@@ -89,17 +91,21 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
     $messages = array();
 
     $query = Database::getConnection()->select('heartbeat_friendship', 'hf')
-      ->fields('hf',['uid_target'])
-      ->condition('hf.uid', \Drupal::currentUser()->id())->execute();
+      ->fields('hf',['uid', 'uid_target']);
+    $conditionOr = $query->orConditionGroup()
+      ->condition('hf.uid', \Drupal::currentUser()->id())
+      ->condition('hf.uid_target', \Drupal::currentUser()->id());
 
-    if ($result = $query->fetchAll()) {
+    $results = $query->condition($conditionOr)->execute();
+    if ($result = $results->fetchAll()) {
       $uids = array();
       foreach ($result as $uid) {
         $uids[] = $uid->uid_target;
+        $uids[] = $uid->uid;
       }
     }
       if ($feed !== null) {
-        if (!empty($uids)) {
+        if (!empty($uids = array_unique($uids))) {
           foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
             $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
           }
