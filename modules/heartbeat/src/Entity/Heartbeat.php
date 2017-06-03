@@ -596,7 +596,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
           if ($file !== NULL && is_object($file)) {
             $url = Url::fromUri($file->getFileUri());
             $posfind = strpos($url->getUri(), 'youtube://');
-            if ($posfind !== 0 && $posfind !== false) {
+            if ($posfind !== 0 && $posfind === false) {
               $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $url->getUri());
             } else {
 

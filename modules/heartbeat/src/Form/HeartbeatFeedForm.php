@@ -109,10 +109,10 @@ class HeartbeatFeedForm extends FormBase {
 //    ];
 
 
-    $form['submit'] = [
-        '#type' => 'submit',
-        '#value' => $this->t('Search'),
-    ];
+//    $form['submit'] = [
+//        '#type' => 'submit',
+//        '#value' => $this->t('Search'),
+//    ];
 
     $form['#attached']['library'][] = 'heartbeat/heartbeat';
 
