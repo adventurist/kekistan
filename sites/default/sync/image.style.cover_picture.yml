@@ -1,0 +1,14 @@
+uuid: d9a895b0-4e16-4926-a00f-c644197a03d2
+langcode: en
+status: true
+dependencies: {  }
+name: cover_picture
+label: 'Cover Picture'
+effects:
+  0fc6eeb2-1f98-4864-bd9a-e7f32a095a2d:
+    uuid: 0fc6eeb2-1f98-4864-bd9a-e7f32a095a2d
+    id: image_scale_and_crop
+    weight: 1
+    data:
+      width: 960
+      height: 480

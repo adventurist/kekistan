@@ -1,0 +1,8 @@
+uuid: 085916da-5e5f-44a3-9e5f-e2ad89c61e0d
+langcode: en
+status: true
+dependencies: {  }
+id: facebook_post
+label: 'Facebook Post'
+media: false
+mime: '0'

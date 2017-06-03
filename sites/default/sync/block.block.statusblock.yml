@@ -1,0 +1,26 @@
+uuid: 0d5f13b6-06a5-447b-bae4-dcdc88919bec
+langcode: en
+status: true
+dependencies:
+  module:
+    - statusmessage
+    - system
+  theme:
+    - kekistan
+id: statusblock
+theme: kekistan
+region: content
+weight: -4
+provider: null
+plugin: status_block
+settings:
+  id: status_block
+  label: 'Status block'
+  provider: statusmessage
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: '/user/*'
+    negate: false
+    context_mapping: {  }

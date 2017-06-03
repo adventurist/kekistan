@@ -1,0 +1,8 @@
+uuid: 967af085-ea1e-4749-9617-e0fa05a13033
+langcode: en
+status: true
+dependencies: {  }
+id: picture_post
+label: 'Picture post'
+media: true
+mime: image/jpeg

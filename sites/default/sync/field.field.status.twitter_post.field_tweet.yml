@@ -1,0 +1,28 @@
+uuid: 3d1ad66a-5abb-4a59-9952-b63b88e0abff
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.status.field_tweet
+    - node.type.tweet
+    - statusmessage.status_type.twitter_post
+id: status.twitter_post.field_tweet
+field_name: field_tweet
+entity_type: status
+bundle: twitter_post
+label: Tweet
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:node'
+  handler_settings:
+    target_bundles:
+      tweet: tweet
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

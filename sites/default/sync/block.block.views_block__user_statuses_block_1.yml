@@ -1,0 +1,30 @@
+uuid: 56360e89-670f-445e-9f86-f51b6fa14d13
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.user_statuses
+  module:
+    - system
+    - views
+  theme:
+    - kekistan
+id: views_block__user_statuses_block_1
+theme: kekistan
+region: content
+weight: -1
+provider: null
+plugin: 'views_block:user_statuses-block_1'
+settings:
+  id: 'views_block:user_statuses-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '/user/*'
+    negate: false
+    context_mapping: {  }

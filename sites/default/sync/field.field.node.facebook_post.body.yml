@@ -1,0 +1,22 @@
+uuid: f860f49c-6c72-429d-89ec-8aebed31eac0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.facebook_post
+  module:
+    - text
+id: node.facebook_post.body
+field_name: body
+entity_type: node
+bundle: facebook_post
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+field_type: text_with_summary

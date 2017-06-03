@@ -1,0 +1,22 @@
+uuid: 51b9c321-cdcf-430f-b6b5-d69113d2dbe8
+langcode: en
+status: true
+dependencies:
+  module:
+    - help
+  theme:
+    - kekistan
+_core:
+  default_config_hash: ElrRiGyf6ypzSECyVJF_whzLvyg-RiW8_TkpKQSOf_Q
+id: kekistan_help
+theme: kekistan
+region: help
+weight: -7
+provider: null
+plugin: help_block
+settings:
+  id: help_block
+  label: Help
+  provider: help
+  label_display: '0'
+visibility: {  }

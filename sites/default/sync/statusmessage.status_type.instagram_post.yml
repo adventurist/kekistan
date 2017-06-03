@@ -1,0 +1,8 @@
+uuid: 994db672-e0e8-4abe-991f-7ce6809c3868
+langcode: en
+status: true
+dependencies: {  }
+id: instagram_post
+label: 'Instagram Post'
+media: false
+mime: '0'

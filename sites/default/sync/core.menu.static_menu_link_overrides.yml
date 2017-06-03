@@ -1,0 +1,105 @@
+definitions:
+  contact__site_page:
+    enabled: true
+    menu_name: footer
+    parent: ''
+    weight: 0
+    expanded: false
+  standard__front_page:
+    enabled: false
+    menu_name: main
+    parent: ''
+    expanded: false
+    weight: -50
+  block__admin_display:
+    weight: -68
+    menu_name: admin
+    parent: system.admin_structure
+    enabled: true
+    expanded: false
+  entity__comment_type__collection:
+    weight: -58
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__contact_form__collection:
+    weight: -55
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__node_type__collection:
+    weight: -59
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  field_ui__display_mode:
+    weight: -66
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  flag__admin__structure__flag:
+    weight: -64
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  heartbeat_stream__admin__structure__settings:
+    weight: -60
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__menu__collection:
+    weight: -65
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__taxonomy_vocabulary__collection:
+    weight: -54
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__view__collection:
+    weight: -67
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__heartbeat__collection:
+    weight: -63
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__heartbeat_type__collection:
+    weight: -62
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__status_type__collection:
+    weight: -57
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__heartbeat_stream__collection:
+    weight: -61
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+  entity__status__collection:
+    weight: -56
+    menu_name: admin
+    parent: system.admin_structure
+    expanded: false
+    enabled: true
+_core:
+  default_config_hash: jdY7AU0tU-QsjmiOw3W8vwpYMb-By--_MSFgbqKUTYM

@@ -1,0 +1,71 @@
+uuid: 9a246245-7312-4dd8-858c-8e4dced41c13
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.tweet.body
+    - field.field.node.tweet.field_tweet_comment
+    - field.field.node.tweet.field_tweet_id
+    - field.field.node.tweet.field_tweet_images
+    - field.field.node.tweet.field_tweet_url
+    - field.field.node.tweet.field_tweet_video
+    - node.type.tweet
+  module:
+    - comment
+    - image
+    - text
+    - user
+id: node.tweet.default
+targetEntityType: node
+bundle: tweet
+mode: default
+content:
+  body:
+    weight: 1
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    type: text_default
+    region: content
+  field_tweet_comment:
+    type: comment_default
+    weight: 4
+    region: content
+    label: above
+    settings:
+      view_mode: default
+      pager_id: 0
+    third_party_settings: {  }
+  field_tweet_images:
+    type: image
+    weight: 3
+    region: content
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+  field_tweet_url:
+    type: string
+    weight: 5
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  field_tweet_video:
+    type: string
+    weight: 2
+    region: content
+    label: above
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  links:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden:
+  field_tweet_id: true
+  langcode: true

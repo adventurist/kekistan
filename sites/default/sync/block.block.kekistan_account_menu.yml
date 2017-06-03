@@ -1,0 +1,26 @@
+uuid: e694a1ab-e55a-490f-bd9b-edac8c23f881
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.account
+  module:
+    - system
+  theme:
+    - kekistan
+_core:
+  default_config_hash: SYcOYi-D5pWFseckaRJTPQch25F8RbQD1RqdW3iuzDI
+id: kekistan_account_menu
+theme: kekistan
+region: header
+weight: -7
+provider: null
+plugin: 'system_menu_block:account'
+settings:
+  id: 'system_menu_block:account'
+  label: 'User account menu'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 1
+visibility: {  }

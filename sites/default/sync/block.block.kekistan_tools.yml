@@ -1,0 +1,26 @@
+uuid: a9af9962-c32d-456f-bf70-b18a772ae213
+langcode: en
+status: false
+dependencies:
+  config:
+    - system.menu.tools
+  module:
+    - system
+  theme:
+    - kekistan
+_core:
+  default_config_hash: XkKLVtnHsMRnc94QQrhlNlhyPDGSOb_oK2KXgJ5DHaE
+id: kekistan_tools
+theme: kekistan
+region: sidebar_first
+weight: -6
+provider: null
+plugin: 'system_menu_block:tools'
+settings:
+  id: 'system_menu_block:tools'
+  label: Tools
+  provider: system
+  label_display: visible
+  level: 1
+  depth: 0
+visibility: {  }

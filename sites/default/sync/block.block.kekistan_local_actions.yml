@@ -1,0 +1,20 @@
+uuid: e8917f87-6514-424b-8c3d-bf711338a56d
+langcode: en
+status: true
+dependencies:
+  theme:
+    - kekistan
+_core:
+  default_config_hash: BxZda5q7x-ZFBFQCzwHiPgQ6TmYCDnJGptmUEO0r0XE
+id: kekistan_local_actions
+theme: kekistan
+region: content
+weight: -8
+provider: null
+plugin: local_actions_block
+settings:
+  id: local_actions_block
+  label: 'Primary admin actions'
+  provider: core
+  label_display: '0'
+visibility: {  }

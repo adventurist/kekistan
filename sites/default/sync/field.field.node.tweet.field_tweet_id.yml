@@ -1,0 +1,23 @@
+uuid: f945fa5d-20c2-41b3-9858-5fe552668328
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tweet_id
+    - node.type.tweet
+id: node.tweet.field_tweet_id
+field_name: field_tweet_id
+entity_type: node
+bundle: tweet
+label: 'Tweet ID'
+description: 'ID to identify the tweet in question'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

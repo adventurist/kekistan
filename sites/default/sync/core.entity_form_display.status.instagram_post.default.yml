@@ -1,0 +1,54 @@
+uuid: ac0a356e-c808-41c5-b08e-4cdb777286cc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.status.instagram_post.field_instagram_post
+    - statusmessage.status_type.instagram_post
+id: status.instagram_post.default
+targetEntityType: status
+bundle: instagram_post
+mode: default
+content:
+  field_instagram_post:
+    weight: 11
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  langcode:
+    type: language_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  recipient:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+hidden: {  }

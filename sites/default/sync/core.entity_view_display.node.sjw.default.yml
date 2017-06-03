@@ -1,0 +1,47 @@
+uuid: 2ad17c60-a594-460c-bb61-97a5825c2f73
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.sjw.body
+    - field.field.node.sjw.field_image
+    - field.field.node.sjw.field_tags
+    - node.type.sjw
+  module:
+    - image
+    - text
+    - user
+id: node.sjw.default
+targetEntityType: node
+bundle: sjw
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  field_image:
+    weight: 102
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+  field_tags:
+    weight: 103
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    type: entity_reference_label
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  langcode: true

@@ -1,0 +1,18 @@
+uuid: 913e7382-96c4-478f-a7e2-3d041ada1ad9
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.sjw
+id: node.sjw.title
+field_name: title
+entity_type: node
+bundle: sjw
+label: Name
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

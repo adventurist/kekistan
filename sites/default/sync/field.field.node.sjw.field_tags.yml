@@ -1,0 +1,28 @@
+uuid: 588b33f0-dce0-4104-af20-167829ac6d9b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tags
+    - node.type.sjw
+    - taxonomy.vocabulary.kekistan
+id: node.sjw.field_tags
+field_name: field_tags
+entity_type: node
+bundle: sjw
+label: Tags
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      kekistan: kekistan
+    sort:
+      field: _none
+    auto_create: true
+    auto_create_bundle: ''
+field_type: entity_reference

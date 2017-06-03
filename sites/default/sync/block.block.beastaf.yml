@@ -1,0 +1,31 @@
+uuid: 04962fa3-35c7-4f07-9090-b2a9650964c6
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:0ce14a3d-5c46-4943-b93a-9523ddf4521c'
+  module:
+    - block_content
+    - system
+  theme:
+    - kekistan
+id: beastaf
+theme: kekistan
+region: content
+weight: 0
+provider: null
+plugin: 'block_content:0ce14a3d-5c46-4943-b93a-9523ddf4521c'
+settings:
+  id: 'block_content:0ce14a3d-5c46-4943-b93a-9523ddf4521c'
+  label: 'Beast af'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

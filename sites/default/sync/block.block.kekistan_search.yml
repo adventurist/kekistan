@@ -1,0 +1,22 @@
+uuid: 15d7e723-df9e-4199-8689-a073608e9355
+langcode: en
+status: true
+dependencies:
+  module:
+    - search
+  theme:
+    - kekistan
+_core:
+  default_config_hash: 0ryzByKH0egRn6TfnkwVvi-TwGZIf_MzQsfd_ET6Ggo
+id: kekistan_search
+theme: kekistan
+region: sidebar_first
+weight: -7
+provider: null
+plugin: search_form_block
+settings:
+  id: search_form_block
+  label: Search
+  provider: search
+  label_display: visible
+visibility: {  }

@@ -1,0 +1,20 @@
+uuid: c1cdd3d5-6cc4-4a40-8c77-08806b0dae21
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: ZDrD-P5fnWXHyP6RQMyJDFGTgEzIymRDYpXn2WDa5U4
+id: user_post_tweet
+label: 'User Post Tweet'
+message_id: null
+description: 'Records the event of a user posting a tweet which was recorded by the Republic'
+mainentity: node
+bundle: tweet
+message: '!user posted !tweettitle'
+weight: 0
+perms: 0
+group_type: HEARTBEAT_GROUP_NONE
+arguments: '{"!user":"[user:account-name]","!tweettitle":"[node:title]"}'
+variables:
+  - '[user:account-name]'
+  - '[node:title]'
