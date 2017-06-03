@@ -100,6 +100,12 @@ class HeartbeatStreamForm extends ContentEntityForm {
       '#default' => $entity->getPath(),
     );
 
+    $form['weight'] = array(
+      '#type' => 'number',
+      '#description' => 'The weight of the stream',
+      '#default' => $entity->getWeight()
+    );
+
     return $form;
   }
 
@@ -128,6 +134,8 @@ class HeartbeatStreamForm extends ContentEntityForm {
       }
 
       $entity->setPath($form_state->getValue('path'));
+
+      $entity->setWeight($form_state->getValue('weight'));
 
       $entity->save();
     }

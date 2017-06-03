@@ -85,7 +85,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
     $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_feed.settings');
 
     $feed = $myConfig->get('message');
-
+    $uids = null;
     $messages = array();
 
     $query = Database::getConnection()->select('heartbeat_friendship', 'hf')
@@ -99,7 +99,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       }
     }
       if ($feed !== null) {
-        if ($uids !== null && count($uids) > 0) {
+        if (!empty($uids)) {
           foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
             $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
           }

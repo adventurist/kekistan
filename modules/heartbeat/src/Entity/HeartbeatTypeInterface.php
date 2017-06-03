@@ -210,6 +210,16 @@ interface HeartbeatTypeInterface extends ConfigEntityInterface {
   public function getBundle();
 
 
+  /**
+   * @return mixed
+   */
+  public function setWeight($weight);
+
+  /**
+   * @param $weight
+   * @return mixed
+   */
+  public function getWeight();
 
 //  /**
 //   * Sets the attachments for this message stream

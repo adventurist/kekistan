@@ -363,4 +363,19 @@ class HeartbeatType extends ConfigEntityBundleBase implements HeartbeatTypeInter
   public function getBundle() {
     return $this->get('bundle');
   }
+
+  /**
+   * @return mixed
+   */
+  public function setWeight($weight) {
+    $this->set('weight', $weight);
+  }
+
+  /**
+   * @param $weight
+   * @return mixed
+   */
+  public function getWeight() {
+    return $this->get('weight');
+  }
 }

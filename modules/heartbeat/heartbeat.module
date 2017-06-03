@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity;
+use Drupal\Core\Database\Database;
 use Drupal\heartbeat\Entity\FILE_FIELD;
 use Drupal\heartbeat\Entity\Heartbeat;
 use GuzzleHttp\Exception\RequestException;
@@ -321,6 +322,34 @@ function updateFeeds() {
  * Implements hook_ajax_render_alter().
  */
 function heartbeat_ajax_render_alter(array &$data) {
+
+}
+
+/**
+ * Implements hook_cron().
+ */
+function heartbeat_cron() {
+  //Iterate over the Heartbeat Types and ensure that the weight of bundle-specific types are lower than that of their
+  //parent type. This will allow us to ensure Bundle specific types end up being published as opposed to
+  //Types which represent all content types
+  $heartbeatTypes = \Drupal::service('entity.query')->get('heartbeat_type')->condition('mainentity', 'node')->execute();
+
+  if (count($heartbeatTypes) > 1) {
+    foreach($heartbeatTypes as $heartbeatType) {
+
+      $entity = \Drupal::service('entity_type.manager')->getStorage('heartbeat_type')->load($heartbeatType);
+
+      if ($entity->getBundle() === null) {
+        $entity->setWeight(99);
+        $entity->save();
+      } else {
+        $entity->setWeight(0);
+        $entity->save();
+      }
+
+    }
+  }
+
 
 }
 

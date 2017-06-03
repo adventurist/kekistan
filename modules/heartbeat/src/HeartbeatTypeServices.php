@@ -49,7 +49,7 @@ class HeartbeatTypeServices {
 
 
   public function getTypes() {
-    return $this->entityQuery->get('heartbeat_type')->execute();
+    return $this->entityQuery->get('heartbeat_type')->sort('weight', 'ASC')->execute();
   }
 
   public function load($id) {

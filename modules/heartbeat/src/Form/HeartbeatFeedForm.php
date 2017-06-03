@@ -104,9 +104,9 @@ class HeartbeatFeedForm extends FormBase {
       ]
     ];
 
-    $form['feedsearch'] = [
-      '#type' => 'search',
-    ];
+//    $form['feedsearch'] = [
+//      '#type' => 'search',
+//    ];
 
 
     $form['submit'] = [

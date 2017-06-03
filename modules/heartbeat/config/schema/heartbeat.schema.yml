@@ -10,9 +10,6 @@ heartbeat.heartbeat_type.*:
       label: 'Label'
     uuid:
       type: string
-    hid:
-      type: serial
-      label: 'hid'
     message_id:
       type: string
       label: 'message_id'
@@ -28,6 +25,9 @@ heartbeat.heartbeat_type.*:
     message:
       type: string
       label: 'message'
+    weight:
+      type: integer
+      label: 'Weight'
 #    message_concat:
 #      type: string
 #      label: 'message_concat'

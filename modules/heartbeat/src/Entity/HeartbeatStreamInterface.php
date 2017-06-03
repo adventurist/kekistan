@@ -214,4 +214,15 @@ interface HeartbeatStreamInterface extends RevisionableInterface, RevisionLogInt
 
   public function setTypes($heartbeat_types);
 
+
+  /**
+   * @return mixed
+   */
+  public function setWeight($weight);
+
+  /**
+   * @param $weight
+   * @return mixed
+   */
+  public function getWeight();
 }

@@ -124,8 +124,9 @@ class HeartbeatStreamServices {
     if ($stream !== null) {
       $types = array();
       foreach ($stream->getTypes() as $heartbeatType) {
-        if (!empty($heartbeatType['target_id']) && $heartbeatType['target_id'] !== "0") {
-          $types[] = $heartbeatType['target_id'];
+        $value = $heartbeatType->getValue()['target_id'];
+        if ($value !== "0") {
+          $types[] = $value;
         }
       }
       $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('type', $types, 'IN')->sort('created', 'DESC')->execute());
@@ -148,8 +149,9 @@ class HeartbeatStreamServices {
     if ($stream !== null) {
       $types = array();
       foreach ($stream->getTypes() as $heartbeatType) {
-        if (!empty($heartbeatType['target_id']) && $heartbeatType['target_id'] !== "0") {
-          $types[] = $heartbeatType['target_id'];
+        $value = $heartbeatType->getValue()['target_id'];
+        if ($value !== "0") {
+          $types[] = $value;
         }
       }
       $uids[] = $currentUid;

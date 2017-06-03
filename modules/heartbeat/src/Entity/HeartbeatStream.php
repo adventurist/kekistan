@@ -77,12 +77,13 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
   protected $settings;
   protected $variables;
   protected $types;
+  protected $weight;
 
   /**
    * @return array
    */
   public function getTypes() {
-    return $this->types;
+    return $this->get('types');
   }
 
   /**
@@ -423,8 +424,27 @@ class HeartbeatStream extends RevisionableContentEntityBase implements Heartbeat
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'heartbeat_type');
 
+    $fields['weight'] = BaseFieldDefinition::create('integer')
+      ->setLabel(t('Weight'))
+      ->setDescription(t('The weight of the stream'))
+      ->setDefaultValue(0);
+
 
     return $fields;
   }
 
+  /**
+   * @return mixed
+   */
+  public function setWeight($weight) {
+    $this->set('weight', $weight);
+  }
+
+  /**
+   * @param $weight
+   * @return mixed
+   */
+  public function getWeight() {
+    return $this->get('weight');
+  }
 }
