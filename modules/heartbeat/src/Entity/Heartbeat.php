@@ -467,8 +467,13 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
   private static function mediaTag($type, $filePath) {
     //TODO put this into new method
-    if ($type == 'image') { $type = 'img';}
-    return '<'. $type . ' src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" / >';
+    if ($type == 'image') {
+      $type = 'img';
+      return '<' . $type . ' src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" / >';
+    } else if ($type == 'youtube') {
+      $filePath = str_replace('youtube://', 'http://www.youtube.com/embed/', $filePath);
+      return '<iframe width="560" height="315" src="' . $filePath . '" frameborder="0"></iframe>';
+    }
   }
 
   protected static function handleMultipleEntities(Token $tokenService, $message, $entities) {
@@ -579,7 +584,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
     foreach ($fields as $field) {
       if ($field instanceof \Drupal\file\Plugin\Field\FieldType\FileFieldItemList) {
-
+      $type = $field->getFieldDefinition()->getType();
         if ($field->getFieldDefinition()->getType() === 'image' ||
             $field->getFieldDefinition()->getType() === 'video' ||
             $field->getFieldDefinition()->getType() === 'audio') {
@@ -590,7 +595,13 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
           if ($file !== NULL && is_object($file)) {
             $url = Url::fromUri($file->getFileUri());
-            $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $url->getUri());
+            $posfind = strpos($url->getUri(), 'youtube://');
+            if ($posfind !== 0 && $posfind !== false) {
+              $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $url->getUri());
+            } else {
+
+              $mediaObject = self::createHeartbeatMedia('youtube', $url->getUri());
+            }
             $types[] = $mediaObject;
 
           } else {
