@@ -85,6 +85,10 @@ div#content-area {
   background: #304c47!important;
   padding: 0em 10em 2.5em 0em!important;
 }
+
+#edit-feedtabs input[type="radio"]:checked {
+  background: #5e802e!important;
+}
 /*** Above rule catches all of these ***/
 /*input#edit-feedtabs-sjw-discovery {*/
 /*background: #304c47!important;*/
