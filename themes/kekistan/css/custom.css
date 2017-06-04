@@ -1,6 +1,7 @@
 /*place the account to right and branding logo to left in header*/
 nav#block-kekistan-account-menu {
     float: right;
+    padding-top:50px;
 }
 
 div#block-kekistan-branding {
@@ -68,6 +69,11 @@ div#content-area {
   padding-top: 15px;
 }
 
+/* Add Content */
+#block-kekistan-content .links a {
+  color: red!important;
+}
+
 /*hyperlinks*/
 .site-name a {
   color: rgba(27, 22, 22, 0.78);
@@ -104,6 +110,11 @@ footer#footer {
   height: 70px;
   padding-top: 10px;
   background-color: rgb(48, 76, 71);
+  color: grey!important;
 }
 
+#block-kekistan-footer .menu-item a {
+  color: white!important;
+}
 
+/*background-image: url(/themes/kekistan/images/icons/instagram-logo.png);*/
