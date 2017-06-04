@@ -120,7 +120,40 @@ footer#footer {
 
 /*background-image: url(/themes/kekistan/images/icons/instagram-logo.png);*/
 
-/* Tags
+/* Tags */
 .quickedit-field {
   padding-top: 10px;
+}
+
+
+/*
+div#edit-name label {
+  float: left!important;
+  padding-right: 10px;
+}
+
+div#edit-mail label {
+  float: left!important;
+  padding-right: 10px!importants;
+}
+*/
+
+form#contact-message-feedback-form #edit-name label {
+  float: left!important;
+  padding-right: 10px!important;
+}
+
+form#contact-message-feedback-form #edit-mail label {
+  float: left!important;
+  padding-right: 10px!important;
+  margin-left: -95px!important;
+}
+
+form#contact-message-feedback-form #edit-subject-wrapper label {
+  float: left!important;
+  margin-left: -160px!important;
+}
+
+form#contact-message-feedback-form label::after {
+  content: ': ';
 }
