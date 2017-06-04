@@ -12,15 +12,18 @@ use Drupal\heartbeat\Entity;
  * @ingroup heartbeat
  */
 class HeartbeatForm extends ContentEntityForm {
-
+//TODO add dependency injection
+  protected $nodeManager;
   /**
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
+
+    $this->nodeManager = \Drupal::service('entity_type.manager')->getStorage('node');
     /* @var $entity \Drupal\heartbeat\Entity\Heartbeat */
     $form = parent::buildForm($form, $form_state);
-
-    if (!$this->entity->isNew()) {
+    $entity = &$this->entity;
+    if ($entity->isNew()) {
       $form['new_revision'] = array(
         '#type' => 'checkbox',
         '#title' => $this->t('Create new revision'),
@@ -28,6 +31,45 @@ class HeartbeatForm extends ContentEntityForm {
         '#weight' => 10,
       );
     }
+
+    $form['uid'] = array(
+      '#type' => 'entity_autocomplete',
+      '#target_type' => 'user',
+      '#default_value' => $entity->getOwner()->isAnonymous() ? NULL : $entity->getOwner(),
+      // A comment can be made anonymous by leaving this field empty therefore
+      // there is no need to list them in the autocomplete.
+      '#selection_settings' => ['include_anonymous' => FALSE],
+      '#title' => $this->t('Authored by'),
+      '#description' => $this->t('No cucks.')
+    );
+
+    $form['message'] = array(
+      '#type' => 'textarea',
+      '#description' => t('The Heartbeat message'),
+      '#title' => 'Message',
+      '#default' => $entity->getMessage()->getValue()[0]['value'],
+      '#value' => $entity->getMessage()->getValue()[0]['value'],
+    );
+
+    $nodeId = $entity->getNid()->getValue()[0]['target_id'];
+    $node = $this->nodeManager->load($nodeId);
+
+    $form['nid'] = array(
+      '#type' => 'entity_autocomplete',
+      '#entity_type' => 'node',
+      '#target_type' => 'node',
+      '#selection_handler' => 'default',
+      '#default_value' => $nodeId > 0 ? null : $this->nodeManager->load($nodeId),
+      '#title' => 'Node',
+      '#description' => t('The node referenced by this Heartbeat')
+    );
+
+    $form['status'] = array(
+      '#type' => 'checkbox',
+      '#title' => 'Status',
+      '#description' => t('Published'),
+      '#default_value' => $entity->isPublished(),
+    );
 
     $entity = $this->entity;
 

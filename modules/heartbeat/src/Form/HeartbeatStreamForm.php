@@ -87,23 +87,27 @@ class HeartbeatStreamForm extends ContentEntityForm {
       );
     }
 
-    $form['types'] = array(
-
+  $form['types'] = array(
+//TODO this isn't setting defaults
       '#type' => 'checkboxes',
       '#options' => $this->heartbeatTypeService->getTypes(),
       '#title' => $this->t('Please select all the Heartbeat Types you wish to include in this stream'),
+      '#default' => array(0,1),
+      '#value' => array(0,1),
     );
 
     $form['path'] = array(
       '#type' => 'textfield',
       '#description' => 'The relative url path for this Heartbeat Stream',
       '#default' => $entity->getPath(),
+      '#value' => $entity->getPath()->getValue()[0]['value'],
     );
 
     $form['weight'] = array(
       '#type' => 'number',
       '#description' => 'The weight of the stream',
-      '#default' => $entity->getWeight()
+      '#default' => $entity->getWeight(),
+      '#value' => $entity->getWeight()->getValue()[0]['value'],
     );
 
     return $form;

@@ -116,12 +116,11 @@ class HeartbeatTypeForm extends EntityForm {
       '#description' => $this->t("Description of the Heartbeat Type"),
       '#required' => TRUE,
     );
-
-
+//TODO Select is nested, thus any returned value seems to be read as "true", which results in the first item within the nest being chosen as the value populating the form's field. This will need to be fixed to prevent wrongly changing one's values without thinking about it.
     $form['entity_type'] = array(
       '#type' => 'select',
       '#title' => $this->t('Entity Type'),
-//      '#default_value' => $heartbeat_type->getEntityType(),
+//      '#default_value' => $heartbeat_type->getMainEntity(),
       '#description' => $this->t("Primary Entity Type for this Heartbeat Type"),
       '#options' => array($this->entityTypes
       ),
@@ -162,7 +161,7 @@ class HeartbeatTypeForm extends EntityForm {
     $form['entity_bundles']['list'] = array(
       '#type' => 'select',
       '#title' => $this->t('Entity Bundles'),
-//      '#default_value' => $heartbeat_type->getEntityType(),
+      '#default_value' => $heartbeat_type->getBundle(),
       '#description' => $this->t("Any bundles available to the specified entity"),
       '#options' => $bundles,
     );
@@ -194,11 +193,11 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => $heartbeat_type->getPerms(),
       '#description' => $this->t("Default permissions to view Heartbeats of this type"),
       '#options' => array(
-        HEARTBEAT_NONE => 'None',
-        HEARTBEAT_PRIVATE => 'Private',
-        HEARTBEAT_PUBLIC_TO_ADDRESSEE => 'Public to Addressee',
-        HEARTBEAT_PUBLIC_TO_CONNECTED => 'Public to Connected',
-        HEARTBEAT_PUBLIC_TO_ALL => 'Public to All',
+        Entity\HEARTBEAT_NONE => 'None',
+        Entity\HEARTBEAT_PRIVATE => 'Private',
+        Entity\HEARTBEAT_PUBLIC_TO_ADDRESSEE => 'Public to Addressee',
+        Entity\HEARTBEAT_PUBLIC_TO_CONNECTED => 'Public to Connected',
+        Entity\HEARTBEAT_PUBLIC_TO_ALL => 'Public to All',
 
       ),
       '#required' => TRUE,
@@ -211,9 +210,9 @@ class HeartbeatTypeForm extends EntityForm {
       '#default_value' => 0,
       '#description' => $this->t("Type of group associated with Heartbeats of this type"),
       '#options' => array(
-        HEARTBEAT_GROUP_NONE => 'None',
-        HEARTBEAT_GROUP_SINGLE =>'Single',
-        HEARTBEAT_GROUP_SUMMARY => 'Group',
+        Entity\HEARTBEAT_GROUP_NONE => 'None',
+        Entity\HEARTBEAT_GROUP_SINGLE =>'Single',
+        Entity\HEARTBEAT_GROUP_SUMMARY => 'Group',
       ),
       '#required' => TRUE,
     );

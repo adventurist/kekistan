@@ -101,6 +101,7 @@ class HeartbeatFeedForm extends FormBase {
         'type' => 'none',
 //        'message' => t('Fetching feed'),
         ),
+        '#value' => $this->streams['Public'],
       ]
     ];
 

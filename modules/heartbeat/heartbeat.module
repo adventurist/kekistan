@@ -354,6 +354,17 @@ function heartbeat_cron() {
 }
 
 /**
+ * Implements hook_flag_options_alter().
+ */
+function heartbeat_flag_options_alter(array &$options, FlagInterface $flag) {
+  $jigga = null;
+
+  $dis = 'the best';
+
+  $another = 'faggot';
+}
+
+/**
  * Implements hook_entity_bundle_create().
  */
 function heartbeat_entity_bundle_create($entity_type_id, $bundle)
