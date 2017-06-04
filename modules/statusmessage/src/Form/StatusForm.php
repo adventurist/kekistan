@@ -7,6 +7,9 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\statusmessage\Entity\Status;
 use Drupal\statusmessage\StatusService;
 use Drupal\statusmessage\StatusTypeService;
+use Drupal\heartbeat\HeartbeatStreamServices;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\heartbeat\Ajax\SelectFeedCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
@@ -55,13 +58,23 @@ class StatusForm extends FormBase {
 
     );
 
+    //TODO switch to ajax
+//    '#submit' => array('::getBundlesForEntity'),
+//    '#ajax' => [
+//      'callback' => '::getBundlesForEntity',
+//      'wrapper' => 'entity-bundles',
+//      'progress' => array(
+//        'type' => 'throbber',
+//        'message' => t('Getting bundles'),
+//      ),
+//    ],
     $form['post'] = array(
       '#type' => 'submit',
       '#description' => 'Post',
       '#value' => t('Post')
 
     );
-
+$stophere = null;
     return $form;
   }
 
@@ -110,25 +123,36 @@ class StatusForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
+
+    $jigga = null;
+
     if (!empty($this->statusTypeService)) {
       foreach ($this->statusTypeService->loadAll() as $type) {
         if (!$type->getMedia()) {
 
-          $userViewed = \Drupal::routeMatch()->getParameters()->get('user');
+          $userViewed = \Drupal::routeMatch()->getParameters()->get('user') === null ? \Drupal::currentUser()->id() : \Drupal::routeMatch()->getParameters()->get('user')->id();
 
           if ($userViewed !== null) {
-
-            $recipientUid = \Drupal::routeMatch()->getParameters()->get('user')->id();
 
             $statusEntity = Status::create([
               'type' => $type->id(),
               'uid' => \Drupal::currentUser()->id(),
-              'recipient' => $recipientUid ? $recipientUid : \Drupal::currentUser()->id()
+              'recipient' => $userViewed
             ]);
 
             $statusEntity->setMessage($form_state->getValue('message'));
             $statusEntity->save();
 
+            if (\Drupal::service('module_handler')->moduleExists('heartbeat')) {
+
+//              $configManager = \Drupal::service('config.manager');
+              $feedConfig = \Drupal::config('heartbeat_feed.settings');
+//              $feedConfig = $feedConfig = $configManager->get('heartbeat_feed.settings');
+              $response = new AjaxResponse();
+              $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
+
+              return $response;
+            }
             break;
           }
         }
