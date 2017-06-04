@@ -39,6 +39,7 @@ element.style {
 /*free kekistan*/
 .site-slogan {
   color: white;
+  padding-top: 10px;
 }
 
 #block-kekistan-account-menu a {
@@ -118,3 +119,8 @@ footer#footer {
 }
 
 /*background-image: url(/themes/kekistan/images/icons/instagram-logo.png);*/
+
+/* Tags
+.quickedit-field {
+  padding-top: 10px;
+}
