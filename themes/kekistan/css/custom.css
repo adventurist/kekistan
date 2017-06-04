@@ -1,4 +1,4 @@
-/*place the account to right and branding logo to left in header*/
+/* Place the account to right and branding logo to left in header*/
 nav#block-kekistan-account-menu {
     float: right;
     padding-top:50px;
@@ -15,12 +15,12 @@ div#block-kekistan-branding {
   display: inline-block;
 }
 
-/*logo image*/
+/* Logo image*/
 #block-kekistan-branding img {
   max-width: 110px;
 }
 
-/*header background*/
+/* Header background*/
 header#header {
   background: rgb(48, 76, 71);
 }
@@ -29,14 +29,14 @@ element.style {
   background-color: #c0c5be;
 }
 
-/*republuc of kekistan*/
+/* Republuc of kekistan*/
 .site-name a {
   color: rgba(255, 255, 255, 0.78) !important;
   top: 28px !important;
   position: relative;
 }
 
-/*free kekistan*/
+/* Free kekistan*/
 .site-slogan {
   color: white;
   padding-top: 10px;
@@ -47,44 +47,39 @@ element.style {
 }
 
 
-/*left side menu bar*/
+/* Left side menu bar*/
 nav#block-kekistan-main-menu {
   margin-top: 15px;
 }
 
-/*left side menu*/
+/* Left side menu*/
 aside#sidebar-first {
   padding-bottom: 20px;
   padding-left: 5px;
   padding-right: 5px;
 }
 
-/*left side menu - search*/
+/* Left side menu - search*/
 div#block-kekistan-search {
   margin-top: 30px;
 }
 
-/*main content*/
+/* Main content*/
 div#content-area {
   padding-bottom: 15px;
   padding-top: 15px;
 }
 
-/*!* Add Content *!*/
-/*#block-kekistan-content .links a {*/
-  /*color: red!important;*/
-/*}*/
-
 #block-kekistan-content .links {
   display: none;
 }
 
-/*hyperlinks*/
+/* Hyberlinks */
 .site-name a {
   color: rgba(27, 22, 22, 0.78);
 }
 
-/*feed buttons*/
+/* Feed buttons*/
 #edit-feedtabs input.form-radio {
   background: #304c47!important;
   padding: 0em 10em 2.5em 0em!important;
@@ -118,13 +113,17 @@ div#content-area {
 
 }
 
-/** Status Messages **/
+.heartbeat-message {
+  padding: 25px!important;
+}
 
+
+/** Status Messages **/
 #edit-message--description {
   display: none;
 }
 
-/*footer*/
+/* Footer */
 footer#footer {
   height: 70px;
   padding-top: 10px;
@@ -144,18 +143,7 @@ footer#footer {
 }
 
 
-/*
-div#edit-name label {
-  float: left!important;
-  padding-right: 10px;
-}
-
-div#edit-mail label {
-  float: left!important;
-  padding-right: 10px!importants;
-}
-*/
-
+/* Contact - Feedback */
 form#contact-message-feedback-form #edit-name label {
   float: left!important;
   padding-right: 10px!important;
