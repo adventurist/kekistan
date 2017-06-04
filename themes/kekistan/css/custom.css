@@ -118,6 +118,12 @@ div#content-area {
 
 }
 
+/** Status Messages **/
+
+#edit-message--description {
+  display: none;
+}
+
 /*footer*/
 footer#footer {
   height: 70px;
