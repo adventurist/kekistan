@@ -159,6 +159,8 @@ footer#footer {
 
 #block-kekistan-footer .instagram-footer + .footer-link-icon {
   background-image: url(/themes/kekistan/images/icons/instagram-logo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
 }
 
 /* Position footer links */
