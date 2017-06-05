@@ -148,6 +148,11 @@ footer#footer {
 }
 
 #block-kekistan-footer .menu-item a {
+  color: transparent!important;
+}
+
+#block-kekistan-footer .menu-item a.about-footer,
+#block-kekistan-footer .menu-item:nth-of-type(2) a {
   color: white!important;
 }
 
@@ -157,15 +162,20 @@ footer#footer {
   display: inline-block;
 }
 
-#block-kekistan-footer .instagram-footer + .footer-link-icon {
+#block-kekistan-footer .instagram-footer {
   background-image: url(/themes/kekistan/images/icons/instagram-logo.png);
   background-size: contain;
   background-repeat: no-repeat;
+  vertical-align: middle;
+  display: inline-block;
+  min-height: 45px;
 }
+
 
 /* Position footer links */
 #block-kekistan-footer ul.menu {
   display: inline-flex;
+  height: 70px;
 }
 
 
