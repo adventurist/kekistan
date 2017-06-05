@@ -416,7 +416,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
       case $entityType === 'node':
 
-        $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/node/[node:nid]">', $entities);
+        $parsedMessage = $tokenService->replace($preparsedMessage . '<a class="heartbeat-node" href="/node/[node:nid]">', $entities);
         /** @noinspection NestedTernaryOperatorInspection */
         $message = $parsedMessage;
         $message .= $mediaData ? self::buildMediaMarkup($mediaData) : '';
@@ -427,7 +427,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
       case $entityType === 'status':
 
-        $parsedMessage = $tokenService->replace($preparsedMessage . '<a href="/admin/structure/' . $entityType . '/[' . $entityType . ':id]">', $entities);
+        $parsedMessage = $tokenService->replace($preparsedMessage . '<a class="status-post" href="/admin/structure/' . $entityType . '/[' . $entityType . ':id]">', $entities);
         /** @noinspection NestedTernaryOperatorInspection */
         $message = $parsedMessage;
         $message .= $mediaData ? self::buildMediaMarkup($mediaData) : 'Post';
