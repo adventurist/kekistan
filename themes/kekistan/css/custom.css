@@ -145,6 +145,10 @@ footer#footer {
   padding-top: 10px;
   background-color: rgb(48, 76, 71);
   color: grey!important;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 #block-kekistan-footer .menu-item a {
