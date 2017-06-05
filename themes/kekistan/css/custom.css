@@ -64,6 +64,22 @@ div#block-kekistan-search {
   margin-top: 30px;
 }
 
+/* Left side menu - anthemn title */
+div#block-kekistananthem {
+  font-size: 10px;
+  padding-top: 30px;
+}
+
+/* Left side menu - anthemn video */
+iframe.kekistan-anthem-video {
+  max-width: 225px;
+}
+
+/* Left side menu - anthemn video */
+#block-kekistananthem .quickedit-field p {
+  text-align: center;
+}
+
 /* Main content*/
 div#content-area {
   padding-bottom: 15px;
@@ -140,7 +156,6 @@ footer#footer {
   min-height: 24px;
   display: inline-block;
 }
-/*background-image: url(/themes/kekistan/images/icons/instagram-logo.png);*/
 
 /* Tags */
 .quickedit-field {
