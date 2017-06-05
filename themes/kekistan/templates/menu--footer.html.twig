@@ -44,8 +44,8 @@
         ]
       %}
       <li{{ item.attributes.addClass(classes) }}>
-        <div class="footer-link-icon"></div>
         {{ link(item.title, item.url) }}
+        <div class="footer-link-icon"></div>
         {% if item.below %}
           {{ menus.menu_links(item.below, attributes, menu_level + 1) }}
         {% endif %}
