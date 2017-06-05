@@ -157,6 +157,12 @@ footer#footer {
   display: inline-block;
 }
 
+/* Position footer links */
+#block-kekistan-footer ul.menu {
+  display: inline-flex;
+}
+
+
 /* Tags */
 .quickedit-field {
   padding-top: 10px;
@@ -183,3 +189,4 @@ form#contact-message-feedback-form #edit-subject-wrapper label {
 form#contact-message-feedback-form label::after {
   content: ': ';
 }
+
