@@ -155,8 +155,72 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
    * @param GetResponseEvent $event
    */
   public function flag_entity_unflagged(Event $event) {
-    $nothing = null;
-    drupal_set_message('Event flag.entity_unflagged thrown by Subscriber in module heartbeat.', 'status', TRUE);
+
+    $friendStatus = FRIEND;
+    $flagging = array_values($event->getFlaggings())[0];
+
+    if ($flagging->getFlagId() === 'friendship') {
+      $entity = $this->flagService->getFlagById($flagging->getFlagId());
+
+      $user = $flagging->getOwner();
+
+      if ($entity->id() && $user->isAuthenticated()) {
+
+        $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
+        $tokenService = \Drupal::service('token');
+
+        foreach ($heartbeatTypeService->getTypes() as $type) {
+
+          $heartbeatTypeEntity = $heartbeatTypeService->load($type);
+
+          if ($heartbeatTypeEntity->getMainEntity() === "flagging") {
+
+            $arguments = json_decode($heartbeatTypeEntity->getArguments());
+            $user2 = User::load($flagging->getFlaggableId());
+            $targetUserFriendships = $this->flagService->getFlagFlaggings($entity, $user2);
+
+            foreach ($targetUserFriendships as $friendship) {
+              if ($friendship->getFlaggableId() === $user->id()) {
+                $friendStatus = NOT_FRIEND;
+                break;
+              }
+            }
+
+            $friendStatus = $friendStatus == NOT_FRIEND ? NOT_FRIEND : PENDING;
+
+            foreach ($arguments as $key => $argument) {
+              $variables[$key] = $argument;
+            }
+
+            Heartbeat::updateFriendship($user->id(), $user2->id(), time(), $friendStatus);
+
+//            $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
+//            $entitiesObj = new \stdClass();
+//            $entitiesObj->type = 'user';
+//            $entitiesObj->entities = [$user, $user2];
+//            $entities = array(
+//              'flagging' => $entity,
+//              'user' => $entitiesObj,
+//            );
+//
+//            $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), null);
+//
+//            $heartbeatActivity = Heartbeat::create([
+//              'type' => $heartbeatTypeEntity->id(),
+//              'uid' => $user->id(),
+//              'nid' => $entity->id(),
+//              'name' => 'Dev Test',
+//            ]);
+//
+//            $heartbeatActivity->setMessage($heartbeatMessage);
+//            $heartbeatActivity->save();
+
+          }
+        }
+
+      }
+    }
+        drupal_set_message('Event flag.entity_unflagged thrown by Subscriber in module heartbeat.', 'status', TRUE);
   }
 
 }
