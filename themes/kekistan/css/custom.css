@@ -172,7 +172,34 @@ footer#footer {
   background-repeat: no-repeat;
   vertical-align: middle;
   display: inline-block;
-  min-height: 45px;
+  min-height: 40px;
+}
+
+#block-kekistan-footer .facebook-footer {
+  background-image: url(/themes/kekistan/images/icons/facebook-logo-button.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  display: inline-block;
+  min-height: 40px;
+}
+
+#block-kekistan-footer .twitter-footer {
+  background-image: url(/themes/kekistan/images/icons/twitter-logo-button.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  display: inline-block;
+  min-height: 40px;
+}
+
+#block-kekistan-footer .fourchan-footer {
+  background-image: url(/themes/kekistan/images/icons/4chanlogo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  display: inline-block;
+  min-height: 40px;
 }
 
 
