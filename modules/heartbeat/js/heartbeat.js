@@ -10,7 +10,7 @@
             divs.forEach(function (anchor) {
               var userId = anchor.href.substring(anchor.href.indexOf('user') + 5, anchor.href.indexOf('&token'));
               JSON.parse(drupalSettings.friendData).forEach(function (friendship) {
-                if (friendship.uid_target === userId && friendship.uid == drupalSettings.user.uid && friendship.status === 0) {
+                if (friendship.uid_target === userId && friendship.uid == drupalSettings.user.uid && friendship.status == 0) {
                   anchor.innerHTML = 'Friendship Pending';
                 }
               });
