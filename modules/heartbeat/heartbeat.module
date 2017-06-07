@@ -279,17 +279,6 @@ function updateFeeds() {
 //  $curlQuery = '/heartbeat/update_feed/' . $updateFeedConfig->get('timestamp');
   //Set options for the curl request
 
-//  try {
-//    $response = \Drupal::httpClient()->get($curlQuery, array('headers' => array('Accept' => 'text/plain')));
-//    $data = (string) $response->getBody();
-//    if (empty($data)) {
-//      $stophere = null;
-//
-//    }
-//  }
-//  catch (RequestException $e) {
-//    return FALSE;
-//  }
 
 
 //  $curlOptions = array(
@@ -329,28 +318,163 @@ function heartbeat_ajax_render_alter(array &$data) {
  * Implements hook_cron().
  */
 function heartbeat_cron() {
+  $friendship = false;
   //Iterate over the Heartbeat Types and ensure that the weight of bundle-specific types are lower than that of their
   //parent type. This will allow us to ensure Bundle specific types end up being published as opposed to
   //Types which represent all content types
   $heartbeatTypes = \Drupal::service('entity.query')->get('heartbeat_type')->condition('mainentity', 'node')->execute();
 
-  if (count($heartbeatTypes) > 1) {
-    foreach($heartbeatTypes as $heartbeatType) {
 
-      $entity = \Drupal::service('entity_type.manager')->getStorage('heartbeat_type')->load($heartbeatType);
+  foreach($heartbeatTypes as $heartbeatType) {
 
-      if ($entity->getBundle() === null) {
-        $entity->setWeight(99);
-        $entity->save();
-      } else {
-        $entity->setWeight(0);
-        $entity->save();
+    $entity = \Drupal::service('entity_type.manager')->getStorage('heartbeat_type')->load($heartbeatType);
+
+//    if ($entity->getBundle() === null) {
+//      $entity->setWeight(99);
+//      $entity->save();
+//    } else {
+//      $entity->setWeight(0);
+//      $entity->save();
+//    }
+    if ($entity->getMainEntity() === 'flagging') {
+      $friendship = true;
+      $flagService = \Drupal::service('flag');
+      foreach ($flagService->getAllFlags('user') as $flag) {
+        if ($flag->id() === 'friendship') {
+          $flaggings = \Drupal\Core\Database\Database::getConnection()->select('flagging', 'f')
+            ->fields('f', array('entity_id', 'uid'))
+            ->condition('flag_id', $flag->id())->execute();
+
+          foreach ($flaggings->fetchAll() as $flagging) {
+            $friendship = \Drupal\Core\Database\Database::getConnection()->select('heartbeat_friendship', 'hf')
+              ->fields(array('status'))
+              ->condition('uid', $flagging->uid)
+              ->condition('uid_target', $flagging->entity_id)
+              ->execute();
+
+            if ($friendship = $friendship->fetchObject()) {
+              $status = $friendship->status;
+
+              $revFriendship = \Drupal\Core\Database\Database::getConnection()->select('heartbeat_friendship', 'hf')
+                ->fields(array('status'))
+                ->condition('uid', $flagging->entity_id)
+                ->condition('uid_target', $flagging->uid)
+                ->execute();
+
+              if ($revFriendship = $revFriendship->fetchObject()) {
+                $revStatus = $revFriendship->status;
+              }
+
+            }
+          }
+        }
+      }
+    }
+//      $entityQuery = \Drupal::service('entity.query')->get('flag
+
+//    foreach ($flagService->)
+  }
+  heartbeat_friendship_maintenance();
+}
+
+function heartbeat_friendship_maintenance() {
+  $flag = $this->flagService->getFlagById('friendship');
+
+  $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
+    ->fields('hf', array('status', 'uid', 'uid_target'))
+    ->execute();
+
+  foreach ($friendships->fetchAll() as $friendship) {
+    $revFriendship = Database::getConnection()->select('heartbeat_friendship', 'hf')
+      ->fields('hf', array('status'))
+      ->condition('uid', $friendship->uid_target)
+      ->condition('uid_target', $friendship->uid)
+      ->execute();
+
+    $revFriendResult = $revFriendship->fetchField();
+
+    if ($revFriendResult > -2) {
+      if ($revFriendResult !== $friendship->status) {
+        $update = Database::getConnection()->update('heartbeat_friendship')
+          ->fields(array(
+              ':status' => 1,
+            )
+          )
+          ->condition('uid', $friendship->uid)
+          ->condition('uid_target', $friendship->uid_target);
+        if ($updated = !$update->execute()) {
+          \Drupal::logger('Heartbeat Cron')->error('Could not update status for friendship');
+        }
       }
 
+      if ($revFriendResult === $friendship->status ||
+        $updated) {
+
+        $userEntity = $this->entityTypeManager->getStorage('user')->load($friendship->uid);
+        $userTargetEntity = $this->entityTypeManager->getStorage('user')->load($friendship->uid_target);
+        $flaggingFound = false;
+
+        foreach ($this->flagService->getEntityFlaggings($flag, $userTargetEntity) as $flagging) {
+          $flOwner = $flagging->getOwnerId();
+          $usId = $userEntity->id();
+          $flaggableId = $flagging->getFlaggableId();
+          //TODO ownerId and entity Id seem to be reversed.
+
+          if ($flagging->getOwnerId() == $userEntity->id() && $flagging->getFlaggableId() == $friendship->uid_target) {
+            $flaggingFound = true;
+            break;
+          }
+        }
+
+        if (!$flaggingFound) {
+          $flagging = $this->flagService->flag($flag, $userTargetEntity, $userEntity);
+        }
+
+        $flaggingReverseFound = false;
+
+        foreach ($this->flagService->getEntityFlaggings($flag, $userEntity) as $flagging) {
+          if ($flagging->getOwnerId() == $userTargetEntity->id() && $flagging->getFlaggableId() == $friendship->uid) {
+            $flaggingReverseFound = true;
+            break;
+          }
+        }
+
+        if (!$flaggingReverseFound) {
+          $flagging = $this->flagService->flag($flag, $userEntity, $userTargetEntity);
+        }
+        //TODO update flagging values or create flaggings
+
+      }
+    } else if ($friendship->status === 1) {
+      //TODO Add reverse friendship
+      $insertReverse = Database::getConnection()->insert('heartbeat_friendship')
+        ->fields([
+          'uid' => $friendship->uid_target,
+          'uid_target' => $friendship->uid,
+          'created' => time(),
+          'status' => 1
+        ]);
+
+      if ($insertReverse->execute()) {
+
+        if ($friendship->status < 1) {
+          $updateFriendship = Database::getConnection()->update('heartbeat_friendship')
+            ->fields(array(
+              'status' => 1,
+            ))
+            ->condition('uid', $friendship->uid)
+            ->condition('uid_target', $friendship->uid_target);
+          if (!$updateFriendship->execute()) {
+            \Drupal::logger('Friendship update failed');
+          }
+        }
+      } else {
+        \Drupal::logger('Heartbeat')->debug('Unable to insert or update for User with ID %id', ['%id' => $friendship->uid]);
+      }
+    } else {
+      //TODO figure out how to set friendship pending
     }
   }
-
-
 }
 
 /**
@@ -359,9 +483,6 @@ function heartbeat_cron() {
 function heartbeat_flag_options_alter(array &$options, FlagInterface $flag) {
   $jigga = null;
 
-  $dis = 'the best';
-
-  $another = 'faggot';
 }
 
 /**
@@ -372,11 +493,19 @@ function heartbeat_entity_bundle_create($entity_type_id, $bundle)
 
 }
 
-//TODO Add heartbeat language to Javascript
-//TODO Determine necessity of polling
-//Add
+/**
+ * Implements hook_preprocess().
+ */
+function heartbeat_preprocess(&$variables, $hook) {
 
-//TODO implement polling in JS using Drupal Settings
+//  if ($hook === 'heartbeat') {
+//    foreach $
+//  }
+//  $myVaribale = 'varibale';
+//
+//  $otherVar = 'null';
+
+}
 //$variables['#attached']['drupalSettings']['heartbeatData'] = $mydata;
 //^ will become available in JS as:
 //settings.heartbeatData, data

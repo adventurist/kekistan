@@ -15,6 +15,10 @@ services:
     class: Drupal\heartbeat\HeartbeatService
     arguments: ['@entity_type.manager', '@entity.query', '@heartbeatstream']
 
+#  friendship:
+#    class: Drupal\heartbeat\FriendshipService
+#    arguments:
+
   heartbeat.event:
     class: Drupal\heartbeat\EventSubscriber\HeartbeatEventSubscriber
     arguments: ['@flag', '@heartbeat.heartbeattype', '@heartbeatstream', '@heartbeat']

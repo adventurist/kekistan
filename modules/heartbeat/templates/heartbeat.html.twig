@@ -18,5 +18,8 @@
 <div{{ attributes.addClass('heartbeat') }}>
   {% if content %}
     {{- content -}}
+    {% autoescape false %}
+      {{ content.message | raw }}
+    {% endautoescape %}
   {% endif %}
 </div>

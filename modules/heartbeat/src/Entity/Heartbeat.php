@@ -303,7 +303,14 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       ->setDescription(t('The content associated with this Heartbeat'))
       ->setSetting('target_type', 'node')
       ->setSetting('handler', 'default')
+      ->setDisplayOptions('view', array(
+        'label' => 'hidden',
+        'type' => 'content',
+        'weight' => 0,
+      ))
+      ->setDisplayConfigurable('view', TRUE)
       ->setRevisionable(TRUE);
+
 
     $fields['name'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Name'))
@@ -330,7 +337,14 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     $fields['message'] = BaseFieldDefinition::create('string_long')
       ->setLabel(t('Message'))
       ->setDescription(t('The message of the Heartbeat entity.'))
-      ->setRevisionable(TRUE);
+      ->setRevisionable(TRUE)
+      ->setDisplayOptions('view', array(
+        'label' => 'above',
+        'type' => 'full_html',
+        'weight' => -4,
+      ))
+      ->setDisplayConfigurable('view', TRUE);
+
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))
@@ -694,15 +708,21 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       }
     }
     if ($friendStatus === 1) {
-      $insert2 = Database::getConnection()->insert('heartbeat_friendship')
-        ->fields([
-          'uid' => $uid_target,
-          'uid_target' => $uid,
-          'created' => $unixtime,
-          'status' => $friendStatus
-        ]);
-      if (!$insert2->execute()) {
-        \Drupal::logger('Heartbeat')->error('Unable to update friendship between %uid and %uid_target', array('%uid' => $uid_target, '%uid_target' => $uid));
+      $update2 = Database::getConnection()->update('heartbeat_friendship')
+        ->fields(['status' => $friendStatus])
+        ->condition('uid', $uid_target, '=')
+        ->condition('uid_target', $uid, '=');
+      if (!$update2->execute()) {
+        $insert2 = Database::getConnection()->insert('heartbeat_friendship')
+          ->fields([
+            'uid' => $uid_target,
+            'uid_target' => $uid,
+            'created' => $unixtime,
+            'status' => $friendStatus
+          ]);
+        if (!$insert2->execute()) {
+          \Drupal::logger('Heartbeat')->error('Unable to update friendship between %uid and %uid_target', array('%uid' => $uid_target, '%uid_target' => $uid));
+        }
       }
     }
   }

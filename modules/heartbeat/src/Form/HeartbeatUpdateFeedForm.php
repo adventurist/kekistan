@@ -58,7 +58,7 @@ class HeartbeatUpdateFeedForm extends FormBase {
 //      $this->triggered = false;
 //      throw new \Drupal\heartbeat\Controller\HeartbeatAjaxException($this);
 //    }
-
+  //TODO this should be changed to library
     $form['#attached']['libraries'][] = 'heartbeat/heartbeat';
 
     $form['timestamp'] = [

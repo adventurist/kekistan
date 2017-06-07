@@ -133,7 +133,7 @@ class HeartbeatStreamServices {
 
       if (count($beats) > 0) {
         $this->lastId = call_user_func('end', array_keys($beats));
-
+//TODO make this multiline
         $this->configFactory->getEditable('heartbeat_update_feed.settings')->set('lastId', $this->lastId)->set('update', false)->set('timestamp', array_values($beats)[0]->getRevisionCreationTime())->save();
 
         return $beats;

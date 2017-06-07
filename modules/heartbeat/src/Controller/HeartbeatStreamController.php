@@ -89,7 +89,13 @@ class HeartbeatStreamController extends ControllerBase {
     $heartbeats = $this->heartbeatService->loadByTypes($heartbeatTypes);
 
     foreach($heartbeats as $heartbeat) {
-      $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+//      $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+
+      $entity = $this->entityTypeManager->getStorage('heartbeat')->load($heartbeat->id());
+      $view_builder = $this->entityTypeManager->getViewBuilder('heartbeat');
+      $pre_render = $view_builder->view($entity);
+      $render_output = render($pre_render);
+      $messages[] = $pre_render;
     }
     return [
       '#theme' => 'heartbeat_stream',
