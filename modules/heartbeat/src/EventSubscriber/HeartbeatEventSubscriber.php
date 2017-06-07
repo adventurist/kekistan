@@ -139,13 +139,15 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
       }
     }
 
-//    if ($friendStatus === FRIEND) {
-//      drupal_set_message($user->getUsername() . ' is now friends with ' . $user2->getUsername());
-//    } else if ($friendStatus === PENDING) {
-//      drupal_set_message($user->getUsername() . ' has requested friendship with ' . $user2->getUsername());
-//    } else {
-//      drupal_set_message($user->getUsername() . ' is unable to request friendship with ' . $user2->getUsername());
-//    }
+    $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
+      ->fields('hf', array('status', 'uid', 'uid_target'))
+      ->execute();
+
+    $friendData = $friendships->fetchAll();
+
+    $friendConfig = \Drupal::configFactory()->getEditable('heartbeat_friendship.settings');
+
+    $friendConfig->set('data', json_encode($friendData))->save();
   }
 
   /**
@@ -194,33 +196,19 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
 
             Heartbeat::updateFriendship($user->id(), $user2->id(), time(), $friendStatus);
 
-//            $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
-//            $entitiesObj = new \stdClass();
-//            $entitiesObj->type = 'user';
-//            $entitiesObj->entities = [$user, $user2];
-//            $entities = array(
-//              'flagging' => $entity,
-//              'user' => $entitiesObj,
-//            );
-//
-//            $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), null);
-//
-//            $heartbeatActivity = Heartbeat::create([
-//              'type' => $heartbeatTypeEntity->id(),
-//              'uid' => $user->id(),
-//              'nid' => $entity->id(),
-//              'name' => 'Dev Test',
-//            ]);
-//
-//            $heartbeatActivity->setMessage($heartbeatMessage);
-//            $heartbeatActivity->save();
-
           }
         }
 
       }
     }
-        drupal_set_message('Event flag.entity_unflagged thrown by Subscriber in module heartbeat.', 'status', TRUE);
-  }
+    $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
+      ->fields('hf', array('status', 'uid', 'uid_target'))
+      ->execute();
 
+    $friendData = $friendships->fetchAll();
+
+    $friendConfig = \Drupal::configFactory()->getEditable('heartbeat_friendship.settings');
+
+    $friendConfig->set('data', json_encode($friendData))->save();
+  }
 }
