@@ -68,103 +68,15 @@ class TestController extends ControllerBase {
    */
   public function start($arg) {
 
-    $flag = $this->flagService->getFlagById('friendship');
-
     $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
       ->fields('hf', array('status', 'uid', 'uid_target'))
       ->execute();
 
-    foreach ($friendships->fetchAll() as $friendship) {
-      $revFriendship = Database::getConnection()->select('heartbeat_friendship', 'hf')
-        ->fields('hf', array('status'))
-        ->condition('uid', $friendship->uid_target)
-        ->condition('uid_target', $friendship->uid)
-        ->execute();
+    $friendData = $friendships->fetchAll();
 
-      $revFriendResult = $revFriendship->fetchField();
+    $friendConfig = \Drupal::configFactory()->getEditable('heartbeat_friendship.settings');
 
-      if ($revFriendResult > -2) {
-        if ($revFriendResult !== $friendship->status) {
-          $update = Database::getConnection()->update('heartbeat_friendship')
-            ->fields(array(
-                ':status' => 1,
-              )
-            )
-            ->condition('uid', $friendship->uid)
-            ->condition('uid_target', $friendship->uid_target);
-          if ($updated = !$update->execute()) {
-            \Drupal::logger('Heartbeat Cron')->error('Could not update status for friendship');
-          }
-        }
-
-        if ($revFriendResult === $friendship->status ||
-        $updated) {
-
-          $userEntity = $this->entityTypeManager->getStorage('user')->load($friendship->uid);
-          $userTargetEntity = $this->entityTypeManager->getStorage('user')->load($friendship->uid_target);
-          $flaggingFound = false;
-
-          foreach ($this->flagService->getEntityFlaggings($flag, $userTargetEntity) as $flagging) {
-            $flOwner = $flagging->getOwnerId();
-            $usId = $userEntity->id();
-            $flaggableId = $flagging->getFlaggableId();
-            //TODO ownerId and entity Id seem to be reversed.
-
-            if ($flagging->getOwnerId() == $userEntity->id() && $flagging->getFlaggableId() == $friendship->uid_target) {
-              $flaggingFound = true;
-              break;
-            }
-          }
-
-          if (!$flaggingFound) {
-            $flagging = $this->flagService->flag($flag, $userTargetEntity, $userEntity);
-          }
-
-          $flaggingReverseFound = false;
-
-          foreach ($this->flagService->getEntityFlaggings($flag, $userEntity) as $flagging) {
-            if ($flagging->getOwnerId() == $userTargetEntity->id() && $flagging->getFlaggableId() == $friendship->uid) {
-              $flaggingReverseFound = true;
-              break;
-            }
-          }
-
-          if (!$flaggingReverseFound) {
-            $flagging = $this->flagService->flag($flag, $userEntity, $userTargetEntity);
-          }
-          //TODO update flagging values or create flaggings
-
-        }
-      } else if ($friendship->status === 1) {
-        //TODO Add reverse friendship
-        $insertReverse = Database::getConnection()->insert('heartbeat_friendship')
-          ->fields([
-            'uid' => $friendship->uid_target,
-            'uid_target' => $friendship->uid,
-            'created' => time(),
-            'status' => 1
-          ]);
-
-        if ($insertReverse->execute()) {
-
-          if ($friendship->status < 1) {
-            $updateFriendship = Database::getConnection()->update('heartbeat_friendship')
-              ->fields(array(
-                'status' => 1,
-              ))
-              ->condition('uid', $friendship->uid)
-              ->condition('uid_target', $friendship->uid_target);
-            if (!$updateFriendship->execute()) {
-              \Drupal::logger('Friendship update failed');
-            }
-          }
-        } else {
-          \Drupal::logger('Heartbeat')->debug('Unable to insert or update for User with ID %id', ['%id' => $friendship->uid]);
-        }
-      } else {
-        //TODO figure out how to set friendship pending
-      }
-    }
+    $friendConfig->set('data', json_encode($friendData))->save();
 
     return [
       '#type' => 'markup',

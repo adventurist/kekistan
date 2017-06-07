@@ -84,3 +84,11 @@ heartbeat_update_feed.config:
     update:
       type: boolean
       label: 'Assert whether or not to update the feed'
+
+heartbeat_friendship.config:
+  type: config_object
+  label: 'Friendship States'
+  mapping:
+    data:
+      type: blob
+      label: 'Data structure comprising all of the friendship states for all users'

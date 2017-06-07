@@ -4,33 +4,39 @@
 (function($, Drupal, drupalSettings) {
     Drupal.behaviors.heartbeat = {
         attach: function (context, settings) {
-          console.dir(drupalSettings);
+
+          if (drupalSettings.friendData != null) {
+            var divs = document.querySelectorAll('.flag-friendship a.use-ajax');
+            divs.forEach(function (anchor) {
+              var userId = anchor.href.substring(anchor.href.indexOf('user') + 5, anchor.href.indexOf('&token'));
+              JSON.parse(drupalSettings.friendData).forEach(function (friendship) {
+                if (friendship.uid_target === userId && friendship.uid == drupalSettings.user.uid && friendship.status === 0) {
+                  anchor.innerHTML = 'Friendship Pending';
+                }
+              });
+            });
+          }
 
           feedElement = document.querySelector('.heartbeat-stream');
-          console.dir(feedElement);
 
           if (drupalSettings.feedUpdate == true) {
-            console.log('stop here man');
-
             updateFeed();
           }
 
             Drupal.AjaxCommands.prototype.selectFeed = function(ajax, response, status) {
-                console.log(response.feed);
-                console.dir(drupalSettings);
-                console.dir(context);
-                console.dir(settings);
 
               $.ajax({
                 type:'POST',
                 url:'/heartbeat/render_feed/' + response.feed,
                 success: function(response) {
-                  // feedElement = document.getElementById('block-heartbeatblock');
+
                   feedElement = document.querySelector('.heartbeat-stream');
                   console.dir(feedElement);
 
                   if (feedElement != null) {
+
                     feedElement.innerHTML = response;
+
                   } else {
 
                     feedBlock = document.getElementById('block-heartbeatblock');
@@ -39,11 +45,9 @@
                     feedBlock.appendChild(insertNode);
 
                   }
-                  console.dir(feedElement);
-                  console.dir(response);
+
                 }
               });
-              // #block-heartbeatblock
             };
 
             Drupal.AjaxCommands.prototype.updateFeed = function(ajax, response, status) {
@@ -53,10 +57,7 @@
                   type: 'POST',
                   url:'/heartbeat/update_feed/' + response.timestamp,
                   success: function(response) {
-                    // feedElement = document.getElementById('block-heartbeatblock');
-                    // feedElement = document.querySelector('.heartbeat-stream');
-                    // feedElement.innerHTML = response;
-                    // console.dir(feedElement);
+
                     console.dir(response);
                   }
                 });

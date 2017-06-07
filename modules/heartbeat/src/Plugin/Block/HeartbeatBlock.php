@@ -85,6 +85,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
   public function build() {
 
     $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_feed.settings');
+    $friendData = \Drupal::config('heartbeat_friendship.settings')->get('data');
 
     $feed = $myConfig->get('message');
     $uids = null;
@@ -127,7 +128,10 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         '#messages' => $messages,
         '#attached' => array(
           'library' => 'heartbeat/heartbeat',
-          'drupalSettings' => ['activeFeed' => 'jigga']
+          'drupalSettings' => [
+            'activeFeed' => 'jigga',
+            'friendData' => $friendData,
+          ]
         ),
         '#cache' => array('max-age' => 0)
       ];
