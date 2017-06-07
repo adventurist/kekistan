@@ -4,6 +4,7 @@ namespace Drupal\heartbeat\EventSubscriber;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\Event;
+use Drupal\Core\Database\Database;
 use Drupal\flag\FlagService;
 use Drupal\user\Entity\User;
 use Drupal\heartbeat\Entity\Heartbeat;
