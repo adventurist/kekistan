@@ -378,7 +378,9 @@ function heartbeat_cron() {
 }
 
 function heartbeat_friendship_maintenance() {
-  $flag = $this->flagService->getFlagById('friendship');
+  $flagService = \Drupal::service('flag');
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+  $flag = $flagService->getFlagById('friendship');
 
   $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
     ->fields('hf', array('status', 'uid', 'uid_target'))
@@ -410,11 +412,11 @@ function heartbeat_friendship_maintenance() {
       if ($revFriendResult === $friendship->status ||
         $updated) {
 
-        $userEntity = $this->entityTypeManager->getStorage('user')->load($friendship->uid);
-        $userTargetEntity = $this->entityTypeManager->getStorage('user')->load($friendship->uid_target);
+        $userEntity = $entityTypeManager->getStorage('user')->load($friendship->uid);
+        $userTargetEntity = $entityTypeManager->getStorage('user')->load($friendship->uid_target);
         $flaggingFound = false;
 
-        foreach ($this->flagService->getEntityFlaggings($flag, $userTargetEntity) as $flagging) {
+        foreach ($flagService->getEntityFlaggings($flag, $userTargetEntity) as $flagging) {
           $flOwner = $flagging->getOwnerId();
           $usId = $userEntity->id();
           $flaggableId = $flagging->getFlaggableId();
@@ -427,12 +429,12 @@ function heartbeat_friendship_maintenance() {
         }
 
         if (!$flaggingFound) {
-          $flagging = $this->flagService->flag($flag, $userTargetEntity, $userEntity);
+          $flagging = $flagService->flag($flag, $userTargetEntity, $userEntity);
         }
 
         $flaggingReverseFound = false;
 
-        foreach ($this->flagService->getEntityFlaggings($flag, $userEntity) as $flagging) {
+        foreach ($flagService->getEntityFlaggings($flag, $userEntity) as $flagging) {
           if ($flagging->getOwnerId() == $userTargetEntity->id() && $flagging->getFlaggableId() == $friendship->uid) {
             $flaggingReverseFound = true;
             break;
@@ -440,7 +442,7 @@ function heartbeat_friendship_maintenance() {
         }
 
         if (!$flaggingReverseFound) {
-          $flagging = $this->flagService->flag($flag, $userEntity, $userTargetEntity);
+          $flagging = $flagService->flag($flag, $userEntity, $userTargetEntity);
         }
         //TODO update flagging values or create flaggings
 
