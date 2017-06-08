@@ -140,24 +140,24 @@ $stophere = null;
 
   public function statusAjaxSubmit(array &$form, FormStateInterface $form_state) {
 
-//    $message = $form_state->getValue('message');
+    $message = $form_state->getValue('message');
 
-//    preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $message, $match);
-//
-//
-//    if ($this->previewGenerator !== null && !empty($match) && array_values($match)[0]) {
-//
-//      $url = array_values($match)[0];
-//
-////      $this->previewGenerator->generatePreview($url);
-//
-//      $response = new AjaxResponse();
-//      $response->addCommand(new ClientCommand($url[0]));
-//
-//      return $response;
-//
-//
-//    }
+    preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $message, $match);
+
+
+    if ($this->previewGenerator !== null && !empty($match) && array_values($match)[0]) {
+
+      $url = array_values($match)[0];
+
+//      $this->previewGenerator->generatePreview($url);
+
+      $response = new AjaxResponse();
+      $response->addCommand(new ClientCommand($url[0]));
+
+      return $response;
+
+
+    }
 
     if (!empty($this->statusTypeService)) {
       foreach ($this->statusTypeService->loadAll() as $type) {
