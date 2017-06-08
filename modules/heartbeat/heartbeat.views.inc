@@ -197,13 +197,13 @@ function heartbeat_views_query_alter(ViewExecutable $view, QueryPluginBase $quer
 /**
  * Implements hook_views_pre_render().
  */
-function heartbeat_views_pre_render(ViewExecutable $view) {
+//function heartbeat_views_pre_render(ViewExecutable $view) {
 
-  $friendStatuses = [-1 => 'No Friendship', 0 => 'Pending Friendship', 1 => 'Minimum Bromance'];
+//  $friendStatuses = [-1 => 'No Friendship', 0 => 'Pending Friendship', 1 => 'Minimum Bromance'];
 
-  if ($view->id() === 'heartbeat_friendship') {
-    foreach ($view->result as $row) {
-      $row->heartbeat_friendship_status = $friendStatuses[$row->heartbeat_friendship_status];
-    }
-  }
-}
+//  if ($view->id() === 'heartbeat_friendship') {
+//    foreach ($view->result as $row) {
+////      $row->heartbeat_friendship_status = $friendStatuses[$row->heartbeat_friendship_status];
+//    }
+//  }
+//}
