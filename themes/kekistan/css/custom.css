@@ -82,8 +82,7 @@ iframe.kekistan-anthem-video {
 
 /*Offset main div to consider fixed footer*/
 #main {
-  bottom: 54px;
-  position: relative;
+/*TODO figure out how to offset footer*/
 }
 
 
