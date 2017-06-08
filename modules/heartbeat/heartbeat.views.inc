@@ -12,6 +12,9 @@ use Drupal\Core\Render\Markup;
 use Drupal\field\FieldConfigInterface;
 use Drupal\field\FieldStorageConfigInterface;
 use Drupal\system\ActionConfigEntityInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+use Drupal\views\Views;
 
 /**
 * Implements hook_views_data().
@@ -31,7 +34,176 @@ function heartbeat_views_data() {
         'field' => array(
             'id' => 'heartbeat_message_field',
         ),
-    );
+      );
+    // Base data.
+    $data = [];
+    $data['heartbeat_friendship'] = [];
+    $data['heartbeat_friendship']['table'] = [];
+    $data['heartbeat_friendship']['table']['group'] = t('Heartbeat Friendship');
+    $data['heartbeat_friendship']['table']['base'] = [
+        'field' =>  'id',
+        'title' => t('Friendships'),
+        'help' => t('Maintains friendship status between Users'),
+    //        'query_id' => 'teacher',
+
+    ];
+
+    // Fields.
+
+    $data['heartbeat_friendship']['id'] = [
+        'title' => t('id'),
+        'help' => t('Friendship ID'),
+        'field' => [
+            'id' => 'numeric',
+        ],
+        'sort' => array(
+            // ID of sort handler plugin to use.
+            'id' => 'standard',
+        ),
+
+        'filter' => array(
+            // ID of filter handler plugin to use.
+            'id' => 'numeric',
+        ),
+
+        'argument' => array(
+            // ID of argument handler plugin to use.
+            'id' => 'numeric',
+        ),
+    ];
+
+    $data['heartbeat_friendship']['uid'] = [
+        'title' => t('UID'),
+        'help' => t('User\'s Unique ID.'),
+        'field' => [
+            'id' => 'numeric',
+        ],
+        'sort' => array(
+            // ID of sort handler plugin to use.
+            'id' => 'standard',
+        ),
+
+        'filter' => array(
+            // ID of filter handler plugin to use.
+            'id' => 'numeric',
+        ),
+
+        'argument' => array(
+            // ID of argument handler plugin to use.
+            'id' => 'numeric',
+        ),
+        'relationship' => array(
+          'title' => t('User'),
+          'help' => t(''),
+          'base' => 'users_field_data',
+          'base field' => 'uid',
+          'id' => 'standard',
+        ),
+
+    ];
+
+    $data['heartbeat_friendship']['uid_target'] = [
+        'title' => t('UID Target'),
+        'help' => t('Unique ID of the User who is the target of the relationship'),
+        'field' => [
+            'id' => 'numeric',
+        ],
+        'sort' => array(
+            // ID of sort handler plugin to use.
+            'id' => 'standard',
+        ),
+
+        'filter' => array(
+            // ID of filter handler plugin to use.
+            'id' => 'numeric',
+        ),
+
+        'argument' => array(
+            // ID of argument handler plugin to use.
+            'id' => 'numeric',
+        ),
+        'relationship' => array(
+          'title' => t('User Target'),
+          'help' => t(''),
+          'base' => 'users_field_data',
+          'base field' => 'uid',
+          'id' => 'standard',
+        ),
+
+    ];
+
+    $data['heartbeat_friendship']['status'] = [
+        'title' => t('Status'),
+        'help' => t('The status of the friendship'),
+        'field' => [
+            'id' => 'numeric',
+        ],
+        'sort' => array(
+            // ID of sort handler plugin to use.
+            'id' => 'standard',
+        ),
+
+        'filter' => array(
+            // ID of filter handler plugin to use.
+            'id' => 'numeric',
+        ),
+
+        'argument' => array(
+            // ID of argument handler plugin to use.
+            'id' => 'numeric',
+        ),
+      ];
+
+  $data['heartbeat_friendship']['table']['join'] = [
+    'users_field_data' => [
+      'left_field' => 'uid',
+      'field' => 'uid',
+    ],
+  ];
+
+
 
     return $data;
+}
+
+/**
+ * Implements hook_views_query_alter().
+ * @param ViewExecutable $view
+ * @param QueryPluginBase $query
+ */
+function heartbeat_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
+
+  $thisstuff = 'stuff';
+
+  if ($view->id() == 'heartbeat_friendship') {
+    $thisjigga = null;
+//
+//    LEFT JOIN {two} ON one.field_a = two.field_b
+//Use this configuration:
+
+    $configuration = array(
+      'table' => 'users_field_data',
+      'field' => 'uid',
+      'left_table' => 'heartbeat_friendship',
+      'left_field' => 'uid_target',
+      'operator' => '=',
+    );
+    $join = Views::pluginManager('join')->createInstance('standard', $configuration);
+    $query->addRelationship('users_target', $join);
+
+  }
+}
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function heartbeat_views_pre_render(ViewExecutable $view) {
+
+  $friendStatuses = [-1 => 'No Friendship', 0 => 'Pending Friendship', 1 => 'Minimum Bromance'];
+
+  if ($view->id() === 'heartbeat_friendship') {
+    foreach ($view->result as $row) {
+      $row->heartbeat_friendship_status = $friendStatuses[$row->heartbeat_friendship_status];
+    }
+  }
 }
