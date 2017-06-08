@@ -80,8 +80,15 @@ iframe.kekistan-anthem-video {
   text-align: center;
 }
 
+/*Offset main div to consider fixed footer*/
+#main {
+  bottom: 54px;
+  position: relative;
+}
+
+
 /* Main content*/
-div#content-area {
+#content-area {
   padding-bottom: 15px;
   padding-top: 15px;
 }
