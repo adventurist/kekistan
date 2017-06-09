@@ -72,7 +72,11 @@ class StatusForm extends FormBase {
       ),
       '#ajax' => [
         'event' => 'change',
-        'callback' => '::statusAjaxSubmit',
+        'callback' => '::generatePreview',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => t('Generating preview'),
+        ),
       ],
     );
 
@@ -138,7 +142,7 @@ $stophere = null;
    * @throws \InvalidArgumentException
    */
 
-  public function statusAjaxSubmit(array &$form, FormStateInterface $form_state) {
+  public function generatePreview(array &$form, FormStateInterface $form_state) {
 
     $message = $form_state->getValue('message');
 
@@ -158,6 +162,44 @@ $stophere = null;
 
 
     }
+
+//    if (!empty($this->statusTypeService)) {
+//      foreach ($this->statusTypeService->loadAll() as $type) {
+//        if (!$type->getMedia()) {
+//
+//          $userViewed = \Drupal::routeMatch()->getParameters()->get('user') === null ? \Drupal::currentUser()->id() : \Drupal::routeMatch()->getParameters()->get('user')->id();
+//
+//          if ($userViewed !== null) {
+//
+//            $statusEntity = Status::create([
+//              'type' => $type->id(),
+//              'uid' => \Drupal::currentUser()->id(),
+//              'recipient' => $userViewed
+//            ]);
+//
+//            $statusEntity->setMessage($form_state->getValue('message'));
+//            $statusEntity->save();
+//
+//            if (\Drupal::service('module_handler')->moduleExists('heartbeat')) {
+//
+////              $configManager = \Drupal::service('config.manager');
+//              $feedConfig = \Drupal::config('heartbeat_feed.settings');
+////              $feedConfig = $feedConfig = $configManager->get('heartbeat_feed.settings');
+//              $response = new AjaxResponse();
+//              $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
+//
+//              return $response;
+//            }
+//            break;
+//          }
+//        }
+//      }
+//    }
+  }
+  public function statusAjaxSubmit(array &$form, FormStateInterface $form_state) {
+
+
+
 
     if (!empty($this->statusTypeService)) {
       foreach ($this->statusTypeService->loadAll() as $type) {
@@ -192,43 +234,17 @@ $stophere = null;
       }
     }
   }
+
+  /**
+   * Form submission handler.
+   *
+   * @param array $form
+   *   An associative array containing the structure of the form.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The current state of the form.
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
 
-
-//    $jigga = null;
-//
-//    if (!empty($this->statusTypeService)) {
-//      foreach ($this->statusTypeService->loadAll() as $type) {
-//        if (!$type->getMedia()) {
-//
-//          $userViewed = \Drupal::routeMatch()->getParameters()->get('user') === null ? \Drupal::currentUser()->id() : \Drupal::routeMatch()->getParameters()->get('user')->id();
-//
-//          if ($userViewed !== null) {
-//
-//            $statusEntity = Status::create([
-//              'type' => $type->id(),
-//              'uid' => \Drupal::currentUser()->id(),
-//              'recipient' => $userViewed
-//            ]);
-//
-//            $statusEntity->setMessage($form_state->getValue('message'));
-//            $statusEntity->save();
-//
-//            if (\Drupal::service('module_handler')->moduleExists('heartbeat')) {
-//
-////              $configManager = \Drupal::service('config.manager');
-//              $feedConfig = \Drupal::config('heartbeat_feed.settings');
-////              $feedConfig = $feedConfig = $configManager->get('heartbeat_feed.settings');
-//              $response = new AjaxResponse();
-//              $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
-//
-//              return $response;
-//            }
-//            break;
-//          }
-//        }
-//      }
-//    }
   }
 }
 
