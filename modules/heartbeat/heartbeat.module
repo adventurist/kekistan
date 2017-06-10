@@ -85,7 +85,7 @@ function heartbeat_theme_suggestions_heartbeat(array $variables) {
  * Implements hook_entity_insert().
  */
 function heartbeat_entity_insert(EntityInterface $entity) {
-$bundleSaved = false;
+  $bundleSaved = false;
   switch (true) {
     case $entity instanceof \Drupal\node\Entity\Node:
 
@@ -339,13 +339,14 @@ function heartbeat_cron() {
 
     $entity = \Drupal::service('entity_type.manager')->getStorage('heartbeat_type')->load($heartbeatType);
 
-//    if ($entity->getBundle() === null) {
-//      $entity->setWeight(99);
-//      $entity->save();
-//    } else {
-//      $entity->setWeight(0);
-//      $entity->save();
-//    }
+    if ($entity->getBundle() === null) {
+      $entity->setWeight(99);
+      $entity->save();
+    } else {
+      $entity->setWeight(0);
+      $entity->save();
+    }
+
     if ($entity->getMainEntity() === 'flagging') {
       $friendship = true;
       $flagService = \Drupal::service('flag');
@@ -490,109 +491,42 @@ function heartbeat_friendship_maintenance() {
 }
 
 
-/**
- * Implements hook_flag_options_alter().
- */
-function heartbeat_flag_options_alter(array &$options, FlagInterface $flag) {
-  $jigga = null;
-
-  \Drupal::logger('heartbeat')->debug('this is getting called');
-
-}
 
 /**
- * Implements hook_entity_bundle_create().
+ * Implements hook_cron().
  */
-function heartbeat_entity_bundle_create($entity_type_id, $bundle) {
+function heartbeat_update_type_weight() {
+  //Iterate over the Heartbeat Types and ensure that the weight of bundle-specific types are lower than that of their
+  //parent type. This will allow us to ensure Bundle specific types end up being published as opposed to
+  //Types which represent all content types
+  $heartbeatTypes = \Drupal::service('entity.query')->get('heartbeat_type')->condition('mainentity', 'node')->execute();
 
+  if (count($heartbeatTypes) > 1) {
+    foreach($heartbeatTypes as $heartbeatType) {
+
+      $entity = \Drupal::service('entity_type.manager')->getStorage('heartbeat_type')->load($heartbeatType);
+
+      if ($entity->getBundle() === null) {
+        $entity->setWeight(99);
+        $entity->save();
+      } else {
+        $entity->setWeight(0);
+        $entity->save();
+      }
+
+    }
+  }
 }
 
-/**
- * Implements hook_form_alter().
- */
-function heartbeat_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  $muhId = $form_state;
-  $muhState = $form_id;
-
-  $jigganull  = 'naul';
-}
 
 /**
  * Implements hook_page_attachments_alter().
  */
 function heartbeat_page_attachments_alter(array &$attachments) {
 
-    $jigganull  = 'naul';
+  $jigganull  = 'naul';
   $jiagganull  = 'naul';
   $mattachments = $attachments;
 
   $attachments['#attached']['library'][] = 'heartbeat/heartbeat';
-}
-
-/**
- * Implements hook_flag_link_type_info_alter().
- */
-function heartbeat_flag_link_type_info_alter(array &$link_types) {
-
-  $jigga = null;
-
-  \Drupal::logger('heartbeat')->debug('this is getting called');
-
-}
-
-
-/**
- * Implements hook_flag_type_info_alter().
- */
-function heartbeat_flag_type_info_alter(array &$definitions) {
-
-  $jigga = null;
-
-  \Drupal::logger('heartbeat')->debug('this is getting called');
-
-  $jsonDefs = json_encode($definitions);
-
-}
-
-/**
- * Implements hook_preprocess().
- */
-function heartbeat_preprocess(&$variables, $hook) {
-
-//  if ($hook === 'heartbeat') {
-//    foreach $
-//  }
-//  $myVaribale = 'varibale';
-//
-//  $otherVar = 'null';
-
-}
-//$variables['#attached']['drupalSettings']['heartbeatData'] = $mydata;
-//^ will become available in JS as:
-//settings.heartbeatData, data
-
-
-/**
- * Implements hook_link_alter().
- */
-function heartbeat_link_alter(&$variables) {
-
-  $jigga = null;
-
-  \Drupal::logger('heartbeat')->debug('Link alter is getting called');
-
-}
-
-
-/**
- * Implements hook_entity_access().
- */
-function heartbeat_entity_access(\Drupal\Core\Entity\EntityInterface $entity, $operation, \Drupal\Core\Session\AccountInterface $account) {
-
-  $muhField = null;
-  $muhAccount = $account;
-
-  if ($entity !== null) {
-    $muhId = $entity->id();
-  }
 }

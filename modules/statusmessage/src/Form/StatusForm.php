@@ -71,7 +71,7 @@ class StatusForm extends FormBase {
         'placeholder' => t('Post a status update'),
       ),
       '#ajax' => [
-        'event' => 'change',
+        'event' => 'change, paste, keyup',
         'callback' => '::generatePreview',
         'progress' => array(
           'type' => 'throbber',
@@ -149,7 +149,7 @@ $stophere = null;
     preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $message, $match);
 
 
-    if ($this->previewGenerator !== null && !empty($match) && array_values($match)[0]) {
+    if ($this->previewGenerator !== null && !empty($match) && array_values($match)[0] !== null) {
 
       $url = array_values($match)[0];
 
