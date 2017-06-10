@@ -8,6 +8,10 @@
 
 namespace Drupal\statusmessage;
 
+require_once(DRUPAL_ROOT .'/vendor/autoload.php');
+
+use TwitterAPIExchange;
+
 
 class StatusTwitter {
 
@@ -15,13 +19,14 @@ class StatusTwitter {
   protected $oauthAccessTokenSecret;
   protected $consumerKey;
   protected $consumerSecret;
+  protected $parameter;
 
-  private $instagramConfig;
+  private $twitterConfig;
 
-  public function __construct() {
-    $this->instagramConfig = \Drupal::config('twitter_api.settings');
+  public function __construct($parameter) {
+    $this->twitterConfig = \Drupal::config('twitter_api.settings');
+    $this->parameter = $parameter;
   }
-
 
   /**
    * @return mixed
@@ -50,8 +55,7 @@ class StatusTwitter {
   /**
    * @param mixed $consumerKey
    */
-  public function setConsumerKey($consumerKey)
-  {
+  public function setConsumerKey($consumerKey) {
     $this->consumerKey = $consumerKey;
   }
 
@@ -84,14 +88,42 @@ class StatusTwitter {
     $this->oauthAccessToken = $oauthAccessToken;
   }
 
+  private function getApiStatusParameter() {
+    return 'https://api.twitter.com/1.1/statuses/show.json';
+  }
+
 
   public function generateRequest($url) {
+
+    $request= $this->parseUrl($url);
+
+    $settings = [
+      'oauth_access_token' => $this->twitterConfig->get('oauth_access_token'),
+      'oauth_access_token_secret' => $this->twitterConfig->get('oauth_access_token_secret'),
+      'consumer_key' => $this->twitterConfig->get('consumer_key'),
+      'consumer_secret' => $this->twitterConfig->get('consumer_secret'),
+    ];
+
+    $twitterApi = new TwitterAPIExchange($settings);
+    $getField = '?id=' . $request . '&tweet_mode=extended';
+    $dataRequest = $twitterApi
+      ->setGetField($getField)
+      ->buildOauth($this->getApiStatusParameter(), 'GET');
+
+    if ($response = $dataRequest->performRequest()) {
+      return \GuzzleHttp\json_decode($response);
+    } else {
+      return null;
+    }
+
+
+
 
   }
 
   public function sendRequest($twid) {
 
-    //TODO Instantiating an Http Client
+    if ($data = $this->generateRequest())
 
     $twitterConfig = \Drupal::config('twitter_api.settings');
 
@@ -99,7 +131,11 @@ class StatusTwitter {
     }
 
   private function parseUrl ($text) {
-
+    /*********************************************************
+     * *****************Example url***************************
+     * https://twitter.com/FoxNews/status/873623005842243584 *
+     *********************************************************/
+    return explode('status/', $text)[1];
   }
 
 
