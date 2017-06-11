@@ -151,7 +151,7 @@ iframe.kekistan-anthem-video {
 
 /* Footer */
 footer#footer {
-  height: 70px;
+  height: 60px;
   padding-top: 10px;
   background-color: rgb(48, 76, 71);
   color: grey!important;
@@ -170,7 +170,6 @@ footer#footer {
   color: white!important;
 }
 
-
 #block-kekistan-footer .footer-link-icon {
   min-width: 32px;
   min-height: 32px;
@@ -183,8 +182,21 @@ footer#footer {
   background-repeat: no-repeat;
   vertical-align: middle;
   display: inline-block;
-  min-height: 40px;
-  margin-left:100px;
+  min-height: 35px;
+  margin-bottom:10px;
+  margin-left:600px;
+}
+
+@media (min-width: 380px) {
+  #block-kekistan-footer .fourchan-footer {
+    background-image: url(/themes/kekistan/images/icons/4chanlogo.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    vertical-align: middle;
+    display: inline-block;
+    min-height: 35px;
+    margin-bottom:10px;
+  }
 }
 
 #block-kekistan-footer .facebook-footer {
@@ -193,7 +205,9 @@ footer#footer {
   background-repeat: no-repeat;
   vertical-align: middle;
   display: inline-block;
-  min-height: 40px;
+  min-height: 35px;
+  margin-bottom:10px;
+  margin-left:15px;
 }
 
 #block-kekistan-footer .instagram-footer {
@@ -202,19 +216,18 @@ footer#footer {
   background-repeat: no-repeat;
   vertical-align: middle;
   display: inline-block;
-  min-height: 40px;
+  min-height: 35px;
+  margin-bottom:10px;
 }
 
-
-
-#block-kekistan-footer .twitter-footer {
-  background-image: url(/themes/kekistan/images/icons/twitter-logo-button.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  vertical-align: middle;
-  display: inline-block;
-  min-height: 40px;
-}
+/*#block-kekistan-footer .twitter-footer {*/
+  /*background-image: url(/themes/kekistan/images/icons/twitter-logo-button.png);*/
+  /*background-size: contain;*/
+  /*background-repeat: no-repeat;*/
+  /*vertical-align: middle;*/
+  /*display: inline-block;*/
+  /*min-height: 35px;*/
+/*}*/
 
 
 
