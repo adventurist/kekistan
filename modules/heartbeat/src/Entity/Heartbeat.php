@@ -11,6 +11,7 @@ use Drupal\Core\Utility\Token;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Database\Database;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\user\UserInterface;
 
 /**
@@ -426,11 +427,18 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    */
   public static function buildMessage(Token $tokenService, $preparsedMessage, $entities = NULL, $entityType, $mediaData = NULL) {
 
+    $arbitrarious = 'nothing at all';
+    $naul = 'nullll';
+
+
     switch (true) {
 
       case $entityType === 'node':
 
         $parsedMessage = $tokenService->replace($preparsedMessage . '<a class="heartbeat-node" href="/node/[node:nid]">', $entities);
+        if (strpos($parsedMessage, '#')) {
+          self::parseHashtags($parsedMessage);
+        }
         /** @noinspection NestedTernaryOperatorInspection */
         $message = $parsedMessage;
         $message .= $mediaData ? self::buildMediaMarkup($mediaData) : '';
@@ -540,6 +548,43 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       }
     }
     return null;
+  }
+
+
+  public static function parseHashtags(&$message) {
+    $lastRow = false;
+    $tagsArray = explode('#', $message);
+    $i = 0;
+    $num = count($tagsArray);
+    foreach ($tagsArray as $hashtag) {
+      if ($i === $num - 1) {
+        $lastTagArray = explode(' ', $hashtag);
+        if (strlen($lastTagArray[1]) > 1) {
+          $hashtag = trim($lastTagArray[0]);
+          $lastRow = true;
+          $remainder = '';
+          $lastRowArgCount = count($lastTagArray);
+
+          for ($x = 1; $x < $lastRowArgCount; $x++) {
+            $remainder .= ' ' . $lastTagArray[$x];
+          }
+        }
+
+      }
+      $tid = \Drupal::entityQuery("taxonomy_term")->condition("name", trim($hashtag))->execute();
+
+      if (count($tid) > 0) {
+        $term = Term::load(array_values($tid)[0]);
+        $link = Link::fromTextAndUrl('#' . $hashtag, $term->toUrl());
+        $tagsArray[$i] = !$lastRow ? $link->toString() : $link->toString() . $remainder;
+      }
+      $i++;
+
+    }
+    $message = '';
+    foreach ($tagsArray as $replacements) {
+      $message .= $replacements;
+    }
   }
 
 
