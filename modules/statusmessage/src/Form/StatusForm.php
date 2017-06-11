@@ -9,7 +9,7 @@ use Drupal\statusmessage\ClientGeneratorService;
 use Drupal\statusmessage\StatusService;
 use Drupal\statusmessage\StatusTypeService;
 use Drupal\statusmessage\Ajax\ClientCommand;
-use Drupal\heartbeat\HeartbeatStreamServices;
+use Drupal\statusmessage\StatusTwitter;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\heartbeat\Ajax\SelectFeedCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -197,9 +197,15 @@ $stophere = null;
 //    }
   }
   public function statusAjaxSubmit(array &$form, FormStateInterface $form_state) {
-
-
-
+    $message = $form_state->getValue('message');
+    if (strpos($message, 'twitter')) {
+      preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $message, $match);
+      if ($this->previewGenerator !== null && !empty($match) && array_values($match)[0] !== null) {
+        $url = is_array(array_values($match)[0]) ? array_values(array_values($match)[0])[0]: array_values($match)[0];
+        $statusTwitter = new StatusTwitter($url);
+        $nid = $statusTwitter->sendRequest();
+      }
+    }
 
     if (!empty($this->statusTypeService)) {
       foreach ($this->statusTypeService->loadAll() as $type) {
@@ -215,7 +221,7 @@ $stophere = null;
               'recipient' => $userViewed
             ]);
 
-            $statusEntity->setMessage($form_state->getValue('message'));
+            $statusEntity->setMessage($message);
             $statusEntity->save();
 
             if (\Drupal::service('module_handler')->moduleExists('heartbeat')) {
