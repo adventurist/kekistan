@@ -3,19 +3,20 @@ langcode: en
 status: true
 dependencies: {  }
 _core:
-  default_config_hash: mDnyDwtmyL811CNkkpcqB-nN5XhpKo-BjDK6mpXaCLs
+  default_config_hash: ZDrD-P5fnWXHyP6RQMyJDFGTgEzIymRDYpXn2WDa5U4
 id: user_post_tweet
 label: 'User Post Tweet'
-hid: null
 message_id: null
 description: 'Records the event of a user posting a tweet which was recorded by the Republic'
 mainentity: node
 bundle: tweet
-message: '!user posted !tweettitle'
-perms: 0
-group_type: HEARTBEAT_GROUP_NONE
-arguments: '{"!user":"[user:account-name]","!tweettitle":"[node:title]"}'
+message: '!user shared a tweet !tweettitle !tweetbody'
+weight: 0
+perms: -1
+group_type: '11'
+arguments: '{"!user":"[user:account-name]","!tweettitle":"[node:title]","!tweetbody":"[node:body]"}'
 variables:
   - '[user:account-name]'
   - '[node:title]'
+  - '[node:body]'
 
