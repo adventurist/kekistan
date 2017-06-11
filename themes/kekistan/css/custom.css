@@ -101,6 +101,10 @@ iframe.kekistan-anthem-video {
   color: rgba(27, 22, 22, 0.78);
 }
 
+.quickedit-field a {
+  color: green;
+}
+
 /* Feed buttons*/
 #edit-feedtabs input.form-radio {
   background: #304c47!important;
@@ -166,14 +170,25 @@ footer#footer {
   color: white!important;
 }
 
+
 #block-kekistan-footer .footer-link-icon {
   min-width: 32px;
   min-height: 32px;
   display: inline-block;
 }
 
-#block-kekistan-footer .instagram-footer {
-  background-image: url(/themes/kekistan/images/icons/instagram-logo.png);
+#block-kekistan-footer .fourchan-footer {
+  background-image: url(/themes/kekistan/images/icons/4chanlogo.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  display: inline-block;
+  min-height: 40px;
+  margin-left:100px;
+}
+
+#block-kekistan-footer .facebook-footer {
+  background-image: url(/themes/kekistan/images/icons/facebook-logo-button-white.png);
   background-size: contain;
   background-repeat: no-repeat;
   vertical-align: middle;
@@ -181,14 +196,16 @@ footer#footer {
   min-height: 40px;
 }
 
-#block-kekistan-footer .facebook-footer {
-  background-image: url(/themes/kekistan/images/icons/facebook-logo-button.png);
+#block-kekistan-footer .instagram-footer {
+  background-image: url(/themes/kekistan/images/icons/instagram-logo-white.png);
   background-size: contain;
   background-repeat: no-repeat;
   vertical-align: middle;
   display: inline-block;
   min-height: 40px;
 }
+
+
 
 #block-kekistan-footer .twitter-footer {
   background-image: url(/themes/kekistan/images/icons/twitter-logo-button.png);
@@ -199,14 +216,7 @@ footer#footer {
   min-height: 40px;
 }
 
-#block-kekistan-footer .fourchan-footer {
-  background-image: url(/themes/kekistan/images/icons/4chanlogo.png);
-  background-size: contain;
-  background-repeat: no-repeat;
-  vertical-align: middle;
-  display: inline-block;
-  min-height: 40px;
-}
+
 
 
 /* Position footer links */
