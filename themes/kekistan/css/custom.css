@@ -144,8 +144,17 @@ iframe.kekistan-anthem-video {
 }
 
 .heartbeat-message a {
+  color: #1da1f2;
+}
+
+.heartbeat-hashtag {
+  display: inline-block;
+}
+
+.heartbeat-hashtag a {
   color: green;
 }
+
 
 /** Status Messages **/
 #edit-message--description {
