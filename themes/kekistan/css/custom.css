@@ -143,6 +143,9 @@ iframe.kekistan-anthem-video {
   padding: 25px!important;
 }
 
+.heartbeat-message a {
+  color: green;
+}
 
 /** Status Messages **/
 #edit-message--description {
@@ -220,16 +223,15 @@ footer#footer {
   margin-bottom:10px;
 }
 
-/*#block-kekistan-footer .twitter-footer {*/
-  /*background-image: url(/themes/kekistan/images/icons/twitter-logo-button.png);*/
-  /*background-size: contain;*/
-  /*background-repeat: no-repeat;*/
-  /*vertical-align: middle;*/
-  /*display: inline-block;*/
-  /*min-height: 35px;*/
-/*}*/
-
-
+#block-kekistan-footer .twitter-footer {
+  background-image: url(/themes/kekistan/images/icons/twitter-logo-white.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  vertical-align: middle;
+  display: inline-block;
+  min-height: 35px;
+  margin-bottom:10px;
+}
 
 
 /* Position footer links */
