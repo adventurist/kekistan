@@ -576,7 +576,9 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       if (count($tid) > 0) {
         $term = Term::load(array_values($tid)[0]);
         $link = Link::fromTextAndUrl('#' . $hashtag, $term->toUrl());
-        $tagsArray[$i] = !$lastRow ? $link->toString() : $link->toString() . $remainder;
+        $tagsArray[$i] = '<div class="heartbeat-hashtag">';
+        $tagsArray[$i] .= !$lastRow ? $link->toString() : $link->toString() . $remainder;
+        $tagsArray[$i] .= '</div>';
       }
       $i++;
 
