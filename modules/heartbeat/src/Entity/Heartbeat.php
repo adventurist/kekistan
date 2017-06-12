@@ -438,6 +438,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         $parsedMessage = $tokenService->replace($preparsedMessage . '<a class="heartbeat-node" href="/node/[node:nid]">', $entities);
         if (strpos($parsedMessage, '#')) {
           self::parseHashtags($parsedMessage);
+        }
+        if (strpos($parsedMessage, '@')) {
           self::parseUsernames($parsedMessage);
         }
         /** @noinspection NestedTernaryOperatorInspection */
