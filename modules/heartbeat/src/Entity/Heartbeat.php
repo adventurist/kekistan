@@ -438,6 +438,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         $parsedMessage = $tokenService->replace($preparsedMessage . '<a class="heartbeat-node" href="/node/[node:nid]">', $entities);
         if (strpos($parsedMessage, '#')) {
           self::parseHashtags($parsedMessage);
+          self::parseUsernames($parsedMessage);
         }
         /** @noinspection NestedTernaryOperatorInspection */
         $message = $parsedMessage;
@@ -571,13 +572,18 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         }
 
       }
-      $tid = \Drupal::entityQuery("taxonomy_term")->condition("name", trim($hashtag))->execute();
+      $tid = \Drupal::entityQuery("taxonomy_term")
+        ->condition("name", trim($hashtag))
+        ->condition('vid', [
+          'twitter', 'tags', 'kekistan'
+        ], 'IN')
+        ->execute();
 
       if (count($tid) > 0) {
         $term = Term::load(array_values($tid)[0]);
         $link = Link::fromTextAndUrl('#' . $hashtag, $term->toUrl());
         $tagsArray[$i] = '<div class="heartbeat-hashtag">';
-        $tagsArray[$i] .= !$lastRow ? $link->toString() . '</div>' : $link->toString() . '</div>' . $remainder;
+        $tagsArray[$i] .= !$lastRow ? $link->toString() . ' </div>' : $link->toString() . '</div>' . $remainder;
       }
       $i++;
 
@@ -587,6 +593,51 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       $message .= $replacements;
     }
   }
+
+
+  public static function parseUsernames(&$message) {
+    $lastRow = false;
+    $usersArray = explode('@', $message);
+    $i = 0;
+    $num = count($usersArray);
+    foreach ($usersArray as $username) {
+      if ($i === $num - 1) {
+        $lastuserArray = explode(' ', $username);
+        if (strlen($lastuserArray[1]) > 1) {
+          $username = trim($lastuserArray[0]);
+          $lastRow = true;
+          $remainder = '';
+          $lastRowArgCount = count($lastuserArray);
+
+          for ($x = 1; $x < $lastRowArgCount; $x++) {
+            $remainder .= ' ' . $lastuserArray[$x];
+          }
+        }
+
+      }
+      $tid = \Drupal::entityQuery("taxonomy_term")
+        ->condition("name", trim($username))
+        ->condition('vid', [
+          'twitter_user', 'usernames'
+        ], 'IN'
+        )
+        ->execute();
+
+      if (count($tid) > 0) {
+        $term = Term::load(array_values($tid)[0]);
+        $link = Link::fromTextAndUrl('@' . $username, $term->toUrl());
+        $usersArray[$i] = '<div class="heartbeat-username">';
+        $usersArray[$i] .= !$lastRow ? $link->toString() . ' </div>' : $link->toString() . '</div>' . $remainder;
+      }
+      $i++;
+
+    }
+    $message = '';
+    foreach ($usersArray as $replacements) {
+      $message .= $replacements;
+    }
+  }
+
 
 
   /**
