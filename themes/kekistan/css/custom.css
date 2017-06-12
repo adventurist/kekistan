@@ -150,14 +150,16 @@ iframe.kekistan-anthem-video {
 .heartbeat-hashtag,
 .heartbeat-username {
   display: inline-block;
+  padding: 0px 3px 0px 3px;
 }
 
 .heartbeat-hashtag a {
-  color: green;
+  color: #6e6e6e;
 }
 
 .heartbeat-username a {
   color: #48FD33;
+
 }
 
 /** Status Messages **/
