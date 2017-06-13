@@ -21,10 +21,21 @@ use Drupal\Core\Render\Element;
  */
 function template_preprocess_heartbeat(array &$variables) {
   // Fetch Heartbeat Entity Object.
-  $heartbeat = $variables['elements']['#heartbeat'];
+  $entity = $variables['elements']['#heartbeat'];
 
-  // Helpful $content variable for templates.
-  foreach (Element::children($variables['elements']) as $key) {
-    $variables['content'][$key] = $variables['elements'][$key];
+  if ($entity->isPublished()) {
+    $node = \Drupal::entityTypeManager()
+      ->getStorage('node')
+      ->load($entity->getNid()->getValue()[0]['target_id']);
+
+    if ($node !== null) {
+      $renderedNode = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node, 'full');
+      $variables['content']['node'] = $renderedNode;
+    }
+
+    // Helpful $content variable for templates.
+    foreach (Element::children($variables['elements']) as $key) {
+      $variables['content'][$key] = $variables['elements'][$key];
+    }
   }
 }
