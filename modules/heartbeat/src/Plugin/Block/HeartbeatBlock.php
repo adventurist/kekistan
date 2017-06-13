@@ -3,7 +3,9 @@
 namespace Drupal\heartbeat\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
-//use Drupal\Core\Asset\AssetResolver;
+use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\User\Entity\User;
+use Drupal\File\Entity\File;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Database;
@@ -41,6 +43,8 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
    * @var \Drupal\heartbeat\HeartbeatService
    */
   protected $heartbeatService;
+
+  protected $entityTypeManager;
   /**
    * Construct.
    *
@@ -57,12 +61,13 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         $plugin_definition,
         HeartbeatTypeServices $heartbeat_heartbeattype,
 	HeartbeatStreamServices $heartbeatstream,
-	HeartbeatService $heartbeat
+	HeartbeatService $heartbeat, EntityTypeManager $entity_type_manager
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->heartbeatTypeServices = $heartbeat_heartbeattype;
     $this->heartbeatStreamServices = $heartbeatstream;
     $this->heartbeatService = $heartbeat;
+    $this->entityTypeManager = $entity_type_manager;
   }
   /**
    * {@inheritdoc}
@@ -74,7 +79,8 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $plugin_definition,
       $container->get('heartbeat.heartbeattype'),
       $container->get('heartbeatstream'),
-      $container->get('heartbeat')
+      $container->get('heartbeat'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -109,17 +115,17 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $uids = count($uids) > 1 ? array_unique($uids) : $uids;
         if (!empty($uids)) {
           foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
-            $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+            $this->renderMessage($messages, $heartbeat);
           }
         } else {
           foreach ($this->heartbeatStreamServices->createStreamByType($feed) as $heartbeat) {
-            $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+            $this->renderMessage($messages, $heartbeat);
           }
         }
       } else {
 //        foreach ($this->heartbeatStreamServices->createStreamForUids($uids) as $heartbeat) {
         foreach ($this->heartbeatStreamServices->loadAllStreams() as $heartbeat) {
-          $messages[] = $heartbeat->getMessage()->getValue()[0]['value'];
+          $this->renderMessage($messages, $heartbeat);
         }
       }
 
@@ -136,5 +142,16 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         '#cache' => array('max-age' => 0)
       ];
 
+    }
+
+    private function renderMessage(array &$messages, $heartbeat) {
+      $user = $heartbeat->getOwner();
+      $profilePic = $user->get('user_picture');
+      $style = $this->entityTypeManager->getStorage('image_style')->load('thumbnail');
+      $pic = File::load($profilePic->getValue()[0]['target_id'])->getFileUri();
+      $rendered = $style->buildUrl($pic);
+      $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
+        'userPicture' => $rendered,
+        'userId' => $user->id());
     }
 }

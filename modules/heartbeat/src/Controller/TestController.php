@@ -9,6 +9,7 @@ use Drupal\flag\FlagService;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\heartbeat\HeartbeatTypeServices;
 use Drupal\heartbeat\HeartbeatStreamServices;
+use Drupal\statusmessage\StatusTwitter;
 use Symfony\Component\Routing\Route;
 use Symfony\Component\Routing\RouteCollection;
 
@@ -68,15 +69,8 @@ class TestController extends ControllerBase {
    */
   public function start($arg) {
 
-    $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
-      ->fields('hf', array('status', 'uid', 'uid_target'))
-      ->execute();
-
-    $friendData = $friendships->fetchAll();
-
-    $friendConfig = \Drupal::configFactory()->getEditable('heartbeat_friendship.settings');
-
-    $friendConfig->set('data', json_encode($friendData))->save();
+    $statusTwitter = new StatusTwitter('https://twitter.com/lvd_drm/status/874429014684745728');
+    $nid = $statusTwitter->sendRequest();
 
     return [
       '#type' => 'markup',

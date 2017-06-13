@@ -22,7 +22,8 @@
   {% autoescape false %}
   {% for message in messages %}
     <div{{ attributes.addClass('heartbeat-message') }}>
-      {{ message }} <br>
+      <div class="heartbeat-owner"><a href="/user/{{ message.userId }}"><img src="{{ message.userPicture }}" /></a></div>
+      {{ message.heartbeat }}<br>
     </div>
   {% endfor %}
   {% endautoescape %}
