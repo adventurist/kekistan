@@ -153,10 +153,20 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
 
       $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $heartbeat->getCreatedTime());
       $user = $heartbeat->getOwner();
-      $profilePic = $user->get('user_picture');
-      $style = $this->entityTypeManager->getStorage('image_style')->load('thumbnail');
-      $pic = File::load($profilePic->getValue()[0]['target_id'])->getFileUri();
-      $rendered = $style->buildUrl($pic);
+      $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
+      if ($profilePic === null) {
+        $profilePic = 86;
+      }
+      $pic2 = $this->entityTypeManager->getStorage('file')->load($profilePic);
+      $pic = File::load($profilePic);
+
+      if ($pic !== null) {
+        $style = $this->entityTypeManager->getStorage('image_style')->load('thumbnail');
+
+        $rendered = $style->buildUrl($pic->getFileUri());
+
+      }
+
       $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
         'userPicture' => $rendered,
         'userId' => $user->id(),
