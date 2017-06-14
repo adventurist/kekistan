@@ -1,0 +1,22 @@
+uuid: 37c9d93c-71e1-4c64-9065-5a9cd4568500
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - kekistan
+_core:
+  default_config_hash: qN1tilRCNbnhh9yuXS99tnmCbv1Mp0VAIzJt6X0ocQc
+id: kekistan_content
+theme: kekistan
+region: content
+weight: -5
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  provider: system
+  label_display: '0'
+visibility: {  }

@@ -1,0 +1,11 @@
+uuid: 697ac1a9-0c74-4292-b7bc-33d5eb1c7de0
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.youtube_video
+id: node.youtube_video
+target_entity_type_id: node
+target_bundle: youtube_video
+default_langcode: site_default
+language_alterable: false

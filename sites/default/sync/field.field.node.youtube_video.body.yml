@@ -1,0 +1,22 @@
+uuid: ff679ed9-71dd-4b55-8c0a-b179dc415482
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.youtube_video
+  module:
+    - text
+id: node.youtube_video.body
+field_name: body
+entity_type: node
+bundle: youtube_video
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+field_type: text_with_summary

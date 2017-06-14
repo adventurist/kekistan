@@ -1,0 +1,18 @@
+uuid: dc3d2a83-97d4-4ecf-a735-062e87fd5816
+langcode: en
+status: true
+dependencies: {  }
+id: user_discover_sjw
+label: 'User Discover SJW'
+message_id: null
+description: 'Records a user discovering an SJY'
+mainentity: node
+bundle: sjw
+message: '!user has discovered an SJW: !sjwtitle'
+weight: 0
+perms: 0
+group_type: HEARTBEAT_GROUP_NONE
+arguments: '{"!user":"[user:account-name]","!sjwtitle":"[node:title]"}'
+variables:
+  - '[user:account-name]'
+  - '[node:title]'

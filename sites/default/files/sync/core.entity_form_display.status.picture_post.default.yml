@@ -1,0 +1,56 @@
+uuid: daef5bf6-c65e-4d18-9cfe-62b7fa7e9311
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.status.picture_post.field_status_image
+    - image.style.thumbnail
+    - statusmessage.status_type.picture_post
+  module:
+    - image
+id: status.picture_post.default
+targetEntityType: status
+bundle: picture_post
+mode: default
+content:
+  field_status_image:
+    weight: 11
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  langcode:
+    type: language_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  recipient:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+hidden: {  }

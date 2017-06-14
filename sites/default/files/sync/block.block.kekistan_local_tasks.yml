@@ -1,0 +1,22 @@
+uuid: a8bf3dfb-bbaa-4e2b-9325-94a7b9ed4477
+langcode: en
+status: true
+dependencies:
+  theme:
+    - kekistan
+_core:
+  default_config_hash: gnBvizkdVJeQzjOfLmeVmq8P4Ckv__Zevuqr1UVhfcQ
+id: kekistan_local_tasks
+theme: kekistan
+region: content
+weight: -7
+provider: null
+plugin: local_tasks_block
+settings:
+  id: local_tasks_block
+  label: Tabs
+  provider: core
+  label_display: '0'
+  primary: true
+  secondary: true
+visibility: {  }

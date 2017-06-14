@@ -1,0 +1,23 @@
+uuid: 5a7236b0-da36-46fe-abdc-3c0272f201d9
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: dJ0L2DNSj5q6XVZAGsuVDpJTh5UeYkIPwKrUOOpr8YI
+id: authenticated
+label: 'Authenticated user'
+weight: 1
+is_admin: false
+permissions:
+  - 'access comments'
+  - 'access content'
+  - 'access shortcuts'
+  - 'access site-wide contact form'
+  - 'add heartbeat entities'
+  - 'flag friendship'
+  - 'post comments'
+  - 'search content'
+  - 'skip comment approval'
+  - 'unflag friendship'
+  - 'use text format basic_html'
+  - 'view published heartbeat entities'

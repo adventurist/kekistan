@@ -1,0 +1,59 @@
+uuid: c74ade7e-0cd1-48ef-ae70-136e3c5612e1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.user.user.field_cover_picture
+    - field.field.user.user.user_picture
+    - image.style.large
+  module:
+    - image
+    - imce
+    - user
+_core:
+  default_config_hash: K-1rBM8mTIkFp9RqOC2tMRUukOQ1xbRCfSKK8dEddnA
+id: user.user.default
+targetEntityType: user
+bundle: user
+mode: default
+content:
+  account:
+    weight: -10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  contact:
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_cover_picture:
+    weight: 7
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  language:
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  timezone:
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  user_picture:
+    type: image_image
+    settings:
+      preview_image_style: large
+      progress_indicator: throbber
+    third_party_settings:
+      imce:
+        enabled: false
+    weight: -1
+    region: content
+hidden:
+  langcode: true

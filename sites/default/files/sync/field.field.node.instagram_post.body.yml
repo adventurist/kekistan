@@ -1,0 +1,22 @@
+uuid: ec963fc0-60ce-40fb-ad2e-d5aedcca28c0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.instagram_post
+  module:
+    - text
+id: node.instagram_post.body
+field_name: body
+entity_type: node
+bundle: instagram_post
+label: Body
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: true
+field_type: text_with_summary

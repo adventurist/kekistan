@@ -1,0 +1,11 @@
+uuid: 7cdf4757-4743-4450-ad29-1f666d4c8b52
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.twitter
+id: taxonomy_term.twitter
+target_entity_type_id: taxonomy_term
+target_bundle: twitter
+default_langcode: site_default
+language_alterable: false

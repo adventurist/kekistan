@@ -1,0 +1,15 @@
+uuid: c82c34f9-95ab-4c3e-a97f-4091ad1da9ad
+name: 'The Republic of Kekistan'
+mail: adventurist@gmail.com
+slogan: 'Free Kekistan'
+page:
+  403: ''
+  404: ''
+  front: /node
+admin_compact_mode: false
+weight_select_max: 100
+langcode: en
+default_langcode: en
+_core:
+  default_config_hash: AyT9s8OUcclfALRE_imByOMgtZ19eOlqdF6zI3p7yqo
+mail_notification: ''

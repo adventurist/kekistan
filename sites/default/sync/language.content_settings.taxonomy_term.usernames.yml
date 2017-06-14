@@ -1,0 +1,11 @@
+uuid: cdc86b9b-6722-4798-8628-0a9405cafd89
+langcode: en
+status: true
+dependencies:
+  config:
+    - taxonomy.vocabulary.usernames
+id: taxonomy_term.usernames
+target_entity_type_id: taxonomy_term
+target_bundle: usernames
+default_langcode: site_default
+language_alterable: false

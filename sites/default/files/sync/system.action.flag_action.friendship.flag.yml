@@ -1,0 +1,13 @@
+uuid: 11149da5-aed1-4a3e-a4f2-043511a758db
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.friendship.flag
+label: 'Befriend this pepe'
+type: user
+plugin: 'flag_action:friendship.flag'
+configuration:
+  flag_id: friendship
+  flag_action: flag

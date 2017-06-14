@@ -1,0 +1,26 @@
+uuid: 0737837b-2e8c-40f5-8229-38286c1e79ef
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - kekistan
+_core:
+  default_config_hash: cr7d-I0MiVLpkRprdIO4_RMjxGIHo-4i5PS8NwZdwns
+id: kekistan_main_menu
+theme: kekistan
+region: sidebar_first
+weight: -8
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  provider: system
+  label_display: '0'
+  level: 1
+  depth: 1
+visibility: {  }

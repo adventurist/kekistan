@@ -1,0 +1,27 @@
+uuid: 1b04701c-7951-4585-8e9f-5c8aa1b1d074
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.instagram_post.body
+    - node.type.instagram_post
+  module:
+    - text
+    - user
+id: node.instagram_post.default
+targetEntityType: node
+bundle: instagram_post
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  langcode: true

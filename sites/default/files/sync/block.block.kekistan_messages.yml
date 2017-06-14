@@ -1,0 +1,22 @@
+uuid: 42eb2e3c-19ff-4cb4-a8ec-f6ea86b3fbea
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - kekistan
+_core:
+  default_config_hash: ZonRdBPXnl2NrfvXeFQLgr2OBFLaotT1HyLmKmm16wA
+id: kekistan_messages
+theme: kekistan
+region: highlighted
+weight: -9
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  provider: system
+  label_display: '0'
+visibility: {  }

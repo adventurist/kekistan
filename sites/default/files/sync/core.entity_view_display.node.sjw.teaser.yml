@@ -1,0 +1,29 @@
+uuid: d3e72e6d-49fb-407e-8af2-32d481f41501
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.sjw.body
+    - node.type.sjw
+  module:
+    - text
+    - user
+id: node.sjw.teaser
+targetEntityType: node
+bundle: sjw
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  langcode: true

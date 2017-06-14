@@ -1,0 +1,31 @@
+uuid: 8cd9823e-7c92-4e47-8170-db493ae913ff
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: friendship
+label: Friendship
+bundles: {  }
+entity_type: user
+global: false
+weight: 0
+flag_short: 'Befriend this pepe'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Unfriend this cuck'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flag_type: 'entity:user'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links:
+    full: full
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  extra_permissions:
+    owner: '0'
+  show_on_profile: true
+linkTypeConfig: {  }

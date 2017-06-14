@@ -1,0 +1,9 @@
+uuid: c19dcd70-dc75-447e-90c1-4c3509ddcb2f
+langcode: en
+status: true
+dependencies: {  }
+name: 'Twitter User'
+vid: twitter_user
+description: 'Screen Names as found on Twitter'
+hierarchy: 0
+weight: 0

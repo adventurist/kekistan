@@ -1,0 +1,21 @@
+uuid: 46f45d98-c253-45b6-91f7-d71990ead102
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_username
+    - node.type.tweet
+id: node.tweet.field_username
+field_name: field_username
+entity_type: node
+bundle: tweet
+label: Username
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings: {  }
+field_type: entity_reference
