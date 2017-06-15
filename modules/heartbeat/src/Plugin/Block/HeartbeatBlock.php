@@ -4,9 +4,11 @@ namespace Drupal\heartbeat\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManager;
+use Drupal\flag\FlagService;
 use Drupal\User\Entity\User;
+use Drupal\Flag\Entity\Flag;
 use Drupal\Core\Datetime\DateFormatter;
-use Drupal\File\Entity\File;
+use Drupal\file\Entity\File;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Database;
@@ -48,6 +50,8 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
   protected $entityTypeManager;
 
   protected $dateFormatter;
+
+  protected $flagService;
   /**
    * Construct.
    *
@@ -64,7 +68,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         $plugin_definition,
         HeartbeatTypeServices $heartbeat_heartbeattype,
 	HeartbeatStreamServices $heartbeatstream,
-	HeartbeatService $heartbeat, EntityTypeManager $entity_type_manager, DateFormatter $date_formatter
+	HeartbeatService $heartbeat, EntityTypeManager $entity_type_manager, DateFormatter $date_formatter, FlagService $flag_service
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->heartbeatTypeServices = $heartbeat_heartbeattype;
@@ -72,6 +76,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
     $this->heartbeatService = $heartbeat;
     $this->entityTypeManager = $entity_type_manager;
     $this->dateFormatter = $date_formatter;
+    $this->flagService = $flag_service;
   }
   /**
    * {@inheritdoc}
@@ -85,7 +90,8 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $container->get('heartbeatstream'),
       $container->get('heartbeat'),
       $container->get('entity_type.manager'),
-      $container->get('date.formatter')
+      $container->get('date.formatter'),
+      $container->get('flag')
     );
   }
 
@@ -153,24 +159,33 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
 
       $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $heartbeat->getCreatedTime());
       $user = $heartbeat->getOwner();
+      $flag = $this->flagService->getFlagById("friendship");
+      $flagLink = $flag->getLinkTypePlugin()->getAsLink($flag, $user);
+      $flagUrl = $flagLink->getUrl()->toString();
+      $flagText = $flagLink->getText();
       $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
+
       if ($profilePic === null) {
         $profilePic = 86;
       }
-      $pic2 = $this->entityTypeManager->getStorage('file')->load($profilePic);
+
       $pic = File::load($profilePic);
 
       if ($pic !== null) {
         $style = $this->entityTypeManager->getStorage('image_style')->load('thumbnail');
 
         $rendered = $style->buildUrl($pic->getFileUri());
-
       }
+
+
+
 
       $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
         'userPicture' => $rendered,
         'userId' => $user->id(),
         'timeAgo' => $timeago,
+        'friendFlag' => $flagUrl,
+        'friendFlagText' => $flagText
         );
     }
 }
