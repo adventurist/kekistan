@@ -1,0 +1,13 @@
+uuid: 19232dfc-fa6f-4fa4-967a-646e52c4175e
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.stream_like.flag
+label: 'Flag this item'
+type: heartbeat_stream
+plugin: 'flag_action:stream_like.flag'
+configuration:
+  flag_id: stream_like
+  flag_action: flag

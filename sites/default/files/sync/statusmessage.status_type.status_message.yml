@@ -1,0 +1,8 @@
+uuid: d01847b1-1376-4731-981b-e78d4a4d9a62
+langcode: en
+status: true
+dependencies: {  }
+id: status_message
+label: 'Status Message'
+media: false
+mime: '0'

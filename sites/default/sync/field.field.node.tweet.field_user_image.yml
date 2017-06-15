@@ -1,0 +1,38 @@
+uuid: 1fe1f8a6-0eb5-4a22-a930-de64cf9d0030
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_user_image
+    - node.type.tweet
+  module:
+    - image
+id: node.tweet.field_user_image
+field_name: field_user_image
+entity_type: node
+bundle: tweet
+label: 'User Image'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_extensions: 'png gif jpg jpeg'
+  alt_field: true
+  alt_field_required: true
+  title_field: false
+  title_field_required: false
+  max_resolution: ''
+  min_resolution: ''
+  default_image:
+    uuid: null
+    alt: ''
+    title: ''
+    width: null
+    height: null
+  file_directory: '[date:custom:Y]-[date:custom:m]'
+  max_filesize: ''
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: image

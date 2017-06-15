@@ -1,0 +1,9 @@
+uuid: ccefe6b6-a28a-4afa-8fac-1c99ed074a86
+langcode: en
+status: true
+dependencies: {  }
+name: Twitter
+vid: twitter
+description: 'Hashtags as found on Twitter'
+hierarchy: 0
+weight: 0

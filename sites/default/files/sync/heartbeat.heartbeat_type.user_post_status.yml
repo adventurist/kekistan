@@ -1,0 +1,18 @@
+uuid: 8702f5a4-0573-425e-a9c1-07702ba50c92
+langcode: en
+status: true
+dependencies: {  }
+id: user_post_status
+label: 'User Post Status'
+message_id: null
+description: 'Records the event of a user posting a status message'
+mainentity: status
+bundle: null
+message: '!user has posted a status update: !statusmessage'
+weight: null
+perms: 0
+group_type: HEARTBEAT_GROUP_NONE
+arguments: '{"!user":"[user:account-name]","!statusmessage":"[status:message]"}'
+variables:
+  - '[user:account-name]'
+  - '[status:message]'

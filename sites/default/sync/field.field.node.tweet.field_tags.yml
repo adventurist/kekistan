@@ -1,0 +1,28 @@
+uuid: d795cde1-5e8b-4fcd-a543-9efced3eb17c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tags
+    - node.type.tweet
+    - taxonomy.vocabulary.twitter
+id: node.tweet.field_tags
+field_name: field_tags
+entity_type: node
+bundle: tweet
+label: Tags
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      twitter: twitter
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: kekistan
+field_type: entity_reference

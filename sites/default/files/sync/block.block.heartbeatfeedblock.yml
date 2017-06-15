@@ -1,0 +1,26 @@
+uuid: 1b7a7c77-ec94-41f5-938b-e290cca40ba0
+langcode: en
+status: true
+dependencies:
+  module:
+    - heartbeat
+    - system
+  theme:
+    - kekistan
+id: heartbeatfeedblock
+theme: kekistan
+region: content
+weight: -3
+provider: null
+plugin: heartbeat_feed_block
+settings:
+  id: heartbeat_feed_block
+  label: 'Heartbeat feed block'
+  provider: heartbeat
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

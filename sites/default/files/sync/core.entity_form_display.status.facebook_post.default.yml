@@ -1,0 +1,54 @@
+uuid: a5363bd3-80ef-4abc-9f3a-8338a9b07ee4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.status.facebook_post.field_facebook_post
+    - statusmessage.status_type.facebook_post
+id: status.facebook_post.default
+targetEntityType: status
+bundle: facebook_post
+mode: default
+content:
+  field_facebook_post:
+    weight: 11
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+    type: entity_reference_autocomplete
+    region: content
+  langcode:
+    type: language_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  recipient:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+hidden: {  }

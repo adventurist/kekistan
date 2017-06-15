@@ -1,0 +1,25 @@
+uuid: 41669ef0-e9cf-48d9-9280-093f0d0c5c27
+langcode: en
+status: false
+dependencies:
+  content:
+    - 'block_content:basic:ea5d3af3-0066-4cfc-93ae-9cee4b9ee56b'
+  module:
+    - block_content
+  theme:
+    - kekistan
+id: kekflag
+theme: kekistan
+region: header
+weight: -6
+provider: null
+plugin: 'block_content:ea5d3af3-0066-4cfc-93ae-9cee4b9ee56b'
+settings:
+  id: 'block_content:ea5d3af3-0066-4cfc-93ae-9cee4b9ee56b'
+  label: 'Kek Flag'
+  provider: block_content
+  label_display: '0'
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

@@ -1,0 +1,25 @@
+uuid: 96461f07-4439-4347-a9d3-4eb2b7967a0a
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:basic:7cd96c47-96e0-467b-8116-6a89b2959afd'
+  module:
+    - block_content
+  theme:
+    - kekistan
+id: kekistananthem
+theme: kekistan
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'block_content:7cd96c47-96e0-467b-8116-6a89b2959afd'
+settings:
+  id: 'block_content:7cd96c47-96e0-467b-8116-6a89b2959afd'
+  label: 'Listen to the national anthem of Kekistan'
+  provider: block_content
+  label_display: visible
+  status: true
+  info: ''
+  view_mode: full
+visibility: {  }

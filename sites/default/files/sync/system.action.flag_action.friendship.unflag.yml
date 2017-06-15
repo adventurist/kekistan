@@ -1,0 +1,13 @@
+uuid: 679ecd95-751e-468b-ae7a-8a275e2f60c5
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.friendship.unflag
+label: 'Unfriend this cuck'
+type: user
+plugin: 'flag_action:friendship.unflag'
+configuration:
+  flag_id: friendship
+  flag_action: unflag

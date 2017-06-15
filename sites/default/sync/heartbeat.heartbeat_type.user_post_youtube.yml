@@ -1,0 +1,17 @@
+uuid: 4c395cae-4631-4a04-9b45-4bce05fb9da0
+langcode: en
+status: true
+dependencies: {  }
+id: user_post_youtube
+label: 'User Post Youtube'
+message_id: null
+description: 'Records a user posting a youtube video'
+mainentity: node
+bundle: youtube_video
+message: '!user posted a video'
+weight: 0
+perms: -1
+group_type: '11'
+arguments: '{"!user":"[user:account-name]"}'
+variables:
+  - '[user:account-name]'

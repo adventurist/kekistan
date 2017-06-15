@@ -1,0 +1,19 @@
+uuid: f08a548d-e310-4be2-9b1d-41b3c905d81c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_twit_id
+    - node.type.tweet
+id: node.tweet.field_twit_id
+field_name: field_twit_id
+entity_type: node
+bundle: tweet
+label: 'Twit Id'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

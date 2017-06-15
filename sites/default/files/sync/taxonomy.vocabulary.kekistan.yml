@@ -1,0 +1,9 @@
+uuid: 04a691a9-a1ba-4f71-b19a-1b8334ce28c4
+langcode: en
+status: true
+dependencies: {  }
+name: Kekistan
+vid: kekistan
+description: 'The vocabulary of the Kekistan Republic'
+hierarchy: 0
+weight: 0

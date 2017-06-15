@@ -1,0 +1,30 @@
+uuid: 065654d2-379c-4046-82e6-ce21395cde7f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_users
+    - node.type.tweet
+    - taxonomy.vocabulary.twitter_user
+    - taxonomy.vocabulary.usernames
+id: node.tweet.field_users
+field_name: field_users
+entity_type: node
+bundle: tweet
+label: Users
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      twitter_user: twitter_user
+      usernames: usernames
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: twitter_user
+field_type: entity_reference

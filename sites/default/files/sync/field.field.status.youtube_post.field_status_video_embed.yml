@@ -1,0 +1,26 @@
+uuid: cec9abb9-91ed-444d-b1e9-28fb4994353b
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.status.field_status_video_embed
+    - statusmessage.status_type.youtube_post
+  module:
+    - video
+id: status.youtube_post.field_status_video_embed
+field_name: field_status_video_embed
+entity_type: status
+bundle: youtube_post
+label: 'Status Video Embed'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_extensions: ''
+  file_directory: 'videos/[date:custom:Y]-[date:custom:m]'
+  max_filesize: ''
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: video

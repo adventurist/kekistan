@@ -1,0 +1,27 @@
+uuid: 254f1de0-9892-4156-9f1e-7d5098c967fb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.facebook_post.body
+    - node.type.facebook_post
+  module:
+    - text
+    - user
+id: node.facebook_post.default
+targetEntityType: node
+bundle: facebook_post
+mode: default
+content:
+  body:
+    label: hidden
+    type: text_default
+    weight: 101
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  langcode: true

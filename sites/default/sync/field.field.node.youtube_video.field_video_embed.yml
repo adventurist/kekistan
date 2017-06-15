@@ -1,0 +1,26 @@
+uuid: 19564d38-5162-4566-bb98-d3edf1b5416d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_video_embed
+    - node.type.youtube_video
+  module:
+    - video
+id: node.youtube_video.field_video_embed
+field_name: field_video_embed
+entity_type: node
+bundle: youtube_video
+label: 'Video Embed'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_extensions: ''
+  file_directory: 'videos/[date:custom:Y]-[date:custom:m]'
+  max_filesize: ''
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: video

@@ -1,0 +1,20 @@
+uuid: 67d3ce5b-bf89-4dad-95d9-70a6cde5c504
+langcode: en
+status: true
+dependencies: {  }
+_core:
+  default_config_hash: 4aYhs1mdbDTc7Xs0TTZ8tTjIEnOWiLKh3F6OV1x9wac
+id: user_create_node
+label: 'User Create Node'
+message_id: null
+description: 'Records the event of a user creating a node'
+mainentity: node
+bundle: null
+message: '!user has created a node: !nodetitle'
+weight: 99
+perms: 0
+group_type: HEARTBEAT_GROUP_NONE
+arguments: '{"!user":"[user:account-name]","!nodetitle":"[node:title]"}'
+variables:
+  - '[user:account-name]'
+  - '[node:title]'

@@ -1,0 +1,11 @@
+uuid: 96704b42-f1a0-4989-bab2-61d834049555
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.sjw
+id: node.sjw
+target_entity_type_id: node
+target_bundle: sjw
+default_langcode: site_default
+language_alterable: false

@@ -1,0 +1,48 @@
+uuid: 5548102a-bb5a-4c3d-a79b-7571194cfb3e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.status.youtube_post.field_status_video_embed
+    - statusmessage.status_type.youtube_post
+  module:
+    - user
+    - video
+id: status.youtube_post.default
+targetEntityType: status
+bundle: youtube_post
+mode: default
+content:
+  field_status_video_embed:
+    weight: 1
+    label: above
+    settings:
+      width: '854'
+      height: '480'
+      autoplay: true
+    third_party_settings: {  }
+    type: video_embed_player
+    region: content
+  name:
+    label: above
+    type: string
+    weight: -4
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  recipient:
+    label: hidden
+    type: author
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  uid:
+    label: hidden
+    type: author
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

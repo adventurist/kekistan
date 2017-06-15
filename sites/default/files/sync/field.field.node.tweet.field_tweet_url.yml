@@ -1,0 +1,19 @@
+uuid: 0abf7338-186e-4755-8c05-e83340f47c86
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tweet_url
+    - node.type.tweet
+id: node.tweet.field_tweet_url
+field_name: field_tweet_url
+entity_type: node
+bundle: tweet
+label: 'Tweet URL'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

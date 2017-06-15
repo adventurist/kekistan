@@ -1,0 +1,11 @@
+uuid: 11e9623e-8a02-48ac-95fe-78dd2a3b7da3
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.facebook_post
+id: node.facebook_post
+target_entity_type_id: node
+target_bundle: facebook_post
+default_langcode: site_default
+language_alterable: false

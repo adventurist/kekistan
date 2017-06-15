@@ -1,0 +1,19 @@
+uuid: 157f1760-71a1-40b0-a01c-f4978cfa56f3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tweet_video
+    - node.type.tweet
+id: node.tweet.field_tweet_video
+field_name: field_tweet_video
+entity_type: node
+bundle: tweet
+label: 'Tweet Video'
+description: 'Videos originally posted on the tweet'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

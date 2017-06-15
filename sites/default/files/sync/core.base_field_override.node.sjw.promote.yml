@@ -1,0 +1,22 @@
+uuid: 535f80c4-ad9b-404e-990b-73f6a7c4eebd
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.sjw
+id: node.sjw.promote
+field_name: promote
+entity_type: node
+bundle: sjw
+label: 'Promoted to front page'
+description: ''
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean
