@@ -153,14 +153,15 @@ iframe.kekistan-anthem-video {
   padding: 0px 3px 0px 3px;
 }
 
+.heartbeat-username a {
+  color: #ca28b4;
+}
+
 .heartbeat-hashtag a {
   color: #6e6e6e;
 }
 
-.heartbeat-username a {
-  color: #48FD33;
 
-}
 
 /** Status Messages **/
 #edit-message--description {
