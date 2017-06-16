@@ -161,6 +161,10 @@ iframe.kekistan-anthem-video {
   color: #6e6e6e;
 }
 
+video.heartbeat-video {
+  max-width: 640px;
+}
+
 
 
 /** Status Messages **/
