@@ -164,6 +164,8 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $flagUrl = $flagLink->getUrl()->toString();
       $flagText = $flagLink->getText();
       $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
+      $flagRenderable = $flagLink->toRenderable();
+      $renderArray = $flagRenderable['#url']->toRenderArray();
 
       if ($profilePic === null) {
         $profilePic = 86;
@@ -178,14 +180,16 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       }
 
 
-
+//TODO GET ACTION AND APPEND TO CLASSES IN FLAG WRAPPER
 
       $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
         'userPicture' => $rendered,
         'userId' => $user->id(),
         'timeAgo' => $timeago,
         'friendFlag' => $flagUrl,
-        'friendFlagText' => $flagText
+        'friendFlagText' => $flagText,
+        'flagId' => $flag->id(),
+        'userId' => $user->id(),
         );
     }
 }
