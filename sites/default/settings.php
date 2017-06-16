@@ -776,5 +776,5 @@ $databases['default']['default'] = array (
   'driver' => 'pgsql',
 );
 $settings['install_profile'] = 'standard';
-$config_directories['sync'] = 'sites/default/files/config_2UPbCCt-x70ZGATGRjVG0JmllHgiLcsmTudTesXcP1263Z70m5TbGwtBdYWEG7JyXOiycL7Y4Q/sync';
+$config_directories['sync'] = 'sites/default/sync';
 
