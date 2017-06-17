@@ -12,6 +12,7 @@ use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Database\Database;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
 
 /**
@@ -430,6 +431,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     $arbitrarious = 'nothing at all';
     $naul = 'nullll';
 
+    $preparsedMessage = self::wrapOwner($preparsedMessage, $entities);
 
     switch (true) {
 
@@ -772,6 +774,16 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     return $names;
   }
 
+  private static function wrapOwner($message, $entities) {
+    foreach ($entities as $entity) {
+      if ($entity instanceof User) {
+        return str_replace(
+          '[user:account-name]',
+          '<a class="heartbeat-user" href="user/' . $entity->id() . '">[user:account-name]</a>', $message);
+      }
+    }
+    return $message;
+  }
 
   /**
    * Updates the friendship status of these two users
