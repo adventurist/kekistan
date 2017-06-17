@@ -177,6 +177,11 @@ video.heartbeat-video,
   display: none;
 }
 
+/*post button on status message*/
+.status-post {
+  display: none;
+}
+
 /* Footer */
 footer#footer {
   height: 60px; overflow:hidden;
