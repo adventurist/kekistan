@@ -147,6 +147,10 @@ iframe.kekistan-anthem-video {
   color: #1da1f2;
 }
 
+heartbeat-message a.heartbeat-user {
+  color: green;
+}
+
 .heartbeat-hashtag,
 .heartbeat-username {
   display: inline-block;
@@ -175,7 +179,7 @@ video.heartbeat-video,
 
 /* Footer */
 footer#footer {
-  height: 60px;
+  height: 60px; overflow:hidden;
   padding-top: 10px;
   background-color: rgb(48, 76, 71);
   color: grey!important;
