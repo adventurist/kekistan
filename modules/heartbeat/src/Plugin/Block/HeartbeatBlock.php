@@ -159,13 +159,14 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
 
       $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $heartbeat->getCreatedTime());
       $user = $heartbeat->getOwner();
-      $flag = $this->flagService->getFlagById("friendship");
-      $flagLink = $flag->getLinkTypePlugin()->getAsLink($flag, $user);
-      $flagUrl = $flagLink->getUrl()->toString();
-      $flagText = $flagLink->getText();
+//      $rendered = $this->entityTypeManager->getViewBuilder('user')->view($user, 'full');
+      $userView = user_view($user, 'compact');
+//      $flag = $this->flagService->getFlagById("friendship");
+//      $flagLink = $flag->getLinkTypePlugin()->getAsLink($flag, $user);
+//      $flagUrl = $flagLink->getUrl()->toString();
+//      $flagText = $flagLink->getText();
       $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
-      $flagRenderable = $flagLink->toRenderable();
-      $renderArray = $flagRenderable['#url']->toRenderArray();
+//      $flagRenderable = $flagLink->toRenderable();
 
       if ($profilePic === null) {
         $profilePic = 86;
@@ -186,10 +187,10 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         'userPicture' => $rendered,
         'userId' => $user->id(),
         'timeAgo' => $timeago,
-        'friendFlag' => $flagUrl,
-        'friendFlagText' => $flagText,
-        'flagId' => $flag->id(),
-        'userId' => $user->id(),
+//        'friendFlag' => $flagUrl,
+//        'friendFlagText' => $flagText,
+//        'flagId' => $flag->id(),
+        'user' => $userView
         );
     }
 }
