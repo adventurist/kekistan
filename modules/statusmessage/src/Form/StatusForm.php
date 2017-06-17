@@ -221,16 +221,18 @@ $stophere = null;
         $url = is_array(array_values($match)[0]) ? array_values(array_values($match)[0])[0]: array_values($match)[0];
         $statusTwitter = new StatusTwitter($url);
         $nid = $statusTwitter->sendRequest();
+//        return $nid;
       }
     } else if (strpos($message, 'youtube') || strpos($message, 'youtu.be')) {
       if ($this->previewGenerator !== null && !empty($match) && array_values($match)[0] !== null) {
         $url = is_array(array_values($match)[0]) ? array_values(array_values($match)[0])[0]: array_values($match)[0];
         $statusYoutube = new StatusYoutube($url);
         $nid = $statusYoutube->generateNode();
+//        return $nid;
       }
     }
 
-    if (!empty($this->statusTypeService)) {
+    if ($nid === null && !empty($this->statusTypeService)) {
       foreach ($this->statusTypeService->loadAll() as $type) {
         if (!$type->getMedia()) {
 
