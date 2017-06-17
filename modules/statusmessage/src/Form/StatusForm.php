@@ -56,34 +56,34 @@ class StatusForm extends FormBase {
   /**
    * {@inheritdoc}
    */
-//  public function buildForm(array $form, FormStateInterface $form_state) {
-//    /* @var $entity \Drupal\statusmessage\Entity\Status */
-//
-//    $form['#attached']['library'][] = 'statusmessage/status';
-//
-//    if (\Drupal::moduleHandler()->moduleExists('heartbeat')) {
-//      $friendData = \Drupal::config('heartbeat_friendship.settings')->get('data');
-//
-//      $form['#attached']['library'][] = 'heartbeat/heartbeat';
-//      $form['#attached']['drupalSettings']['friendData'] = $friendData;
-//    }
-//
-//    $form['message'] = array(
-//      '#type' => 'textarea',
-//      '#description' => 'Status Message',
-//      '#attributes' => array(
-//        'placeholder' => t('Post a status update'),
-//      ),
-//      '#ajax' => [
-//        'event' => 'change, paste, keyup',
-//        'callback' => '::generatePreview',
-//        'progress' => array(
-//          'type' => 'throbber',
-//          'message' => t('Generating preview'),
-//        ),
-//      ],
-//    );
-//
+  public function buildForm(array $form, FormStateInterface $form_state) {
+    /* @var $entity \Drupal\statusmessage\Entity\Status */
+
+    $form['#attached']['library'][] = 'statusmessage/status';
+
+    if (\Drupal::moduleHandler()->moduleExists('heartbeat')) {
+      $friendData = \Drupal::config('heartbeat_friendship.settings')->get('data');
+
+      $form['#attached']['library'][] = 'heartbeat/heartbeat';
+      $form['#attached']['drupalSettings']['friendData'] = $friendData;
+    }
+
+    $form['message'] = array(
+      '#type' => 'textarea',
+      '#description' => 'Status Message',
+      '#attributes' => array(
+        'placeholder' => t('Post a status update'),
+      ),
+      '#ajax' => [
+        'event' => 'change, paste, keyup',
+        'callback' => '::generatePreview',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => t('Generating preview'),
+        ),
+      ],
+    );
+
 //    $form['mediatabs'] = [
 //      '#type' => 'radios',
 ////      '#description' => $this->t('User selectable feeds'),
@@ -96,24 +96,24 @@ class StatusForm extends FormBase {
 //////        'message' => t('Fetching feed'),
 ////        ),
 //      ];
-//
-//
-//    $form['post'] = array(
-//      '#type' => 'submit',
-//      '#description' => 'Post',
-//      '#value' => t('Post'),
-//      '#ajax' => [
-//        'callback' => '::statusAjaxSubmit',
-//        'progress' => array(
-//          'type' => 'throbber',
-//          'message' => t('Posting Message'),
-//          ),
-//      ]
-//
-//    );
-//$stophere = null;
-//    return $form;
-//  }
+
+
+    $form['post'] = array(
+      '#type' => 'submit',
+      '#description' => 'Post',
+      '#value' => t('Post'),
+      '#ajax' => [
+        'callback' => '::statusAjaxSubmit',
+        'progress' => array(
+          'type' => 'throbber',
+          'message' => t('Posting Message'),
+          ),
+      ]
+
+    );
+$stophere = null;
+    return $form;
+  }
 
   /**
    * {@inheritdoc}
