@@ -215,57 +215,68 @@ $stophere = null;
   }
   public function statusAjaxSubmit(array &$form, FormStateInterface $form_state) {
     $message = $form_state->getValue('message');
-    preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $message, $match);
-    if (strpos($message, 'twitter')) {
-      if ($this->previewGenerator !== null && !empty($match) && array_values($match)[0] !== null) {
-        $url = is_array(array_values($match)[0]) ? array_values(array_values($match)[0])[0]: array_values($match)[0];
-        $statusTwitter = new StatusTwitter($url);
-        $nid = $statusTwitter->sendRequest();
+    if (strlen(trim($message)) > 1) {
+      preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $message, $match);
+      if (strpos($message, 'twitter')) {
+        if ($this->previewGenerator !== NULL && !empty($match) && array_values($match)[0] !== NULL) {
+          $url = is_array(array_values($match)[0]) ? array_values(array_values($match)[0])[0] : array_values($match)[0];
+          $statusTwitter = new StatusTwitter($url);
+          $nid = $statusTwitter->sendRequest();
 //        return $nid;
+        }
       }
-    } else if (strpos($message, 'youtube') || strpos($message, 'youtu.be')) {
-      if ($this->previewGenerator !== null && !empty($match) && array_values($match)[0] !== null) {
-        $url = is_array(array_values($match)[0]) ? array_values(array_values($match)[0])[0]: array_values($match)[0];
-        $statusYoutube = new StatusYoutube($url);
-        $nid = $statusYoutube->generateNode();
+      else {
+        if (strpos($message, 'youtube') || strpos($message, 'youtu.be')) {
+          if ($this->previewGenerator !== NULL && !empty($match) && array_values($match)[0] !== NULL) {
+            $url = is_array(array_values($match)[0]) ? array_values(array_values($match)[0])[0] : array_values($match)[0];
+            $statusYoutube = new StatusYoutube($url);
+            $nid = $statusYoutube->generateNode();
 //        return $nid;
-      }
-    }
-
-    if ($nid === null && !empty($this->statusTypeService)) {
-      foreach ($this->statusTypeService->loadAll() as $type) {
-        if (!$type->getMedia()) {
-
-          $userViewed = \Drupal::routeMatch()->getParameters()->get('user') === null ? \Drupal::currentUser()->id() : \Drupal::routeMatch()->getParameters()->get('user')->id();
-
-          if ($userViewed !== null) {
-
-            $statusEntity = Status::create([
-              'type' => $type->id(),
-              'uid' => \Drupal::currentUser()->id(),
-              'recipient' => $userViewed
-            ]);
-
-            $statusEntity->setMessage($message);
-            $statusEntity->save();
           }
         }
       }
-    }
 
-    if (\Drupal::service('module_handler')->moduleExists('heartbeat') && ($nid !== null || $statusEntity !== null)) {
+      if ($nid === NULL && !empty($this->statusTypeService)) {
+        foreach ($this->statusTypeService->loadAll() as $type) {
+          if (!$type->getMedia()) {
+
+            $userViewed = \Drupal::routeMatch()
+              ->getParameters()
+              ->get('user') === NULL ? \Drupal::currentUser()
+              ->id() : \Drupal::routeMatch()
+              ->getParameters()
+              ->get('user')
+              ->id();
+
+            if ($userViewed !== NULL) {
+
+              $statusEntity = Status::create([
+                'type' => $type->id(),
+                'uid' => \Drupal::currentUser()->id(),
+                'recipient' => $userViewed
+              ]);
+
+              $statusEntity->setMessage($message);
+              $statusEntity->save();
+            }
+          }
+        }
+      }
+
+      if (\Drupal::service('module_handler')
+          ->moduleExists('heartbeat') && ($nid !== NULL || $statusEntity !== NULL)
+      ) {
 
 //              $configManager = \Drupal::service('config.manager');
-      $feedConfig = \Drupal::config('heartbeat_feed.settings');
+        $feedConfig = \Drupal::config('heartbeat_feed.settings');
 //              $feedConfig = $feedConfig = $configManager->get('heartbeat_feed.settings');
-      $response = new AjaxResponse();
-      $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
+        $response = new AjaxResponse();
+        $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
 
-      return $response;
+        return $response;
+      }
     }
-
     return null;
-    
   }
 
   /**

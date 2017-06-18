@@ -347,6 +347,48 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       ))
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['comments'] = BaseFieldDefinition::create('comment')
+      ->setLabel(t('Kommentare'))
+      ->setDescription(t('Kommentare.'))
+      ->setCardinality(BaseFieldDefinition::CARDINALITY_UNLIMITED)
+      ->setSettings(
+        array(
+          'default_mode'=> 1,
+          'per_page'=>50,
+          'anonymous'=> 0,
+          'form_location'=>1,
+          'preview'=> 1,
+          'comment_type'=>'heartbeat_comment',
+          'locked'=>false,
+
+        ))
+      ->setDefaultValue(
+        array(
+          'status'=>2,
+          'cid'=>0,
+          'last_comment_timestamp'=> 0,
+          'last_comment_name'=> null,
+          'last_comment_uid'=> 0,
+          'comment_count'=> 0,
+        )
+      )
+      ->setDisplayOptions('form', array(
+        'type' => 'comment_default',
+        'settings' => array(
+          'form_location' => 1,
+          'default_mode'=> 1,
+          'per_page'=>50,
+          'anonymous'=> 0,
+          'preview'=> 1,
+          'comment_type'=>'heartbeat_comment',
+          'locked'=>false,
+
+        ),
+        'weight' => 1,
+      ))
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
+
 
     $fields['status'] = BaseFieldDefinition::create('boolean')
       ->setLabel(t('Publishing status'))

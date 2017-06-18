@@ -1,0 +1,134 @@
+diff --git a/core/lib/Drupal/Core/Render/Element/RenderElement.php b/core/lib/Drupal/Core/Render/Element/RenderElement.php
+index 1f39e10..84f1c6d 100644
+--- a/core/lib/Drupal/Core/Render/Element/RenderElement.php
++++ b/core/lib/Drupal/Core/Render/Element/RenderElement.php
+@@ -275,25 +275,14 @@ public static function preRenderAjaxForm($element) {
+         case 'submit':
+         case 'button':
+         case 'image_button':
+-          // Pressing the ENTER key within a textfield triggers the click event of
+-          // the form's first submit button. Triggering Ajax in this situation
+-          // leads to problems, like breaking autocomplete textfields, so we bind
+-          // to mousedown instead of click.
+-          // @see https://www.drupal.org/node/216059
+-          $element['#ajax']['event'] = 'mousedown';
++          $element['#ajax']['event'] = 'click';
+           // Retain keyboard accessibility by setting 'keypress'. This causes
+           // ajax.js to trigger 'event' when SPACE or ENTER are pressed while the
+           // button has focus.
+           $element['#ajax']['keypress'] = TRUE;
+-          // Binding to mousedown rather than click means that it is possible to
+-          // trigger a click by pressing the mouse, holding the mouse button down
+-          // until the Ajax request is complete and the button is re-enabled, and
+-          // then releasing the mouse button. Set 'prevent' so that ajax.js binds
+-          // an additional handler to prevent such a click from triggering a
+-          // non-Ajax form submission. This also prevents a textfield's ENTER
+-          // press triggering this button's non-Ajax form submission behavior.
++          // Prevent the form from submitting.
+           if (!isset($element['#ajax']['prevent'])) {
+-            $element['#ajax']['prevent'] = 'click';
++            $element['#ajax']['prevent'] = 'submit';
+           }
+           break;
+ 
+diff --git a/core/misc/ajax.js b/core/misc/ajax.js
+index fefe9f3..ff3b010 100644
+--- a/core/misc/ajax.js
++++ b/core/misc/ajax.js
+@@ -338,7 +338,7 @@
+    */
+   Drupal.Ajax = function (base, element, element_settings) {
+     var defaults = {
+-      event: element ? 'mousedown' : null,
++      event: element ? 'click' : null,
+       keypress: true,
+       selector: base ? '#' + base : null,
+       effect: 'none',
+@@ -546,8 +546,7 @@
+     }
+ 
+     // If necessary, prevent the browser default action of an additional event.
+-    // For example, prevent the browser default action of a click, even if the
+-    // Ajax behavior binds to mousedown.
++    // For example, prevent the browser default action of a click.
+     if (element_settings.prevent) {
+       $(ajax.element).on(element_settings.prevent, false);
+     }
+diff --git a/core/modules/field_ui/field_ui.js b/core/modules/field_ui/field_ui.js
+index a53553d..3528e43 100644
+--- a/core/modules/field_ui/field_ui.js
++++ b/core/modules/field_ui/field_ui.js
+@@ -229,7 +229,7 @@
+ 
+         // Fire the Ajax update.
+         $('input[name=refresh_rows]').val(rowNames.join(' '));
+-        $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
++        $('input[data-drupal-selector="edit-refresh"]').trigger('click');
+ 
+         // Disabled elements do not appear in POST ajax data, so we mark the
+         // elements disabled only after firing the request.
+diff --git a/core/modules/file/file.js b/core/modules/file/file.js
+index 8ed377e..1e6f97a 100644
+--- a/core/modules/file/file.js
++++ b/core/modules/file/file.js
+@@ -88,13 +88,13 @@
+   Drupal.behaviors.fileButtons = {
+     attach: function (context) {
+       var $context = $(context);
+-      $context.find('.js-form-submit').on('mousedown', Drupal.file.disableFields);
+-      $context.find('.js-form-managed-file .js-form-submit').on('mousedown', Drupal.file.progressBar);
++      $context.find('.js-form-submit').on('click', Drupal.file.disableFields);
++      $context.find('.js-form-managed-file .js-form-submit').on('click', Drupal.file.progressBar);
+     },
+     detach: function (context) {
+       var $context = $(context);
+-      $context.find('.js-form-submit').off('mousedown', Drupal.file.disableFields);
+-      $context.find('.js-form-managed-file .js-form-submit').off('mousedown', Drupal.file.progressBar);
++      $context.find('.js-form-submit').off('click', Drupal.file.disableFields);
++      $context.find('.js-form-managed-file .js-form-submit').off('click', Drupal.file.progressBar);
+     }
+   };
+ 
+@@ -170,7 +170,7 @@
+      *   The event triggered. For example `change.autoFileUpload`.
+      */
+     triggerUploadButton: function (event) {
+-      $(event.target).closest('.js-form-managed-file').find('.js-form-submit').trigger('mousedown');
++      $(event.target).closest('.js-form-managed-file').find('.js-form-submit').trigger('click');
+     },
+ 
+     /**
+@@ -179,7 +179,7 @@
+      * @name Drupal.file.disableFields
+      *
+      * @param {jQuery.Event} event
+-     *   The event triggered, most likely a `mousedown` event.
++     *   The event triggered, most likely a `click` event.
+      */
+     disableFields: function (event) {
+       var $clickedButton = $(this).findOnce('ajax');
+@@ -217,7 +217,7 @@
+      * @name Drupal.file.progressBar
+      *
+      * @param {jQuery.Event} event
+-     *   The event triggered, most likely a `mousedown` event.
++     *   The event triggered, most likely a `click` event.
+      */
+     progressBar: function (event) {
+       var $clickedButton = $(this);
+diff --git a/core/modules/views_ui/js/ajax.js b/core/modules/views_ui/js/ajax.js
+index b044688..1120a6a 100644
+--- a/core/modules/views_ui/js/ajax.js
++++ b/core/modules/views_ui/js/ajax.js
+@@ -37,10 +37,8 @@
+   Drupal.AjaxCommands.prototype.viewsSetForm = function (ajax, response, status) {
+     var $form = $('.js-views-ui-dialog form');
+     // Identify the button that was clicked so that .ajaxSubmit() can use it.
+-    // We need to do this for both .click() and .mousedown() since JavaScript
+-    // code might trigger either behavior.
+     var $submit_buttons = $form.find('input[type=submit].js-form-submit, button.js-form-submit').once('views-ajax-submit');
+-    $submit_buttons.on('click mousedown', function () {
++    $submit_buttons.on('click', function () {
+       this.form.clk = this;
+     });
+     $form.once('views-ajax-submit').each(function () {
