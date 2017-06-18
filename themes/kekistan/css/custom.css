@@ -202,6 +202,15 @@ video.heartbeat-video,
   display: none;
 }
 
+/*Feed Filter*/
+
+#block-views-feed-filter-block .field-content {
+
+  background: #1eac48;
+  font-weight: 700;
+  transition: all 0.5s ease;
+}
+
 /* Footer */
 footer#footer {
   height: 60px; overflow:hidden;
