@@ -73,7 +73,7 @@ div#block-kekistan-search h2 {
 }
 
 /*suggested hash tag below search box*/
-.contextual-region.js-view-dom-id-c733377677a24fc04f1e2fdfd9779abac9eb5c2ad879f103dcd33e327696a5e6 {
+#block-views-feed-filter-block .contextual-region {
   margin-top: 15px;
 }
 
