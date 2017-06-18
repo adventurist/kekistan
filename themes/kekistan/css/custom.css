@@ -172,6 +172,10 @@ video.heartbeat-video,
   width: 100%;
 }
 
+.heartbeat-youtube {
+  min-height: 360px;
+}
+
 
 
 /** Status Messages **/
