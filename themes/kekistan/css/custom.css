@@ -335,5 +335,24 @@ and (orientation : portrait) {
   }
 
 
+}
 
+@media (max-width: 414px) {
+  footer#footer {
+    height: 50px;
+  }
+  #block-kekistan-footer li.menu-item:first-child {
+    padding-left: 5px;
+  }
+
+  #block-kekistan-footer .facebook-footer {
+    max-width: 32px;
+  }
+}
+
+@media (min-width: 1440px) {
+
+  .heartbeat-youtube {
+    min-height: 360px;
+  }
 }
