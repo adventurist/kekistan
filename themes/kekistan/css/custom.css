@@ -214,7 +214,7 @@ video.heartbeat-video,
 
 /*Feed Filter*/
 
-#block-views-feed-filter-block .field-content {
+#block-views-feed-filter-block .field-content:hover {
 
   background: #1eac48;
   font-weight: 700;
