@@ -170,6 +170,11 @@ heartbeat-message a.heartbeat-user {
   width: 25%;
   float: left;}
 
+/*node main image and user image */
+a.heartbeat-node img {
+  margin-bottom: 5px;
+}
+
 .heartbeat-content {
   display: inline-block;
   width: 75%;
