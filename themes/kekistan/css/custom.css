@@ -139,6 +139,11 @@ iframe.kekistan-anthem-video {
 
 }
 
+.heartbeat-owner .time-ago {
+  font-size:11px;
+  color: grey;
+}
+
 .heartbeat-message {
   padding: 12px!important;
   word-wrap: break-word;
@@ -164,6 +169,11 @@ heartbeat-message a.heartbeat-user {
   display: inline-block;
   width: 25%;
   float: left;}
+
+/*node main image and user image */
+a.heartbeat-node img {
+  margin-bottom: 5px;
+}
 
 .heartbeat-content {
   display: inline-block;
