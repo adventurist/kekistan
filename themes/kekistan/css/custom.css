@@ -168,7 +168,9 @@ heartbeat-message a.heartbeat-user {
 .heartbeat-content {
   display: inline-block;
   width: 75%;
-  float: right;}
+  padding-left: 4px;
+  float: right;
+}
 
 .heartbeat-username a {
   color: #6e6e6e;
@@ -352,6 +354,7 @@ and (orientation : portrait) {
 @media (max-width: 768px) {
   #sidebar-first {
     float: right;
+    font-size: 14px;
   }
 }
 @media (max-width: 414px) {
