@@ -187,6 +187,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         'userPicture' => $rendered,
         'userId' => $user->id(),
         'timeAgo' => $timeago,
+        'id' => $heartbeat->id(),
 //        'friendFlag' => $flagUrl,
 //        'friendFlagText' => $flagText,
 //        'flagId' => $flag->id(),

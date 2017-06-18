@@ -437,7 +437,9 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
       case $entityType === 'node':
 
-        $parsedMessage = $tokenService->replace($preparsedMessage . '<a class="heartbeat-node" href="/node/[node:nid]">', $entities);
+//        $parsedMessage = $tokenService->replace($preparsedMessage . '<a class="heartbeat-node" href="/node/[node:nid]">', $entities);
+        $parsedMessage = $tokenService->replace($preparsedMessage, $entities);
+
         if (strpos($parsedMessage, '#')) {
           self::parseHashtags($parsedMessage);
         }
@@ -447,7 +449,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         /** @noinspection NestedTernaryOperatorInspection */
         $message = $parsedMessage;
         $message .= $mediaData ? self::buildMediaMarkup($mediaData) : '';
-        $message .= '</a>';
+//        $message .= '</a>';
 
         return $message;
         break;
