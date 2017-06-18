@@ -140,8 +140,10 @@ iframe.kekistan-anthem-video {
 }
 
 .heartbeat-message {
-  padding: 25px!important;
+  padding: 12px!important;
   word-wrap: break-word;
+  float: left;
+  width: 99%;
 }
 
 .heartbeat-message a {
@@ -157,6 +159,16 @@ heartbeat-message a.heartbeat-user {
   display: inline-block;
   padding: 0px 3px 0px 3px;
 }
+
+.heartbeat-owner {
+  display: inline-block;
+  width: 25%;
+  float: left;}
+
+.heartbeat-content {
+  display: inline-block;
+  width: 75%;
+  float: right;}
 
 .heartbeat-username a {
   color: #6e6e6e;
