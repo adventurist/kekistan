@@ -225,8 +225,16 @@ video.heartbeat-video,
   display: none;
 }
 
+
 div#block-statusblock {
-  margin-bottom: 15px;
+    margin-bottom: 15px;
+}
+
+/*Feed Filter*/
+#block-views-feed-filter-block .field-content:hover {
+  background: #1eac48;
+  font-weight: 700;
+  transition: all 0.5s ease;
 }
 
 /* Footer */
