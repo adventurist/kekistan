@@ -141,6 +141,7 @@ iframe.kekistan-anthem-video {
 
 .heartbeat-message {
   padding: 25px!important;
+  word-wrap: break-word;
 }
 
 .heartbeat-message a {
@@ -166,8 +167,9 @@ heartbeat-message a.heartbeat-user {
 }
 
 video.heartbeat-video,
-.heartbeat-message video {
-  max-width: 640px;
+.heartbeat-message video,
+.heartbeat-youtube {
+  width: 100%;
 }
 
 
@@ -211,6 +213,10 @@ footer#footer {
   min-width: 32px;
   min-height: 32px;
   display: inline-block;
+}
+
+#block-kekistan-footer li.menu-item:first-child {
+  padding-left: 20px;
 }
 
 /*#block-kekistan-footer .fourchan-footer {*/
@@ -312,4 +318,18 @@ form#contact-message-feedback-form label::after {
 .statusmessage-preview-iframe {
   min-height: 240px;
   min-width: 465px;
+}
+
+
+@media only screen
+and (min-device-width : 414px)
+and (max-device-width : 736px)
+and (orientation : portrait) {
+
+  video.heartbeat-video, .heartbeat-message video {
+    width: 100%;
+  }
+
+
+
 }
