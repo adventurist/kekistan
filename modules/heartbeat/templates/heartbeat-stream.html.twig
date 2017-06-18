@@ -21,16 +21,15 @@
   {% endif %}
   {% autoescape false %}
   {% for message in messages %}
-    <div{{ attributes.addClass('heartbeat-message') }}>
+    <div{{ attributes.addClass('heartbeat-message') }} id="heartbeat-{{ message.id }}">
       <div class="heartbeat-owner">
         <a href="/user/{{ message.userId }}"><img src="{{ message.userPicture }}" /></a>
         {{ message.user }}
+        <div class="time-ago">{{ message.timeAgo }} ago</div>
       </div>
-        {#<div class"flag {{ message.flagId }} flag-{{ message.flagId }}-{{ message.userId }}"><a href="{{ message.friendFlag }}" class="use-ajax" rel="nofollow"> {{ message.friendFlagText }} </a>#}
-
-       {#</div>#}
-      <div class="time-ago">{{ message.timeAgo }} ago</div>
-      {{ message.heartbeat }}<br>
+      <div class="heartbeat-content"> 
+      {{ message.heartbeat }}
+      </div>
     </div>
   {% endfor %}
   {% endautoescape %}
