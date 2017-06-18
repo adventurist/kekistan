@@ -248,22 +248,24 @@ $stophere = null;
 
             $statusEntity->setMessage($message);
             $statusEntity->save();
-
-            if (\Drupal::service('module_handler')->moduleExists('heartbeat')) {
-
-//              $configManager = \Drupal::service('config.manager');
-              $feedConfig = \Drupal::config('heartbeat_feed.settings');
-//              $feedConfig = $feedConfig = $configManager->get('heartbeat_feed.settings');
-              $response = new AjaxResponse();
-              $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
-
-              return $response;
-            }
-            break;
           }
         }
       }
     }
+
+    if (\Drupal::service('module_handler')->moduleExists('heartbeat') && ($nid !== null || $statusEntity !== null)) {
+
+//              $configManager = \Drupal::service('config.manager');
+      $feedConfig = \Drupal::config('heartbeat_feed.settings');
+//              $feedConfig = $feedConfig = $configManager->get('heartbeat_feed.settings');
+      $response = new AjaxResponse();
+      $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
+
+      return $response;
+    }
+
+    return null;
+    
   }
 
   /**
