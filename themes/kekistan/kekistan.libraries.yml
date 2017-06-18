@@ -43,3 +43,11 @@ custom:
   css:
    theme:
     css/custom.css: {}
+  js:
+    js/kek.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings
+
