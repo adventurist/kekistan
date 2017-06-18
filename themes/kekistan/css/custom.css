@@ -139,6 +139,11 @@ iframe.kekistan-anthem-video {
 
 }
 
+.heartbeat-owner .time-ago {
+  font-size:11px;
+  color: grey;
+}
+
 .heartbeat-message {
   padding: 12px!important;
   word-wrap: break-word;
