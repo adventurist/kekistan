@@ -64,6 +64,19 @@ div#block-kekistan-search {
   margin-top: 30px;
 }
 
+form#search-block-form {
+  margin-top: -5px;
+}
+
+div#block-kekistan-search h2 {
+  font-size: 1.4em;
+}
+
+/*suggested hash tag below search box*/
+.contextual-region.js-view-dom-id-cc3853a482ab7e3b7213438822af7560bb55e837911338719ecf3e69c022cf81 {
+  margin-top: 20px;
+}
+
 /* Left side menu - anthemn title */
 div#block-kekistananthem {
   font-size: 10px;
@@ -210,6 +223,10 @@ video.heartbeat-video,
 /*post button on status message*/
 .status-post {
   display: none;
+}
+
+div#block-statusblock {
+  margin-bottom: 15px;
 }
 
 /* Footer */
