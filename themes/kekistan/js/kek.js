@@ -2,9 +2,45 @@
   Drupal.behaviors.custom= {
     attach: function (context, settings) {
 
-      let fraction = 0.8;
+      let feedFilterBlock = document.getElementById('block-views-feed-filter-block');
+      let terms = feedFilterBlock.querySelectorAll('a');
+
+      terms.forEach(function(term) {
+        console.dir(term);
+        let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
+        term.addEventListener('click', function (event) {
+
+          event.preventDefault();
+          event.stopPropagation();
+
+          $.ajax({
+            type: 'GET',
+            url: '/heartbeat/filter-feed/' + tid,
+            success: function (response) {
+
+              feedElement = document.querySelector('.heartbeat-stream');
+
+              if (feedElement != null) {
+
+                feedElement.innerHTML = response;
+
+              } else {
+
+                feedBlock = document.getElementById('block-heartbeatblock');
+                insertNode = document.createElement('div');
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
+
+              }
+            }
+          });
+          return false;
+        });
+      });
+
+      let fraction = 0.65;
       let videos = document.getElementsByTagName('video');
-      console.dir(videos);
+      // console.dir(videos);
       for (let i = videos.length - 1; i > -1; i--) {
         let video = videos[i];
         video.addEventListener('loadedmetadata', function() {

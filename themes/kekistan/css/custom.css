@@ -77,6 +77,14 @@ div#block-kekistan-search h2 {
   margin-top: 15px;
 }
 
+#block-views-feed-filter-block .views-field-name .field-content {
+  position: absolute;
+}
+#block-views-feed-filter-block .views-field-tid .field-content {
+  color: transparent;
+  width: 100%;
+}
+
 /* Left side menu - anthemn title */
 div#block-kekistananthem {
   font-size: 10px;

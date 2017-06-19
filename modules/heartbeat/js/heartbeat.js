@@ -10,7 +10,6 @@
             // console.log(divs);
             divs.forEach(function (anchor) {
               var userId = anchor.href.substring(anchor.href.indexOf('friendship') + 11, anchor.href.indexOf('?destination'));
-              console.log(userId);
               JSON.parse(drupalSettings.friendData).forEach(function (friendship) {
                 if (friendship.uid_target === userId && friendship.uid == drupalSettings.user.uid && friendship.status == 0) {
                   anchor.innerHTML = 'Friendship Pending';

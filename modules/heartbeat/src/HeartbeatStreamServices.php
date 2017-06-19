@@ -5,6 +5,8 @@ namespace Drupal\heartbeat;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeRepository;
 use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Core\Database\Connection;
+//use Drupal\Core\Database\Driver\pgsql\Connection;
 use Drupal\Core\Config\ConfigFactoryInterface;
 
 /**
@@ -48,17 +50,27 @@ class HeartbeatStreamServices {
    */
   protected $configFactory;
 
+
+  /**
+   * @var \Drupal\Core\Database\Database
+   */
+
+  protected $database;
+
   /**
    * Constructor.
    * @param EntityTypeManager $entityTypeManager
    * @param EntityTypeRepository $entityTypeRepository
    * @param QueryFactory $entityQuery
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $configFactory
+   * @param \Drupal\Core\Database\Database $database
    */
-  public function __construct(EntityTypeManager $entityTypeManager, EntityTypeRepository $entityTypeRepository, QueryFactory $entityQuery, ConfigFactoryInterface $configFactory) {
+  public function __construct(EntityTypeManager $entityTypeManager, EntityTypeRepository $entityTypeRepository, QueryFactory $entityQuery, ConfigFactoryInterface $configFactory, Connection $database) {
     $this->entityTypeManager = $entityTypeManager;
     $this->entityTypeRepository = $entityTypeRepository;
     $this->entityQuery = $entityQuery;
     $this->configFactory = $configFactory;
+    $this->database = $database;
   }
 
   /**
@@ -169,6 +181,62 @@ class HeartbeatStreamServices {
     }
     return null;
   }
+
+
+  public function createHashStreamForUidsByType($uids, $type, $tid) {
+    $currentUid = \Drupal::currentUser()->id();
+//    $nids = $this->entityQuery->get('node')
+    $query = $this->database->query('
+      SELECT id
+      FROM heartbeat_field_revision hr
+      INNER JOIN node n ON n.nid = hr.nid
+      INNER JOIN node__field_users fu ON fu.entity_id = n.nid 
+      WHERE fu.field_users_target_id = :tid', array(
+        ':tid' => $tid
+      )
+    );
+    $hids = array();
+    foreach ($query->fetchAllKeyed() as $id => $row) {
+      $hids[] = $id;
+    }
+
+
+//    $stream = $this->entityTypeManager->getStorage('heartbeat_stream')->load(array_values($this->loadStream($type))[0]);
+//    if ($stream !== null) {
+//      $types = array();
+//      foreach ($stream->getTypes() as $heartbeatType) {
+//        $value = $heartbeatType->getValue()['target_id'];
+//        if ($value !== "0") {
+//          $types[] = $value;
+//        }
+//      }
+//      $uids[] = $currentUid;
+
+
+    if (!empty($hids)) {
+      $beats = $this->entityTypeManager->getStorage('heartbeat')
+        ->loadMultiple($this->entityQuery->get('heartbeat')
+          ->condition('status', 1)
+          ->condition('uid', $uids, 'IN')
+          ->condition('id', $hids, 'IN')
+          ->sort('created', 'DESC')
+          ->execute());
+
+      if (count($beats) > 0) {
+        $this->lastId = call_user_func('end', array_keys($beats));
+
+        $this->configFactory->getEditable('heartbeat_update_feed.settings')
+          ->set('lastId', $this->lastId)
+          ->set('update', FALSE)
+          ->set('timestamp', array_values($beats)[0]->getRevisionCreationTime())
+          ->save();
+
+        return $beats;
+      }
+    }
+    return null;
+  }
+
 
   public function updateStreamForUidsByType($uids, $type) {
     $currentUid = \Drupal::currentUser()->id();

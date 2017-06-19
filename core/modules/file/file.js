@@ -88,13 +88,13 @@
   Drupal.behaviors.fileButtons = {
     attach: function (context) {
       var $context = $(context);
-      $context.find('.js-form-submit').on('mousedown', Drupal.file.disableFields);
-      $context.find('.js-form-managed-file .js-form-submit').on('mousedown', Drupal.file.progressBar);
+      $context.find('.js-form-submit').on('click', Drupal.file.disableFields);
+      $context.find('.js-form-managed-file .js-form-submit').on('click', Drupal.file.progressBar);
     },
     detach: function (context) {
       var $context = $(context);
-      $context.find('.js-form-submit').off('mousedown', Drupal.file.disableFields);
-      $context.find('.js-form-managed-file .js-form-submit').off('mousedown', Drupal.file.progressBar);
+      $context.find('.js-form-submit').off('click', Drupal.file.disableFields);
+      $context.find('.js-form-managed-file .js-form-submit').off('click', Drupal.file.progressBar);
     }
   };
 
@@ -170,7 +170,7 @@
      *   The event triggered. For example `change.autoFileUpload`.
      */
     triggerUploadButton: function (event) {
-      $(event.target).closest('.js-form-managed-file').find('.js-form-submit').trigger('mousedown');
+      $(event.target).closest('.js-form-managed-file').find('.js-form-submit').trigger('click');
     },
 
     /**
@@ -179,7 +179,7 @@
      * @name Drupal.file.disableFields
      *
      * @param {jQuery.Event} event
-     *   The event triggered, most likely a `mousedown` event.
+     *   The event triggered, most likely a `click` event.
      */
     disableFields: function (event) {
       var $clickedButton = $(this).findOnce('ajax');
@@ -217,7 +217,7 @@
      * @name Drupal.file.progressBar
      *
      * @param {jQuery.Event} event
-     *   The event triggered, most likely a `mousedown` event.
+     *   The event triggered, most likely a `click` event.
      */
     progressBar: function (event) {
       var $clickedButton = $(this);

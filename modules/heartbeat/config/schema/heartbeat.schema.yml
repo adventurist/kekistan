@@ -92,3 +92,11 @@ heartbeat_friendship.config:
     data:
       type: blob
       label: 'Data structure comprising all of the friendship states for all users'
+
+heartbeat_hashtag.config:
+  type: config_object
+  label: 'Hashtag selections'
+  mapping:
+    tid:
+      type: integer
+      label: 'The Taxonomy term to be used when filtering a Heartbeat Stream'

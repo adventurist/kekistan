@@ -112,3 +112,11 @@ heartbeat.heartbeat_update_feed_form:
   requirements:
     _access: 'TRUE'
 
+heartbeat.heartbeat_filter_feed:
+  path: '/heartbeat/filter-feed/{tid}'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::filterFeed'
+    _title: 'Heartbeat Filter Feed'
+  requirements:
+    _access: 'TRUE'
+

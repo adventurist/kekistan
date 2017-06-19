@@ -2,6 +2,7 @@
 
 namespace Drupal\heartbeat\Controller;
 
+use Drupal\block\BlockViewBuilder;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
@@ -167,12 +168,19 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
     $myConfig->set('message', $arg)->save();
     \Drupal::logger('HeartbeatController')->debug('My argument is %arg', ['%arg' => $arg]);
 
-    return \Drupal\block\BlockViewBuilder::lazyBuilder('heartbeatblock', 'teaser');
+    return BlockViewBuilder::lazyBuilder('heartbeatblock', 'teaser');
   }
 
 
   public function updateFeed($arg) {
     \Drupal::logger('HeartbeatController::updater')->debug('Jigga what is %arg', ['%arg' => $arg]);
+  }
+
+  public function filterFeed($tid) {
+    $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_hashtag.settings');
+    $myConfig->set('tid', $tid)->save();
+
+    return BlockViewBuilder::lazyBuilder('heartbeathashblock', 'teaser');
 
   }
 
