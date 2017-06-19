@@ -191,7 +191,7 @@ class HeartbeatStreamServices {
       FROM heartbeat_field_revision hr
       INNER JOIN node n ON n.nid = hr.nid
       INNER JOIN node__field_tags fu ON fu.entity_id = n.nid 
-      WHERE fu.field_users_target_id = :tid', array(
+      WHERE fu.field_tags_target_id = :tid', array(
         ':tid' => $tid
       )
     );
