@@ -882,6 +882,46 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         }
       }
     }
+    return null;
+  }
+
+  /**
+   * @param $tid
+   */
+  public static function updateTermUsage($tid, $vid = null) {
+    $update = Database::getConnection()->update('taxonomy_term__field_count')
+      ->expression('field_count_value', 'field_count_value + 1')
+      ->condition('entity_id', $tid);
+
+    if (!$update->execute()) {
+      $insert = Database::getConnection()->insert('taxonomy_term__field_count')
+        ->fields([
+          'entity_id' => $tid,
+          'revision_id' => $tid,
+          'bundle' => $vid,
+          'langcode' => \Drupal::languageManager()->getDefaultLanguage()->getId(),
+          'delta' => 0,
+        'field_count_value' => 1]);
+      if (!$insert->execute()) {
+        \Drupal::logger('Heartbeat')
+          ->error('Unable to update term counts for Term with ID = %tid', array('%tid' => $tid));
+      } else {
+        self::newTermUsage($tid);
+      }
+    } else {
+     self::newTermUsage($tid);
+    }
+  }
+
+  /**
+   * @param $tid
+   */
+  public static function newTermUsage($tid) {
+    $insert = Database::getConnection()->insert('heartbeat_term_usage')
+      ->fields(['tid' => $tid, 'timestamp' => time()]);
+    if (!$insert->execute()) {
+      \Drupal::logger('Heartbeat')->error('Unable to update term usage for Term with ID = %tid', array('%tid' => $tid));
+    }
   }
 
 
