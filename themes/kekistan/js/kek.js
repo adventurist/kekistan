@@ -8,7 +8,7 @@
       terms.forEach(function(term) {
         console.dir(term);
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
-        term.addEventListener('click touchstart', function (event) {
+        term.addEventListener('click', function (event) {
           console.log('clicked ' + term + ' ' + tid);
           event.preventDefault();
           event.stopPropagation();
