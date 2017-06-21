@@ -75,8 +75,10 @@
                 });
               }
             }
+
+            listenImages();
         }
-    }
+    };
 
 
   function updateFeed() {
@@ -89,7 +91,12 @@
         console.log('We are succeed!');
       }
     })
+  }
 
+  function listenImages() {
+    $('.heartbeat-content').find('img').each(function() {
+      $(this).colorbox({href: $(this).attr('src')});
+    });
   }
 
 })(jQuery, Drupal, drupalSettings);
