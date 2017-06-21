@@ -1,0 +1,23 @@
+uuid: c46908e5-4fe6-4717-b6b6-972738b38770
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_count
+    - taxonomy.vocabulary.twitter
+id: taxonomy_term.twitter.field_count
+field_name: field_count
+entity_type: taxonomy_term
+bundle: twitter
+label: Count
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -1,0 +1,11 @@
+uuid: 654457ec-a548-4456-ae53-1c28235e37f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.heartbeat_comment
+id: comment.heartbeat_comment
+target_entity_type_id: comment
+target_bundle: heartbeat_comment
+default_langcode: site_default
+language_alterable: false

@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.tweet.field_user_image
     - field.field.node.tweet.field_username
     - field.field.node.tweet.field_users
+    - field.field.node.tweet.field_video
     - image.style.thumbnail
     - node.type.tweet
   module:
@@ -24,6 +25,7 @@ dependencies:
     - link
     - path
     - text
+    - video
 id: node.tweet.default
 targetEntityType: node
 bundle: tweet
@@ -131,6 +133,16 @@ content:
       placeholder: ''
     third_party_settings: {  }
     type: entity_reference_autocomplete
+    region: content
+  field_video:
+    weight: 33
+    settings:
+      file_directory: 'video-thumbnails/[date:custom:Y]-[date:custom:m]'
+      allowed_providers:
+        youtube: youtube
+      uri_scheme: public
+    third_party_settings: {  }
+    type: video_embed
     region: content
   langcode:
     type: language_select

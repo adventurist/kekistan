@@ -5,10 +5,11 @@ dependencies: {  }
 name: profile_picture
 label: 'Profile Picture'
 effects:
-  1ebde8ce-54c2-4ad8-9cfa-cd6311dc7490:
-    uuid: 1ebde8ce-54c2-4ad8-9cfa-cd6311dc7490
-    id: image_scale_and_crop
-    weight: 1
+  2f9531df-6e4b-4c99-8b7a-93b71385882e:
+    uuid: 2f9531df-6e4b-4c99-8b7a-93b71385882e
+    id: image_scale
+    weight: 2
     data:
-      width: 168
-      height: 256
+      width: null
+      height: 480
+      upscale: false

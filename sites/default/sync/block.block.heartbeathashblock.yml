@@ -1,4 +1,4 @@
-uuid: 1b7a7c77-ec94-41f5-938b-e290cca40ba0
+uuid: 1dc8fcd4-2135-4ced-bd5f-16d0247fed41
 langcode: en
 status: false
 dependencies:
@@ -7,15 +7,15 @@ dependencies:
     - system
   theme:
     - kekistan
-id: heartbeatfeedblock
+id: heartbeathashblock
 theme: kekistan
 region: content
-weight: -3
+weight: 0
 provider: null
-plugin: heartbeat_feed_block
+plugin: heartbeat_hash_block
 settings:
-  id: heartbeat_feed_block
-  label: 'Heartbeat feed block'
+  id: heartbeat_hash_block
+  label: 'Heartbeat Hash block'
   provider: heartbeat
   label_display: '0'
 visibility:

@@ -16,6 +16,7 @@ dependencies:
     - field.field.node.tweet.field_user_image
     - field.field.node.tweet.field_username
     - field.field.node.tweet.field_users
+    - field.field.node.tweet.field_video
     - node.type.tweet
   module:
     - comment
@@ -24,6 +25,7 @@ dependencies:
     - link
     - text
     - user
+    - video
 id: node.tweet.default
 targetEntityType: node
 bundle: tweet
@@ -131,6 +133,16 @@ content:
       link: true
     third_party_settings: {  }
     type: entity_reference_label
+    region: content
+  field_video:
+    weight: 13
+    label: above
+    settings:
+      width: '854'
+      height: '480'
+      autoplay: true
+    third_party_settings: {  }
+    type: video_embed_player
     region: content
   links:
     weight: 0

@@ -1,0 +1,13 @@
+uuid: 6e2fb071-6446-4790-bead-30408a7652f7
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.heartbeat_like.flag
+label: Praise
+type: heartbeat
+plugin: 'flag_action:heartbeat_like.flag'
+configuration:
+  flag_id: heartbeat_like
+  flag_action: flag

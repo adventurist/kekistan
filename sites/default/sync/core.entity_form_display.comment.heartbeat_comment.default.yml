@@ -1,0 +1,40 @@
+uuid: 96148884-b173-4b8e-ae33-1d8f3f26582e
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.heartbeat_comment
+    - field.field.comment.heartbeat_comment.comment_body
+  module:
+    - text
+id: comment.heartbeat_comment.default
+targetEntityType: comment
+bundle: heartbeat_comment
+mode: default
+content:
+  author:
+    weight: -2
+    region: content
+  comment_body:
+    type: text_textarea
+    weight: 11
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  subject:
+    type: string_textfield
+    weight: 10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

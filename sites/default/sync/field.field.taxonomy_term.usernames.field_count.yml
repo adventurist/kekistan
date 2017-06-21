@@ -1,0 +1,23 @@
+uuid: 17dedfb1-cd94-4b6c-a555-9b7d6eb78969
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_count
+    - taxonomy.vocabulary.usernames
+id: taxonomy_term.usernames.field_count
+field_name: field_count
+entity_type: taxonomy_term
+bundle: usernames
+label: Count
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

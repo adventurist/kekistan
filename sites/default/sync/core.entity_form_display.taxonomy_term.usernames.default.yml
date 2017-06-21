@@ -1,0 +1,51 @@
+uuid: 6e1db88d-cabe-4a5b-a35b-08194d399cf0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.usernames.field_count
+    - taxonomy.vocabulary.usernames
+  module:
+    - path
+    - text
+id: taxonomy_term.usernames.default
+targetEntityType: taxonomy_term
+bundle: usernames
+mode: default
+content:
+  description:
+    type: text_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_count:
+    weight: 31
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+    type: number
+    region: content
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -5
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

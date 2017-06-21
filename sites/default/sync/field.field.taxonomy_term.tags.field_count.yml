@@ -1,0 +1,23 @@
+uuid: 54e14fa5-9bed-4b7d-922c-4ca2b1697d64
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_count
+    - taxonomy.vocabulary.tags
+id: taxonomy_term.tags.field_count
+field_name: field_count
+entity_type: taxonomy_term
+bundle: tags
+label: Count
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

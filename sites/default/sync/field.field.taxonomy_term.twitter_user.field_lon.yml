@@ -1,0 +1,23 @@
+uuid: f2a14ac2-b150-4c71-ad6c-e671b0d1ac95
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_lon
+    - taxonomy.vocabulary.twitter_user
+id: taxonomy_term.twitter_user.field_lon
+field_name: field_lon
+entity_type: taxonomy_term
+bundle: twitter_user
+label: Lon
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

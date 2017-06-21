@@ -1,0 +1,30 @@
+uuid: 443d0a3d-bba4-4673-8698-eb7db247d1c8
+langcode: en
+status: true
+dependencies:
+  config:
+    - views.view.feed_filter
+  module:
+    - system
+    - views
+  theme:
+    - kekistan
+id: views_feed_filter_block
+theme: kekistan
+region: sidebar_first
+weight: 0
+provider: null
+plugin: 'views_block:feed_filter-block_1'
+settings:
+  id: 'views_block:feed_filter-block_1'
+  label: ''
+  provider: views
+  label_display: '0'
+  views_label: ''
+  items_per_page: none
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

@@ -1,0 +1,56 @@
+uuid: f1dac120-eca8-454b-ad85-0276f81fffc0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.twitter_user.field_count
+    - field.field.taxonomy_term.twitter_user.field_lat
+    - field.field.taxonomy_term.twitter_user.field_lon
+    - taxonomy.vocabulary.twitter_user
+  module:
+    - text
+id: taxonomy_term.twitter_user.default
+targetEntityType: taxonomy_term
+bundle: twitter_user
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_count:
+    weight: 3
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+  field_lat:
+    weight: 1
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+  field_lon:
+    weight: 2
+    label: above
+    settings:
+      thousand_separator: ''
+      decimal_separator: .
+      scale: 2
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_decimal
+    region: content
+hidden:
+  langcode: true

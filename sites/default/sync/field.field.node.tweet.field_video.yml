@@ -1,0 +1,26 @@
+uuid: c7da9864-32f8-44d1-ae1f-df51baeab929
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_video
+    - node.type.tweet
+  module:
+    - video
+id: node.tweet.field_video
+field_name: field_video
+entity_type: node
+bundle: tweet
+label: Video
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  file_extensions: ''
+  file_directory: 'videos/[date:custom:Y]-[date:custom:m]'
+  max_filesize: ''
+  handler: 'default:file'
+  handler_settings: {  }
+field_type: video

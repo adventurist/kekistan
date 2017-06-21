@@ -1,0 +1,32 @@
+uuid: 06337975-f965-4770-ab39-1f81cc75d75a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.kekistan.field_count
+    - taxonomy.vocabulary.kekistan
+  module:
+    - text
+id: taxonomy_term.kekistan.default
+targetEntityType: taxonomy_term
+bundle: kekistan
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_count:
+    weight: 1
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+hidden:
+  langcode: true

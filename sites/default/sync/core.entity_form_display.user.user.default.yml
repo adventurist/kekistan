@@ -3,6 +3,7 @@ langcode: en
 status: true
 dependencies:
   config:
+    - field.field.user.user.field_autism
     - field.field.user.user.field_cover_picture
     - field.field.user.user.user_picture
     - image.style.large
@@ -18,17 +19,17 @@ bundle: user
 mode: default
 content:
   account:
-    weight: -10
+    weight: 0
     region: content
     settings: {  }
     third_party_settings: {  }
   contact:
-    weight: 5
+    weight: 3
     region: content
     settings: {  }
     third_party_settings: {  }
   field_cover_picture:
-    weight: 7
+    weight: 4
     settings:
       progress_indicator: throbber
       preview_image_style: thumbnail
@@ -36,12 +37,12 @@ content:
     type: image_image
     region: content
   language:
-    weight: 0
+    weight: 2
     region: content
     settings: {  }
     third_party_settings: {  }
   timezone:
-    weight: 6
+    weight: 5
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -53,7 +54,8 @@ content:
     third_party_settings:
       imce:
         enabled: false
-    weight: -1
+    weight: 1
     region: content
 hidden:
+  field_autism: true
   langcode: true

@@ -1,0 +1,32 @@
+uuid: 3ba6bd41-3aa8-46cd-aff5-5c7f813b01ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.usernames.field_count
+    - taxonomy.vocabulary.usernames
+  module:
+    - text
+id: taxonomy_term.usernames.default
+targetEntityType: taxonomy_term
+bundle: usernames
+mode: default
+content:
+  description:
+    label: hidden
+    type: text_default
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_count:
+    weight: 1
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    type: number_integer
+    region: content
+hidden:
+  langcode: true

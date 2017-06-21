@@ -1,0 +1,8 @@
+uuid: 49e8f841-2c5d-49c7-96ff-974c810afdeb
+langcode: en
+status: true
+dependencies: {  }
+id: heartbeat_comment
+label: 'Heartbeat Comment'
+target_entity_type_id: heartbeat
+description: 'Comments applied to a Heartbeat'

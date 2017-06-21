@@ -1,0 +1,13 @@
+uuid: b1a49351-24b3-4d84-b835-1dfa450b7cba
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.heartbeat_like.unflag
+label: Jihad
+type: heartbeat
+plugin: 'flag_action:heartbeat_like.unflag'
+configuration:
+  flag_id: heartbeat_like
+  flag_action: unflag

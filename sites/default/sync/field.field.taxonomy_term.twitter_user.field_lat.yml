@@ -1,0 +1,25 @@
+uuid: 45e588b2-6629-4d28-a900-629cefa125d2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_lat
+    - taxonomy.vocabulary.twitter_user
+id: taxonomy_term.twitter_user.field_lat
+field_name: field_lat
+entity_type: taxonomy_term
+bundle: twitter_user
+label: Lat
+description: ''
+required: false
+translatable: false
+default_value:
+  -
+    value: !!float 0
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: decimal

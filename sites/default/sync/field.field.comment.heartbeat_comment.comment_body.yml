@@ -1,0 +1,21 @@
+uuid: 007de35d-dea3-4a76-b4ef-a8c777958051
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.heartbeat_comment
+    - field.storage.comment.comment_body
+  module:
+    - text
+id: comment.heartbeat_comment.comment_body
+field_name: comment_body
+entity_type: comment
+bundle: heartbeat_comment
+label: Comment
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: text_long

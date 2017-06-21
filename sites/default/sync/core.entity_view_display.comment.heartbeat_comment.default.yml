@@ -1,0 +1,26 @@
+uuid: 62563cbf-6953-4cb1-8c42-7a70d6089a03
+langcode: en
+status: true
+dependencies:
+  config:
+    - comment.type.heartbeat_comment
+    - field.field.comment.heartbeat_comment.comment_body
+  module:
+    - text
+id: comment.heartbeat_comment.default
+targetEntityType: comment
+bundle: heartbeat_comment
+mode: default
+content:
+  comment_body:
+    label: hidden
+    type: text_default
+    weight: 0
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  langcode: true
