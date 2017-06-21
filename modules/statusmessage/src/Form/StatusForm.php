@@ -81,8 +81,8 @@ class StatusForm extends FormBase {
         'event' => 'change, paste, keyup',
         'callback' => '::generatePreview',
         'progress' => array(
-          'type' => 'throbber',
-          'message' => t('Generating preview'),
+          'type' => 'none',
+//          'message' => t('Generating preview'),
         ),
       ],
     );

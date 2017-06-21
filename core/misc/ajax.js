@@ -783,7 +783,7 @@
     // interaction while the Ajax request is in progress. ajax.ajaxing prevents
     // the element from triggering a new request, but does not prevent the user
     // from changing its value.
-    $(this.element).prop('disabled', true);
+    //$(this.element).prop('disabled', true);
 
     if (!this.progress || !this.progress.type) {
       return;
