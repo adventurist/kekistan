@@ -12,6 +12,7 @@ use Drupal\Core\Form\FormState;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\Entity;
+use Drupal\Component\Utility\Html;
 use Drupal\Core\Database\Database;
 use Drupal\heartbeat\Entity\FILE_FIELD;
 use Drupal\heartbeat\Entity\Heartbeat;
@@ -130,8 +131,8 @@ function heartbeat_entity_insert(EntityInterface $entity) {
                 'nid' => $entity->id(),
                 'name' => 'Dev Test',
               ]);
-
-              $heartbeatActivity->setMessage($heartbeatMessage);
+              //TODO Find better fix than this str_replace
+              $heartbeatActivity->setMessage(str_replace('&039;', "'", $heartbeatMessage));
               if ($heartbeatActivity->save()) {
                 $bundleSaved = true;
               }
