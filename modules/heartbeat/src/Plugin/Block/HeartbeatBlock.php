@@ -170,13 +170,16 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
 //      $flagLink = $flag->getLinkTypePlugin()->getAsLink($flag, $user);
 //      $flagUrl = $flagLink->getUrl()->toString();
 //      $flagText = $flagLink->getText();
-      $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
+      $userPic = $user->get('user_picture')->getValue();
+      if (!empty($userPic)) {
+        $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
+      }
 
 //      $commentForm = $this->formBuilder->getForm('Drupal\comment\CommentForm', $heartbeat);
 
 //      $flagRenderable = $flagLink->toRenderable();
 
-      if ($profilePic === null) {
+      if (null === $profilePic) {
         $profilePic = 86;
       }
 
@@ -190,6 +193,11 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
 
 
 //TODO GET ACTION AND APPEND TO CLASSES IN FLAG WRAPPER
+
+
+
+
+
 
       $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
         'userPicture' => $rendered,
