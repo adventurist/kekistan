@@ -338,7 +338,7 @@
    */
   Drupal.Ajax = function (base, element, element_settings) {
     var defaults = {
-      event: element ? 'click' : null,
+      event: element ? 'mousedown' : null,
       keypress: true,
       selector: base ? '#' + base : null,
       effect: 'none',
@@ -546,7 +546,8 @@
     }
 
     // If necessary, prevent the browser default action of an additional event.
-    // For example, prevent the browser default action of a click.
+    // For example, prevent the browser default action of a click, even if the
+    // Ajax behavior binds to mousedown.
     if (element_settings.prevent) {
       $(ajax.element).on(element_settings.prevent, false);
     }
@@ -783,7 +784,7 @@
     // interaction while the Ajax request is in progress. ajax.ajaxing prevents
     // the element from triggering a new request, but does not prevent the user
     // from changing its value.
-    //$(this.element).prop('disabled', true);
+//    $(this.element).prop('disabled', true);
 
     if (!this.progress || !this.progress.type) {
       return;

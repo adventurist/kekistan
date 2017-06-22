@@ -1,0 +1,6 @@
+{
+    "require": {
+        "embed/embed": "^3.0",
+        "drupal/console": "^0.11.3"
+    }
+}

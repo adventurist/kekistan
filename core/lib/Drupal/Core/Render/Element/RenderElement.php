@@ -275,14 +275,25 @@ abstract class RenderElement extends PluginBase implements ElementInterface {
         case 'submit':
         case 'button':
         case 'image_button':
-          $element['#ajax']['event'] = 'click';
+          // Pressing the ENTER key within a textfield triggers the click event of
+          // the form's first submit button. Triggering Ajax in this situation
+          // leads to problems, like breaking autocomplete textfields, so we bind
+          // to mousedown instead of click.
+          // @see https://www.drupal.org/node/216059
+          $element['#ajax']['event'] = 'mousedown';
           // Retain keyboard accessibility by setting 'keypress'. This causes
           // ajax.js to trigger 'event' when SPACE or ENTER are pressed while the
           // button has focus.
           $element['#ajax']['keypress'] = TRUE;
-          // Prevent the form from submitting.
+          // Binding to mousedown rather than click means that it is possible to
+          // trigger a click by pressing the mouse, holding the mouse button down
+          // until the Ajax request is complete and the button is re-enabled, and
+          // then releasing the mouse button. Set 'prevent' so that ajax.js binds
+          // an additional handler to prevent such a click from triggering a
+          // non-Ajax form submission. This also prevents a textfield's ENTER
+          // press triggering this button's non-Ajax form submission behavior.
           if (!isset($element['#ajax']['prevent'])) {
-            $element['#ajax']['prevent'] = 'submit';
+            $element['#ajax']['prevent'] = 'click';
           }
           break;
 

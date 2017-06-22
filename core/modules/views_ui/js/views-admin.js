@@ -734,13 +734,7 @@
      *   The event triggered.
      */
     clickAddGroupButton: function (event) {
-      // Due to conflicts between Drupal core's AJAX system and the Views AJAX
-      // system, the only way to get this to work seems to be to trigger both
-      // the click and submit events.
-      this.addGroupButton
-        .trigger('mousedown')
-        .trigger('click')
-        .trigger('submit');
+      this.addGroupButton.trigger('mousedown');
       event.preventDefault();
     },
 
@@ -752,7 +746,7 @@
      *   form button that should be clicked.
      */
     clickRemoveGroupButton: function (event) {
-      this.table.find('#' + event.data.buttonId).trigger('click').trigger('submit');
+      this.table.find('#' + event.data.buttonId).trigger('mousedown');
       event.preventDefault();
     },
 

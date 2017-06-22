@@ -37,8 +37,10 @@
   Drupal.AjaxCommands.prototype.viewsSetForm = function (ajax, response, status) {
     var $form = $('.js-views-ui-dialog form');
     // Identify the button that was clicked so that .ajaxSubmit() can use it.
+    // We need to do this for both .click() and .mousedown() since JavaScript
+    // code might trigger either behavior.
     var $submit_buttons = $form.find('input[type=submit].js-form-submit, button.js-form-submit').once('views-ajax-submit');
-    $submit_buttons.on('click', function () {
+    $submit_buttons.on('click mousedown', function () {
       this.form.clk = this;
     });
     $form.once('views-ajax-submit').each(function () {

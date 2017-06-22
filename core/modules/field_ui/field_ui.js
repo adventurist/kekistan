@@ -229,7 +229,7 @@
 
         // Fire the Ajax update.
         $('input[name=refresh_rows]').val(rowNames.join(' '));
-        $('input[data-drupal-selector="edit-refresh"]').trigger('click');
+        $('input[data-drupal-selector="edit-refresh"]').trigger('mousedown');
 
         // Disabled elements do not appear in POST ajax data, so we mark the
         // elements disabled only after firing the request.
