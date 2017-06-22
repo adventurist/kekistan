@@ -138,9 +138,7 @@ class StatusHeartPost implements SharedContentInterface {
     $tagsArray = explode('#', $message);
     $num = count($tagsArray);
 
-    if ($num > 1) {
-      unset($tagsArray[0]);
-    }
+    unset($tagsArray[0]);
 
     foreach ($tagsArray as $hashtag) {
       if ($i === $num - 1) {
