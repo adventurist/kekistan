@@ -123,7 +123,7 @@ class StatusHeartPost implements SharedContentInterface {
 
       $ext = strtolower(pathinfo($this->generator->getImage(), PATHINFO_EXTENSION));
       $ext = strpos($ext, '?') ? substr($ext, 0, strpos($ext, '?')) : $ext;
-      $fileUrl = substr($this->generator->getImage(), 0, strpos($this->generator->getImage(), $ext)) . $ext;
+      $fileUrl = strlen($ext) > 0 ? substr($this->generator->getImage(), 0, strpos($this->generator->getImage(), $ext)) . $ext : $this->generator->getImage();
 
       $mainImage = file_get_contents($fileUrl);
       $file = file_save_data($mainImage, 'public://' . substr($fileUrl, strrpos($this->generator->getImage(), '/') + 1), FILE_EXISTS_REPLACE);
