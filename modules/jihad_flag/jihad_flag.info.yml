@@ -1,0 +1,11 @@
+name : Jihad Flag
+type: module
+description : "Declare Meme Jihad on someone"
+dependencies:
+  - flag
+  - token
+  - heartbeat
+  - statusmessage
+
+core: '8.x'
+project: 'kekistan'
