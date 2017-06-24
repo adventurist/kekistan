@@ -2,6 +2,7 @@
 
 namespace Drupal\heartbeat\Plugin\Block;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBuilder;
@@ -162,47 +163,77 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
 
     }
 
-    private function renderMessage(array &$messages, $heartbeat) {
+  private function renderMessage(array &$messages, $heartbeat) {
 
-      $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $heartbeat->getCreatedTime());
-      $user = $heartbeat->getOwner();
+    $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $heartbeat->getCreatedTime());
+    $user = $heartbeat->getOwner();
 //      $rendered = $this->entityTypeManager->getViewBuilder('user')->view($user, 'full');
-      $userView = user_view($user, 'compact');
+    $userView = user_view($user, 'compact');
 //      $flag = $this->flagService->getFlagById("friendship");
 //      $flagLink = $flag->getLinkTypePlugin()->getAsLink($flag, $user);
 //      $flagUrl = $flagLink->getUrl()->toString();
 //      $flagText = $flagLink->getText();
+    $userPic = $user->get('user_picture')->getValue();
+    if (!empty($userPic)) {
       $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
-
-//      $commentForm = $this->formBuilder->getForm('Drupal\comment\CommentForm', $heartbeat);
-
-//      $flagRenderable = $flagLink->toRenderable();
-
-      if ($profilePic === null) {
-        $profilePic = 86;
-      }
-
-      $pic = File::load($profilePic);
-
-      if ($pic !== null) {
-        $style = $this->entityTypeManager->getStorage('image_style')->load('thumbnail');
-
-        $rendered = $style->buildUrl($pic->getFileUri());
-      }
-
-
-//TODO GET ACTION AND APPEND TO CLASSES IN FLAG WRAPPER
-
-      $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
-        'userPicture' => $rendered,
-        'userId' => $user->id(),
-        'timeAgo' => $timeago,
-        'id' => $heartbeat->id(),
-//        'friendFlag' => $flagUrl,
-//        'friendFlagText' => $flagText,
-//        'flagId' => $flag->id(),
-        'user' => $userView,
-//        'commentForm' => $commentForm
-        );
     }
+
+    if (NULL === $profilePic) {
+      $profilePic = 86;
+    }
+
+    $pic = File::load($profilePic);
+
+    if ($pic !== NULL) {
+      $style = $this->entityTypeManager->getStorage('image_style')
+        ->load('thumbnail');
+      $rendered = $style->buildUrl($pic->getFileUri());
+    }
+
+    $cids = \Drupal::entityQuery('comment')
+      ->condition('entity_id', $heartbeat->id())
+      ->condition('entity_type', 'heartbeat')
+      ->sort('cid', 'DESC')
+      ->execute();
+
+    $comments = [];
+
+    foreach($cids as $cid) {
+
+//        $comment = $this->entityTypeManager->getStorage('comment')->load($cid);
+      $comment = Comment::load($cid);
+//        $comment->delete();
+
+      $comments[] = $comment->get('comment_body')->value;
+    }
+
+//      $heartbeatCommentBlock = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
+//      $commentForm = $this->entityTypeManager->getViewBuilder('block')
+//        ->view($heartbeatCommentBlock);
+
+    $form = \Drupal::service('form_builder')->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm', $heartbeat);
+
+    $likeFlag = $this->flagService->getFlagById('heartbeat_like');
+
+    $flagKey = 'flag_' . $likeFlag->id();
+    $flagData = [
+      '#lazy_builder' => ['flag.link_builder:build', [
+        $heartbeat->getEntityTypeId(),
+        $heartbeat->id(),
+        $likeFlag->id(),
+      ]],
+      '#create_placeholder' => TRUE,
+    ];
+
+    $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
+      'userPicture' => $rendered,
+      'userId' => $user->id(),
+      'timeAgo' => $timeago,
+      'id' => $heartbeat->id(),
+      'user' => $userView,
+      'commentForm' => $form,
+      'comments' => $comments,
+      'likeFlag' => [$flagKey => $flagData],
+    );
+  }
 }
