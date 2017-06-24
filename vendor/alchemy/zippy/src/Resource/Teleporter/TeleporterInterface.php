@@ -11,20 +11,18 @@
 
 namespace Alchemy\Zippy\Resource\Teleporter;
 
-use Alchemy\Zippy\Exception\InvalidArgumentException;
-use Alchemy\Zippy\Exception\IOException;
-use Alchemy\Zippy\Resource\Resource as ZippyResource;
+use Alchemy\Zippy\Resource\Resource;
 
 interface TeleporterInterface
 {
     /**
-     * Teleports a file from a destination to an other
+     * Teleport a file from a destination to an other
      *
-     * @param ZippyResource $resource A Resource
-     * @param string        $context  The current context
+     * @param Resource $resource A Resource
+     * @param string   $context  The current context
      *
-     * @throws IOException when file could not be written on local
-     * @throws InvalidArgumentException when path to file is not valid
+     * @throws IOException              In case file could not be written on local
+     * @throws InvalidArgumentException In case path to file is not valid
      */
-    public function teleport(ZippyResource $resource, $context);
+    public function teleport(Resource $resource, $context);
 }

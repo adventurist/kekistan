@@ -11,25 +11,48 @@
 
 namespace Alchemy\Zippy\Resource\Teleporter;
 
-use Alchemy\Zippy\Resource\Reader\Stream\StreamReaderFactory;
-use Alchemy\Zippy\Resource\ResourceLocator;
-use Alchemy\Zippy\Resource\Writer\StreamWriter;
+use Alchemy\Zippy\Resource\Resource;
+use Alchemy\Zippy\Exception\InvalidArgumentException;
 
 /**
  * This class transport an object using php stream wrapper
  */
-class StreamTeleporter extends GenericTeleporter
+class StreamTeleporter extends AbstractTeleporter
 {
-    public function __construct()
+    /**
+     * {@inheritdoc}
+     */
+    public function teleport(Resource $resource, $context)
     {
-        parent::__construct(new StreamReaderFactory(), new StreamWriter(), new ResourceLocator());
+        $streamCreated = false;
+
+        if (is_resource($resource->getOriginal())) {
+            $stream = $resource->getOriginal();
+        } else {
+            $stream = @fopen($resource->getOriginal(), 'rb');
+
+            if (!is_resource($stream)) {
+                throw new InvalidArgumentException(sprintf(
+                    'The stream or file "%s" could not be opened: ',
+                    $resource->getOriginal()
+                ));
+            }
+            $streamCreated = true;
+        }
+
+        $content = stream_get_contents($stream);
+
+        if ($streamCreated) {
+            fclose($stream);
+        }
+
+        $this->writeTarget($content, $resource, $context);
     }
 
     /**
      * Creates the StreamTeleporter
      *
      * @return StreamTeleporter
-     * @deprecated This method will be removed in a future release (0.5.x)
      */
     public static function create()
     {

@@ -29,7 +29,7 @@ class ParserFactory
     /**
      * Maps the corresponding parser to the selected adapter
      *
-     * @param   string $adapterName An adapter name
+     * @param   $adapterName An adapter name
      *
      * @return ParserInterface
      *

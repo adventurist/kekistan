@@ -19,7 +19,7 @@ class MigrateExecuteMessageCapture implements MigrateMessageInterface
      *
      * @var array
      */
-    protected $messages = [];
+    protected $messages = array();
 
     /**
      * {@inheritdoc}
@@ -34,7 +34,7 @@ class MigrateExecuteMessageCapture implements MigrateMessageInterface
      */
     public function clear()
     {
-        $this->messages = [];
+        $this->messages = array();
     }
 
     /**

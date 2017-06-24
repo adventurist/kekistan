@@ -17,7 +17,8 @@
 #}
 <div{{ attributes.addClass('heartbeat') }}>
   {% if content %}
-    {{- content.message -}}
-    {{- content.node -}}
+    {{- content -}}
+    {#{{- content.message -}}#}
+    {#{{- content.node -}}#}
   {% endif %}
 </div>

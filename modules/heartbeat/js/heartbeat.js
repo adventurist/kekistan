@@ -94,8 +94,15 @@
   }
 
   function listenImages() {
+    let cboxOptions = {
+      width: '95%',
+      height: '95%',
+      maxWidth: '960px',
+      maxHeight: '960px',
+    };
+
     $('.heartbeat-content').find('img').each(function() {
-      $(this).colorbox({href: $(this).attr('src')});
+      $(this).colorbox({href: $(this).attr('src'), cboxOptions});
     });
   }
 

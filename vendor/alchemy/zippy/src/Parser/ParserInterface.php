@@ -18,9 +18,9 @@ interface ParserInterface
     /**
      * Parses a file listing
      *
-     * @param string $output The string to parse
+     * @param String $output The string to parse
      *
-     * @return array An array of Member properties (location, mtime, size & is_dir)
+     * @return Array An array of Member properties (location, mtime, size & is_dir)
      *
      * @throws RuntimeException In case the parsing process failed
      */
@@ -29,18 +29,18 @@ interface ParserInterface
     /**
      * Parses the inflator binary version
      *
-     * @param string $output
+     * @param String $output
      *
-     * @return string The version
+     * @return String The version
      */
     public function parseInflatorVersion($output);
 
     /**
      * Parses the deflator binary version
      *
-     * @param string $output
+     * @param String $output
      *
-     * @return string The version
+     * @return String The version
      */
-    public function parseDeflatorVersion($output);
+    public function parsedeflatorVersion($output);
 }

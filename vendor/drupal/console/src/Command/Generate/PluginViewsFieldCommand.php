@@ -11,76 +11,15 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Generator\PluginViewsFieldGenerator;
-use Drupal\Console\Command\Shared\ModuleTrait;
-use Drupal\Console\Command\Shared\ConfirmationTrait;
-use Symfony\Component\Console\Command\Command;
-use Drupal\Console\Core\Style\DrupalStyle;
-use Drupal\Console\Extension\Manager;
-use Drupal\Console\Core\Utils\ChainQueue;
-use Drupal\Console\Core\Command\Shared\CommandTrait;
-use Drupal\Console\Utils\Site;
-use Drupal\Console\Core\Utils\StringConverter;
+use Drupal\Console\Command\ModuleTrait;
+use Drupal\Console\Command\ConfirmationTrait;
+use Drupal\Console\Command\GeneratorCommand;
+use Drupal\Console\Style\DrupalStyle;
 
-/**
- * Class PluginViewsFieldCommand
- *
- * @package Drupal\Console\Command\Generate
- */
-class PluginViewsFieldCommand extends Command
+class PluginViewsFieldCommand extends GeneratorCommand
 {
     use ModuleTrait;
     use ConfirmationTrait;
-    use CommandTrait;
-
-
-    /**
- * @var Manager
-*/
-    protected $extensionManager;
-
-    /**
- * @var PluginViewsFieldGenerator
-*/
-    protected $generator;
-
-    /**
-     * @var Site
-     */
-    protected $site;
-
-    /**
-     * @var StringConverter
-     */
-    protected $stringConverter;
-
-    /**
-     * @var ChainQueue
-     */
-    protected $chainQueue;
-
-    /**
-     * PluginViewsFieldCommand constructor.
-     *
-     * @param Manager                   $extensionManager
-     * @param PluginViewsFieldGenerator $generator
-     * @param Site                      $site
-     * @param StringConverter           $stringConverter
-     * @param ChainQueue                $chainQueue
-     */
-    public function __construct(
-        Manager $extensionManager,
-        PluginViewsFieldGenerator $generator,
-        Site $site,
-        StringConverter $stringConverter,
-        ChainQueue $chainQueue
-    ) {
-        $this->extensionManager = $extensionManager;
-        $this->generator = $generator;
-        $this->site = $site;
-        $this->stringConverter = $stringConverter;
-        $this->chainQueue = $chainQueue;
-        parent::__construct();
-    }
 
     protected function configure()
     {
@@ -88,22 +27,22 @@ class PluginViewsFieldCommand extends Command
             ->setName('generate:plugin:views:field')
             ->setDescription($this->trans('commands.generate.plugin.views.field.description'))
             ->setHelp($this->trans('commands.generate.plugin.views.field.help'))
-            ->addOption('module', null, InputOption::VALUE_REQUIRED, $this->trans('commands.common.options.module'))
+            ->addOption('module', '', InputOption::VALUE_REQUIRED, $this->trans('commands.common.options.module'))
             ->addOption(
                 'class',
-                null,
+                '',
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.plugin.views.field.options.class')
             )
             ->addOption(
                 'title',
-                null,
+                '',
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.views.field.options.title')
             )
             ->addOption(
                 'description',
-                null,
+                '',
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.views.field.options.description')
             );
@@ -116,22 +55,22 @@ class PluginViewsFieldCommand extends Command
     {
         $io = new DrupalStyle($input, $output);
 
-        // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmGeneration
+        // @see use Drupal\Console\Command\ConfirmationTrait::confirmGeneration
         if (!$this->confirmGeneration($io)) {
-            return 1;
+            return;
         }
 
         $module = $input->getOption('module');
         $class_name = $input->getOption('class');
-        $class_machine_name = $this->stringConverter->camelCaseToUnderscore($class_name);
+        $class_machine_name = $this->getStringHelper()->camelCaseToUnderscore($class_name);
         $title = $input->getOption('title');
         $description = $input->getOption('description');
 
-        $this->generator->generate($module, $class_machine_name, $class_name, $title, $description);
+        $this
+            ->getGenerator()
+            ->generate($module, $class_machine_name, $class_name, $title, $description);
 
-        $this->chainQueue->addCommand('cache:rebuild', ['cache' => 'discovery']);
-
-        return 0;
+        $this->getChain()->addCommand('cache:rebuild', ['cache' => 'discovery']);
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -141,8 +80,8 @@ class PluginViewsFieldCommand extends Command
         // --module option
         $module = $input->getOption('module');
         if (!$module) {
-            // @see Drupal\Console\Command\Shared\ModuleTrait::moduleQuestion
-            $module = $this->moduleQuestion($io);
+            // @see Drupal\Console\Command\ModuleTrait::moduleQuestion
+            $module = $this->moduleQuestion($output);
             $input->setOption('module', $module);
         }
 
@@ -161,7 +100,7 @@ class PluginViewsFieldCommand extends Command
         if (!$title) {
             $title = $io->ask(
                 $this->trans('commands.generate.plugin.views.field.questions.title'),
-                $this->stringConverter->camelCaseToHuman($class_name)
+                $this->getStringHelper()->camelCaseToHuman($class_name)
             );
             $input->setOption('title', $title);
         }

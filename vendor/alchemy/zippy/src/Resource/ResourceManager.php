@@ -43,8 +43,8 @@ class ResourceManager
      * Some keys can be associative. In these cases, the key is used the target
      * for the file.
      *
-     * @param string $context
-     * @param array  $request
+     * @param String $context
+     * @param Array  $request
      *
      * @return ResourceCollection
      *

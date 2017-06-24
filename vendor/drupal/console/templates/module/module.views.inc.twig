@@ -21,19 +21,19 @@ use Drupal\system\ActionConfigEntityInterface;
 function {{module}}_views_data() {
 
     $data['views']['table']['group'] = t('Custom Global');
-    $data['views']['table']['join'] = [
+    $data['views']['table']['join'] = array(
       // #global is a special flag which allows a table to appear all the time.
-      '#global' => [],
-    ];
+      '#global' => array(),
+    );
 
 
-    $data['views']['{{ class_machine_name }}'] = [
+    $data['views']['{{ class_machine_name }}'] = array(
         'title' => t('{{ title }}'),
         'help' => t('{{ description }}'),
-        'field' => [
+        'field' => array(
             'id' => '{{ class_machine_name }}',
-        ],
-    ];
+        ),
+    );
 
     return $data;
 }

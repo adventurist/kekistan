@@ -37,7 +37,6 @@ class ProfileGeneratorTest extends GeneratorTest
         $description,
         $core,
         $dependencies,
-        $themes,
         $distribution
     ) {
         $generator = new ProfileGenerator();
@@ -52,7 +51,6 @@ class ProfileGeneratorTest extends GeneratorTest
             $description,
             $core,
             $dependencies,
-            $themes,
             $distribution
         );
 

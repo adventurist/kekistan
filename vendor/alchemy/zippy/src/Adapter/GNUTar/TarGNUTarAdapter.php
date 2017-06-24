@@ -66,7 +66,7 @@ class TarGNUTarAdapter extends AbstractTarAdapter
      */
     protected function getExtractOptions()
     {
-        return array('--overwrite');
+        return array('--overwrite-dir', '--overwrite');
     }
 
     /**
@@ -74,6 +74,6 @@ class TarGNUTarAdapter extends AbstractTarAdapter
      */
     protected function getExtractMembersOptions()
     {
-        return array('--overwrite');
+        return array('--overwrite-dir', '--overwrite');
     }
 }

@@ -22,16 +22,24 @@
   {% autoescape false %}
   {% for message in messages %}
     <div{{ attributes.addClass('heartbeat-message') }} id="heartbeat-{{ message.id }}">
-      <div class="heartbeat-owner">
-        <a href="/user/{{ message.userId }}"><img src="{{ message.userPicture }}" /></a>
-        {{ message.user }}
-        <div class="time-ago">{{ message.timeAgo }} ago</div>
+      {#{{ message }}#}
+      <div class="heartbeat-message-wrap">
+        <div class="heartbeat-owner">
+          <a href="/user/{{ message.userId }}"><img src="{{ message.userPicture }}" /></a>
+          {{ message.user }}
+          <div class="time-ago">{{ message.timeAgo }} ago</div>
+        </div>
+        <div class="heartbeat-content">
+        {{ message.heartbeat }}
+        </div>
       </div>
-      <div class="heartbeat-content">
-      {{ message.heartbeat }}
-      </div>
-      <div class="heartbeat-comment">
-        {{ message.commentForm }}
+      <div class="heartbeat-interaction-wrap">
+        <div class="heartbeat-like">
+          {{ message.likeFlag }}
+        </div>
+        <div class="heartbeat-comment">
+          {{ message.commentForm }}
+        </div>
       </div>
     </div>
   {% endfor %}

@@ -10,37 +10,17 @@ namespace Drupal\Console\Command\Database;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
-use Drupal\Core\Database\Connection;
-use Drupal\Console\Core\Command\Shared\CommandTrait;
-use Drupal\Console\Command\Shared\ConnectTrait;
-use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Command\ContainerAwareCommand;
+use Drupal\Console\Style\DrupalStyle;
+use Drupal\Console\Command\Database\ConnectTrait;
 
 /**
  * Class DropCommand
- *
  * @package Drupal\Console\Command\Database
  */
-class DropCommand extends Command
+class DropCommand extends ContainerAwareCommand
 {
-    use CommandTrait;
     use ConnectTrait;
-
-    /**
-     * @var Connection
-     */
-    protected $database;
-
-    /**
-     * DropCommand constructor.
-     *
-     * @param Connection $database
-     */
-    public function __construct(Connection $database)
-    {
-        $this->database = $database;
-        parent::__construct();
-    }
 
     /**
      * {@inheritdoc}
@@ -66,7 +46,7 @@ class DropCommand extends Command
     {
         $io = new DrupalStyle($input, $output);
         $database = $input->getArgument('database');
-        $yes = $input->getOption('yes');
+        $yes = $input->hasOption('yes')?$input->getOption('yes'):false;
 
         $databaseConnection = $this->resolveConnection($io, $database);
 
@@ -77,13 +57,13 @@ class DropCommand extends Command
                     $databaseConnection['database']
                 ),
                 true
-            )
-            ) {
+            )) {
                 return 1;
             }
         }
 
-        $schema = $this->database->schema();
+        $databaseService = $this->getService('database');
+        $schema = $databaseService->schema();
         $tables = $schema->findTables('%');
         $tableRows = [];
 
@@ -101,7 +81,5 @@ class DropCommand extends Command
                 count($tableRows['success'])
             )
         );
-
-        return 0;
     }
 }

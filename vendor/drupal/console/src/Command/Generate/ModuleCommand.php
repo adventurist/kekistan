@@ -7,81 +7,17 @@
 
 namespace Drupal\Console\Command\Generate;
 
-use Symfony\Component\Config\Definition\Exception\Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Drupal\Console\Generator\ModuleGenerator;
-use Drupal\Console\Command\Shared\ConfirmationTrait;
-use Symfony\Component\Console\Command\Command;
-use Drupal\Console\Core\Style\DrupalStyle;
-use Drupal\Console\Utils\Validator;
-use Drupal\Console\Core\Command\Shared\CommandTrait;
-use Drupal\Console\Core\Utils\StringConverter;
-use Drupal\Console\Utils\DrupalApi;
+use Drupal\Console\Command\ConfirmationTrait;
+use Drupal\Console\Command\GeneratorCommand;
+use Drupal\Console\Style\DrupalStyle;
 
-class ModuleCommand extends Command
+class ModuleCommand extends GeneratorCommand
 {
     use ConfirmationTrait;
-    use CommandTrait;
-
-    /**
-     * @var ModuleGenerator
-     */
-    protected $generator;
-
-    /**
-     * @var Validator
-     */
-    protected $validator;
-
-    /**
-     * @var string
-     */
-    protected $appRoot;
-
-    /**
-     * @var StringConverter
-     */
-    protected $stringConverter;
-
-    /**
-     * @var DrupalApi
-     */
-    protected $drupalApi;
-
-    /**
-     * @var string
-     */
-    protected $twigtemplate;
-
-
-    /**
-     * ModuleCommand constructor.
-     *
-     * @param ModuleGenerator $generator
-     * @param Validator       $validator
-     * @param $appRoot
-     * @param StringConverter $stringConverter
-     * @param DrupalApi       $drupalApi
-     * @param $twigtemplate
-     */
-    public function __construct(
-        ModuleGenerator $generator,
-        Validator $validator,
-        $appRoot,
-        StringConverter $stringConverter,
-        DrupalApi $drupalApi,
-        $twigtemplate = null
-    ) {
-        $this->generator = $generator;
-        $this->validator = $validator;
-        $this->appRoot = $appRoot;
-        $this->stringConverter = $stringConverter;
-        $this->drupalApi = $drupalApi;
-        $this->twigtemplate = $twigtemplate;
-        parent::__construct();
-    }
 
     /**
      * {@inheritdoc}
@@ -94,76 +30,63 @@ class ModuleCommand extends Command
             ->setHelp($this->trans('commands.generate.module.help'))
             ->addOption(
                 'module',
-                null,
+                '',
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.module.options.module')
             )
             ->addOption(
                 'machine-name',
-                null,
+                '',
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.module.options.machine-name')
             )
             ->addOption(
                 'module-path',
-                null,
+                '',
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.module.options.module-path')
             )
             ->addOption(
                 'description',
-                null,
+                '',
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.module.options.description')
             )
             ->addOption(
                 'core',
-                null,
+                '',
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.module.options.core')
             )
             ->addOption(
                 'package',
-                null,
+                '',
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.module.options.package')
             )
             ->addOption(
                 'module-file',
-                null,
+                '',
                 InputOption::VALUE_NONE,
                 $this->trans('commands.generate.module.options.module-file')
             )
             ->addOption(
                 'features-bundle',
-                null,
+                '',
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.module.options.features-bundle')
             )
             ->addOption(
                 'composer',
-                null,
+                '',
                 InputOption::VALUE_NONE,
                 $this->trans('commands.generate.module.options.composer')
             )
             ->addOption(
                 'dependencies',
-                null,
+                '',
                 InputOption::VALUE_OPTIONAL,
-                $this->trans('commands.generate.module.options.dependencies'),
-                ''
-            )
-            ->addOption(
-                'test',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                $this->trans('commands.generate.module.options.test')
-            )
-            ->addOption(
-                'twigtemplate',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                $this->trans('commands.generate.module.options.twigtemplate')
+                $this->trans('commands.generate.module.options.dependencies')
             );
     }
 
@@ -175,32 +98,46 @@ class ModuleCommand extends Command
         $io = new DrupalStyle($input, $output);
         $yes = $input->hasOption('yes')?$input->getOption('yes'):false;
 
-        // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmGeneration
+        $validators = $this->getValidator();
+
+        // @see use Drupal\Console\Command\ConfirmationTrait::confirmGeneration
         if (!$this->confirmGeneration($io, $yes)) {
-            return 1;
+            return;
         }
 
-        $module = $this->validator->validateModuleName($input->getOption('module'));
+        $module = $validators->validateModuleName($input->getOption('module'));
 
-        $modulePath = $this->appRoot . $input->getOption('module-path');
-        $modulePath = $this->validator->validateModulePath($modulePath, true);
+        $drupal = $this->getDrupalHelper();
+        $drupalRoot = $drupal->getRoot();
+        $modulePath = $drupalRoot.$input->getOption('module-path');
+        $modulePath = $validators->validateModulePath($modulePath, true);
 
-        $machineName = $this->validator->validateMachineName($input->getOption('machine-name'));
+        $machineName = $validators->validateMachineName($input->getOption('machine-name'));
         $description = $input->getOption('description');
         $core = $input->getOption('core');
         $package = $input->getOption('package');
         $moduleFile = $input->getOption('module-file');
         $featuresBundle = $input->getOption('features-bundle');
         $composer = $input->getOption('composer');
-        $dependencies = $this->validator->validateExtensions(
-            $input->getOption('dependencies'),
-            'module',
-            $io
-        );
-        $test = $input->getOption('test');
-        $twigTemplate = $input->getOption('twigtemplate');
 
-        $this->generator->generate(
+         // Modules Dependencies, re-factor and share with other commands
+        $dependencies = $validators->validateModuleDependencies($input->getOption('dependencies'));
+        // Check if all module dependencies are available
+        if ($dependencies) {
+            $checked_dependencies = $this->checkDependencies($dependencies['success']);
+            if (!empty($checked_dependencies['no_modules'])) {
+                $io->warning(
+                    sprintf(
+                        $this->trans('commands.generate.module.warnings.module-unavailable'),
+                        implode(', ', $checked_dependencies['no_modules'])
+                    )
+                );
+            }
+            $dependencies = $dependencies['success'];
+        }
+
+        $generator = $this->getGenerator();
+        $generator->generate(
             $module,
             $machineName,
             $modulePath,
@@ -210,12 +147,46 @@ class ModuleCommand extends Command
             $moduleFile,
             $featuresBundle,
             $composer,
-            $dependencies,
-            $test,
-            $twigTemplate
+            $dependencies
         );
+    }
 
-        return 0;
+    /**
+     * @param  array $dependencies
+     * @return array
+     */
+    private function checkDependencies(array $dependencies)
+    {
+        $this->getDrupalHelper()->loadLegacyFile('/core/modules/system/system.module');
+        $client = $this->getHttpClient();
+        $localModules = array();
+
+        $modules = system_rebuild_module_data();
+        foreach ($modules as $module_id => $module) {
+            array_push($localModules, basename($module->subpath));
+        }
+
+        $checkDependencies = [
+          'local_modules' => [],
+          'drupal_modules' => [],
+          'no_modules' => [],
+        ];
+
+        foreach ($dependencies as $module) {
+            if (in_array($module, $localModules)) {
+                $checkDependencies['local_modules'][] = $module;
+            } else {
+                $response = $client->head('https://www.drupal.org/project/'.$module);
+                $header_link = explode(';', $response->getHeader('link'));
+                if (empty($header_link[0])) {
+                    $checkDependencies['no_modules'][] = $module;
+                } else {
+                    $checkDependencies['drupal_modules'][] = $module;
+                }
+            }
+        }
+
+        return $checkDependencies;
     }
 
     /**
@@ -225,25 +196,27 @@ class ModuleCommand extends Command
     {
         $io = new DrupalStyle($input, $output);
 
-        $validator = $this->validator;
+        $stringUtils = $this->getStringHelper();
+        $validators = $this->getValidator();
+        $drupal = $this->getDrupalHelper();
 
         try {
             $module = $input->getOption('module') ?
-              $this->validator->validateModuleName(
+              $this->validateModuleName(
                   $input->getOption('module')
               ) : null;
         } catch (\Exception $error) {
             $io->error($error->getMessage());
 
-            return 1;
+            return;
         }
 
         if (!$module) {
             $module = $io->ask(
                 $this->trans('commands.generate.module.questions.module'),
                 null,
-                function ($module) use ($validator) {
-                    return $validator->validateModuleName($module);
+                function ($module) use ($validators) {
+                    return $validators->validateModuleName($module);
                 }
             );
             $input->setOption('module', $module);
@@ -251,7 +224,7 @@ class ModuleCommand extends Command
 
         try {
             $machineName = $input->getOption('machine-name') ?
-              $this->validator->validateModuleName(
+              $this->validateModule(
                   $input->getOption('machine-name')
               ) : null;
         } catch (\Exception $error) {
@@ -261,9 +234,9 @@ class ModuleCommand extends Command
         if (!$machineName) {
             $machineName = $io->ask(
                 $this->trans('commands.generate.module.questions.machine-name'),
-                $this->stringConverter->createMachineName($module),
-                function ($machine_name) use ($validator) {
-                    return $validator->validateMachineName($machine_name);
+                $stringUtils->createMachineName($module),
+                function ($machine_name) use ($validators) {
+                    return $validators->validateMachineName($machine_name);
                 }
             );
             $input->setOption('machine-name', $machineName);
@@ -271,7 +244,7 @@ class ModuleCommand extends Command
 
         $modulePath = $input->getOption('module-path');
         if (!$modulePath) {
-            $drupalRoot = $this->appRoot;
+            $drupalRoot = $drupal->getRoot();
             $modulePath = $io->ask(
                 $this->trans('commands.generate.module.questions.module-path'),
                 '/modules/custom',
@@ -344,13 +317,13 @@ class ModuleCommand extends Command
         $featuresBundle = $input->getOption('features-bundle');
         if (!$featuresBundle) {
             $featuresSupport = $io->confirm(
-                $this->trans('commands.generate.module.questions.features-support'),
-                false
+              $this->trans('commands.generate.module.questions.features-support'),
+              false
             );
             if ($featuresSupport) {
                 $featuresBundle = $io->ask(
-                    $this->trans('commands.generate.module.questions.features-bundle'),
-                    'default'
+                  $this->trans('commands.generate.module.questions.features-bundle'),
+                  'default'
                 );
             }
             $input->setOption('features-bundle', $featuresBundle);
@@ -377,24 +350,6 @@ class ModuleCommand extends Command
                 );
             }
             $input->setOption('dependencies', $dependencies);
-        }
-
-        $test = $input->getOption('test');
-        if (!$test) {
-            $test = $io->confirm(
-                $this->trans('commands.generate.module.questions.test'),
-                true
-            );
-            $input->setOption('test', $test);
-        }
-
-        $twigtemplate = $input->getOption('twigtemplate');
-        if (!$twigtemplate) {
-            $twigtemplate = $io->confirm(
-                $this->trans('commands.generate.module.questions.twigtemplate'),
-                true
-            );
-            $input->setOption('twigtemplate', $twigtemplate);
         }
     }
 

@@ -28,9 +28,6 @@ class RequestMapper
     /**
      * Maps resources request to a ResourceCollection
      *
-     * @param       $context
-     * @param array $resources
-     *
      * @return ResourceCollection
      */
     public function map($context, array $resources)

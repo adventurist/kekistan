@@ -16,41 +16,25 @@ class HookFactoryTest extends \PHPUnit_Framework_TestCase
         $this->factory = new HookFactory();
     }
 
-    /**
-     * @dataProvider generateHookDataProvider
-     */
-    public function testBashSyntax($programPath, $programName, $multiple)
+    public function testBashSyntax()
     {
         if ($this->hasProgram('bash')) {
-            $script = $this->factory->generateHook('bash', $programPath, $programName, $multiple);
+            $script = $this->factory->generateHook('bash', '/path/to/myprogram', 'myprogram');
             $this->assertSyntaxIsValid($script, 'bash -n', 'BASH hook');
+
         } else {
             $this->markTestSkipped("Couldn't detect BASH program to run hook syntax check");
         }
     }
 
-    /**
-     * @dataProvider generateHookDataProvider
-     */
-    public function testZshSyntax($programPath, $programName, $multiple)
+    public function testZshSyntax()
     {
         if ($this->hasProgram('zsh')) {
-            $script = $this->factory->generateHook('zsh', $programPath, $programName, $multiple);
+            $script = $this->factory->generateHook('zsh', '/path/to/myprogram', 'myprogram');
             $this->assertSyntaxIsValid($script, 'zsh -n', 'ZSH hook');
         } else {
             $this->markTestSkipped("Couldn't detect ZSH program to run hook syntax check");
         }
-    }
-
-    public function generateHookDataProvider()
-    {
-        return array(
-            array('/path/to/myprogram', null, false),
-            array('/path/to/myprogram', null, true),
-            array('/path/to/myprogram', 'myprogram', false),
-            array('/path/to/myprogram', 'myprogram', true),
-            array('/path/to/my-program', 'my-program', false)
-        );
     }
 
     protected function hasProgram($programName)

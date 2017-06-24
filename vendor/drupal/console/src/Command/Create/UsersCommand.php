@@ -11,47 +11,17 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
-use Drupal\Console\Core\Command\Shared\CommandTrait;
-use Drupal\Console\Command\Shared\CreateTrait;
-use Drupal\Console\Utils\Create\UserData;
-use Drupal\Console\Utils\DrupalApi;
-use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Command\ContainerAwareCommand;
+use Drupal\Console\Command\CreateTrait;
+use Drupal\Console\Style\DrupalStyle;
 
 /**
  * Class UsersCommand
- *
  * @package Drupal\Console\Command\Create
  */
-class UsersCommand extends Command
+class UsersCommand extends ContainerAwareCommand
 {
     use CreateTrait;
-    use CommandTrait;
-
-    /**
-     * @var DrupalApi
-     */
-    protected $drupalApi;
-    /**
-     * @var UserData
-     */
-    protected $createUserData;
-
-    /**
-     * UsersCommand constructor.
-     *
-     * @param DrupalApi $drupalApi
-     * @param UserData  $createUserData
-     */
-    public function __construct(
-        DrupalApi $drupalApi,
-        UserData $createUserData
-    ) {
-        $this->drupalApi = $drupalApi;
-        $this->createUserData = $createUserData;
-        parent::__construct();
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -94,7 +64,7 @@ class UsersCommand extends Command
 
         $rids = $input->getArgument('roles');
         if (!$rids) {
-            $roles = $this->drupalApi->getRoles();
+            $roles = $this->getDrupalApi()->getRoles();
             $rids = $io->choice(
                 $this->trans('commands.create.users.questions.roles'),
                 array_values($roles),
@@ -140,7 +110,7 @@ class UsersCommand extends Command
                 array_values($timeRanges)
             );
 
-            $input->setOption('time-range', array_search($timeRange, $timeRanges));
+            $input->setOption('time-range',  array_search($timeRange, $timeRanges));
         }
     }
 
@@ -157,10 +127,11 @@ class UsersCommand extends Command
         $timeRange = $input->getOption('time-range')?:31536000;
 
         if (!$roles) {
-            $roles = $this->drupalApi->getRoles();
+            $roles = $this->getDrupalApi()->getRoles();
         }
 
-        $users = $this->createUserData->create(
+        $createUsers = $this->getDrupalApi()->getCreateUsers();
+        $users = $createUsers->createUser(
             $roles,
             $limit,
             $password,
@@ -184,7 +155,5 @@ class UsersCommand extends Command
                 )
             );
         }
-
-        return 0;
     }
 }

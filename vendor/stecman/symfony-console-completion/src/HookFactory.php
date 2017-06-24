@@ -41,14 +41,10 @@ function %%function_name%% {
 
     local RESULT STATUS;
 
-    RESULT="$(%%completion_command%% </dev/null)";
+    RESULT="$(%%completion_command%%)";
     STATUS=$?;
 
-    local cur mail_check_backup;
-
-    mail_check_backup=$MAILCHECK;
-    MAILCHECK=-1;
-
+    local cur;
     _get_comp_words_by_ref -n : cur;
 
     # Check if shell provided path completion is requested
@@ -66,16 +62,9 @@ function %%function_name%% {
     COMPREPLY=(`compgen -W "$RESULT" -- $cur`);
 
     __ltrim_colon_completions "$cur";
-
-    MAILCHECK=mail_check_backup;
 };
 
-if [ "$(type -t _get_comp_words_by_ref)" == "function" ]; then
-    complete -F %%function_name%% "%%program_name%%";
-else
-    >&2 echo "Completion was not registered for %%program_name%%:";
-    >&2 echo "The 'bash-completion' package is required but doesn't appear to be installed.";
-fi
+complete -F %%function_name%% %%program_name%%;
 END
 
         // ZSH Hook
@@ -105,7 +94,7 @@ function %%function_name%% {
     compadd -- $RESULT
 };
 
-compdef %%function_name%% "%%program_name%%";
+compdef %%function_name%% %%program_name%%;
 END
     );
 
@@ -125,11 +114,9 @@ END
      * @param string $type - a key from self::$hooks
      * @param string $programPath
      * @param string $programName
-     * @param bool   $multiple
-     *
      * @return string
      */
-    public function generateHook($type, $programPath, $programName = null, $multiple = false)
+    public function generateHook($type, $programPath, $programName = null)
     {
         if (!isset(self::$hooks[$type])) {
             throw new \RuntimeException(sprintf(
@@ -142,12 +129,6 @@ END
         // Use the program path if an alias/name is not given
         $programName = $programName ?: $programPath;
 
-        if ($multiple) {
-            $completionCommand = '$1 _completion';
-        } else {
-            $completionCommand = $programPath . ' _completion';
-        }
-
         return str_replace(
             array(
                 '%%function_name%%',
@@ -159,7 +140,7 @@ END
                 $this->generateFunctionName($programPath, $programName),
                 $programName,
                 $programPath,
-                $completionCommand
+                "$programPath _completion"
             ),
             $this->stripComments(self::$hooks[$type])
         );
@@ -172,22 +153,9 @@ END
     {
         return sprintf(
             '_%s_%s_complete',
-            $this->sanitiseForFunctionName(basename($programName)),
+            basename($programName),
             substr(md5($programPath), 0, 16)
         );
-    }
-
-
-    /**
-     * Make a string safe for use as a shell function name
-     *
-     * @param string $name
-     * @return string
-     */
-    protected function sanitiseForFunctionName($name)
-    {
-        $name = str_replace('-', '_', $name);
-        return preg_replace('/[^A-Za-z0-9_]+/', '', $name);
     }
 
     /**

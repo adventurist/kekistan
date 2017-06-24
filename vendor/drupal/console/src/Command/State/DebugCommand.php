@@ -10,47 +10,16 @@ namespace Drupal\Console\Command\State;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
-use Drupal\Core\KeyValueStore\KeyValueFactoryInterface;
-use Drupal\Core\State\StateInterface;
-use Drupal\Console\Core\Command\Shared\CommandTrait;
-use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Command\ContainerAwareCommand;
+use Drupal\Console\Style\DrupalStyle;
 use Drupal\Component\Serialization\Yaml;
 
 /**
  * Class DebugCommand
- *
  * @package Drupal\Console\Command\State
  */
-class DebugCommand extends Command
+class DebugCommand extends ContainerAwareCommand
 {
-    use CommandTrait;
-
-    /**
-     * @var StateInterface
-     */
-    protected $state;
-
-    /**
-     * @var KeyValueFactoryInterface
-     */
-    protected $keyValue;
-
-    /**
-     * DebugCommand constructor.
-     *
-     * @param StateInterface           $state
-     * @param KeyValueFactoryInterface $keyValue
-     */
-    public function __construct(
-        StateInterface $state,
-        KeyValueFactoryInterface $keyValue
-    ) {
-        $this->state = $state;
-        $this->keyValue = $keyValue;
-        parent::__construct();
-    }
-
     /**
      * {@inheritdoc}
      */
@@ -76,16 +45,18 @@ class DebugCommand extends Command
         $key = $input->getArgument('key');
 
         if ($key) {
+            $state = $this->getState();
             $io->info($key);
-            $io->writeln(Yaml::encode($this->state->get($key)));
+            $io->writeln(Yaml::encode($state->get($key)));
 
-            return 0;
+            return;
         }
 
         $tableHeader = [$this->trans('commands.state.debug.messages.key')];
-        $keyStoreStates = array_keys($this->keyValue->get('state')->getAll());
-        $io->table($tableHeader, $keyStoreStates);
 
-        return 0;
+        $keyValue = $this->getService('keyvalue');
+        $keyStoreStates = array_keys($keyValue->get('state')->getAll());
+
+        $io->table($tableHeader, $keyStoreStates);
     }
 }

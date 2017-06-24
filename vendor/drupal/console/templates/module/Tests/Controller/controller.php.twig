@@ -18,16 +18,15 @@ use Drupal\simpletest\WebTestBase;
  */
 class {{class_name}}Test extends WebTestBase {% endblock %}
 {% block class_methods %}
-
   /**
    * {@inheritdoc}
    */
   public static function getInfo() {
-    return [
+    return array(
       'name' => "{{module}} {{class_name}}'s controller functionality",
       'description' => 'Test Unit for module {{module}} and controller {{class_name}}.',
       'group' => 'Other',
-    ];
+    );
   }
 
   /**
@@ -42,6 +41,6 @@ class {{class_name}}Test extends WebTestBase {% endblock %}
    */
   public function test{{class_name}}() {
     // Check that the basic functions of module {{module}}.
-    $this->assertEquals(TRUE, TRUE, 'Test Unit Generated via Drupal Console.');
+    $this->assertEquals(TRUE, TRUE, 'Test Unit Generated via App Console.');
   }
 {% endblock %}

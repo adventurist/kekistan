@@ -158,6 +158,20 @@ iframe.kekistan-anthem-video {
   color: grey;
 }
 
+.heartbeat-message-wrap {
+  float: left;
+  width: 100%;
+}
+
+.heartbeat-interaction-wrap {
+  width: 100%;
+  float: right;
+}
+
+.heartbeat-comment-form label {
+  display: none;
+}
+
 .heartbeat-message {
   padding: 12px!important;
   word-wrap: break-word;

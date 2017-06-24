@@ -8,21 +8,19 @@
 namespace Drupal\Console\Command\Views;
 
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Command\Command;
-use Drupal\Console\Core\Command\Shared\ContainerAwareCommandTrait;
-use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Command\ContainerAwareCommand;
+use Drupal\Console\Style\DrupalStyle;
 use Drupal\views\Views;
 
 /**
  * Class PluginsDebugCommand
- *
  * @package Drupal\Console\Command\Views
  */
-class PluginsDebugCommand extends Command
+class PluginsDebugCommand extends ContainerAwareCommand
 {
-    use ContainerAwareCommandTrait;
     /**
      * {@inheritdoc}
      */
@@ -50,11 +48,13 @@ class PluginsDebugCommand extends Command
     }
 
     /**
-     * @param \Drupal\Console\Core\Style\DrupalStyle $io
-     * @param $type
+     * @param \Drupal\Console\Style\DrupalStyle $io
+     * @param $tag
+     * @param $status
      */
     protected function pluginList(DrupalStyle $io, $type)
     {
+        $entity_manager = $this->getEntityManager();
         $plugins = Views::pluginList();
 
         $rows = [];

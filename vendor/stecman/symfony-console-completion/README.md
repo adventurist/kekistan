@@ -18,11 +18,7 @@ Example of zero-config use with Composer:
 
 If you don't need any custom completion behaviour, you can simply add the completion command to your application:
 
-1. Install `stecman/symfony-console-completion` using [composer](https://getcomposer.org/) by running:
-   ```
-   $ composer require stecman/symfony-console-completion
-   ```
-
+1. Install `stecman/symfony-console-completion` using composer
 2. Add an instance of `CompletionCommand` to your application's `Application::getDefaultCommands()` method:
 
   ```php

@@ -23,7 +23,7 @@ function template_preprocess_heartbeat(array &$variables) {
   // Fetch Heartbeat Entity Object.
   $entity = $variables['elements']['#heartbeat'];
 
-  if ($entity->isPublished()) {
+  if ($entity->getEntityType() == 'heartbeat' && $entity->isPublished()) {
     $node = \Drupal::entityTypeManager()
       ->getStorage('node')
       ->load($entity->getNid()->getValue()[0]['target_id']);
@@ -32,10 +32,10 @@ function template_preprocess_heartbeat(array &$variables) {
       $renderedNode = \Drupal::entityTypeManager()->getViewBuilder('node')->view($node, 'full');
       $variables['content']['node'] = $renderedNode;
     }
-
+  }
     // Helpful $content variable for templates.
     foreach (Element::children($variables['elements']) as $key) {
       $variables['content'][$key] = $variables['elements'][$key];
     }
-  }
+
 }

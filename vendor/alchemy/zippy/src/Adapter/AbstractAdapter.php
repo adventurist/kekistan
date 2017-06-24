@@ -12,14 +12,14 @@
 
 namespace Alchemy\Zippy\Adapter;
 
-use Alchemy\Zippy\Adapter\Resource\ResourceInterface;
-use Alchemy\Zippy\Adapter\VersionProbe\VersionProbeInterface;
 use Alchemy\Zippy\Archive\Archive;
 use Alchemy\Zippy\Archive\ArchiveInterface;
-use Alchemy\Zippy\Exception\RuntimeException;
 use Alchemy\Zippy\Exception\InvalidArgumentException;
-use Alchemy\Zippy\Resource\PathUtil;
 use Alchemy\Zippy\Resource\ResourceManager;
+use Alchemy\Zippy\Resource\PathUtil;
+use Alchemy\Zippy\Adapter\VersionProbe\VersionProbeInterface;
+use Alchemy\Zippy\Exception\RuntimeException;
+use Alchemy\Zippy\Adapter\Resource\ResourceInterface;
 
 abstract class AbstractAdapter implements AdapterInterface
 {
@@ -121,8 +121,6 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Sets the version probe used by this adapter
      *
-     * @param VersionProbeInterface $probe
-     *
      * @return VersionProbeInterface
      */
     public function setVersionProbe(VersionProbeInterface $probe)
@@ -179,8 +177,6 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Creates a resource given a path
      *
-     * @param string $path
-     *
      * @return ResourceInterface
      */
     abstract protected function createResource($path);
@@ -188,29 +184,19 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Do the removal after having check that the current adapter is supported
      *
-     * @param ResourceInterface $resource
-     * @param array             $files
-     *
-     * @return array
+     * @return Array
      */
     abstract protected function doRemove(ResourceInterface $resource, $files);
 
     /**
      * Do the add after having check that the current adapter is supported
      *
-     * @param ResourceInterface $resource
-     * @param array             $files
-     * @param bool              $recursive
-     *
-     * @return array
+     * @return Array
      */
     abstract protected function doAdd(ResourceInterface $resource, $files, $recursive);
 
     /**
      * Do the extract after having check that the current adapter is supported
-     *
-     * @param ResourceInterface $resource
-     * @param                   $to
      *
      * @return \SplFileInfo The extracted archive
      */
@@ -220,10 +206,9 @@ abstract class AbstractAdapter implements AdapterInterface
      * Do the extract members after having check that the current adapter is supported
      *
      * @param ResourceInterface $resource
-     * @param string|string[]   $members
-     * @param string            $to
-     * @param bool              $overwrite
-     *
+     * @param string|string[] $members
+     * @param string $to
+     * @param bool $overwrite
      * @return \SplFileInfo The extracted archive
      */
     abstract protected function doExtractMembers(ResourceInterface $resource, $members, $to, $overwrite = false);
@@ -231,18 +216,12 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Do the list members after having check that the current adapter is supported
      *
-     * @param ResourceInterface $resource
-     *
-     * @return array
+     * @return Array
      */
     abstract protected function doListMembers(ResourceInterface $resource);
 
     /**
      * Do the create after having check that the current adapter is supported
-     *
-     * @param string $path
-     * @param string $file
-     * @param bool   $recursive
      *
      * @return ArchiveInterface
      */
@@ -251,7 +230,7 @@ abstract class AbstractAdapter implements AdapterInterface
     /**
      * Makes the target path absolute as the adapters might have a different directory
      *
-     * @param string $path The path to convert
+     * @param $path The path to convert
      *
      * @return string The absolute path
      *
@@ -268,6 +247,6 @@ abstract class AbstractAdapter implements AdapterInterface
             throw new InvalidArgumentException(sprintf('Target path %s is not writeable.', $directory));
         }
 
-        return realpath($directory) . '/' . PathUtil::basename($path);
+        return realpath($directory).'/'.PathUtil::basename($path);
     }
 }

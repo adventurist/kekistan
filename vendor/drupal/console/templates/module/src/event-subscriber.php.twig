@@ -24,7 +24,7 @@ class {{ class }} implements EventSubscriberInterface {% endblock %}
 {% block class_construct %}
 
   /**
-   * Constructs a new {{ class }} object.
+   * Constructor.
    */
   public function __construct({{ servicesAsParameters(services)|join(', ') }}) {
 {{ serviceClassInitialization(services) }}

@@ -11,12 +11,6 @@
 /bin/pdepend
 /bin/php-cs-fixer
 /bin/phpmd
-/bin/php-parse
-/bin/psysh
-PATCHES.txt
-
-# Develop
-autoload.local.php
 
 # Binaries
 /box.phar
@@ -29,7 +23,3 @@ autoload.local.php
 
 # Drupal
 /core
-/nbproject/
-
-# drupal/console-extend-plugin generated files
-extend.console.*.yml

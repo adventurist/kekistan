@@ -23,7 +23,7 @@ class Archive implements ArchiveInterface
     /**
      * The path to the archive
      *
-     * @var string
+     * @var String
      */
     protected $path;
 
@@ -37,7 +37,7 @@ class Archive implements ArchiveInterface
     /**
      * An array of archive members
      *
-     * @var MemberInterface[]
+     * @var Array
      */
     protected $members = array();
 
@@ -117,12 +117,12 @@ class Archive implements ArchiveInterface
     /**
      * @inheritdoc
      */
-        public function extract($toDirectory)
-        {
+     public function extract($toDirectory)
+     {
         $this->adapter->extract($this->resource, $toDirectory);
 
         return $this;
-        }
+     }
 
     /**
      * @inheritdoc

@@ -122,3 +122,12 @@ Temporarily hiding all irrelevant content */
 /*@media all and (min-width: 300px) {*/
 /*}*/
 
+
+
+/*TODO
+
+  //add responsiveness for colorbox on mobile using something like the following:
+
+    max-width: 400px;
+height: auto!important;
+*/

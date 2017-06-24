@@ -3,7 +3,6 @@
 namespace Stecman\Component\Symfony\Console\BashCompletion;
 
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
-use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -20,7 +19,6 @@ class CompletionCommand extends SymfonyCommand
     {
         $this
             ->setName('_completion')
-            ->setDefinition($this->createDefinition())
             ->setDescription('BASH completion hook.')
             ->setHelp(<<<END
 To enable BASH completion, run:
@@ -32,15 +30,25 @@ Or for an alias:
     <comment>eval `[program] _completion -g -p [alias]`</comment>.
 
 END
+            )
+            ->addOption(
+                'generate-hook',
+                'g',
+                InputOption::VALUE_NONE,
+                'Generate BASH code that sets up completion for this application.'
+            )
+            ->addOption(
+                'program',
+                'p',
+                InputOption::VALUE_REQUIRED,
+                "Program name that should trigger completion\n<comment>(defaults to the absolute application path)</comment>."
+            )
+            ->addOption(
+                'shell-type',
+                null,
+                InputOption::VALUE_OPTIONAL,
+                'Set the shell type (zsh or bash). Otherwise this is determined automatically.'
             );
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getNativeDefinition()
-    {
-        return $this->createDefinition();
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -53,19 +61,10 @@ END
             $program = $argv[0];
 
             $factory = new HookFactory();
-            $alias = $input->getOption('program');
-            $multiple = (bool)$input->getOption('multiple');
-
-            // When completing for multiple apps having absolute path in the alias doesn't make sense.
-            if (!$alias && $multiple) {
-                $alias = basename($program);
-            }
-
             $hook = $factory->generateHook(
                 $input->getOption('shell-type') ?: $this->getShellType(),
                 $program,
-                $alias,
-                $multiple
+                $input->getOption('program')
             );
 
             $output->write($hook, true);
@@ -95,7 +94,7 @@ END
      */
     protected function configureCompletion(CompletionHandler $handler)
     {
-        // Override this method to configure custom value completions
+         // Override this method to configure custom value completions
     }
 
     /**
@@ -110,35 +109,5 @@ END
         }
 
         return basename(getenv('SHELL'));
-    }
-
-    protected function createDefinition()
-    {
-        return new InputDefinition(array(
-            new InputOption(
-                'generate-hook',
-                'g',
-                InputOption::VALUE_NONE,
-                'Generate BASH code that sets up completion for this application.'
-            ),
-            new InputOption(
-                'program',
-                'p',
-                InputOption::VALUE_REQUIRED,
-                "Program name that should trigger completion\n<comment>(defaults to the absolute application path)</comment>."
-            ),
-            new InputOption(
-                'multiple',
-                'm',
-                InputOption::VALUE_NONE,
-                "Generated hook can be used for multiple applications."
-            ),
-            new InputOption(
-                'shell-type',
-                null,
-                InputOption::VALUE_OPTIONAL,
-                'Set the shell type (zsh or bash). Otherwise this is determined automatically.'
-            ),
-        ));
     }
 }

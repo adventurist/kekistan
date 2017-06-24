@@ -6,6 +6,7 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBuilder;
 use Drupal\flag\FlagService;
+use Drupal\comment\Entity\Comment;
 use Drupal\User\Entity\User;
 use Drupal\Flag\Entity\Flag;
 use Drupal\Core\Datetime\DateFormatter;
@@ -175,40 +176,53 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
       }
 
-//      $commentForm = $this->formBuilder->getForm('Drupal\comment\CommentForm', $heartbeat);
 
-//      $flagRenderable = $flagLink->toRenderable();
 
-      if (null === $profilePic) {
+      $heartbeatCommentForm = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
+      $commentForm = $this->entityTypeManager->getViewBuilder('block')
+        ->view($heartbeatCommentForm);
+
+
+      if (NULL === $profilePic) {
         $profilePic = 86;
       }
 
       $pic = File::load($profilePic);
 
-      if ($pic !== null) {
-        $style = $this->entityTypeManager->getStorage('image_style')->load('thumbnail');
+      if ($pic !== NULL) {
+        $style = $this->entityTypeManager->getStorage('image_style')
+          ->load('thumbnail');
 
         $rendered = $style->buildUrl($pic->getFileUri());
       }
 
+      $likeFlag = $this->flagService->getFlagById('heartbeat_like');
 
-//TODO GET ACTION AND APPEND TO CLASSES IN FLAG WRAPPER
-
-
-
-
-
+      $flagKey = 'flag_' . $likeFlag->id();
+      $flagData = [
+        '#lazy_builder' => ['flag.link_builder:build', [
+          $heartbeat->getEntityTypeId(),
+          $heartbeat->id(),
+          $likeFlag->id(),
+        ]],
+        '#create_placeholder' => TRUE,
+      ];
 
       $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
         'userPicture' => $rendered,
         'userId' => $user->id(),
         'timeAgo' => $timeago,
         'id' => $heartbeat->id(),
-//        'friendFlag' => $flagUrl,
-//        'friendFlagText' => $flagText,
-//        'flagId' => $flag->id(),
         'user' => $userView,
-//        'commentForm' => $commentForm
+        'commentForm' => $commentForm,
+        'likeFlag' => [$flagKey => $flagData],
         );
     }
 }
+
+
+/******************************
+ * *****FOR COMMENT FEED*******
+ * *****ON EACH HEARTBEAT******
+ * ****************************/
+

@@ -21,12 +21,12 @@ class TargetLocator
      * For example, adding /path/to/file where the context (current working
      * directory) is /path/to will return `file` as target
      *
-     * @param string          $context
-     * @param string|resource $resource
+     * @param String          $context
+     * @param String|resource $resource
      *
-     * @return string
+     * @return String
      *
-     * @throws TargetLocatorException when the resource is invalid
+     * @throws TargetLocatorException In case the resource is invalid
      */
     public function locate($context, $resource)
     {
@@ -36,7 +36,7 @@ class TargetLocator
             case is_string($resource):
                 return $this->locateString($context, $resource);
             case $resource instanceof \SplFileInfo:
-                return $this->locateString($context, $resource->getRealPath());
+                return $this->locateString($context, $resource->getRealpath());
             default:
                 throw new TargetLocatorException($resource, 'Unknown resource format');
         }
@@ -47,7 +47,7 @@ class TargetLocator
      *
      * @param resource $resource
      *
-     * @return string
+     * @return String
      *
      * @throws TargetLocatorException
      */
@@ -66,10 +66,9 @@ class TargetLocator
     /**
      * Locate the target for a string.
      *
-     * @param        $context
-     * @param string $resource
+     * @param String $resource
      *
-     * @return string
+     * @return String
      *
      * @throws TargetLocatorException
      */
@@ -103,9 +102,9 @@ class TargetLocator
     /**
      * Removes backward path sequences (..)
      *
-     * @param string $path
+     * @param String $path
      *
-     * @return string
+     * @return String
      *
      * @throws TargetLocatorException In case the path is invalid
      */
@@ -121,10 +120,10 @@ class TargetLocator
     /**
      * Checks whether the path belong to the context
      *
-     * @param string $path A resource path
-     * @param string $context
+     * @param String $path    A resource path
+     * @param String $context
      *
-     * @return bool
+     * @return Boolean
      */
     private function isFileInContext($path, $context)
     {
@@ -134,10 +133,9 @@ class TargetLocator
     /**
      * Gets the relative path from the context for the given path
      *
-     * @param string $path A resource path
-     * @param string $context
+     * @param String $path A resource path
      *
-     * @return string
+     * @return String
      */
     private function getRelativePathFromContext($path, $context)
     {
@@ -145,11 +143,11 @@ class TargetLocator
     }
 
     /**
-     * Checks if a scheme refers to a local filesystem
+     * Checks if a scheme reffers to a local filesystem
      *
-     * @param string $scheme
+     * @param String $scheme
      *
-     * @return bool
+     * @return Boolean
      */
     private function isLocalFilesystem($scheme)
     {
