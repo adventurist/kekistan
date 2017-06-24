@@ -5,6 +5,8 @@ namespace Drupal\heartbeat\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Comment\Entity\Comment;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\Core\Ajax\PrependCommand;
 
 /**
  * Class HeartbeatCommentForm.
@@ -66,7 +68,14 @@ class HeartbeatCommentForm extends FormBase {
     ]);
 
     if ($comment->save()) {
-      return true;
+
+      $response = new AjaxResponse();
+      $response->addCommand(new PrependCommand(
+        '#heartbeat-' . $config->get('entity_id') . ' .heartbeat-comments',
+        '<div id="heartbeat-comment-' . $comment->id() . '">' . $commentBody . ' <br></div>'));
+
+      return $response;
+
     }
 
   }

@@ -41,7 +41,9 @@
           {{ message.commentForm }}
           <div class="heartbeat-comments">
             {% for comment in message.comments %}
-            {{ comment }} <br>
+              <div id="heartbeat-comment-{{ comment.id }}">
+            {{ comment.body }} <br>
+              </div>
             {% endfor %}
           </div>
         </div>

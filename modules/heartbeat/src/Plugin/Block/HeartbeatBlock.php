@@ -208,8 +208,9 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
 //        $comment = $this->entityTypeManager->getStorage('comment')->load($cid);
           $comment = Comment::load($cid);
 //        $comment->delete();
+        $comments[]['id'] = $cid;
+        $comments[]['body'] = $comment->get('comment_body')->value;
 
-        $comments[] = $comment->get('comment_body')->value;
       }
 
 //      $heartbeatCommentBlock = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
