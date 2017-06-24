@@ -3,6 +3,7 @@
 namespace Drupal\heartbeat\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
+use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBuilder;
 use Drupal\flag\FlagService;
@@ -17,6 +18,7 @@ use Drupal\Core\Database\Database;
 use Drupal\heartbeat\HeartbeatTypeServices;
 use Drupal\heartbeat\HeartbeatStreamServices;
 use Drupal\heartbeat\HeartbeatService;
+use Drupal\heartbeat\Plugin\Block\HeartbeatCommentBlock;
 
 //*  deriver = "Drupal\heartbeat\Plugin\Derivative\HeartbeatBlockDeriver
 
@@ -56,6 +58,9 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
   protected $flagService;
 
   protected $formBuilder;
+
+  protected $configFactory;
+
   /**
    * Construct.
    *
@@ -72,7 +77,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         $plugin_definition,
         HeartbeatTypeServices $heartbeat_heartbeattype,
 	HeartbeatStreamServices $heartbeatstream,
-	HeartbeatService $heartbeat, EntityTypeManager $entity_type_manager, DateFormatter $date_formatter, FlagService $flag_service, FormBuilder $form_builder
+	HeartbeatService $heartbeat, EntityTypeManager $entity_type_manager, DateFormatter $date_formatter, FlagService $flag_service, FormBuilder $form_builder, ConfigFactory $configFactory
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->heartbeatTypeServices = $heartbeat_heartbeattype;
@@ -82,6 +87,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
     $this->dateFormatter = $date_formatter;
     $this->flagService = $flag_service;
     $this->formBuilder = $form_builder;
+    $this->configFactory = $configFactory;
   }
   /**
    * {@inheritdoc}
@@ -97,7 +103,8 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $container->get('entity_type.manager'),
       $container->get('date.formatter'),
       $container->get('flag'),
-      $container->get('form_builder')
+      $container->get('form_builder'),
+      $container->get('config.factory')
     );
   }
 
@@ -176,13 +183,6 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
       }
 
-
-
-      $heartbeatCommentForm = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
-      $commentForm = $this->entityTypeManager->getViewBuilder('block')
-        ->view($heartbeatCommentForm);
-
-
       if (NULL === $profilePic) {
         $profilePic = 86;
       }
@@ -192,9 +192,29 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       if ($pic !== NULL) {
         $style = $this->entityTypeManager->getStorage('image_style')
           ->load('thumbnail');
-
         $rendered = $style->buildUrl($pic->getFileUri());
       }
+
+      $cids = \Drupal::entityQuery('comment')
+        ->condition('entity_id', $heartbeat->id())
+        ->condition('entity_type', 'heartbeat')
+        ->sort('cid', 'DESC')
+        ->execute();
+
+      $comments = [];
+
+      foreach($cids as $cid) {
+
+//        $comment = $this->entityTypeManager->getStorage('comment')->load($cid);
+          $comment = Comment::load($cid);
+//        $comment->delete();
+
+        $comments[] = $comment->get('comment_body')->value;
+      }
+
+      $heartbeatCommentBlock = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
+      $commentForm = $this->entityTypeManager->getViewBuilder('block')
+        ->view($heartbeatCommentBlock);
 
       $likeFlag = $this->flagService->getFlagById('heartbeat_like');
 
@@ -215,6 +235,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         'id' => $heartbeat->id(),
         'user' => $userView,
         'commentForm' => $commentForm,
+        'comments' => $comments,
         'likeFlag' => [$flagKey => $flagData],
         );
     }

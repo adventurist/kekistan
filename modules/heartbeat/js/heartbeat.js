@@ -74,9 +74,10 @@
                   }
                 });
               }
-            }
+            };
 
             listenImages();
+            listenCommentPost();
         }
     };
 
@@ -105,6 +106,36 @@
       $(this).colorbox({href: $(this).attr('src'), cboxOptions});
     });
   }
+
+  function listenCommentPost() {
+    let comments = document.querySelectorAll('[data-drupal-selector]');
+
+    for (let i = 0; i < comments.length; i++) {
+      let comment = comments[i];
+      console.dir(comment);
+      comment.addEventListener('click', function() {
+        getParent(comment);
+      })
+    }
+  }
+
+  function getParent(node) {
+    console.dir(node);
+    if (node.classList.contains('heartbeat-comment')) {
+      let id = node.id.substr(node.id.indexOf('-')+1);
+      $.ajax({
+        type: 'POST',
+        url:'/heartbeat/commentupdate/' + id,
+        success: function(response) {
+
+          console.log(response);
+        }
+      });
+    } else {
+      getParent(node.parentNode);
+    }
+  }
+
 
 })(jQuery, Drupal, drupalSettings);
 

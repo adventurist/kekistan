@@ -4,6 +4,7 @@ namespace Drupal\heartbeat\Plugin\Block;
 
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\heartbeat\Form\HeartbeatCommentForm;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Form\FormBuilder;
 
@@ -23,6 +24,8 @@ class HeartbeatCommentBlock extends BlockBase implements ContainerFactoryPluginI
    * @var Drupal\Core\Form\FormBuilder
    */
   protected $form_builder;
+  protected $entityId;
+
   /**
    * Construct.
    *
@@ -61,7 +64,15 @@ class HeartbeatCommentBlock extends BlockBase implements ContainerFactoryPluginI
    * {@inheritdoc}
    */
   public function build() {
-    return $this->form_builder->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm');
+    $form = $this->form_builder->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm');
+    if ($form instanceof HeartbeatCommentForm) {
+      $form->setEntityId($this->entityId);
+    }
+    return $form;
+  }
+
+  public function setEntityId($id) {
+    $this->entityId = $id;
   }
 
 }
