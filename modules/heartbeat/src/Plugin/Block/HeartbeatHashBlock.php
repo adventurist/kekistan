@@ -214,9 +214,21 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
     $form = \Drupal::service('form_builder')->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm', $heartbeat);
 
     $likeFlag = $this->flagService->getFlagById('heartbeat_like');
+    $unlikeFlag = $this->flagService->getFlagById('jihad_flag');
 
-    $flagKey = 'flag_' . $likeFlag->id();
-    $flagData = [
+
+    $unlikeKey = 'flag_' . $unlikeFlag->id();
+    $unlikeData = [
+      '#lazy_builder' => ['flag.link_builder:build', [
+        $heartbeat->getEntityTypeId(),
+        $heartbeat->id(),
+        $unlikeFlag->id(),
+      ]],
+      '#create_placeholder' => TRUE,
+    ];
+
+    $likeKey = 'flag_' . $likeFlag->id();
+    $likeData = [
       '#lazy_builder' => ['flag.link_builder:build', [
         $heartbeat->getEntityTypeId(),
         $heartbeat->id(),
@@ -233,7 +245,8 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
       'user' => $userView,
       'commentForm' => $form,
       'comments' => $comments,
-      'likeFlag' => [$flagKey => $flagData],
+      'likeFlag' => [$likeKey => $likeData],
+      'unlikeFlag' => [$unlikeKey => $unlikeData]
     );
   }
 }
