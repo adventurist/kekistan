@@ -188,7 +188,10 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
     $commentConfig = \Drupal::configFactory()->getEditable('heartbeat_comment.settings');
     $commentConfig->set('entity_id', $entity_id)->save();
 
-    return true;
+    return [
+      '#type' => 'markup',
+      '#markup' => 'Success',
+    ];
   }
 
 }
