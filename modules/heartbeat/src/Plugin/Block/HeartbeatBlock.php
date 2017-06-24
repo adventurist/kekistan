@@ -212,9 +212,11 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         $comments[] = $comment->get('comment_body')->value;
       }
 
-      $heartbeatCommentBlock = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
-      $commentForm = $this->entityTypeManager->getViewBuilder('block')
-        ->view($heartbeatCommentBlock);
+//      $heartbeatCommentBlock = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
+//      $commentForm = $this->entityTypeManager->getViewBuilder('block')
+//        ->view($heartbeatCommentBlock);
+
+      $form = \Drupal::service('form_builder')->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm', $heartbeat);
 
       $likeFlag = $this->flagService->getFlagById('heartbeat_like');
 
@@ -234,7 +236,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         'timeAgo' => $timeago,
         'id' => $heartbeat->id(),
         'user' => $userView,
-        'commentForm' => $commentForm,
+        'commentForm' => $form,
         'comments' => $comments,
         'likeFlag' => [$flagKey => $flagData],
         );

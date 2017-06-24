@@ -168,7 +168,7 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
     $myConfig->set('message', $arg)->save();
     \Drupal::logger('HeartbeatController')->debug('My argument is %arg', ['%arg' => $arg]);
 
-    return BlockViewBuilder::lazyBuilder('heartbeatblock', 'teaser');
+    return BlockViewBuilder::lazyBuilder('heartbeatblock', 'full');
   }
 
 
