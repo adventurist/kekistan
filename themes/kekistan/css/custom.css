@@ -168,6 +168,10 @@ iframe.kekistan-anthem-video {
   float: right;
 }
 
+.heartbeat-like, .heartbeat-unlike {
+  display: inline-block;
+}
+
 .heartbeat-comment-form label {
   display: none;
 }
