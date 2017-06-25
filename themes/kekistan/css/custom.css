@@ -166,6 +166,13 @@ iframe.kekistan-anthem-video {
 .heartbeat-interaction-wrap {
   width: 75%;
   float: right;
+  padding-top: 12px;
+}
+
+@media (max-width: 768px) {
+  .heartbeat-interaction-wrap {
+    width: 100%;
+  }
 }
 
 .heartbeat-message a {
@@ -227,9 +234,9 @@ iframe.kekistan-anthem-video {
   width: 99%;
 }
 
-heartbeat-message a.heartbeat-user {
-  color: green;
-}
+/*.heartbeat-message a.heartbeat-user {*/
+  /*color: green;*/
+/*}*/
 
 .heartbeat-hashtag,
 .heartbeat-username {

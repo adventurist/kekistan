@@ -32,24 +32,24 @@
         <div class="heartbeat-content">
         {{ message.heartbeat }}
         </div>
-        <div class="heartbeat-interaction-wrap">
-          <div class="heartbeat-like">
-            {{ message.likeFlag }}
+      </div>
+      <div class="heartbeat-interaction-wrap">
+        <div class="heartbeat-like">
+          {{ message.likeFlag }}
+        </div>
+        <div class="heartbeat-unlike">
+          {{ message.unlikeFlag }}
+        </div>
+        <div class="heartbeat-comment" id="comment-{{ message.id }}">
+          <div class="heartbeat-comments">
+            {% for comment in message.comments %}
+              <div id="heartbeat-comment-{{ comment.id }}">
+                <span class="comment-owner">{{ comment.owner }}{{ comment.timeAgo }} ago</span>
+                <span class="comment-body">{{ comment.body }}</span>
+              </div>
+            {% endfor %}
           </div>
-          <div class="heartbeat-unlike">
-            {{ message.unlikeFlag }}
-          </div>
-          <div class="heartbeat-comment" id="comment-{{ message.id }}">
-            <div class="heartbeat-comments">
-              {% for comment in message.comments %}
-                <div id="heartbeat-comment-{{ comment.id }}">
-                  <span class="comment-owner">{{ comment.owner }}{{ comment.timeAgo }} ago</span>
-                  <span class="comment-body">{{ comment.body }}</span>
-                </div>
-              {% endfor %}
-            </div>
-            {{ message.commentForm }}
-          </div>
+          {{ message.commentForm }}
         </div>
       </div>
     </div>
