@@ -101,6 +101,14 @@ heartbeat_hashtag.config:
       type: integer
       label: 'The Taxonomy term to be used when filtering a Heartbeat Stream'
 
+heartbeat_more.config:
+  type: config_object
+  label: 'Parameter for fetching more heartbeats'
+  mapping:
+    hid:
+      type: integer
+      label: 'The oldest ID visible to the User requesting more Heartbeats'
+
 heartbeat_comment.config:
   type: config_object
   label: 'Comment configuration'

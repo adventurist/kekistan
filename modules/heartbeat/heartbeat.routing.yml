@@ -97,7 +97,7 @@ heartbeat.render_feed:
     _permission: 'access content'
 
 heartbeat.update_feed:
-  path: '/heartbeat/update_feed/{arg}'
+  path: '/heartbeat/update_feed/{hid}'
   defaults:
     _controller: '\Drupal\heartbeat\Controller\HeartbeatController::updateFeed'
     _title: 'Update Feed'

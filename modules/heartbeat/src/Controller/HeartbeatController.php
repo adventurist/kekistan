@@ -172,8 +172,11 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
   }
 
 
-  public function updateFeed($arg) {
-    \Drupal::logger('HeartbeatController::updater')->debug('Jigga what is %arg', ['%arg' => $arg]);
+  public function updateFeed($hid) {
+    $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_more.settings');
+    $myConfig->set('hid', $hid)->save();
+
+    return BlockViewBuilder::lazyBuilder('heartbeatmoreblock', 'full');
   }
 
   public function filterFeed($tid) {
@@ -181,7 +184,6 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
     $myConfig->set('tid', $tid)->save();
 
     return BlockViewBuilder::lazyBuilder('heartbeathashblock', 'teaser');
-
   }
 
   public function commentConfigUpdate($entity_id) {

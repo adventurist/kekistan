@@ -7,26 +7,16 @@
 
           if (drupalSettings.friendData != null) {
             var divs = document.querySelectorAll('.flag-friendship a.use-ajax');
-            // console.log(divs);
+
             for (let i = 0; i < divs.length; i++) {
               let anchor = divs[i];
               var userId = anchor.href.substring(anchor.href.indexOf('friendship') + 11, anchor.href.indexOf('?destination'));
-              console.log(userId);
               JSON.parse(drupalSettings.friendData).forEach(function (friendship) {
                 if (friendship.uid_target === userId && friendship.uid == drupalSettings.user.uid && friendship.status == 0) {
                   anchor.innerHTML = 'Friendship Pending';
                 }
               });
             }
-            // divs.forEach(function (anchor) {
-            //   var userId = anchor.href.substring(anchor.href.indexOf('friendship') + 11, anchor.href.indexOf('?destination'));
-            //   console.log(userId);
-            //   JSON.parse(drupalSettings.friendData).forEach(function (friendship) {
-            //     if (friendship.uid_target === userId && friendship.uid == drupalSettings.user.uid && friendship.status == 0) {
-            //       anchor.innerHTML = 'Friendship Pending';
-            //     }
-            //   });
-            // });
           }
 
           feedElement = document.querySelector('.heartbeat-stream');
@@ -43,7 +33,6 @@
                 success: function(response) {
 
                   feedElement = document.querySelector('.heartbeat-stream');
-                  console.dir(feedElement);
 
                   if (feedElement != null) {
 
@@ -55,22 +44,18 @@
                     insertNode = document.createElement('div');
                     insertNode.innerHTML = response;
                     feedBlock.appendChild(insertNode);
-
                   }
-
                 }
               });
             };
 
             Drupal.AjaxCommands.prototype.updateFeed = function(ajax, response, status) {
-              console.dir(response.timestamp);
               if ($response.update) {
                 $.ajax({
                   type: 'POST',
                   url:'/heartbeat/update_feed/' + response.timestamp,
                   success: function(response) {
 
-                    console.dir(response);
                   }
                 });
               }
@@ -88,8 +73,6 @@
       type: 'POST',
       url: '/heartbeat/form/heartbeat_update_feed',
       success: function (response) {
-        console.dir(response);
-        console.log('We are succeed!');
       }
     })
   }
@@ -127,14 +110,70 @@
         type: 'POST',
         url:'/heartbeat/commentupdate/' + id,
         success: function(response) {
-
-          console.log(response);
         }
       });
     } else {
       getParent(node.parentNode);
     }
   }
+
+  function getScrollXY() {
+    var scrOfX = 0, scrOfY = 0;
+    if( typeof( window.pageYOffset ) == 'number' ) {
+      //Netscape compliant
+      scrOfY = window.pageYOffset;
+      scrOfX = window.pageXOffset;
+    } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
+      //DOM compliant
+      scrOfY = document.body.scrollTop;
+      scrOfX = document.body.scrollLeft;
+    } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
+      //IE6 standards compliant mode
+      scrOfY = document.documentElement.scrollTop;
+      scrOfX = document.documentElement.scrollLeft;
+    }
+    return [ scrOfX, scrOfY ];
+  }
+
+//taken from http://james.padolsey.com/javascript/get-document-height-cross-browser/
+  function getDocHeight() {
+    var D = document;
+    return Math.max(
+      D.body.scrollHeight, D.documentElement.scrollHeight,
+      D.body.offsetHeight, D.documentElement.offsetHeight,
+      D.body.clientHeight, D.documentElement.clientHeight
+    );
+  }
+
+  document.addEventListener("scroll", function (event) {
+
+    if (getDocHeight() == getScrollXY()[1] + window.innerHeight) {
+
+      let streams = document.querySelectorAll('.heartbeat-stream');
+      let stream = streams.length > 1 ? streams[streams.length - 1] : streams[0];
+
+      if (stream !== null) {
+        console.dir(stream);
+        let lastHeartbeat = stream.lastElementChild;
+
+        if (lastHeartbeat !== null) {
+
+          let hid = lastHeartbeat.id.substring(lastHeartbeat.id.indexOf('-') + 1);
+          $.ajax({
+            type: 'POST',
+            url: '/heartbeat/update_feed/' + hid,
+            success: function (response) {
+
+              feedBlock = document.getElementById('block-heartbeatblock');
+              insertNode = document.createElement('div');
+              insertNode.innerHTML = response;
+              feedBlock.appendChild(insertNode);
+            }
+          });
+        }
+      }
+    }
+  });
 
 
 })(jQuery, Drupal, drupalSettings);

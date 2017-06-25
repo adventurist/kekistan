@@ -182,6 +182,31 @@ class HeartbeatStreamServices {
     return null;
   }
 
+  public function getOlderStreamForUidsByType($uids, $type, $hid) {
+    $currentUid = \Drupal::currentUser()->id();
+    $stream = $this->entityTypeManager->getStorage('heartbeat_stream')->load(array_values($this->loadStream($type))[0]);
+    if ($stream !== null) {
+      $types = array();
+      foreach ($stream->getTypes() as $heartbeatType) {
+        $value = $heartbeatType->getValue()['target_id'];
+        if ($value !== "0") {
+          $types[] = $value;
+        }
+      }
+//      $uids[] = $currentUid;
+      $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('id', $hid, '<')->condition('type', $types, 'IN')->condition('uid', $uids, 'IN')->sort('created', 'DESC')->range(0,50)->execute());
+
+      if (count($beats) > 0) {
+        $this->lastId = call_user_func('end', array_keys($beats));
+
+        $this->configFactory->getEditable('heartbeat_update_feed.settings')->set('lastId', $this->lastId)->set('update', false)->set('timestamp', array_values($beats)[0]->getRevisionCreationTime())->save();
+
+        return $beats;
+      }
+    }
+    return null;
+  }
+
 
   public function createHashStreamForUidsByType($uids, $type, $tid) {
     $currentUid = \Drupal::currentUser()->id();
@@ -199,19 +224,6 @@ class HeartbeatStreamServices {
     foreach ($query->fetchAllKeyed() as $id => $row) {
       $hids[] = $id;
     }
-
-
-//    $stream = $this->entityTypeManager->getStorage('heartbeat_stream')->load(array_values($this->loadStream($type))[0]);
-//    if ($stream !== null) {
-//      $types = array();
-//      foreach ($stream->getTypes() as $heartbeatType) {
-//        $value = $heartbeatType->getValue()['target_id'];
-//        if ($value !== "0") {
-//          $types[] = $value;
-//        }
-//      }
-//      $uids[] = $currentUid;
-
 
     if (!empty($hids)) {
       $beats = $this->entityTypeManager->getStorage('heartbeat')
