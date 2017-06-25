@@ -164,7 +164,7 @@ iframe.kekistan-anthem-video {
 }
 
 .heartbeat-interaction-wrap {
-  width: 100%;
+  width: 75%;
   float: right;
 }
 
@@ -202,8 +202,17 @@ iframe.kekistan-anthem-video {
   display: inline;
 }
 
+heartbeat-comments {
+  font-size: 13px;
+}
+
 .comment-owner, .comment-body {
   display: inline-block;
+}
+
+.comment-body {
+  vertical-align: top;
+  padding-top: 8px;
 }
 
 
