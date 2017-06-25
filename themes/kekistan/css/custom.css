@@ -221,6 +221,11 @@ iframe.kekistan-anthem-video {
 .comment-owner {
   width: 25%;
   font-size: 12px;
+  font-weight: 700;
+}
+
+.comment-owner article {
+  font-weight: 500;
 }
 
 .comment-body {

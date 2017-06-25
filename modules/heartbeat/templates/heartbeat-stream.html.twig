@@ -44,7 +44,7 @@
           <div class="heartbeat-comments">
             {% for comment in message.comments %}
               <div id="heartbeat-comment-{{ comment.id }}">
-                <span class="comment-owner">{{ comment.username }}{{ comment.owner }}{{ comment.timeAgo }} ago</span>
+                <span class="comment-owner">{{ comment.username }}{{ comment.owner }}<span class="comment-ago"{{ comment.timeAgo }}> ago</span></span>
                 <span class="comment-body">{{ comment.body }}</span>
               </div>
             {% endfor %}
