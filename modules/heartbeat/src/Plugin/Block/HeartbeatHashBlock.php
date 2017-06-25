@@ -200,12 +200,17 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
 
     foreach($cids as $cid) {
 
-//        $comment = $this->entityTypeManager->getStorage('comment')->load($cid);
       $comment = Comment::load($cid);
-//        $comment->delete();
 
-      $comments[]['id'] = $cid;
-      $comments[]['body'] = $comment->get('comment_body')->value;
+      $commentOwner = user_view($comment->getOwner(), 'comment');
+      $comments[] = [
+        'id' => $cid,
+        'body' => $comment->get('comment_body')->value,
+        'username' => $comment->getAuthorName(),
+        'owner' => $commentOwner,
+        'timeAgo' => $this->dateFormatter->formatInterval(REQUEST_TIME - $comment->getCreatedTime())
+      ];
+
     }
 
 //      $heartbeatCommentBlock = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
