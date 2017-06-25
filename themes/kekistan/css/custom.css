@@ -209,6 +209,13 @@ iframe.kekistan-anthem-video {
   display: inline;
 }
 
+.praisetip, .jihadtip {
+  transition: all 0.5s ease;
+  color: rgb(0, 178, 0);
+  position: absolute;
+  transform: translateY(-30%);
+}
+
 .heartbeat-comments {
   font-size: 13px;
   padding-top: 12px

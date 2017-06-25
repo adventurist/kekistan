@@ -79,9 +79,50 @@
 
       }
       displayCounts();
+      flagTooltips();
     }
   };
 
+  function flagTooltips() {
+    var likeFlags = document.querySelectorAll('.flag-heartbeat_like');
+    var jihadFlags = document.querySelectorAll('.flag-jihad_flag');
+
+    for (let i = 0; i < likeFlags.length; i++) {
+      let tip = document.createElement('div');
+      tip.innerText = "Praise";
+      tip.style.display = "none";
+      tip.className = "praisetip";
+      likeFlags[i].parentNode.appendChild(tip);
+
+      likeFlags[i].addEventListener('mouseover', function() {
+        let tip = likeFlags[i].parentNode.querySelector('.praisetip');
+        tip.style.display = "block";
+      });
+      likeFlags[i].addEventListener('mouseout', function() {
+        let tip = likeFlags[i].parentNode.querySelector('.praisetip');
+        tip.style.display = "none";
+      });
+    }
+
+    for (let i = 0; i < jihadFlags.length; i++) {
+      let tip = document.createElement('div');
+      tip.innerText = "Jihad!";
+      tip.style.display = "none";
+      tip.className = "jihadtip";
+      jihadFlags[i].parentNode.appendChild(tip);
+
+      jihadFlags[i].addEventListener('mouseover', function() {
+        console.log('mouse over');
+        let tip = jihadFlags[i].parentNode.querySelector('.jihadtip');
+        tip.style.display = "block";
+      });
+      jihadFlags[i].addEventListener('mouseout', function() {
+        console.log('mouse over');
+        let tip = jihadFlags[i].parentNode.querySelector('.jihadtip');
+        tip.style.display = "none";
+      });
+    }
+  }
 
   function displayCounts() {
     var likefelFlags = document.querySelectorAll('.flag-heartbeat_like');
