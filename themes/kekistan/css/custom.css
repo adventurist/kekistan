@@ -168,8 +168,29 @@ iframe.kekistan-anthem-video {
   float: right;
 }
 
+.heartbeat-message a {
+  color: #1da1f2;
+}
+
 .heartbeat-like, .heartbeat-unlike {
   display: inline-block;
+}
+
+.flag-heartbeat_like a {
+  background: url(/themes/kekistan/images/icons/like.png) no-repeat;
+  background-size: contain;
+  color: transparent;
+}
+
+.flag-jihad_flag a {
+  background: url(/themes/kekistan/images/icons/bomb.png) no-repeat;
+  background-size: contain;
+  color: transparent;
+}
+
+.action-unflag.flag-heartbeat_like a,
+.action-unflag.flag-jihad_flag a {
+  opacity: 0.3;
 }
 
 .heartbeat-comment-form label {
@@ -181,10 +202,6 @@ iframe.kekistan-anthem-video {
   word-wrap: break-word;
   float: left;
   width: 99%;
-}
-
-.heartbeat-message a {
-  color: #1da1f2;
 }
 
 heartbeat-message a.heartbeat-user {
