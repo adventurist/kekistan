@@ -217,9 +217,14 @@ iframe.kekistan-anthem-video {
   display: inline-block;
 }
 
+.comment-owner {
+  width: 25%;
+}
+
 .comment-body {
   vertical-align: top;
   padding-top: 16px;
+  width: 75%;
 }
 
 
