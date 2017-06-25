@@ -202,6 +202,10 @@ iframe.kekistan-anthem-video {
   display: inline;
 }
 
+.comment-owner, .comment-body {
+  display: inline-block;
+}
+
 
 .heartbeat-comment-form label {
   display: none;
