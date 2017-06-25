@@ -205,11 +205,15 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
 
       foreach($cids as $cid) {
 
-//        $comment = $this->entityTypeManager->getStorage('comment')->load($cid);
-          $comment = Comment::load($cid);
-//        $comment->delete();
-        $comments[]['id'] = $cid;
-        $comments[]['body'] = $comment->get('comment_body')->value;
+        $comment = Comment::load($cid);
+
+        $commentOwner = user_view($comment->getOwner(), 'comment');
+        $comments[] = [
+          'id' => $cid,
+          'body' => $comment->get('comment_body')->value,
+          'username' => $comment->getAuthorName(),
+          'owner' => $commentOwner,
+          ];
 
       }
 

@@ -138,17 +138,23 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
           }
         }
       }
+      $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
+        ->fields('hf', array('status', 'uid', 'uid_target'))
+        ->execute();
+
+      $friendData = $friendships->fetchAll();
+
+      $friendConfig = \Drupal::configFactory()->getEditable('heartbeat_friendship.settings');
+
+      $friendConfig->set('data', json_encode($friendData))->save();
+    }
+    if ($flagging->getFlagId() === 'heartbeat_like') {
+
+    }
+    if ($flagging->getFlagId() === 'jihad_flag') {
+
     }
 
-    $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
-      ->fields('hf', array('status', 'uid', 'uid_target'))
-      ->execute();
-
-    $friendData = $friendships->fetchAll();
-
-    $friendConfig = \Drupal::configFactory()->getEditable('heartbeat_friendship.settings');
-
-    $friendConfig->set('data', json_encode($friendData))->save();
   }
 
   /**

@@ -54,30 +54,32 @@ class HeartbeatCommentForm extends FormBase {
    */
   public function commentAjaxSubmit(array &$form, FormStateInterface $form_state) {
 
-    $commentBody = $form_state->getValue('comment_body');
-    $config = \Drupal::config('heartbeat_comment.settings');
+    if (\Drupal::currentUser()->isAuthenticated()) {
+      $commentBody = $form_state->getValue('comment_body');
+      $config = \Drupal::config('heartbeat_comment.settings');
 
 
-    $comment = Comment::create([
-      'entity_type' => 'heartbeat',
-      'entity_id' => $config->get('entity_id'),
-      'field_name' => 'comment',
-      'comment_body' => $commentBody,
-      'comment_type' => 'comment',
-      'subject' => 'Heartbeat Comment',
-    ]);
+      $comment = Comment::create([
+        'entity_type' => 'heartbeat',
+        'entity_id' => $config->get('entity_id'),
+        'field_name' => 'comment',
+        'comment_body' => $commentBody,
+        'comment_type' => 'comment',
+        'subject' => 'Heartbeat Comment',
+        'uid' => \Drupal::currentUser()->id(),
+      ]);
 
-    if ($comment->save()) {
+      if ($comment->save()) {
 
-      $response = new AjaxResponse();
-      $response->addCommand(new AppendCommand(
-        '#heartbeat-' . $config->get('entity_id') . ' .heartbeat-comments',
-        '<div id="heartbeat-comment-' . $comment->id() . '">' . $commentBody . ' <br></div>'));
+        $response = new AjaxResponse();
+        $response->addCommand(new AppendCommand(
+          '#heartbeat-' . $config->get('entity_id') . ' .heartbeat-comments',
+          '<div id="heartbeat-comment-' . $comment->id() . '">' . $commentBody . ' <br></div>'));
 
-      return $response;
-
+        return $response;
+      }
     }
-
+    return null;
   }
 
   /**
