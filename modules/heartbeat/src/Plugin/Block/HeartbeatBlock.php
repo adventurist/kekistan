@@ -213,7 +213,8 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
           'body' => $comment->get('comment_body')->value,
           'username' => $comment->getAuthorName(),
           'owner' => $commentOwner,
-          ];
+          'timeAgo' => $this->dateFormatter->formatInterval(REQUEST_TIME - $comment->getCreatedTime())
+        ];
 
       }
 
