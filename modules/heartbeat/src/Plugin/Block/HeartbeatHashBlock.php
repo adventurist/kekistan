@@ -193,7 +193,7 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
     $cids = \Drupal::entityQuery('comment')
       ->condition('entity_id', $heartbeat->id())
       ->condition('entity_type', 'heartbeat')
-      ->sort('cid', 'DESC')
+      ->sort('cid', 'ASC')
       ->execute();
 
     $comments = [];
@@ -204,7 +204,8 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
       $comment = Comment::load($cid);
 //        $comment->delete();
 
-      $comments[] = $comment->get('comment_body')->value;
+      $comments[]['id'] = $cid;
+      $comments[]['body'] = $comment->get('comment_body')->value;
     }
 
 //      $heartbeatCommentBlock = \Drupal\block\Entity\Block::load('heartbeatcommentblock');

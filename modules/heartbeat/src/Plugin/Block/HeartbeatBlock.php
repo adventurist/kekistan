@@ -198,7 +198,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $cids = \Drupal::entityQuery('comment')
         ->condition('entity_id', $heartbeat->id())
         ->condition('entity_type', 'heartbeat')
-        ->sort('cid', 'DESC')
+        ->sort('cid', 'ASC')
         ->execute();
 
       $comments = [];
