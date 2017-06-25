@@ -70,11 +70,12 @@ class HeartbeatCommentForm extends FormBase {
       ]);
 
       if ($comment->save()) {
-
+        
         $response = new AjaxResponse();
         $response->addCommand(new AppendCommand(
           '#heartbeat-' . $config->get('entity_id') . ' .heartbeat-comments',
-          '<div id="heartbeat-comment-' . $comment->id() . '">' . $commentBody . ' <br></div>'));
+          '<div id="heartbeat-comment-' . $comment->id() . '"><span class="comment-owner"><span class="comment-username">' . \Drupal::currentUser()->getAccountName() . '</span>' . user_view(\Drupal::currentUser(), 'comment') . '<span class"comment-ago">1 sec ago</span><span class="comment-body">' . $commentBody . '</span></div>')
+        );
 
         return $response;
       }
