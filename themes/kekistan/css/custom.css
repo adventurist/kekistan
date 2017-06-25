@@ -219,12 +219,13 @@ iframe.kekistan-anthem-video {
 
 .comment-owner {
   width: 25%;
+  font-size: 12px;
 }
 
 .comment-body {
   vertical-align: top;
   padding-top: 16px;
-  width: 75%;
+  width: 73%;
 }
 
 
