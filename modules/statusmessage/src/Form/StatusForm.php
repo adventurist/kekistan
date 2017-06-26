@@ -234,7 +234,7 @@ $stophere = null;
 
         } else if (strpos($message, 'youtube') || strpos($message, 'youtu.be')) {
 
-          $statusYoutube = new StatusYoutube($url);
+          $statusYoutube = new StatusYoutube($url, $message);
           $nid = $statusYoutube->generateNode();
 
         } else {
