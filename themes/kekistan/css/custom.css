@@ -61,7 +61,13 @@ aside#sidebar-first {
 
 /* Left side menu - search*/
 div#block-kekistan-search {
+  float: left;
+  width: 100%;
   margin-top: 30px;
+}
+
+#block-kekistan-search #edit-submit {
+  float: right!important;
 }
 
 form#search-block-form {
@@ -312,6 +318,11 @@ video.heartbeat-video,
 
 div#block-statusblock {
     margin-bottom: 15px;
+}
+
+#status-form #edit-post {
+  margin-bottom: 16px!important;
+  float: right!important;
 }
 
 /*Feed Filter*/
