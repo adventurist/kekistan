@@ -453,8 +453,8 @@ form#contact-message-feedback-form label::after {
 /*Preview Generator*/
 
 .statusmessage-preview-iframe {
-  min-height: 240px;
-  min-width: 465px;
+  min-height: 320px;
+  width: 100%;
 }
 
 
