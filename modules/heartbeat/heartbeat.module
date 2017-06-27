@@ -315,6 +315,10 @@ function heartbeat_entity_view(array &$build, \Drupal\Core\Entity\EntityInterfac
 
   if ($entity instanceof \Drupal\user\Entity\User) {
     if (isset($build['flag_friendship']) && \Drupal::currentUser()->id() === $entity->id()) {
+      \Drupal::logger('heartbeat_friendship_entityView')->debug('IDs are %id1 and %id2', array(
+        '%id1' => \Drupal::currentUser()->id(),
+        '%id2' => $entity->id(),
+      ));
       unset($build['flag_friendship']);
     }
   }
