@@ -206,6 +206,16 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       foreach($cids as $cid) {
 
         $comment = Comment::load($cid);
+        $commentLike = $this->flagService->getFlagById('heartbeat_like_comment');
+        $commentLikeKey = 'flag_' . $commentLike->id();
+        $commentLikeData = [
+          '#lazy_builder' => ['flag.link_builder:build', [
+            $comment->getEntityTypeId(),
+            $comment->id(),
+            $commentLike->id(),
+          ]],
+          '#create_placeholder' => TRUE,
+        ];
 
         $commentOwner = user_view($comment->getOwner(), 'comment');
         $comments[] = [
@@ -213,7 +223,8 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
           'body' => $comment->get('comment_body')->value,
           'username' => $comment->getAuthorName(),
           'owner' => $commentOwner,
-          'timeAgo' => $this->dateFormatter->formatInterval(REQUEST_TIME - $comment->getCreatedTime())
+          'timeAgo' => $this->dateFormatter->formatInterval(REQUEST_TIME - $comment->getCreatedTime()),
+          'commentLike' => [$commentLikeKey => $commentLikeData],
         ];
 
       }
