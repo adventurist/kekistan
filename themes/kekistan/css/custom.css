@@ -205,6 +205,16 @@ iframe.kekistan-anthem-video {
   color: transparent;
 }
 
+.flag-heartbeat_like_comment a.use-ajax {
+  min-height: 8px;
+  display: block;
+  padding-left: 24px;
+  margin-left: 4px;
+  min-width: 8px;
+  background: url(/themes/kekistan/images/icons/like.png) no-repeat 0px center !important;
+  background-size: 16% !important;
+}
+
 .action-unflag.flag-heartbeat_like a,
 .action-unflag.flag-jihad_flag a {
   opacity: 0.3;

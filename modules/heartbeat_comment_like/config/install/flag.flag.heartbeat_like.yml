@@ -1,0 +1,26 @@
+langcode: en
+status: true
+dependencies:
+  module:
+    - heartbeat
+id: heartbeat_like
+label: Heartbeat Like
+entity_type: heartbeat
+global: false
+weight: 0
+flag_short: 'Praise ([flagcount:count])'
+flag_long: ''
+flag_message: ''
+unflag_short: 'Reee ([flagcount:count])'
+unflag_long: ''
+unflag_message: ''
+unflag_denied_text: ''
+flag_type: 'entity:heartbeat'
+link_type: ajax_link
+flagTypeConfig:
+  show_in_links: {  }
+  show_as_field: true
+  show_on_form: false
+  show_contextual_link: false
+  access_author: ''
+linkTypeConfig: {  }
