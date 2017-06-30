@@ -4,9 +4,13 @@ namespace Drupal\heartbeat\Controller;
 
 use Drupal\block\BlockViewBuilder;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\Element\Ajax;
 use Drupal\Core\Url;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\heartbeat\Ajax\SubCommentCommand;
 use Drupal\heartbeat\Entity\HeartbeatInterface;
 
 /**
@@ -194,6 +198,29 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
       '#type' => 'markup',
       '#markup' => 'Success',
     ];
+  }
+
+  public function subCommentRequest($cid) {
+    $subCommentConfig = \Drupal::configFactory()->getEditable('heartbeat_comment.settings');
+    $subCommentConfig->set('cid', $cid)->save();
+
+    $muhComment = \Drupal::entityTypeManager()->getStorage('comment')->load($cid);
+    $muhForm = \Drupal::formBuilder()->getForm('\Drupal\heartbeat\Form\HeartbeatSubCommentForm', $muhComment);
+//heartbeat-comment-' + response.cid
+    $response = new AjaxResponse();
+//    $response->addCommand(new SubCommentCommand($cid));
+    $response->addCommand(new AppendCommand('#heartbeat-comment-' . $cid, BlockViewBuilder::lazyBuilder('heartbeatsubcommentblock', 'teaser')));
+    return $response;
+
+
+//    return [
+//      '#type' => 'markup',
+//      '#markup' => 'Success',
+//    ];
+  }
+
+  public function subComment() {
+    return BlockViewBuilder::lazyBuilder('heartbeatsubcommentblock', 'teaser');
   }
 
 }

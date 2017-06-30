@@ -6,6 +6,8 @@ use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Config\ConfigFactory;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBuilder;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\flag\FlagService;
 use Drupal\comment\Entity\Comment;
 use Drupal\User\Entity\User;
@@ -205,6 +207,11 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
 
       foreach($cids as $cid) {
 
+        $url = Url::fromRoute('heartbeat.sub_comment_request', array('cid' => $cid));
+        $commentLink = Link::fromTextAndUrl(t('Reply'), $url);
+        $commentLink = $commentLink->toRenderable();
+        $commentLink['#attributes'] = array('class' => array('button', 'button-action', 'use-ajax'));
+
         $comment = Comment::load($cid);
         $commentLike = $this->flagService->getFlagById('heartbeat_like_comment');
         $commentLikeKey = 'flag_' . $commentLike->id();
@@ -225,6 +232,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
           'owner' => $commentOwner,
           'timeAgo' => $this->dateFormatter->formatInterval(REQUEST_TIME - $comment->getCreatedTime()),
           'commentLike' => [$commentLikeKey => $commentLikeData],
+          'reply' => $commentLink,
         ];
 
       }

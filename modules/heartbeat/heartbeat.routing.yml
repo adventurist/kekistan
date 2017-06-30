@@ -127,3 +127,27 @@ heartbeat.heartbeat_comment_update:
     _title: 'Heartbeat Comment Config Update'
   requirements:
     _access: 'TRUE'
+
+#heartbeat.heartbeat_sub_comment_update:
+#  path: '/heartbeat/subcommentupdate/{cid}'
+#  defaults:
+#    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::subCommentConfigUpdate'
+#    _title: 'Heartbeat Sub Comment Config Update'
+#  requirements:
+#    _access: 'TRUE'
+
+heartbeat.sub_comment:
+  path: '/heartbeat/subcomment/{cid}'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::subComment'
+    _title: 'Sub Comment Block'
+  requirements:
+    _permission: 'access content'
+
+heartbeat.sub_comment_request:
+  path: '/heartbeat/subcommentrequest/{cid}'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::subCommentRequest'
+    _title: 'Sub Comment Block'
+  requirements:
+    _permission: 'access content'
