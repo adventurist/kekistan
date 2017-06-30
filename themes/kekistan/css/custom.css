@@ -257,7 +257,8 @@ iframe.kekistan-anthem-video {
   font-size: 12px;
 }
 
-.comment-owner .comment-username {
+.comment-owner .comment-username,
+.sub-comment-username {
   font-weight: 700;
 }
 
@@ -270,6 +271,11 @@ iframe.kekistan-anthem-video {
 
 .heartbeat-comment-form label {
   display: none;
+}
+
+.heartbeat-subcomment {
+  padding-left: 24px;
+  display: flex;
 }
 
 .heartbeat-message {

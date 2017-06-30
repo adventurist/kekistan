@@ -47,7 +47,16 @@
                 <span class="comment-owner"><span class="comment-username">{{ comment.username }}</span>{{ comment.owner }}<span class="comment-ago">{{ comment.timeAgo }} ago</span>
                 <span class="comment-like">{{ comment.commentLike}}</span></span>
                 <span class="comment-body">{{ comment.body }}</span>
-                <span class ="sub-comment">{{ comment.reply }}</span>
+                <span class ="sub-comment">
+                  {% for subComment in comment.subComments %}
+                  <div class="heartbeat-subcomment" id="sub-comment-{{ subComment.id }}">
+                    <span class="sub-comment-owner"><span class="sub-comment-username">{{ subComment.username }}</span>{{ subComment.owner }}<span class="sub-comment-ago">{{ subComment.timeAgo }} ago</span>
+                <span class="sub-comment-like">{{ subComment.commentLike}}</span></span>
+                <span class="sub-comment-body">{{ subComment.body }}</span>
+                  </div>
+                  {% endfor %}
+                  {{ comment.reply }}
+                </span>
               </div>
             {% endfor %}
           </div>

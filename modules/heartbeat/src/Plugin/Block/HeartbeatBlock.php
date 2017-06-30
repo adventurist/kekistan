@@ -225,6 +225,43 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         ];
 
         $commentOwner = user_view($comment->getOwner(), 'comment');
+
+        $subCids = \Drupal::entityQuery('comment')
+          ->condition('entity_id', $cid)
+          ->condition('entity_type', 'comment')
+          ->sort('cid', 'ASC')
+          ->execute();
+
+        $subComments = [];
+        if (count($subCids) > 0) {
+          foreach ($subCids as $subCid) {
+
+            $subComment = Comment::load($subCid);
+            $subCommentLike = $this->flagService->getFlagById('heartbeat_like_comment');
+            $subCommentLikeKey = 'flag_' . $subCommentLike->id();
+            $subCommentLikeData = [
+              '#lazy_builder' => ['flag.link_builder:build', [
+                $subComment->getEntityTypeId(),
+                $subComment->id(),
+                $subCommentLike->id(),
+              ]],
+              '#create_placeholder' => TRUE,
+            ];
+
+            $subCommentOwner = user_view($subComment->getOwner(), 'comment');
+
+            $subComments[] = [
+              'id' => $subCid,
+              'body' => $subComment->get('comment_body')->value,
+              'username' => $subComment->getAuthorName(),
+              'owner' => $subCommentOwner,
+              'timeAgo' => $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()),
+              'commentLike' => [$subCommentLikeKey => $subCommentLikeData],
+            ];
+
+          }
+        }
+
         $comments[] = [
           'id' => $cid,
           'body' => $comment->get('comment_body')->value,
@@ -233,6 +270,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
           'timeAgo' => $this->dateFormatter->formatInterval(REQUEST_TIME - $comment->getCreatedTime()),
           'commentLike' => [$commentLikeKey => $commentLikeData],
           'reply' => $commentLink,
+          'subComments' => $subComments
         ];
 
       }
