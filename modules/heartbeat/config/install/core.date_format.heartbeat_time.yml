@@ -1,0 +1,9 @@
+uuid: 5651f093-535c-4949-870e-49101c96d716
+langcode: en
+status: true
+dependencies: {  }
+id: heartbeat_time
+label: 'Heartbeat Time'
+locked: false
+pattern: 'g:ia'
+

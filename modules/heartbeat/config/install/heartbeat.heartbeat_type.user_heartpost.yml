@@ -1,0 +1,19 @@
+uuid: 39675abc-1d57-4432-855f-c59bc4f30210
+langcode: en
+status: true
+dependencies: {  }
+id: user_heartpost
+label: 'User Heartpost'
+message_id: null
+description: 'Records the event of a user creating a Heartpost'
+mainentity: node
+bundle: heartpost
+message: '!nodetitle !nodebody'
+weight: 0
+perms: -1
+group_type: '11'
+arguments: '{"!nodetitle":"[node:title]","!nodebody":"[node:body]"}'
+variables:
+  - '[node:title]'
+  - '[node:body]'
+
