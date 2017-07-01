@@ -159,8 +159,20 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
   }
 
   private function renderMessage(array &$messages, $heartbeat) {
+    $timeago = null;
+    $diff = $this->timestamp - $heartbeat->getCreatedTime();
+    switch (true) {
+      case ($diff < 86400):
+        $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $heartbeat->getCreatedTime()) . ' ago';
+        break;
+      case ($diff >= 86400 && $diff < 172800):
+        $timeago = 'Yesterday at ' . $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_time');
+        break;
+      case ($diff >= 172800):
+        $timeago = $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_medium');
+        break;
+    }
 
-    $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $heartbeat->getCreatedTime());
     $user = $heartbeat->getOwner();
 //      $rendered = $this->entityTypeManager->getViewBuilder('user')->view($user, 'full');
     $userView = user_view($user, 'compact');
@@ -195,6 +207,11 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
 
     foreach($cids as $cid) {
 
+      $url = Url::fromRoute('heartbeat.sub_comment_request', array('cid' => $cid));
+      $commentLink = Link::fromTextAndUrl(t('Reply'), $url);
+      $commentLink = $commentLink->toRenderable();
+      $commentLink['#attributes'] = array('class' => array('button', 'button-action', 'use-ajax'));
+
       $comment = Comment::load($cid);
       $commentLike = $this->flagService->getFlagById('heartbeat_like_comment');
       $commentLikeKey = 'flag_' . $commentLike->id();
@@ -208,26 +225,88 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
       ];
 
       $commentOwner = user_view($comment->getOwner(), 'comment');
+
+      $subCids = \Drupal::entityQuery('comment')
+        ->condition('entity_id', $cid)
+        ->condition('entity_type', 'comment')
+        ->sort('cid', 'ASC')
+        ->execute();
+
+      $subComments = [];
+      if (count($subCids) > 0) {
+        foreach ($subCids as $subCid) {
+          $subComment = Comment::load($subCid);
+
+          $subDiff = $this->timestamp - $subComment->getCreatedTime();
+
+          switch (true) {
+            case ($subDiff < 86400):
+              $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago';
+              break;
+            case ($subDiff >= 86400 && $subDiff < 172800):
+              $timeago = 'Yesterday at ' . $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_time');
+              break;
+            case ($subDiff >= 172800):
+              $timeago = $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_medium');
+              break;
+          }
+
+          $subCommentLike = $this->flagService->getFlagById('heartbeat_like_comment');
+          $subCommentLikeKey = 'flag_' . $subCommentLike->id();
+          $subCommentLikeData = [
+            '#lazy_builder' => ['flag.link_builder:build', [
+              $subComment->getEntityTypeId(),
+              $subComment->id(),
+              $subCommentLike->id(),
+            ]],
+            '#create_placeholder' => TRUE,
+          ];
+
+          $subCommentOwner = user_view($subComment->getOwner(), 'comment');
+          $subCommentTime = $this->timestamp - $subComment->getCreatedTime() < 172800 ? $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago': $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_medium');
+          $subComments[] = [
+            'id' => $subCid,
+            'body' => $subComment->get('comment_body')->value,
+            'username' => $subComment->getAuthorName(),
+            'owner' => $subCommentOwner,
+            'timeAgo' => $subCommentTime,
+            'commentLike' => [$subCommentLikeKey => $subCommentLikeData],
+          ];
+
+        }
+      }
+
+      $commentTimeDiff = $this->timestamp - $comment->getCreatedTime();
+
+      switch (true) {
+        case ($commentTimeDiff < 86400):
+          $cTimeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $comment->getCreatedTime()) . ' ago';
+          break;
+        case ($commentTimeDiff >= 86400 && $commentTimeDiff < 172800):
+          $cTimeago = 'Yesterday at ' . $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_time');
+          break;
+        case ($commentTimeDiff >= 172800):
+          $cTimeago = $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_medium');
+          break;
+      }
+
       $comments[] = [
         'id' => $cid,
         'body' => $comment->get('comment_body')->value,
         'username' => $comment->getAuthorName(),
         'owner' => $commentOwner,
-        'timeAgo' => $this->dateFormatter->formatInterval(REQUEST_TIME - $comment->getCreatedTime()),
+        'timeAgo' => $cTimeago,
         'commentLike' => [$commentLikeKey => $commentLikeData],
+        'reply' => $commentLink,
+        'subComments' => $subComments
       ];
 
     }
-
-//      $heartbeatCommentBlock = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
-//      $commentForm = $this->entityTypeManager->getViewBuilder('block')
-//        ->view($heartbeatCommentBlock);
 
     $form = \Drupal::service('form_builder')->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm', $heartbeat);
 
     $likeFlag = $this->flagService->getFlagById('heartbeat_like');
     $unlikeFlag = $this->flagService->getFlagById('jihad_flag');
-
 
     $unlikeKey = 'flag_' . $unlikeFlag->id();
     $unlikeData = [

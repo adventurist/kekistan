@@ -266,7 +266,6 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
                 break;
             }
 
-
             $subCommentLike = $this->flagService->getFlagById('heartbeat_like_comment');
             $subCommentLikeKey = 'flag_' . $subCommentLike->id();
             $subCommentLikeData = [
