@@ -151,3 +151,10 @@ heartbeat.sub_comment_request:
     _title: 'Sub Comment Block'
   requirements:
     _permission: 'access content'
+
+heartbeat.user_edit:
+  path: '/user/'
+  defaults:
+    _title: 'User Edit'
+  requirements:
+    _permission: 'access content'

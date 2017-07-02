@@ -204,19 +204,13 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
     $subCommentConfig = \Drupal::configFactory()->getEditable('heartbeat_comment.settings');
     $subCommentConfig->set('cid', $cid)->save();
 
-    $muhComment = \Drupal::entityTypeManager()->getStorage('comment')->load($cid);
-    $muhForm = \Drupal::formBuilder()->getForm('\Drupal\heartbeat\Form\HeartbeatSubCommentForm', $muhComment);
-//heartbeat-comment-' + response.cid
     $response = new AjaxResponse();
-//    $response->addCommand(new SubCommentCommand($cid));
-    $response->addCommand(new AppendCommand('#heartbeat-comment-' . $cid, BlockViewBuilder::lazyBuilder('heartbeatsubcommentblock', 'teaser')));
+    $response->addCommand(new AppendCommand('#heartbeat-comment-' . $cid,
+      BlockViewBuilder::lazyBuilder('heartbeatsubcommentblock', 'teaser')));
+    $response->addCommand(new SubCommentCommand($cid));
+
     return $response;
 
-
-//    return [
-//      '#type' => 'markup',
-//      '#markup' => 'Success',
-//    ];
   }
 
   public function subComment() {

@@ -25,3 +25,7 @@ services:
     tags:
       - { name: event_subscriber }
 
+  heartbeat.route_subscriber:
+    class: Drupal\heartbeat\Routing\HeartbeatRouteSubscriber
+    tags:
+      - { name: event_subscriber }

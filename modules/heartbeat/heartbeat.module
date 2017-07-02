@@ -543,15 +543,10 @@ function heartbeat_link_alter(&$variables) {
     $variables['url'] = $url;
   }
 }
+
 /**
- * Implements hook_menu_links_discovered_alter().
+ * Implements hook_form_alter().
  */
-function heartbeat_menu_links_discovered_alter(&$links) {
-
-  $relevantLinks = array_filter($links, function ($k) {
-    return strpos($k, 'menu_link_content:') === 0;
-  }, ARRAY_FILTER_USE_KEY);
-
-  $muhLink = $links;
-
+function heartbeat_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  
 }

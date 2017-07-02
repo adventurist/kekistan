@@ -6,6 +6,8 @@ use Drupal\comment\Entity\Comment;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBuilder;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\flag\FlagService;
 use Drupal\User\Entity\User;
 use Drupal\Flag\Entity\Flag;
@@ -55,6 +57,9 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
   protected $flagService;
 
   protected $formBuilder;
+
+  protected $timestamp;
+
   /**
    * Construct.
    *
@@ -81,6 +86,7 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
     $this->dateFormatter = $date_formatter;
     $this->flagService = $flag_service;
     $this->formBuilder = $form_builder;
+    $this->timestamp = time();
   }
   /**
    * {@inheritdoc}

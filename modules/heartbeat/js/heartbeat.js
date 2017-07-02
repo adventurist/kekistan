@@ -67,32 +67,17 @@
           Drupal.AjaxCommands.prototype.myfavouritemethodintheworld = function(ajax, response, status) {
             console.dir(response);
             if (response.cid) {
-              let parentCheck = document.getElementById('heartbeat-comment-' + response.cid);
-              let form = parentCheck.querySelector('form');
               console.log('this shit is getting called again');
+              let parentComment = document.getElementById('heartbeat-comment-' + response.cid);
+              let text = parentComment.querySelector('.form-textarea');
 
-              if (form == null) {
-                $.ajax({
-                  type: 'POST',
-                  url: '/heartbeat/subcomment/' + response.cid,
-                  success: function (data) {
-                    let parentComment = document.getElementById('heartbeat-comment-' + response.cid);
-                    let insertNode = document.createElement('div');
-                    insertNode.innerHTML = data;
-                    parentComment.appendChild(insertNode);
-
-                    let text = parentComment.querySelector('.form-textarea');
-
-                    // text.addEventListener('keydown', function (e) {
-                    //   console.dir(e);
-                    //   // if (e.keyCode === 13) {
-                    //   //   let submitBtn = parentComment.querySelector('.form-submit');
-                    //   //   submitBtn.click();
-                    //   // }
-                    // });
-                  }
-                })
-              }
+              text.addEventListener('keydown', function (e) {
+                console.dir(e);
+                if (e.keyCode === 13) {
+                  let submitBtn = parentComment.querySelector('.form-submit');
+                  submitBtn.click();
+                }
+              });
             }
           }
         }
