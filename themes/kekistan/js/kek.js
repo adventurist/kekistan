@@ -6,10 +6,10 @@
       let terms = feedFilterBlock.querySelectorAll('a');
 
       terms.forEach(function (term) {
-        console.dir(term);
+        // console.dir(term);
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
         term.addEventListener('click', function (event) {
-          console.log('clicked ' + term + ' ' + tid);
+          // console.log('clicked ' + term + ' ' + tid);
           event.preventDefault();
           event.stopPropagation();
 
@@ -80,6 +80,7 @@
       }
       displayCounts();
       flagTooltips();
+      textareaAutoHeight();
     }
   };
 
@@ -129,7 +130,7 @@
     var jihadFlags = document.querySelectorAll('.flag-jihad_flag');
     for (let i = 0; i < likefelFlags.length; i++) {
 
-      console.dir(likefelFlags[i]);
+      // console.dir(likefelFlags[i]);
       for (let g = 0; g < likefelFlags[i].childNodes.length; g++) {
         if (likefelFlags[i].childNodes[g].tagName === 'A') {
           let anchor = likefelFlags[i].childNodes[g];
@@ -137,7 +138,7 @@
           // if (anchor.nextSibling !== null && anchor.nextSibling.tagName !== 'span') {
 
             countSpan.innerText = anchor.innerText.substring(anchor.innerText.lastIndexOf("(") + 1, anchor.innerText.lastIndexOf(")"));
-            console.log(countSpan.innerText);
+            // console.log(countSpan.innerText);
             anchor.after(countSpan);
           // }
         }
@@ -161,6 +162,22 @@
           // }
         }
       }
+    }
+  }
+
+  function textareaAutoHeight() {
+
+    let textAreas = document.querySelectorAll('.heartbeat-comment-form textarea');
+
+    for (let m = textAreas.length - 1; m > 0; m--) {
+      let textArea = textAreas[m];
+      textArea.addEventListener('keydown', function(e) {
+        if (e.keyCode == 13) {
+          console.dir(e);
+          console.dir(textArea);
+          textArea.style.height = textArea.scrollHeight + "px";
+        }
+      });
     }
   }
 

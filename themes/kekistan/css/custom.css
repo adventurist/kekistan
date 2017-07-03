@@ -268,6 +268,14 @@ iframe.kekistan-anthem-video {
   width: 73%;
 }
 
+.heartbeat-comment-form textarea {
+  height: 45px;
+}
+
+.heartbeat-comment-form .form-submit {
+  float: right;
+}
+
 
 .heartbeat-comment-form label {
   display: none;
