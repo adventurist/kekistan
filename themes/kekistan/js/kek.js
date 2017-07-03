@@ -167,7 +167,7 @@
 
   function textareaAutoHeight() {
 
-    let textAreas = document.querySelectorAll('.heartbeat-comment-form textarea');
+    let textAreas = document.querySelectorAll('.heartbeat-comment-form textarea,.heartbeat-sub-comment-form .form-textarea');
 
     for (let m = textAreas.length - 1; m > 0; m--) {
       let textArea = textAreas[m];

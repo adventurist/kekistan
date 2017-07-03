@@ -268,7 +268,8 @@ iframe.kekistan-anthem-video {
   width: 73%;
 }
 
-.heartbeat-comment-form textarea {
+.heartbeat-comment-form textarea,
+.heartbeat-sub-comment-form textarea{
   height: 45px;
 }
 
