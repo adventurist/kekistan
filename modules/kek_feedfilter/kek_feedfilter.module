@@ -1,0 +1,59 @@
+<?php
+
+/**
+ * @file
+ * Contains kek_feedfilter.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\views\Plugin\views\query\QueryPluginBase;
+use Drupal\views\ViewExecutable;
+
+/**
+ * Implements hook_help().
+ */
+function kek_feedfilter_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the kek_feedfilter module.
+    case 'help.page.kek_feedfilter':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Logic related to feed filter as applied on Kekistan Republic') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+
+/**
+ * Implements hook_views_pre_render().
+ */
+function kek_feedfilter_views_pre_render(ViewExecutable $view) {
+  if ($view->id() === 'feed_filter') {
+    $unique_results = array_unique_property($view->result, 'taxonomy_term_field_data_name');
+    unset($view->result);
+    $view->result = $unique_results;
+  }
+}
+
+function array_unique_property($array,$subkey){
+
+  $temp = array();
+
+  $unique = array_filter($array, function ($v) use (&$temp,$subkey) {
+
+    if ( is_object($v) ) $v = (array)$v;
+
+    if ( !array_key_exists($subkey,$v) ) return false;
+
+    if ( in_array($v[$subkey], $temp) ) {
+      return false;
+    } else {
+      array_push($temp, $v[$subkey]);
+      return true;
+    }
+  });
+
+  return $unique;
+}
