@@ -333,12 +333,13 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
       ]],
       '#create_placeholder' => TRUE,
     ];
-
+//TODO move this method as a static method on Heartbeat entity
     $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
       'userPicture' => $rendered,
       'userId' => $user->id(),
       'timeAgo' => $timeago,
       'id' => $heartbeat->id(),
+      'userName' => $user->getAccountName(),
       'user' => $userView,
       'commentForm' => $form,
       'comments' => $comments,

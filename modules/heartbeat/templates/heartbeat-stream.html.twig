@@ -25,7 +25,9 @@
       {#{{ message }}#}
       <div class="heartbeat-message-wrap">
         <div class="heartbeat-owner">
-          <a href="/user/{{ message.userId }}"><img src="{{ message.userPicture }}" /></a>
+          <a href="/user/{{ message.userId }}"><img src="{{ message.userPicture }}" />
+            {{ message.userName }}
+          </a>
           {{ message.user }}
           <div class="time-ago">{{ message.timeAgo }}</div>
         </div>
@@ -44,13 +46,17 @@
           <div class="heartbeat-comments">
             {% for comment in message.comments %}
               <div id="heartbeat-comment-{{ comment.id }}">
-                <span class="comment-owner"><span class="comment-username">{{ comment.username }}</span>{{ comment.owner }}<span class="comment-ago">{{ comment.timeAgo }}</span>
+                <span class="comment-owner">{{ comment.owner }}
+                  <span class="comment-username">{{ comment.username }}</span><br>
+                  <span class="comment-ago">{{ comment.timeAgo }}</span>
                 <span class="comment-like">{{ comment.commentLike}}</span></span>
                 <span class="comment-body">{{ comment.body }}</span>
                 <span class ="sub-comment">
                   {% for subComment in comment.subComments %}
                   <div class="heartbeat-subcomment" id="sub-comment-{{ subComment.id }}">
-                    <span class="sub-comment-owner"><span class="sub-comment-username">{{ subComment.username }}</span>{{ subComment.owner }}<span class="sub-comment-ago">{{ subComment.timeAgo }}</span>
+                    <span class="sub-comment-owner">{{ subComment.owner }}
+                      <span class="sub-comment-username">{{ subComment.username }}</span><br>
+                      <span class="sub-comment-ago">{{ subComment.timeAgo }}</span>
                 <span class="sub-comment-like">{{ subComment.commentLike}}</span></span>
                 <span class="sub-comment-body">{{ subComment.body }}</span>
                   </div>

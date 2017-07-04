@@ -344,6 +344,7 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
       'userId' => $user->id(),
       'timeAgo' => $timeago,
       'id' => $heartbeat->id(),
+      'userName' => $user->getAccountName(),
       'user' => $userView,
       'commentForm' => $form,
       'comments' => $comments,
