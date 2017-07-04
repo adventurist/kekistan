@@ -237,6 +237,7 @@ iframe.kekistan-anthem-video {
   color: rgb(0, 178, 0);
   position: absolute;
   transform: translateY(-30%);
+  z-index: -1;
 }
 
 .jihadtip {
