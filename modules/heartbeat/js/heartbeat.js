@@ -108,6 +108,7 @@
   }
 
   function listenCommentPost() {
+    //TODO is drupal data selector enough? I doubt it.
     let comments = document.querySelectorAll('[data-drupal-selector]');
 
     for (let i = 0; i < comments.length; i++) {
@@ -122,7 +123,7 @@
   function getParent(node) {
     console.dir(node);
     if (node.classList.contains('heartbeat-comment')) {
-      let id = node.id.substr(node.id.indexOf('-')+1);
+      let id = node.id.substr(node.id.indexOf('-') + 1);
       $.ajax({
         type: 'POST',
         url:'/heartbeat/commentupdate/' + id,

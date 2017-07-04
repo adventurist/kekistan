@@ -140,7 +140,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         $uids[] = $uid->uid;
       }
     }
-      if ($feed !== null) {
+      if ($feed !== null && $this->heartbeatStreamServices) {
       $uids = count($uids) > 1 ? array_unique($uids) : $uids;
         if (!empty($uids)) {
           foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {

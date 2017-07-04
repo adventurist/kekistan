@@ -548,5 +548,5 @@ function heartbeat_link_alter(&$variables) {
  * Implements hook_form_alter().
  */
 function heartbeat_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
-  
+
 }
