@@ -4,38 +4,41 @@
 
       let feedFilterBlock = document.getElementById('block-views-feed-filter-block');
       let terms = feedFilterBlock.querySelectorAll('a');
+      let events = ['click', 'touchstart'];
 
       terms.forEach(function (term) {
-        // console.dir(term);
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
-        term.addEventListener('click', function (event) {
-          // console.log('clicked ' + term + ' ' + tid);
-          event.preventDefault();
-          event.stopPropagation();
 
-          $.ajax({
-            type: 'GET',
-            url: '/heartbeat/filter-feed/' + tid,
-            success: function (response) {
+        events.split(" ").forEach(function(eventname) {
+          term.addEventListener(eventname, function (event) {
+            // console.log('clicked ' + term + ' ' + tid);
+            event.preventDefault();
+            event.stopPropagation();
 
-              feedElement = document.querySelector('.heartbeat-stream');
+            $.ajax({
+              type: 'GET',
+              url: '/heartbeat/filter-feed/' + tid,
+              success: function (response) {
 
-              if (feedElement != null) {
+                feedElement = document.querySelector('.heartbeat-stream');
 
-                feedElement.innerHTML = response;
+                if (feedElement != null) {
 
-              } else {
+                  feedElement.innerHTML = response;
 
-                feedBlock = document.getElementById('block-heartbeatblock');
-                insertNode = document.createElement('div');
-                insertNode.innerHTML = response;
-                feedBlock.appendChild(insertNode);
+                } else {
 
+                  feedBlock = document.getElementById('block-heartbeatblock');
+                  insertNode = document.createElement('div');
+                  insertNode.innerHTML = response;
+                  feedBlock.appendChild(insertNode);
+
+                }
               }
-            }
+            });
+            return false;
           });
-          return false;
-        });
+        })
       });
 
       let fraction = 0.65;
