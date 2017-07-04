@@ -4,12 +4,12 @@
 
       let feedFilterBlock = document.getElementById('block-views-feed-filter-block');
       let terms = feedFilterBlock.querySelectorAll('a');
-      let events = ['click', 'touchstart'];
+      let events = ['click', 'touchend'];
 
       terms.forEach(function (term) {
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
 
-        events.split(" ").forEach(function(eventname) {
+        events.forEach(function(eventname) {
           term.addEventListener(eventname, function (event) {
             // console.log('clicked ' + term + ' ' + tid);
             event.preventDefault();
