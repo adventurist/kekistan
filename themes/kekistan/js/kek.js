@@ -84,6 +84,7 @@
       displayCounts();
       flagTooltips();
       textareaAutoHeight();
+      listenReplyButtons();
     }
   };
 
@@ -181,6 +182,18 @@
           textArea.style.height = textArea.scrollHeight + "px";
         }
       });
+    }
+  }
+
+  function listenReplyButtons() {
+    let replyButtons = document.querySelectorAll('.heartbeat-comment-form .form-submit, .heartbeat-sub-comment-form .form-submit');
+
+    for (let m = 0; m < replyButtons.length; m++) {
+      replyButtons[m].addEventListener('click', function() {
+        let replyText = replyButtons[m].parentNode.querySelector('textarea');
+        replyText.value = '';
+        replyText.innerText = '';
+      })
     }
   }
 
