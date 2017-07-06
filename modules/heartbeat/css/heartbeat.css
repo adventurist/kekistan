@@ -13,6 +13,15 @@
 }
 
 
+.heartbeat-message img:first-of-type ~ img {
+  display: inline-block;
+  max-width: 25%;
+}
+
+.heartbeat-message img:last-of-type {
+  max-width: 100%;
+}
+
 /*Main Feed Form*/
 #heartbeat-feed-form input[type="radio"] {
     -webkit-appearance: none;

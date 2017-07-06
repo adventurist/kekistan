@@ -745,28 +745,26 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
     foreach ($fields as $field) {
       if ($field instanceof \Drupal\file\Plugin\Field\FieldType\FileFieldItemList) {
-      $type = $field->getFieldDefinition()->getType();
         if ($field->getFieldDefinition()->getType() === 'image' ||
             $field->getFieldDefinition()->getType() === 'video' ||
             $field->getFieldDefinition()->getType() === 'audio') {
 
           $fieldValue = $field->getValue();
-          $fileId = $fieldValue[0]['target_id'];
-          $file = \Drupal::entityTypeManager()->getStorage('file')->load($fileId);
 
-          if ($file !== NULL && is_object($file)) {
-            $url = Url::fromUri($file->getFileUri());
-            $posfind = strpos($url->getUri(), 'youtube://');
-            if ($posfind !== 0 && $posfind === false) {
-              $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $url->getUri());
+          foreach ($fieldValue as $value) {
+            $file = \Drupal::entityTypeManager()->getStorage('file')->load($value['target_id']);
+            if ($file !== NULL && is_object($file)) {
+              $url = Url::fromUri($file->getFileUri());
+              $posfind = strpos($url->getUri(), 'youtube://');
+              if ($posfind !== 0 && $posfind === false) {
+                $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $url->getUri());
+              } else {
+                $mediaObject = self::createHeartbeatMedia('youtube', $url->getUri());
+              }
+              $types[] = $mediaObject;
             } else {
-
-              $mediaObject = self::createHeartbeatMedia('youtube', $url->getUri());
+              continue;
             }
-            $types[] = $mediaObject;
-
-          } else {
-            continue;
           }
         }
       }
