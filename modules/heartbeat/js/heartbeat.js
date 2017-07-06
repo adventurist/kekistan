@@ -103,7 +103,9 @@
     };
 
     $('.heartbeat-content').find('img').each(function() {
-      $(this).colorbox({href: $(this).attr('src'), cboxOptions});
+      let parentClass = $(this).parent().prop('className');
+      let phid = parentClass.substring(parentClass.indexOf('hid') + 4);
+      $(this).colorbox({rel: phid, href: $(this).attr('src'), cboxOptions});
     });
   }
 
