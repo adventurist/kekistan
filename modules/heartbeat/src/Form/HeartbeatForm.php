@@ -35,16 +35,16 @@ class HeartbeatForm extends ContentEntityForm {
     $form['uid'] = array(
       '#type' => 'entity_autocomplete',
       '#target_type' => 'user',
-      '#default_value' => $entity->getOwner()->isAnonymous() ? NULL : $entity->getOwner(),
+      '#default_value' => $entity->getOwner(),
       // A comment can be made anonymous by leaving this field empty therefore
       // there is no need to list them in the autocomplete.
       '#selection_settings' => ['include_anonymous' => FALSE],
       '#title' => $this->t('Authored by'),
-      '#description' => $this->t('No cucks.')
+      '#description' => $this->t('The owner of the heartbeat')
     );
 
     $form['message'] = array(
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#description' => t('The Heartbeat message'),
       '#title' => 'Message',
       '#default' => $entity->getMessage()->getValue()[0]['value'],
@@ -59,7 +59,7 @@ class HeartbeatForm extends ContentEntityForm {
       '#entity_type' => 'node',
       '#target_type' => 'node',
       '#selection_handler' => 'default',
-      '#default_value' => $nodeId > 0 ? null : $this->nodeManager->load($nodeId),
+      '#default_value' => $node,
       '#title' => 'Node',
       '#description' => t('The node referenced by this Heartbeat')
     );
