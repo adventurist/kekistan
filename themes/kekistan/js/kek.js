@@ -48,6 +48,7 @@
         let video = videos[i];
         video.addEventListener('loadedmetadata', function () {
           video.loop = video.duration < 5;
+          video.volume = 0.2;
 
           window.addEventListener('scroll', checkScroll, false);
           window.addEventListener('resize', checkScroll, false);
