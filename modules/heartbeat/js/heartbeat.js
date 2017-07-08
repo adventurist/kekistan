@@ -96,8 +96,6 @@
 
   function listenImages() {
     let cboxOptions = {
-      width: '95%',
-      height: '95%',
       maxWidth: '960px',
       maxHeight: '960px',
     };
@@ -195,18 +193,30 @@
     }
   });
 
-  jQuery(document).bind('cbox_open', function(){
-    jQuery("#colorbox").swipe( {
+  $(document).bind('cbox_open', function() {
+    $("#colorbox").swipe( {
       //Generic swipe handler for all directions
       swipeLeft:function(event, direction, distance, duration, fingerCount) {
-        jQuery.colorbox.prev();
+        $.colorbox.prev();
       },
       swipeRight:function(event, direction, distance, duration, fingerCount) {
-        jQuery.colorbox.next();
+        $.colorbox.next();
       },
       //Default is 75px, set to 0 for demo so any distance triggers swipe
       threshold:0
     });
+    let cboxClose = document.getElementById('cboxClose');
+    cboxClose.addEventListener('click', function() {
+      jQuery.colorbox.close();
+    });
+    cboxClose.addEventListener('touchstart', function() {
+      jQuery.colorbox.close();
+    });
+    document.addEventListener('keyup', function(e) {
+      if (e.keyCode == 27) {
+        jQuery.colorbox.close();
+      }
+    })
   });
 
 })(jQuery, Drupal, drupalSettings);
