@@ -207,14 +207,14 @@
     });
     let cboxClose = document.getElementById('cboxClose');
     cboxClose.addEventListener('click', function() {
-      jQuery.colorbox.close();
+      $.colorbox.close();
     });
     cboxClose.addEventListener('touchstart', function() {
-      jQuery.colorbox.close();
+      $.colorbox.close();
     });
     document.addEventListener('keyup', function(e) {
       if (e.keyCode == 27) {
-        jQuery.colorbox.close();
+        $.colorbox.close();
       }
     })
   });
