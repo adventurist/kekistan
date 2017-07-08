@@ -22,6 +22,67 @@
   max-width: 100%;
 }
 
+/*Imgs displayed in colorbox*/
+
+.cboxPhoto {
+  max-height: 854px;
+  width: auto!important;
+  position: absolute;
+  top: 85px;
+  left: 350px;
+}
+
+#colorbox {
+  text-align: center!important;
+  position: fixed!important;
+  top: 0!important;
+  left: 0!important;
+  background: rgba(28, 28, 28, 0.75)!important;
+  height: 100%!important;
+  width: 100%!important;
+}
+
+#cboxContent,
+#cboxLoadedContent,
+#cboxWrapper {
+  width: 100%!important;
+  height: 100%!important;
+}
+
+#cboxNext {
+  display: inline-block;
+  transform: translate(821%, 550%);
+  color: transparent;
+  background-image: url(/themes/kekistan/images/icons/forward.png);
+  background-repeat: no-repeat;
+  background-position: 10px 20px;
+  width: 45px;
+  height: 75px;
+}
+
+#cboxPrevious {
+  display: inline-block;
+  transform: translate(-800%, 550%);
+  color: transparent;
+  background-image: url(/themes/kekistan/images/icons/backward.png);
+  background-repeat: no-repeat;
+  background-position: 10px 21px;
+  width: 45px;
+  height: 75px;
+}
+
+#cboxClose {
+  position: absolute;
+  top: 95px;
+  right: 100px;
+  color: transparent;
+  background-image: url(/themes/kekistan/images/icons/close.png);
+  background-repeat: no-repeat;
+  background-size: 75%;
+  background-position: 6px 2px;
+  width: 45px;
+}
+
 /*Main Feed Form*/
 #heartbeat-feed-form input[type="radio"] {
     -webkit-appearance: none;
@@ -32,7 +93,6 @@
     display: inline-block;
     position: relative;
     border-right: 1px solid white;
-
 }
 #heartbeat-feed-form input.form-radio {
     background: #12ff00;
