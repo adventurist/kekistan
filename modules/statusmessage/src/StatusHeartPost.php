@@ -46,8 +46,8 @@ class StatusHeartPost implements SharedContentInterface {
 
       $tags = $this->processTerms();
 
-      if ($fid = $this->getMedia()) {
-        $node->set('field_image', $fid);
+      if ($fids = $this->getMedia()) {
+        $node->set('field_image', $fids);
       }
 
       if (!empty($this->tags)) {
@@ -85,10 +85,10 @@ class StatusHeartPost implements SharedContentInterface {
   private function setNodeData() {
 
     $append = FALSE;
-
+    $title = $this->generator->getTitle();
     $node = Node::create([
       'type' => 'heartpost',
-      'title' => $this->generator->getTitle(),
+      'title' => strlen($title) < 50 ? $title : substr($title, 0, 47) . '...',
       'status' => 1,
     ]);
 
@@ -117,21 +117,37 @@ class StatusHeartPost implements SharedContentInterface {
   }
 
 
-  private function getMedia() {
+  private function getMedia()
+  {
 
-    if ($this->generator->getImage()) {
+    $fids = array();
 
-      $ext = strtolower(pathinfo($this->generator->getImage(), PATHINFO_EXTENSION));
-      $ext = strpos($ext, '?') ? substr($ext, 0, strpos($ext, '?')) : $ext;
-      $fileUrl = strlen($ext) > 0 ? substr($this->generator->getImage(), 0, strpos($this->generator->getImage(), $ext)) . $ext : $this->generator->getImage();
+    if ($images = $this->generator->getImages()) {
+      for ($i = 0; $i < 10; $i++) {
+        if (count($fids) < 6 && $images[$i]['width'] > 400) {
+          $ext = strtolower(pathinfo($images[$i]['url'], PATHINFO_EXTENSION));
+          $ext = strpos($ext, '?') ? substr($ext, 0, strpos($ext, '?')) : $ext;
+          $fileUrl = strlen($ext) > 0 ? substr($images[$i]['url'], 0, strpos($images[$i]['url'], $ext)) . $ext : $images[$i]['url'];
+          $data = file_get_contents($fileUrl);
+          $file = file_save_data($data, 'public://' . substr($fileUrl, strrpos($images[$i]['url'], '/') + 1), FILE_EXISTS_REPLACE);
+          $fids[] = $file->id();
+        }
+      }
+    } else {
 
-      $mainImage = file_get_contents($fileUrl);
-      $file = file_save_data($mainImage, 'public://' . substr($fileUrl, strrpos($this->generator->getImage(), '/') + 1), FILE_EXISTS_REPLACE);
+      if ($this->generator->getImage()) {
 
-      return $file->id();
+        $ext = strtolower(pathinfo($this->generator->getImage(), PATHINFO_EXTENSION));
+        $ext = strpos($ext, '?') ? substr($ext, 0, strpos($ext, '?')) : $ext;
+        $fileUrl = strlen($ext) > 0 ? substr($this->generator->getImage(), 0, strpos($this->generator->getImage(), $ext)) . $ext : $this->generator->getImage();
+
+        $mainImage = file_get_contents($fileUrl);
+        $file = file_save_data($mainImage, 'public://' . substr($fileUrl, strrpos($this->generator->getImage(), '/') + 1), FILE_EXISTS_REPLACE);
+
+        $fids[] = $file->id();
+      }
     }
-//    return $this->generator->getImages();
-
+    return $fids;
   }
 
 
