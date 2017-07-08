@@ -7,6 +7,7 @@
       let events = ['click', 'touchend'];
 
       terms.forEach(function (term) {
+        drupalSettings.filterMode = true;
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
 
         events.forEach(function(eventname) {

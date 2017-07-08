@@ -130,7 +130,7 @@ class HeartbeatStreamServices {
   }
 
   public function createStreamForUids($uids) {
-    return $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('uid', $uids, 'IN')->sort('created', 'DESC')->range(0,50)->execute());
+    return $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('uid', $uids, 'IN')->sort('created', 'DESC')->range(0,25)->execute());
   }
 
   public function createStreamByType($type) {
@@ -143,7 +143,7 @@ class HeartbeatStreamServices {
           $types[] = $value;
         }
       }
-      $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('type', $types, 'IN')->sort('created', 'DESC')->range(0,50)->execute());
+      $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('type', $types, 'IN')->sort('created', 'DESC')->range(0,25)->execute());
 
       if (count($beats) > 0) {
         $this->lastId = call_user_func('end', array_keys($beats));
@@ -169,7 +169,7 @@ class HeartbeatStreamServices {
         }
       }
 //      $uids[] = $currentUid;
-      $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('type', $types, 'IN')->condition('uid', $uids, 'IN')->sort('created', 'DESC')->range(0,50)->execute());
+      $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('type', $types, 'IN')->condition('uid', $uids, 'IN')->sort('created', 'DESC')->range(0,25)->execute());
 
       if (count($beats) > 0) {
         $this->lastId = call_user_func('end', array_keys($beats));
@@ -194,7 +194,7 @@ class HeartbeatStreamServices {
         }
       }
 //      $uids[] = $currentUid;
-      $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('id', $hid, '<')->condition('type', $types, 'IN')->condition('uid', $uids, 'IN')->sort('created', 'DESC')->range(0,50)->execute());
+      $beats = $this->entityTypeManager->getStorage('heartbeat')->loadMultiple($this->entityQuery->get('heartbeat')->condition('status', 1)->condition('id', $hid, '<')->condition('type', $types, 'IN')->condition('uid', $uids, 'IN')->sort('created', 'DESC')->range(0,25)->execute());
 
       if (count($beats) > 0) {
         $this->lastId = call_user_func('end', array_keys($beats));
