@@ -28,8 +28,11 @@
   max-height: 854px;
   width: auto!important;
   position: absolute;
-  top: 85px;
-  left: 350px;
+  top:0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
 }
 
 #colorbox {
