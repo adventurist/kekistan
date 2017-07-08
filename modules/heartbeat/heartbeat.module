@@ -130,7 +130,7 @@ function heartbeat_entity_insert(EntityInterface $entity) {
                 'type' => $heartbeatTypeEntity->id(),
                 'uid' => $user->id(),
                 'nid' => $entity->id(),
-                'name' => 'Dev Test',
+                'name' => $entity->getTitle(),
               ]);
               //TODO Find better fix than this str_replace
               $heartbeatActivity->setMessage(str_replace('&039;', "'", $heartbeatMessage));
@@ -148,7 +148,7 @@ function heartbeat_entity_insert(EntityInterface $entity) {
                 'type' => $heartbeatTypeEntity->id(),
                 'uid' => $user->id(),
                 'nid' => $entity->id(),
-                'name' => 'Dev Test',
+                'name' => $entity->getTitle(),
                 'status' => !$bundleSaved ? 1 : 0,
               ]);
 
@@ -220,7 +220,7 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
             'type' => $heartbeatTypeEntity->id(),
             'uid' => $user->id(),
             'nid' => $entity->id(),
-            'name' => 'Dev Test',
+            'name' => $entity->getTitle(),
           ]);
 
           $heartbeatActivity->setMessage($heartbeatMessage);
@@ -238,7 +238,7 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
             'type' => $heartbeatTypeEntity->id(),
             'uid' => $user->id(),
             'nid' => $entity->id(),
-            'name' => 'Dev Test',
+            'name' => $entity->getTitle(),
             'status' => !$bundleSaved ? 1 : 0,
           ]);
 
