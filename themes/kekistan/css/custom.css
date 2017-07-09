@@ -103,6 +103,11 @@ iframe.kekistan-anthem-video {
 /*Offset main div to consider fixed footer*/
 #main {
   margin-bottom: 70px;
+  background: #e6ecec;
+}
+
+#sidebar-first {
+  background: #FFF;
 }
 
 
@@ -303,6 +308,8 @@ iframe.kekistan-anthem-video {
   word-wrap: break-word;
   float: left;
   width: 99%;
+  margin: 4px;
+  background: #FFF;
 }
 
 /*.heartbeat-message a.heartbeat-user {*/
