@@ -1,0 +1,5 @@
+name: Kekistan Custom
+type: module
+description: Modifications to Kekistan
+core: 8.x
+package: Kekistan

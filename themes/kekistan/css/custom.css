@@ -4,6 +4,32 @@ nav#block-kekistan-account-menu {
     padding-top:50px;
 }
 
+#block-kekistan-account-menu .menu-item {
+  display: inline;
+}
+
+#block-kekistan-account-menu .menu .menu-item a {
+  background-repeat: no-repeat!important;
+  height: 32px;
+  width: 96px;
+  background-size: contain!important;
+  float: left;
+  display: inline;
+  color: transparent;
+}
+#block-kekistan-account-menu .menu .menu-item:first-of-type a {
+  background: url(/themes/kekistan/images/icons/profile.png);
+}
+
+#block-kekistan-account-menu .menu .menu-item:nth-of-type(2) a {
+  background: url(/themes/kekistan/images/icons/settings.png);
+}
+
+#block-kekistan-account-menu .menu .menu-item:last-of-type a {
+  background: url(/themes/kekistan/images/icons/logout.png);
+
+}
+
 div#block-kekistan-branding {
   float: left;
   margin-bottom: 15px;
@@ -47,6 +73,8 @@ element.style {
 }
 
 
+
+
 /* Left side menu bar*/
 nav#block-kekistan-main-menu {
   margin-top: 15px;
@@ -61,13 +89,26 @@ aside#sidebar-first {
 
 /* Left side menu - search*/
 div#block-kekistan-search {
-  float: left;
-  width: 100%;
+  margin-left: 5em;
+  width: 20%;
+  display: inline-block;
   margin-top: 30px;
+}
+
+#block-kekistan-search #edit-keys {
+  float: left!important;
+  display: inline-block!important;
+  width: 75%!important;
 }
 
 #block-kekistan-search #edit-submit {
   float: right!important;
+  width: 15%;
+  max-height: 30px;
+  transform: translate(-110%, 16%);
+  color: transparent;
+  background: url('/themes/kekistan/images/icons/search.png') no-repeat;
+  background-size: contain;
 }
 
 form#search-block-form {
@@ -81,6 +122,16 @@ div#block-kekistan-search h2 {
 /*suggested hash tag below search box*/
 #block-views-feed-filter-block .contextual-region {
   margin-top: 15px;
+}
+
+/* Same hashtag searching in its own region*/
+.filter-container {
+  max-width: 75em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
 }
 
 
