@@ -161,7 +161,17 @@ iframe.kekistan-anthem-video {
 
 .heartbeat-stream #main #content {
   margin-left: 0!important;
+  width: 100%!important;
+}
 
+#block-heartbeatblock #main .container {
+  margin-top: 40px;
+}
+
+/*keeping additional content the same width as parent*/
+
+.block-kekistan-content #content {
+  width: 100%!important;
 }
 
 .heartbeat-owner .time-ago {
@@ -311,6 +321,12 @@ iframe.kekistan-anthem-video {
   margin: 4px;
   background: #FFF;
 }
+
+.heartbeat-stream .heartbeat-message:first-of-type {
+  /*margin-top: -16px;*/
+}
+
+
 
 /*.heartbeat-message a.heartbeat-user {*/
   /*color: green;*/
