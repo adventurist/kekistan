@@ -1,5 +1,5 @@
 (function($, Drupal, drupalSettings) {
-  drupalSettings.filterMode = false;
+  drupalSettings.filterMode = true;
   Drupal.behaviors.custom= {
     attach: function (context, settings) {
 
@@ -7,39 +7,100 @@
       let terms = feedFilterBlock.querySelectorAll('a');
       let events = ['click', 'touchend'];
 
+      // terms.forEach(function (term) {
+      //   let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
+      //
+      //   events.forEach(function(eventname) {
+      //     term.addEventListener(eventname, function (event) {
+      //       drupalSettings.filterMode = true;
+      //       event.preventDefault();
+      //       event.stopPropagation();
+      //
+      //       $.ajax({
+      //         type: 'GET',
+      //         url: '/heartbeat/filter-feed/' + tid,
+      //         success: function (response) {
+      //
+      //           feedElement = document.querySelector('.heartbeat-stream');
+      //
+      //           if (feedElement != null) {
+      //
+      //             feedElement.innerHTML = response;
+      //
+      //           } else {
+      //
+      //             feedBlock = document.getElementById('block-heartbeatblock');
+      //             insertNode = document.createElement('div');
+      //             insertNode.innerHTML = response;
+      //             feedBlock.appendChild(insertNode);
+      //
+      //           }
+      //         }
+      //       });
+      //       return false;
+      //     });
+      //   })
+      // });
+
+
       terms.forEach(function (term) {
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
+        term.addEventListener("touchstart", function (event) {
+          drupalSettings.filterMode = true;
+          event.preventDefault();
+          event.stopPropagation();
 
-        events.forEach(function(eventname) {
-          term.addEventListener(eventname, function (event) {
-            drupalSettings.filterMode = true;
-            event.preventDefault();
-            event.stopPropagation();
+          $.ajax({
+            type: 'GET',
+            url: '/heartbeat/filter-feed/' + tid,
+            success: function (response) {
 
-            $.ajax({
-              type: 'GET',
-              url: '/heartbeat/filter-feed/' + tid,
-              success: function (response) {
+              feedElement = document.querySelector('.heartbeat-stream');
 
-                feedElement = document.querySelector('.heartbeat-stream');
+              if (feedElement != null) {
 
-                if (feedElement != null) {
+                feedElement.innerHTML = response;
 
-                  feedElement.innerHTML = response;
+              } else {
 
-                } else {
+                feedBlock = document.getElementById('block-heartbeatblock');
+                insertNode = document.createElement('div');
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
 
-                  feedBlock = document.getElementById('block-heartbeatblock');
-                  insertNode = document.createElement('div');
-                  insertNode.innerHTML = response;
-                  feedBlock.appendChild(insertNode);
-
-                }
               }
-            });
-            return false;
+            }
           });
-        })
+          return false;
+        });
+        term.addEventListener("click", function (event) {
+          drupalSettings.filterMode = true;
+          event.preventDefault();
+          event.stopPropagation();
+
+          $.ajax({
+            type: 'GET',
+            url: '/heartbeat/filter-feed/' + tid,
+            success: function (response) {
+
+              feedElement = document.querySelector('.heartbeat-stream');
+
+              if (feedElement != null) {
+
+                feedElement.innerHTML = response;
+
+              } else {
+
+                feedBlock = document.getElementById('block-heartbeatblock');
+                insertNode = document.createElement('div');
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
+
+              }
+            }
+          });
+          return false;
+        });
       });
 
       let fraction = 0.65;
