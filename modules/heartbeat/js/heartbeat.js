@@ -182,17 +182,22 @@
         if (lastHeartbeat !== null) {
 
           let hid = lastHeartbeat.id.substring(lastHeartbeat.id.indexOf('-') + 1);
-          $.ajax({
-            type: 'POST',
-            url: '/heartbeat/update_feed/' + hid,
-            success: function (response) {
+          if (drupalSettings.lastHid !== hid) {
 
-              feedBlock = document.getElementById('block-heartbeatblock');
-              insertNode = document.createElement('div');
-              insertNode.innerHTML = response;
-              feedBlock.appendChild(insertNode);
-            }
-          });
+            drupalSettings.lastHid = hid;
+
+            $.ajax({
+              type: 'POST',
+              url: '/heartbeat/update_feed/' + hid,
+              success: function (response) {
+
+                feedBlock = document.getElementById('block-heartbeatblock');
+                insertNode = document.createElement('div');
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
+              }
+            });
+          }
         }
       }
     }
