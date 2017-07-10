@@ -1,48 +1,11 @@
 (function($, Drupal, drupalSettings) {
-  drupalSettings.filterMode = true;
+  drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
     attach: function (context, settings) {
 
       let feedFilterBlock = document.getElementById('block-views-feed-filter-block');
       let terms = feedFilterBlock.querySelectorAll('a');
-      let events = ['click', 'touchend'];
-
-      // terms.forEach(function (term) {
-      //   let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
-      //
-      //   events.forEach(function(eventname) {
-      //     term.addEventListener(eventname, function (event) {
-      //       drupalSettings.filterMode = true;
-      //       event.preventDefault();
-      //       event.stopPropagation();
-      //
-      //       $.ajax({
-      //         type: 'GET',
-      //         url: '/heartbeat/filter-feed/' + tid,
-      //         success: function (response) {
-      //
-      //           feedElement = document.querySelector('.heartbeat-stream');
-      //
-      //           if (feedElement != null) {
-      //
-      //             feedElement.innerHTML = response;
-      //
-      //           } else {
-      //
-      //             feedBlock = document.getElementById('block-heartbeatblock');
-      //             insertNode = document.createElement('div');
-      //             insertNode.innerHTML = response;
-      //             feedBlock.appendChild(insertNode);
-      //
-      //           }
-      //         }
-      //       });
-      //       return false;
-      //     });
-      //   })
-      // });
-
-
+      //TODO Convert the following two event listeners to a more elegant syntax
       terms.forEach(function (term) {
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
         term.addEventListener("touchstart", function (event) {
