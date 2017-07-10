@@ -2,7 +2,6 @@
  * Created by logicp on 5/28/17.
  */
 (function($, Drupal, drupalSettings) {
-  drupalSettings.filterMode = false;
     Drupal.behaviors.heartbeat = {
         attach: function (context, settings) {
 
@@ -165,8 +164,13 @@
   }
 
   document.addEventListener("scroll", function (event) {
+    var docHeight = getDocHeight();
+    var scrollXy = getScrollXY();
+    var winInner = window.innerHeight;
 
-    if (drupalSettings.filterMode == false && getDocHeight() == getScrollXY()[1] + window.innerHeight) {
+    var ratio = (getScrollXY()[1] + window.innerHeight) / docHeight;
+
+    if (drupalSettings.filterMode == false && (getScrollXY()[1] + window.innerHeight) / docHeight > 0.99) {
 
       let streams = document.querySelectorAll('.heartbeat-stream');
       let stream = streams.length > 1 ? streams[streams.length - 1] : streams[0];

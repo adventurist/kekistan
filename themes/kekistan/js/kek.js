@@ -1,5 +1,5 @@
 (function($, Drupal, drupalSettings) {
-  drupalSettings.filterMode = true;
+  drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
     attach: function (context, settings) {
 

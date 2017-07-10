@@ -186,7 +186,7 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
   public function filterFeed($tid) {
     $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_hashtag.settings');
     $myConfig->set('tid', $tid)->save();
-
+    $block = BlockViewBuilder::lazyBuilder('heartbeathashblock', 'teaser');
     return BlockViewBuilder::lazyBuilder('heartbeathashblock', 'teaser');
   }
 
