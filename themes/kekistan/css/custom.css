@@ -611,6 +611,10 @@ and (orientation : portrait) {
 }
 @media (max-width: 414px) {
 
+  #header {
+    max-height: 64px!important;
+  }
+
   #block-kekistan-branding {
     max-width: 100%;
   }
@@ -630,19 +634,24 @@ and (orientation : portrait) {
     float: right !important;
     width: 15%;
     max-height: 22px;
-    transform: translate(8%, -180%);
+    transform: translate(22%, -150%);
   }
 
   #block-kekistan-account-menu {
-    padding-top: 20px!important;
+    padding-top: 12px!important;
   }
 
   #block-kekistan-search #edit-keys {
-    width: 92%!important;
+    width: 100%!important;
+    font-size: 12px!important;
   }
 
   #block-kekistan-branding img {
-    max-width: 96px;
+    max-width: 64px;
+  }
+
+  .site-slogan {
+    font-size: 10px!important;
   }
 
   #block-kekistan-account-menu .menu .menu-item a {
