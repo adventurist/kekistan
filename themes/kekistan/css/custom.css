@@ -610,15 +610,72 @@ and (orientation : portrait) {
   }
 }
 @media (max-width: 414px) {
-  footer#footer {
-    height: 50px;
+
+  #block-kekistan-branding {
+    max-width: 100%;
   }
+
+  .site-name, .site-name a {
+    display: none;
+  }
+
+  #block-kekistan-search {
+    margin-left: 1em!important;
+    width: 44%!important;
+    display: inline-block!important;
+    margin-top: 15px!important;
+  }
+
+  #block-kekistan-search #edit-submit {
+    float: right !important;
+    width: 15%;
+    max-height: 22px;
+    transform: translate(8%, -180%);
+  }
+
+  #block-kekistan-account-menu {
+    padding-top: 20px!important;
+  }
+
+  #block-kekistan-search #edit-keys {
+    width: 92%!important;
+  }
+
+  #block-kekistan-branding img {
+    max-width: 96px;
+  }
+
+  #block-kekistan-account-menu .menu .menu-item a {
+    height: 24px!important;
+    width: 36px!important;
+    padding-top: 0!important;
+  }
+
   #block-kekistan-footer li.menu-item:first-child {
     padding-left: 5px;
   }
 
+
   #block-kekistan-footer .facebook-footer {
     max-width: 32px;
+  }
+
+  .site-name {
+    display: none;
+  }
+
+  /*#sidebar-first {*/
+    /*position: fixed;*/
+    /*top: 1px;*/
+    /*text-align: center;*/
+    /*font-size: 12px;*/
+  /*}*/
+
+  #block-kekistananthem {
+    display: none;
+  }
+  footer#footer {
+    height: 50px;
   }
 }
 
