@@ -164,13 +164,8 @@
   }
 
   document.addEventListener("scroll", function (event) {
-    var docHeight = getDocHeight();
-    var scrollXy = getScrollXY();
-    var winInner = window.innerHeight;
 
-    var ratio = (getScrollXY()[1] + window.innerHeight) / docHeight;
-
-    if (drupalSettings.filterMode == false && (getScrollXY()[1] + window.innerHeight) / docHeight > 0.99) {
+    if (drupalSettings.filterMode == false && (getScrollXY()[1] + window.innerHeight) / getDocHeight() > 0.99) {
 
       let streams = document.querySelectorAll('.heartbeat-stream');
       let stream = streams.length > 1 ? streams[streams.length - 1] : streams[0];
@@ -203,7 +198,7 @@
     }
   });
 
-  $(document).bind('cbox_open', function() {
+  $(document).on('cbox_open', function() {
     $("#colorbox").swipe( {
       //Generic swipe handler for all directions
       swipeLeft:function(event, direction, distance, duration, fingerCount) {
@@ -215,19 +210,33 @@
       //Default is 75px, set to 0 for demo so any distance triggers swipe
       threshold:0
     });
-    let cboxClose = document.getElementById('cboxClose');
-    cboxClose.addEventListener('click', function() {
+    let cboxCloseBtn = $('#cboxClose');
+    cboxCloseBtn.on('click touchstart', function() {
       $.colorbox.close();
     });
-    cboxClose.addEventListener('touchstart', function() {
-      $.colorbox.close();
-    });
-    document.addEventListener('keyup', function(e) {
+    cboxCloseBtn.on('keyup', function(e) {
       if (e.keyCode == 27) {
-        $.colorbox.close();
+        $.colorbox().close();
       }
-    })
-  });
+    });
+
+    // let cboxClose = document.getElementById('cboxClose');
+    // cboxClose.addEventListener('click', function() {
+    //   $.colorbox.close();
+    // });
+    // cboxClose.addEventListener('touchstart', function() {
+    //   $.colorbox.close();
+    // });
+    // document.addEventListener('keyup', function(e) {
+    //   if (e.keyCode == 27) {
+    //     $.colorbox.close();
+    //   }
+    // })
+
+    return true;
+
+    }
+  );
 
 })(jQuery, Drupal, drupalSettings);
 
