@@ -55,37 +55,50 @@
 }
 
 #cboxNext {
-  display: inline-block;
-  transform: translate(821%, 550%);
+  position: absolute;
+  right: 5px;
+  top: 45%;
   color: transparent;
+  background-color: rgba(45,45,45,0.5);
   background-image: url(/themes/kekistan/images/icons/forward.png);
   background-repeat: no-repeat;
-  background-position: 10px 20px;
-  width: 45px;
-  height: 75px;
+  background-position: 10px 10px;
+  background-size: 30px;
+  width: 10px;
+  height: 50px;
 }
 
 #cboxPrevious {
-  display: inline-block;
-  transform: translate(-800%, 550%);
+  position: absolute;
+  left: 35px;
+  top: 45%;
   color: transparent;
+  background-color: rgba(45,45,45,0.5);
   background-image: url(/themes/kekistan/images/icons/backward.png);
   background-repeat: no-repeat;
-  background-position: 10px 21px;
-  width: 45px;
-  height: 75px;
+  background-position: 10px 10px;
+  background-size: 30px;
+  width: 10px;
+  height: 50px;
 }
 
 #cboxClose {
   position: absolute;
-  top: 95px;
-  right: 100px;
+  top: 2%;
+  right: 1%;
   color: transparent;
+  background-color: rgba(45,45,45,0.5);
+  border-radius: 20px;
   background-image: url(/themes/kekistan/images/icons/close.png);
   background-repeat: no-repeat;
-  background-size: 75%;
-  background-position: 6px 2px;
+  background-size: 60%;
+  background-position: 10px 8px;
   width: 45px;
+  height: 45px;
+}
+
+#cboxPrev:hover, #cboxNext:hover, #cboxClose:hover {
+  opacity: 0.5;
 }
 
 /*Main Feed Form*/
