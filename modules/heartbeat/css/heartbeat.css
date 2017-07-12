@@ -28,6 +28,7 @@
 .cboxPhoto {
   max-height: 854px;
   width: auto!important;
+  height: auto!important;
   position: absolute;
   top:0;
   bottom: 0;
