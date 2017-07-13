@@ -59,10 +59,7 @@
   right: 5px;
   top: 45%;
   color: transparent;
-  background-color: rgba(45,45,45,0.5);
-  background-image: url(/themes/kekistan/images/icons/forward.png);
-  background-repeat: no-repeat;
-  background-position: 10px 10px;
+  background: rgba(45, 45, 45, 0.5) url(/themes/kekistan/images/icons/forward.png) no-repeat 10px 10px;
   background-size: 30px;
   width: 10px;
   height: 50px;
@@ -73,10 +70,7 @@
   left: 5px;
   top: 45%;
   color: transparent;
-  background-color: rgba(45,45,45,0.5);
-  background-image: url(/themes/kekistan/images/icons/backward.png);
-  background-repeat: no-repeat;
-  background-position: 10px 10px;
+  background: rgba(45, 45, 45, 0.5) url(/themes/kekistan/images/icons/backward.png) no-repeat 10px 10px;
   background-size: 30px;
   width: 10px;
   height: 50px;
@@ -87,12 +81,9 @@
   top: 2%;
   right: 1%;
   color: transparent;
-  background-color: rgba(45,45,45,0.5);
   border-radius: 20px;
-  background-image: url(/themes/kekistan/images/icons/close.png);
-  background-repeat: no-repeat;
   background-size: 60%;
-  background-position: 10px 8px;
+  background: rgba(45, 45, 45, 0.5) url(/themes/kekistan/images/icons/close.png) no-repeat 10px 8px;
   width: 45px;
   height: 45px;
 }
