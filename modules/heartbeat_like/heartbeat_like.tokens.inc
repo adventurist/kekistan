@@ -54,10 +54,13 @@ function heartbeat_like_tokens($type, $tokens, array $data, array $options, Bubb
             $count_db = $query->execute()->fetchAssoc();
 
             if (!isset($count_db['count'])) {
-              $count_db['count'] = 0;
-            }
+//              unset ($replacements[$original]);
+              $replacements[$original] = "99";
+              continue 2;
+            } else {
 
-            $replacements[$original] = $count_db['count'];
+              $replacements[$original] = $count_db['count'];
+            }
           }
 
           break;
@@ -67,4 +70,19 @@ function heartbeat_like_tokens($type, $tokens, array $data, array $options, Bubb
 
   // Return the replacements.
   return $replacements;
+}
+
+/**
+ * Implements hook_tokens_alter().
+ * @param array $replacements
+ * @param array $context
+ * @param BubbleableMetadata $bubbleable_metadata
+ */
+function heartbeat_like_tokens_alter(array &$replacements, array $context, \Drupal\Core\Render\BubbleableMetadata $bubbleable_metadata) {
+
+  foreach ($replacements as $key => $replacement) {
+    if ($key === '[flagcount:count]' && $replacement == 0) {
+      $replacements[$key] = "";
+    }
+  }
 }
