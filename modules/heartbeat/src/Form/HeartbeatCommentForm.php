@@ -76,7 +76,7 @@ $body = $commentBody;
         $response = new AjaxResponse();
         $response->addCommand(new AppendCommand(
           '#heartbeat-' . $config->get('entity_id') . ' .heartbeat-comments',
-          '<div id="heartbeat-comment-' . $comment->id() . '"><span class="comment-owner"><span class="comment-username">' . \Drupal::currentUser()->getAccountName() . '</span>' . render($userview) . '<span class"comment-ago">1 sec ago</span></span><span class="comment-body">' . $commentBody . '</span></div>')
+          '<div id="heartbeat-comment-' . $comment->id() . '"><span class="comment-owner"><span class="comment-username">' . \Drupal::currentUser()->getAccountName() . '</span>' . render($userview) . '<span class"comment-ago">1 sec ago</span></span><span class="comment-body">' . $commentBody . '</span><span class="sub-comment"><a href="/heartbeat/subcommentrequest/' . $cid . '" class="button button-action use-ajax">Reply</a></span></div>')
         );
 
         return $response;
