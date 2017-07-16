@@ -27,7 +27,11 @@ nav#block-kekistan-account-menu {
 
 #block-kekistan-account-menu .menu .menu-item:last-of-type a {
   background: url(/themes/kekistan/images/icons/logout.png);
+}
 
+#block-kekistan-account-menu .menu .menu-item a.menu-item-visible {
+  color: black!important;
+  padding-top: 30px;
 }
 
 div#block-kekistan-branding {
@@ -640,6 +644,7 @@ and (orientation : portrait) {
   #block-kekistan-account-menu {
     padding-top: 12px!important;
   }
+
 
   #block-kekistan-search #edit-keys {
     width: 100%!important;

@@ -111,6 +111,7 @@
       flagTooltips();
       textareaAutoHeight();
       listenReplyButtons();
+      userMenuBehaviour();
     }
   };
 
@@ -221,6 +222,47 @@
         replyText.innerText = '';
       })
     }
+  }
+
+  function userMenuBehaviour() {
+    // $('#block-kekistan-account-menu').find('.menu-item').each().find('a').each(function() {
+    //   $(this).on('mouseover focus', function() {
+    //     $(this).find('a').css('color', '#000');
+    //   })
+    // });
+    let userMenu = document.getElementById('block-kekistan-account-menu');
+    let menuItems = userMenu.querySelectorAll('.menu-item');
+
+    for (let i = 0; i < menuItems.length; i++) {
+      let   menuItem = menuItems[i].querySelector('a');
+      ['mouseover', 'focus'].map(function(event) {
+        menuItem.addEventListener(event, function() {
+          menuItem.classList.add('menu-item-visible');
+        })
+        // menuItemListener(event, menuItem, true);
+      });
+      ['mouseout', 'focusout'].map(function(event) {
+        menuItem.addEventListener(event, function() {
+          menuItem.classList.remove('menu-item-visible');
+        })
+        // menuItemListener(event, menuItem, false);
+      })
+
+
+    }
+
+
+
+  }
+
+  function menuItemListener(event, element, option) {
+    element.addEventListener(event, function() {
+      if (option == true) {
+        menuItem.classList.add('menu-item-visible');
+      } else {
+        menuItem.classList.remove('menu-item-visible');
+      }
+    })
   }
 
 })(jQuery, Drupal, drupalSettings);
