@@ -31,15 +31,11 @@
                 type:'POST',
                 url:'/heartbeat/render_feed/' + response.feed,
                 success: function(response) {
-
                   feedElement = document.querySelector('.heartbeat-stream');
 
                   if (feedElement != null) {
-
                     feedElement.innerHTML = response;
-
                   } else {
-
                     feedBlock = document.getElementById('block-heartbeatblock');
                     insertNode = document.createElement('div');
                     insertNode.innerHTML = response;
@@ -79,7 +75,17 @@
                 }
               });
             }
-          }
+          };
+
+          let stream = document.querySelector('.heartbeat-stream');
+
+          let observer = new MutationObserver(function(mutations) {
+            listenImages();
+          });
+
+          let config = { attributes: true, childList: true, characterData: true };
+
+          observer.observe(stream, config);
         }
     };
 
