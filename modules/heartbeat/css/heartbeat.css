@@ -156,9 +156,16 @@ Temporarily hiding all irrelevant content */
 #block-heartbeatblock #block-kekistan-breadcrumbs,
 #block-heartbeatblock #block-kekistan-page-title { display: none}
 
-.heartbeat-stream #content {
-  margin-left: 0;
+/*.heartbeat-stream #content {*/
+  /*margin-left: 0;*/
+/*}*/
+
+#block-heartbeatblock #content {
+  margin-left: 0!important;
+  width: 100%!important;
 }
+
+
 
 /*heartbeat-stream section.section {*/
   /*padding: 0;*/
