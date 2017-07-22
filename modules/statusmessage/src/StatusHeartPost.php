@@ -126,6 +126,10 @@ class StatusHeartPost implements SharedContentInterface {
       for ($i = 0; $i < 10; $i++) {
         if (count($fids) < 6 && $images[$i]['width'] > 400) {
           $ext = strtolower(pathinfo($images[$i]['url'], PATHINFO_EXTENSION));
+          if (!$this->verifyExtension($ext)) {
+            $ext = explode($ext, $images[$i]['url']);
+            $ext = count($ext) > 1 ? $ext[1] : $ext[0];
+          }
           $ext = strpos($ext, '?') ? substr($ext, 0, strpos($ext, '?')) : $ext;
           $fileUrl = strlen($ext) > 0 ? substr($images[$i]['url'], 0, strpos($images[$i]['url'], $ext)) . $ext : $images[$i]['url'];
           $data = file_get_contents($fileUrl);
@@ -199,5 +203,19 @@ class StatusHeartPost implements SharedContentInterface {
         $i++;
       }
     return $tids;
+  }
+
+  public function verifyExtension($string) {
+    return $this->strposMultiple($string, ['jpg', 'jpeg', 'png', 'gif', 'bmp', ]);
+  }
+
+  public function strposMultiple($string, $patterns) {
+    $patterns = is_array($patterns) ? $patterns : is_object($patterns) ? (array) $patterns : array($patterns);
+
+    foreach($patterns as $pattern) {
+      if (stripos($string, $pattern)) {
+        return true;
+      }
+    }
   }
 }
