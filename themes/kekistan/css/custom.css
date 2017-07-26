@@ -288,9 +288,10 @@ iframe.kekistan-anthem-video {
 .action-unflag.flag-heartbeat_like a,
 .action-unflag.flag-jihad_flag a {
   opacity: 0.3;
-  /*float: left;*/
-  /*max-width: 22px;*/
-  /*margin-right: 8px;*/
+  background-size: contain;
+  padding: 10px;
+  padding-left: 72px;
+  margin-left: -56px;
 }
 
 
