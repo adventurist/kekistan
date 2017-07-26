@@ -267,13 +267,11 @@ iframe.kekistan-anthem-video {
 .flag-heartbeat_like a {
   background: url(/themes/kekistan/images/icons/like.png) no-repeat 6px center ;
   background-size: contain;
-  color: transparent;
 }
 
 .flag-jihad_flag a {
   background: url(/themes/kekistan/images/icons/bomb.png) no-repeat 6px center ;
   background-size: contain;
-  color: transparent;
 }
 
 .flag-heartbeat_like_comment a.use-ajax {
