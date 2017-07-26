@@ -31,7 +31,6 @@ nav#block-kekistan-account-menu {
 
 #block-kekistan-account-menu .menu .menu-item a.menu-item-visible {
   color: black!important;
-  padding-top: 30px;
 }
 
 div#block-kekistan-branding {
@@ -661,7 +660,7 @@ and (orientation : portrait) {
   #block-kekistan-account-menu .menu .menu-item a {
     height: 24px!important;
     width: 36px!important;
-    padding-top: 0!important;
+    padding-top: 30px!important;
   }
 
   #block-kekistan-footer li.menu-item:first-child {
