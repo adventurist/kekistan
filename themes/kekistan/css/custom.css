@@ -26,7 +26,7 @@ nav#block-kekistan-account-menu {
 }
 
 #block-kekistan-account-menu .menu .menu-item:last-of-type a {
-  background: url(/themes/kekistan/images/icons/sign-in.png);
+  background: url(/themes/kekistan/images/icons/login.png);
 }
 
 #block-kekistan-account-menu .menu .menu-item a.menu-item-visible {
