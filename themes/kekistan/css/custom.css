@@ -267,7 +267,8 @@ iframe.kekistan-anthem-video {
   background: url(/themes/kekistan/images/icons/okay.png) no-repeat center ;
   background-size: contain;
   padding: 10px;
-  padding-left: 36px;
+  padding-left: 64px;
+  margin-left: -32px;
 }
 
 .flag-jihad_flag a {
