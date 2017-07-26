@@ -18,7 +18,7 @@ nav#block-kekistan-account-menu {
   color: transparent;
 }
 #block-kekistan-account-menu .menu .menu-item:first-of-type a {
-  background: url(/themes/kekistan/images/icons/profile.png);
+  background: url(/themes/kekistan/images/icons/user.png);
 }
 
 #block-kekistan-account-menu .menu .menu-item:nth-of-type(2) a {
@@ -26,7 +26,7 @@ nav#block-kekistan-account-menu {
 }
 
 #block-kekistan-account-menu .menu .menu-item:last-of-type a {
-  background: url(/themes/kekistan/images/icons/logout.png);
+  background: url(/themes/kekistan/images/icons/sign-in.png);
 }
 
 #block-kekistan-account-menu .menu .menu-item a.menu-item-visible {
@@ -59,7 +59,7 @@ element.style {
   background-color: #c0c5be;
 }
 
-/* Republuc of kekistan*/
+/* Republic of kekistan*/
 .site-name a {
   color: rgba(255, 255, 255, 0.78) !important;
   font-size: 25px;
@@ -379,7 +379,7 @@ iframe.kekistan-anthem-video {
 }
 
 .heartbeat-stream .heartbeat-message:first-of-type {
-  /*margin-top: -16px;*/
+  margin-top: 0px;
 }
 
 
@@ -592,6 +592,7 @@ form#contact-message-feedback-form label::after {
 .statusmessage-preview-iframe {
   min-height: 320px;
   width: 100%;
+  background-color: white;
 }
 
 
