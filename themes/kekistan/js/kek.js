@@ -107,7 +107,6 @@
         }
 
       }
-      displayCounts();
       flagTooltips();
       textareaAutoHeight();
       listenReplyButtons();
