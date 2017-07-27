@@ -266,9 +266,9 @@ iframe.kekistan-anthem-video {
 .flag-heartbeat_like a {
   background: url(/themes/kekistan/images/icons/okay.png) no-repeat center ;
   background-size: contain;
-  padding: 10px;
-  padding-left: 64px;
-  margin-left: -32px;
+  padding: 8px;
+  padding-left: 72px;
+  margin-left: -28px;
 }
 
 .flag-heartbeat_like_comment a.use-ajax {
