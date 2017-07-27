@@ -8,7 +8,8 @@ nav#block-kekistan-account-menu {
   display: inline;
 }
 
-#block-kekistan-account-menu .menu .menu-item a {
+/*account menu*/
+#block-kekistan-account-menu .menu-item a {
   background-repeat: no-repeat!important;
   height: 32px;
   width: 96px;
@@ -16,7 +17,15 @@ nav#block-kekistan-account-menu {
   float: left;
   display: inline;
   color: transparent;
+  padding-top:35px;
+  font-size: 14px;
 }
+
+/*account menu hover*/
+#block-kekistan-account-menu .menu .menu-item a.menu-item-visible {
+  color: grey!important;
+}
+
 #block-kekistan-account-menu .menu .menu-item:first-of-type a {
   background: url(/themes/kekistan/images/icons/user.png);
 }
@@ -29,9 +38,7 @@ nav#block-kekistan-account-menu {
   background: url(/themes/kekistan/images/icons/login.png);
 }
 
-#block-kekistan-account-menu .menu .menu-item a.menu-item-visible {
-  color: black!important;
-}
+
 
 div#block-kekistan-branding {
   float: left;
