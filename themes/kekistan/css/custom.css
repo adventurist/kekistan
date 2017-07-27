@@ -271,13 +271,6 @@ iframe.kekistan-anthem-video {
   margin-left: -32px;
 }
 
-.flag-jihad_flag a {
-  background: url(/themes/kekistan/images/icons/bomb.png) no-repeat center ;
-  background-size: contain;
-  padding: 15px;
-  margin-left: 20px;
-}
-
 .flag-heartbeat_like_comment a.use-ajax {
   min-height: 8px;
   padding-left: 24px;
@@ -287,13 +280,20 @@ iframe.kekistan-anthem-video {
   background-size: 45% !important;
 }
 
+.flag-jihad_flag a {
+  background: url(/themes/kekistan/images/icons/bomb.png) no-repeat center ;
+  background-size: contain;
+  padding: 15px;
+  margin-left: 20px;
+}
+
 .action-unflag.flag-heartbeat_like a,
 .action-unflag.flag-jihad_flag a {
   opacity: 0.3;
   background-size: contain;
-  padding: 10px;
+  padding: 8px;
   padding-left: 72px;
-  margin-left: -56px;
+  margin-left: -28px;
 }
 
 
