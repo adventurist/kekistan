@@ -274,6 +274,8 @@ iframe.kekistan-anthem-video {
 .flag-jihad_flag a {
   background: url(/themes/kekistan/images/icons/bomb.png) no-repeat center ;
   background-size: contain;
+  padding: 15px;
+  margin-left: 20px;
 }
 
 .flag-heartbeat_like_comment a.use-ajax {
