@@ -114,6 +114,9 @@
     }
   };
 
+  hideCommentForms();
+  commentFormListeners();
+
   function flagTooltips() {
     var likeFlags = document.querySelectorAll('.flag-heartbeat_like');
     var jihadFlags = document.querySelectorAll('.flag-jihad_flag');
@@ -262,6 +265,47 @@
         menuItem.classList.remove('menu-item-visible');
       }
     })
+  }
+
+  function hideCommentForms() {
+
+
+    let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
+
+    for (let f = 0; f < forms.length; f++) {
+      forms[f].className += ' comment-form-hidden';
+    }
+  }
+
+  function commentFormListeners() {
+    let cFormButtons = document.querySelectorAll('.heartbeat-comment-button');
+    let loggedIn = drupalSettings.user.uid > 0;
+
+    for (var b = 0; b < cFormButtons.length; b++) {
+      cFormButtons[b].addEventListener('click', function(e) {
+
+        if (loggedIn) {
+
+          let childs = e.srcElement.parentNode.querySelectorAll('.form-submit, .js-form-type-textarea');
+          console.dir(childs);
+          for (let c = 0; c < childs.length; c++) {
+            toggleCommentElements(childs[c]);
+          }
+        }
+      })
+    }
+  }
+
+
+  function toggleCommentElements(node) {
+
+    console.dir(node);
+    if (node.classList.contains('comment-form-hidden')) {
+      console.log('removing comment-form-hidden class from element');
+      node.classList.remove('comment-form-hidden');
+    } else {
+      node.className += ' comment-form-hidden';
+    }
   }
 
 })(jQuery, Drupal, drupalSettings);

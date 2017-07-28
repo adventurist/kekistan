@@ -335,10 +335,37 @@ iframe.kekistan-anthem-video {
 .jihadtip {
   color: red;
 }
+/***********************
+***Heartbeat Comments***
+***********************/
 
 .heartbeat-comments {
   font-size: 13px;
   padding-top: 12px
+}
+
+.heartbeat-comment-button {
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: normal;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 0;
+  padding: 0 4rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  text-align: center;
+  margin-right: 0.1rem;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.7);
+  transition: background-color 1000ms linear;
+}
+
+.heartbeat-comment-button:hover {
+  background-color: #70a978;
+}
+
+.comment-form-hidden {
+  display: none!important;
 }
 
 .comment-owner, .comment-body {
