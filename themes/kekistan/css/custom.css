@@ -33,6 +33,14 @@ nav#block-kekistan-account-menu {
 .kekistan-login-block-close:hover {
   background-color: #70a978;
 }
+
+#block-kekistan-local-tasks ul.tabs.primary li {
+  display: inline-block!important;
+}
+.kekistan-login-block #header,
+.kekistan-login-block #sidebar-first {
+  display: none;
+}
 /*account menu*/
 #block-kekistan-account-menu .menu-item a {
   background-repeat: no-repeat!important;
