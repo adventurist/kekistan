@@ -291,11 +291,68 @@
           for (let c = 0; c < childs.length; c++) {
             toggleCommentElements(childs[c]);
           }
+        } else {
+          //Load Login Block
+          //append to document
+          //Hover in middle of screen
+
+          $.ajax({
+            type: 'GET',
+            url: '/user/modal/login',
+            success: function (response) {
+                mainContainer = document.getElementById('main');
+                loginBlock = document.createElement('div');
+                loginBlock.innerHTML = response;
+                loginBlock.className = 'kekistan-login-block';
+                loginBlock.id = 'kekistan-login-block';
+                closeBtn = document.createElement('div');
+                closeBtn.className =  'kekistan-login-block-close';
+                closeBtn.innerHTML = '✖';
+                loginBlock.appendChild(closeBtn);
+                mainContainer.appendChild(loginBlock);
+
+                closeBtn.addEventListener('click', function() {
+                  loginBlock.innerHTML = '';
+                  mainContainer.removeChild(loginBlock);
+                });
+
+            }
+          });
+
+
         }
       })
     }
   }
 
+  function ajaxRetrieveBlock(path, method, parent, arg = undefined) {
+
+
+
+    // $.ajax({
+    //   type: method,
+    //   url: path + arg ? '/' + arg : '',
+    //   success: function (response) {
+    //
+    //     if (response != null && response && response.length > 0) {
+    //
+    //       if (feedElement != null) {
+    //
+    //         feedElement.innerHTML = response;
+    //
+    //       } else {
+    //
+    //         feedBlock = document.getElementById('block-heartbeatblock');
+    //         insertNode = document.createElement('div');
+    //         insertNode.innerHTML = response;
+    //         feedBlock.appendChild(insertNode);
+    //
+    //       }
+    //     }
+    //   }
+    // });
+
+  }
 
   function toggleCommentElements(node) {
 
