@@ -142,7 +142,7 @@ div#block-kekistan-search {
 #block-kekistan-search #edit-submit {
   float: right!important;
   width: 15%;
-  max-height: 30px;
+  max-height: 20px;
   transform: translate(-110%, 16%);
   color: transparent;
   background: url('/themes/kekistan/images/icons/search.png') no-repeat;

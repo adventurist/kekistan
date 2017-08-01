@@ -30,7 +30,7 @@ function kek_custom_help($route_name, RouteMatchInterface $route_match) {
 function kek_custom_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
 
   if ($form_id == 'search_block_form') {
-    $form['keys']['#attributes']['placeholder'] = t('Search Kekistan');
+    $form['keys']['#attributes']['placeholder'] = t('Search');
   }
 
 }
