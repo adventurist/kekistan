@@ -179,8 +179,9 @@ div#block-kekistananthem {
   padding-top: 60px;
 }
 
-/* Left side menu - anthemn video */
+/* Left side menu - anthemn video when logged out*/
 iframe.kekistan-anthem-video {
+  margin-left: 21px;
   max-width: 225px;
 }
 
