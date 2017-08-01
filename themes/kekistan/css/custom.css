@@ -119,6 +119,7 @@ element.style {
 /* Left side menu bar*/
 nav#block-kekistan-main-menu {
   margin-top: 15px;
+  margin-bottom: 20px;
 }
 
 /* Left side menu*/
@@ -133,17 +134,10 @@ div#block-kekistan-search {
   margin-top: 25px;
 }
 
-#block-kekistan-search #edit-keys {
-  float: left!important;
-  display: inline-block!important;
-  width: 75%!important;
-}
-
 #block-kekistan-search #edit-submit {
   float: right!important;
-  width: 15%;
   max-height: 20px;
-  transform: translate(-110%, 16%);
+  transform: translate(65%, -170%);
   color: transparent;
   background: url('/themes/kekistan/images/icons/search.png') no-repeat;
   background-size: contain;
@@ -704,26 +698,20 @@ and (orientation : portrait) {
   }
 
   #block-kekistan-search {
-    margin-left: 1em!important;
-    width: 44%!important;
-    display: inline-block!important;
-    margin-top: 15px!important;
-  }
-
-  #block-kekistan-search #edit-submit {
-    float: right !important;
-    width: 15%;
-    max-height: 22px;
-    transform: translate(22%, -150%);
+    margin-left: 1em !important;
+    width: 44% !important;
+    display: inline-block !important;
+    margin-top: 15px !important;
   }
 
   #block-kekistan-account-menu {
     padding-top: 12px!important;
   }
 
-
+  /*search box*/
   #block-kekistan-search #edit-keys {
-    width: 100%!important;
+    width: 75%!important;
+    display: inline-block!important;
     font-size: 12px!important;
   }
 
