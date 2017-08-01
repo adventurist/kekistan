@@ -116,9 +116,6 @@ element.style {
   color: #d6d5d5;
 }
 
-
-
-
 /* Left side menu bar*/
 nav#block-kekistan-main-menu {
   margin-top: 15px;
@@ -133,10 +130,7 @@ aside#sidebar-first {
 
 /* Left side menu - search*/
 div#block-kekistan-search {
-  margin-left: 10em;
-  width: 20%;
-  display: inline-block;
-  margin-top: 50px;
+  margin-top: 25px;
 }
 
 #block-kekistan-search #edit-keys {
