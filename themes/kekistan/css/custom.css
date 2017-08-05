@@ -91,6 +91,9 @@ div#block-kekistan-branding {
 header#header {
   background: rgb(48, 76, 71);
   max-height: 3em;
+  position: fixed;
+  z-index: 1;
+  width: 100%;
 }
 
 element.style {
@@ -189,6 +192,7 @@ iframe.kekistan-anthem-video {
 #main {
   margin-bottom: 70px;
   background: #e6ecec;
+  padding-top: 3em;
 }
 
 #sidebar-first {
