@@ -1,7 +1,6 @@
 /* Place the account to right and branding logo to left in header*/
 nav#block-kekistan-account-menu {
     float: right;
-    padding-top:50px;
 }
 
 #block-kekistan-account-menu .menu-item {
@@ -44,13 +43,12 @@ nav#block-kekistan-account-menu {
 /*account menu*/
 #block-kekistan-account-menu .menu-item a {
   background-repeat: no-repeat!important;
-  height: 32px;
-  width: 96px;
   background-size: contain!important;
   float: left;
   display: inline;
+  max-width: 24px;
   color: transparent;
-  padding-top:35px;
+  margin: 0.7em 1em 0 1em;
   font-size: 14px;
 }
 
@@ -75,7 +73,6 @@ nav#block-kekistan-account-menu {
 
 div#block-kekistan-branding {
   float: left;
-  margin-bottom: 15px;
   display: inline-block;
 }
 
@@ -86,12 +83,14 @@ div#block-kekistan-branding {
 
 /* Logo image*/
 #block-kekistan-branding img {
-  max-width: 110px;
+  max-width: 64px;
+  vertical-align: bottom;
 }
 
 /* Header background*/
 header#header {
   background: rgb(48, 76, 71);
+  max-height: 3em;
 }
 
 element.style {
@@ -101,13 +100,16 @@ element.style {
 /* Republic of kekistan*/
 .site-name a {
   color: rgba(255, 255, 255, 0.78) !important;
-  font-size: 25px;
-  top: 28px !important;
+  font-size: 17px;
+  letter-spacing: 3px;
+  padding-left: 4px;
+  vertical-align: bottom;
   position: relative;
 }
 
 /* Free kekistan*/
 .site-slogan {
+  display: none;
   color: white;
   padding-top: 10px;
 }
@@ -511,13 +513,12 @@ video.heartbeat-video,
 }
 
 
-div#block-statusblock {
-    margin-bottom: 15px;
-}
-
 #status-form #edit-post {
-  margin-bottom: 16px!important;
   float: right!important;
+  max-width: 5em;
+  font-size: 14px;
+  max-height: 3em;
+  margin-right: 0em;
 }
 
 /*Feed Filter*/
