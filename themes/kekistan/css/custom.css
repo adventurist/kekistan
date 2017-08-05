@@ -534,8 +534,9 @@ video.heartbeat-video,
 
 /* Footer */
 footer#footer {
-  height: 60px; overflow:hidden;
-  padding-top: 10px;
+  height: 3em;
+  overflow:hidden;
+  padding: 2px;
   background-color: rgb(48, 76, 71);
   color: grey!important;
   position: fixed;
@@ -546,6 +547,7 @@ footer#footer {
 
 #block-kekistan-footer {
   text-align: center;
+  font-size: 13px;
 }
 
 #block-kekistan-footer .menu-item a {
@@ -581,10 +583,10 @@ footer#footer {
 #block-kekistan-footer li a {
   background-size: contain;
   background-repeat: no-repeat;
-  vertical-align: middle;
+  vertical-align: top;
   display: inline-block;
-  min-height: 35px;
-  margin-bottom:10px;
+  padding: 3px;
+  margin-top: 2px;
 }
 
 /*@media (min-width: 380px) {*/
