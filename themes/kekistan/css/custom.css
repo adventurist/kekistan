@@ -534,7 +534,7 @@ video.heartbeat-video,
 
 /* Footer */
 footer#footer {
-  height: 3em;
+  height: 2em;
   overflow:hidden;
   padding: 2px;
   background-color: rgb(48, 76, 71);
