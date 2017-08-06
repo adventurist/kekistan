@@ -362,6 +362,19 @@ iframe.kekistan-anthem-video {
 .jihadtip {
   color: red;
 }
+
+.flag-heartbeat_like.selected::after {
+  content: 'Praise';
+  color: rgb(0, 178, 0);
+  transition: all 0.5s ease;
+  position: absolute;
+}
+
+.flag-jihad_flag.selected::after {
+  content: 'Jihad!';
+  color: red;
+  transition: all 0.5s ease;
+}
 /***********************
 ***Heartbeat Comments***
 ***********************/

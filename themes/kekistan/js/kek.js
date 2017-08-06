@@ -107,7 +107,9 @@
         }
 
       }
-      flagTooltips();
+      // flagTooltips();
+
+      flagToolListen();
       textareaAutoHeight();
       listenReplyButtons();
       userMenuBehaviour();
@@ -116,6 +118,33 @@
 
   hideCommentForms();
   commentFormListeners();
+
+  function flagToolListen() {
+
+    var likeFlags = document.querySelectorAll('.flag-heartbeat_like');
+    var jihadFlags = document.querySelectorAll('.flag-jihad_flag');
+
+    for (let i = 0; i < likeFlags.length; i++) {
+      likeFlags[i].addEventListener('mouseover', function() {
+        likeFlags[i].className += ' selected';
+      });
+      likeFlags[i].addEventListener('mouseout', function() {
+        likeFlags[i].classList.remove('selected');
+      });
+    }
+
+    for (let i = 0; i < jihadFlags.length; i++) {
+
+      jihadFlags[i].addEventListener('mouseover', function() {
+        jihadFlags[i].className += ' selected';
+
+      });
+      jihadFlags[i].addEventListener('mouseout', function() {
+        jihadFlags[i].classList.remove('selected');
+      });
+    }
+
+  }
 
   function flagTooltips() {
     var likeFlags = document.querySelectorAll('.flag-heartbeat_like');
