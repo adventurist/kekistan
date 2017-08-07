@@ -678,7 +678,7 @@ form#contact-message-feedback-form label::after {
 /*Preview Generator*/
 
 .statusmessage-preview-iframe {
-  min-height: 320px;
+  min-height: 380px;
   width: 100%;
   background-color: white;
 }
