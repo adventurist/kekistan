@@ -206,17 +206,13 @@ $stophere = null;
       preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $message, $match);
 
       if ($this->markupgenerator !== NULL && !empty($match) && array_values($match)[0] !== NULL) {
-
         $url = is_array(array_values($match)[0]) ? array_values(array_values($match)[0])[0] : array_values($match)[0];
 
         if (strpos($message, 'twitter')) {
-
-
           $statusTwitter = new StatusTwitter($url);
           $nid = $statusTwitter->sendRequest();
 
         } else if (strpos($message, 'youtube') || strpos($message, 'youtu.be')) {
-
           $statusYoutube = new StatusYoutube($url, $message);
           $nid = $statusYoutube->generateNode();
 
@@ -225,14 +221,12 @@ $stophere = null;
           $nid = $statusHeartPost->sendRequest();
 
         }
-
       }
 
       if ($nid === NULL && !empty($this->statusTypeService)) {
         $statusCreated = false;
         foreach ($this->statusTypeService->loadAll() as $type) {
           if (!$statusCreated && !$type->getMedia()) {
-
             $userViewed = \Drupal::routeMatch()
               ->getParameters()
               ->get('user') === NULL ? \Drupal::currentUser()
@@ -242,14 +236,13 @@ $stophere = null;
               ->id();
 
             if ($userViewed !== NULL) {
-
               $statusEntity = Status::create([
                 'type' => $type->id(),
                 'uid' => \Drupal::currentUser()->id(),
                 'recipient' => $userViewed
               ]);
-
               $statusEntity->setMessage($message);
+
               if ($statusEntity->save()) {
                 $statusCreated = TRUE;
               }
@@ -259,9 +252,7 @@ $stophere = null;
       }
 
       if (\Drupal::service('module_handler')
-          ->moduleExists('heartbeat') && ($nid !== NULL || $statusEntity !== NULL)
-      ) {
-
+          ->moduleExists('heartbeat') && ($nid !== NULL || $statusEntity !== NULL)) {
 //              $configManager = \Drupal::service('config.manager');
         $feedConfig = \Drupal::config('heartbeat_feed.settings');
 //              $feedConfig = $feedConfig = $configManager->get('heartbeat_feed.settings');
