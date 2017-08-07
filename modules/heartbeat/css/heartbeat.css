@@ -78,14 +78,11 @@
 
 #cboxClose {
   position: absolute;
-  top: 5%;
-  right: 1%;
-  width: 56px;
-  height: 56px;
-  color: transparent;
-  border-radius: 20px;
-  background-size: contain;
-  background: rgba(45, 45, 45, 0.5) url(/themes/kekistan/images/icons/close.png) no-repeat center center;
+  top: 16%;
+  right: 12%;
+  width: 65px;
+  height: 67px;
+  background: url(/themes/kekistan/images/icons/cross-circular-button-outline.png) no-repeat center center;
 }
 
 #cboxPrev:hover, #cboxNext:hover, #cboxClose:hover {
