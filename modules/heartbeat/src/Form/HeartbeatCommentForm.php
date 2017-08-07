@@ -37,7 +37,7 @@ class HeartbeatCommentForm extends FormBase {
     $form['post'] = array(
       '#type' => 'submit',
       '#description' => 'Comment',
-      '#value' => t('Comment'),
+      '#value' => t('Submit'),
       '#ajax' => [
         'callback' => '::commentAjaxSubmit',
         'progress' => array(
