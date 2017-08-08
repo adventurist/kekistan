@@ -129,7 +129,6 @@ class StatusForm extends FormBase {
       ]
 
     );
-$stophere = null;
     return $form;
   }
 
@@ -224,29 +223,32 @@ $stophere = null;
       }
 
       if ($nid === NULL && !empty($this->statusTypeService)) {
-        $statusCreated = false;
+        $sTypes = $this->statusTypeService->loadAll();
         foreach ($this->statusTypeService->loadAll() as $type) {
-          if (!$statusCreated && !$type->getMedia()) {
-            $userViewed = \Drupal::routeMatch()
-              ->getParameters()
-              ->get('user') === NULL ? \Drupal::currentUser()
-              ->id() : \Drupal::routeMatch()
-              ->getParameters()
-              ->get('user')
-              ->id();
+          $userViewed = \Drupal::routeMatch()
+            ->getParameters()
+            ->get('user') === NULL ? \Drupal::currentUser()
+            ->id() : \Drupal::routeMatch()
+            ->getParameters()
+            ->get('user')
+            ->id();
 
-            if ($userViewed !== NULL) {
-              $statusEntity = Status::create([
-                'type' => $type->id(),
-                'uid' => \Drupal::currentUser()->id(),
-                'recipient' => $userViewed
-              ]);
-              $statusEntity->setMessage($message);
+          if ($userViewed !== NULL) {
+            $statusEntity = Status::create([
+              'type' => $type->id(),
+              'uid' => \Drupal::currentUser()->id(),
+              'recipient' => $userViewed
+            ]);
 
-              if ($statusEntity->save()) {
-                $statusCreated = TRUE;
-              }
+            if ($type->getMedia() && $file !== null) {
+              $statusEntity->set('field_image', array_values($file)[0]);
             }
+            $statusEntity->setMessage($message);
+          }
+
+          if (!empty($statusEntity) && $statusEntity->save()) {
+            //TODO Log or error report
+            $statusCreated = TRUE;
           }
         }
       }
