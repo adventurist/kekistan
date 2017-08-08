@@ -83,6 +83,7 @@
   width: 65px;
   height: 67px;
   background: url(/themes/kekistan/images/icons/cross-circular-button-outline.png) no-repeat center center;
+  color: transparent;
 }
 
 #cboxPrev:hover, #cboxNext:hover, #cboxClose:hover {
