@@ -238,7 +238,7 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
             'type' => $heartbeatTypeEntity->id(),
             'uid' => $user->id(),
             'nid' => $entity->id(),
-            'name' => $entity->getTitle(),
+            'name' => $entity->getName(),
             'status' => !$bundleSaved ? 1 : 0,
           ]);
 
@@ -252,7 +252,7 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
       }
     }
   }
-  updateFeeds();
+//  updateFeeds();
 
 }
 
