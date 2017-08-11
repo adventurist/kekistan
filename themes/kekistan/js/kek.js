@@ -119,6 +119,17 @@
   hideCommentForms();
   commentFormListeners();
 
+  if (window.innerWidth < 415) {
+    let header = document.getElementById('header');
+    $(window).scroll(function () {
+      if ($(window).scrollTop() >= 270) {
+        header.style.top = '0';
+      } else {
+        header.style.top = '39px';
+      }
+    });
+  }
+
   function flagToolListen() {
 
     var likeFlags = document.querySelectorAll('.flag-heartbeat_like');

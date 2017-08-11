@@ -704,7 +704,7 @@ and (orientation : portrait) {
 @media (max-width: 414px) {
 
   #header {
-    max-height: 64px!important;
+    max-height: 2.5em!important;
   }
 
   #block-kekistan-branding {
@@ -770,8 +770,9 @@ and (orientation : portrait) {
   #block-kekistananthem {
     display: none;
   }
-  footer#footer {
-    height: 50px;
+
+  #footer {
+    height: 32px;
   }
 }
 
