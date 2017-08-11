@@ -121,8 +121,11 @@
 
   if (window.innerWidth < 415) {
     let header = document.getElementById('header');
+    let adminBar = document.getElementById('toolbar-bar');
     $(window).scroll(function () {
-      if ($(window).scrollTop() >= 270) {
+      console.log(adminBar.scrollTop);
+      if ($(window).scrollTop() >= 39) {
+        // header.style.top=
         header.style.top = '0';
       } else {
         header.style.top = '39px';
