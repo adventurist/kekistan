@@ -5,12 +5,13 @@ dependencies:
   module:
     - statusmessage
     - system
+    - user
   theme:
     - kekistan
 id: statusblock
 theme: kekistan
 region: content
-weight: -4
+weight: -8
 provider: null
 plugin: status_block
 settings:
@@ -24,3 +25,10 @@ visibility:
     pages: "/user/*\r\n<front>"
     negate: false
     context_mapping: {  }
+  user_role:
+    id: user_role
+    roles:
+      authenticated: authenticated
+    negate: false
+    context_mapping:
+      user: '@user.current_user_context:current_user'

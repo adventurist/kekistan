@@ -11,7 +11,7 @@ dependencies:
 id: kekistananthem
 theme: kekistan
 region: sidebar_first
-weight: 0
+weight: -10
 provider: null
 plugin: 'block_content:7cd96c47-96e0-467b-8116-6a89b2959afd'
 settings:

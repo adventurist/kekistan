@@ -1,0 +1,10 @@
+uuid: 001f8cf7-d909-4cc6-985f-3d359d90b135
+langcode: en
+status: true
+dependencies:
+  module:
+    - user
+id: user.comment
+label: Comment
+targetEntityType: user
+cache: true

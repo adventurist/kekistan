@@ -12,7 +12,7 @@ dependencies:
 id: beastaf
 theme: kekistan
 region: content
-weight: 0
+weight: -4
 provider: null
 plugin: 'block_content:0ce14a3d-5c46-4943-b93a-9523ddf4521c'
 settings:

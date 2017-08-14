@@ -10,7 +10,7 @@ dependencies:
 id: heartbeatblock
 theme: kekistan
 region: content
-weight: -2
+weight: -7
 provider: null
 plugin: heartbeat_block
 settings:

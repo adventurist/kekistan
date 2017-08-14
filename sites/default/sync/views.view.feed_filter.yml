@@ -183,6 +183,19 @@ display:
           entity_field: vid
           plugin_id: bundle
       sorts:
+        created:
+          id: created
+          table: taxonomy_index
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          plugin_id: date
         field_count_value:
           id: field_count_value
           table: taxonomy_term__field_count
@@ -223,6 +236,16 @@ display:
           admin_label: node
           required: true
           plugin_id: standard
+        reverse__node__field_tags:
+          id: reverse__node__field_tags
+          table: taxonomy_term_field_data
+          field: reverse__node__field_tags
+          relationship: none
+          group_type: group
+          admin_label: field_tags
+          required: false
+          entity_type: taxonomy_term
+          plugin_id: entity_reverse
       arguments: {  }
       display_extenders: {  }
       use_ajax: true
@@ -245,7 +268,7 @@ display:
       pager:
         type: mini
         options:
-          items_per_page: 5
+          items_per_page: 10
           offset: 0
           id: 0
           total_pages: null

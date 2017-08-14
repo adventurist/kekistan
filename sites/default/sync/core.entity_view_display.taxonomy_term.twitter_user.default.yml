@@ -22,16 +22,16 @@ content:
     settings: {  }
     third_party_settings: {  }
   field_count:
-    weight: 3
+    type: number_integer
+    weight: 1
+    region: content
     label: above
     settings:
       thousand_separator: ''
       prefix_suffix: true
     third_party_settings: {  }
-    type: number_integer
-    region: content
   field_lat:
-    weight: 1
+    weight: 2
     label: above
     settings:
       thousand_separator: ''
@@ -42,7 +42,7 @@ content:
     type: number_decimal
     region: content
   field_lon:
-    weight: 2
+    weight: 3
     label: above
     settings:
       thousand_separator: ''

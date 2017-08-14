@@ -1,0 +1,13 @@
+uuid: b3030b36-d95c-4900-82ee-1260ff06785a
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.heartbeat_like_comment.flag
+label: 'Praise ([flagcount:count])'
+type: comment
+plugin: 'flag_action:heartbeat_like_comment.flag'
+configuration:
+  flag_id: heartbeat_like_comment
+  flag_action: flag

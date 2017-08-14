@@ -1,0 +1,13 @@
+uuid: fa92fccc-a9ef-4ba9-bd33-a636be2a9aa3
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.heartbeat_like_comment.unflag
+label: 'Reee ([flagcount:count])'
+type: comment
+plugin: 'flag_action:heartbeat_like_comment.unflag'
+configuration:
+  flag_id: heartbeat_like_comment
+  flag_action: unflag

@@ -1,0 +1,20 @@
+uuid: d38f6b3e-2c94-4215-8f95-1d8239d718ba
+langcode: en
+status: false
+dependencies:
+  module:
+    - kek_custom
+  theme:
+    - kekistan
+id: kekloginblock
+theme: kekistan
+region: content
+weight: 0
+provider: null
+plugin: kek_login_block
+settings:
+  id: kek_login_block
+  label: 'Kek login block'
+  provider: kek_custom
+  label_display: '0'
+visibility: {  }

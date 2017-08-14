@@ -12,7 +12,7 @@ dependencies:
 id: views_feed_filter_block
 theme: kekistan
 region: sidebar_first
-weight: 0
+weight: -11
 provider: null
 plugin: 'views_block:feed_filter-block_1'
 settings:
