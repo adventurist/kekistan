@@ -67,3 +67,7 @@
 #edit-mediatabs + #ajax-wrapper {
   display: inline-block;
 }
+
+.status-comment-share {
+  text-decoration: none;
+}

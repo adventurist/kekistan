@@ -84,8 +84,9 @@ class HeartbeatCommentForm extends FormBase {
         $extraMarkup = null;
         if (!empty($urls = $this->markupGenerator->validateUrl($commentBody))) {
           $url = array_values($urls)[0];
+          $url = !is_array($url) ? $url : array_values($url)[0];
           $this->markupGenerator->parseMarkup($url);
-          $extraMarkup = $this->markupGenerator->generatePreview();
+          $extraMarkup = '<a href="' . $url . '" class="status-comment-share"> ' . $this->markupGenerator->generatePreview() . '</a>';
         }
 
         $comment = Comment::create([
