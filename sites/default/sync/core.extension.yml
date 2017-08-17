@@ -21,10 +21,14 @@ module:
   filter: 0
   flag: 0
   heartbeat: 0
+  heartbeat_like: 0
+  heartbeat_like_comment: 0
   help: 0
   history: 0
   image: 0
   imce: 0
+  jihad_flag: 0
+  kek_feedfilter: 0
   language: 0
   link: 0
   link_attributes: 0
@@ -35,7 +39,6 @@ module:
   page_cache: 0
   path: 0
   quickedit: 0
-  rdf: 0
   search: 0
   shortcut: 0
   statusmessage: 0

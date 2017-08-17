@@ -1,0 +1,20 @@
+uuid: 3253dc41-1796-4b81-acb5-2b8162e1184c
+langcode: en
+status: false
+dependencies:
+  module:
+    - heartbeat
+  theme:
+    - kekistan
+id: heartbeatcommentblock
+theme: kekistan
+region: content
+weight: -1
+provider: null
+plugin: heartbeat_comment_block
+settings:
+  id: heartbeat_comment_block
+  label: 'Heartbeat comment block'
+  provider: heartbeat
+  label_display: '0'
+visibility: {  }

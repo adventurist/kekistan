@@ -1,0 +1,13 @@
+uuid: 752f47e9-1dfc-4857-9e88-7c9cf4b19f54
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.jihad_flag.flag
+label: 'Jihad ([flagcount:count])'
+type: heartbeat
+plugin: 'flag_action:jihad_flag.flag'
+configuration:
+  flag_id: jihad_flag
+  flag_action: flag

@@ -1,0 +1,56 @@
+uuid: f9dfbab7-5ffc-4383-882c-27eb8d48de86
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.status.status_message.field_image
+    - image.style.thumbnail
+    - statusmessage.status_type.status_message
+  module:
+    - image
+id: status.status_message.default
+targetEntityType: status
+bundle: status_message
+mode: default
+content:
+  field_image:
+    weight: 11
+    settings:
+      progress_indicator: throbber
+      preview_image_style: thumbnail
+    third_party_settings: {  }
+    type: image_image
+    region: content
+  langcode:
+    type: language_select
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: -4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  recipient:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    settings:
+      match_operator: CONTAINS
+      size: 60
+      placeholder: ''
+    region: content
+    third_party_settings: {  }
+hidden: {  }

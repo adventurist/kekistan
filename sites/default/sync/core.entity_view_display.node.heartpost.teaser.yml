@@ -1,0 +1,29 @@
+uuid: 5a66f35d-f29f-484a-9b10-477f0c433e6d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.heartpost.body
+    - node.type.heartpost
+  module:
+    - text
+    - user
+id: node.heartpost.teaser
+targetEntityType: node
+bundle: heartpost
+mode: teaser
+content:
+  body:
+    label: hidden
+    type: text_summary_or_trimmed
+    weight: 101
+    settings:
+      trim_length: 600
+    third_party_settings: {  }
+    region: content
+  links:
+    weight: 100
+    region: content
+hidden:
+  langcode: true

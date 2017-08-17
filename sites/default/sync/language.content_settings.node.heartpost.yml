@@ -1,0 +1,11 @@
+uuid: 163fdb79-e4a3-4816-b40b-83bbf43f3d1c
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.heartpost
+id: node.heartpost
+target_entity_type_id: node
+target_bundle: heartpost
+default_langcode: site_default
+language_alterable: false

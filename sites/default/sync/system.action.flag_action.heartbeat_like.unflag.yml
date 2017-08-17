@@ -1,11 +1,11 @@
-uuid: b1a49351-24b3-4d84-b835-1dfa450b7cba
+uuid: 67275fc4-34cb-4b70-8e9b-5e6e555aeccc
 langcode: en
 status: true
 dependencies:
   module:
     - flag
 id: flag_action.heartbeat_like.unflag
-label: Jihad
+label: 'Reee ([flagcount:count])'
 type: heartbeat
 plugin: 'flag_action:heartbeat_like.unflag'
 configuration:

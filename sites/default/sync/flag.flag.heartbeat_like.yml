@@ -1,19 +1,21 @@
-uuid: 4da0c5ae-d656-44c1-a6fc-ec1d95a24bd4
+uuid: cf31746e-b78b-4fd7-84f5-990b392a4531
 langcode: en
 status: true
 dependencies: {  }
+_core:
+  default_config_hash: G-kCzfaH9ntZya6ueEO7Z0eMSvDpZUm6EsOE0V8e9W4
 id: heartbeat_like
 label: 'Heartbeat Like'
 bundles: {  }
 entity_type: heartbeat
 global: false
 weight: 0
-flag_short: Praise
+flag_short: 'Praise ([flagcount:count])'
 flag_long: ''
-flag_message: 'Autistic Energy Rises'
-unflag_short: Jihad
+flag_message: ''
+unflag_short: 'Reee ([flagcount:count])'
 unflag_long: ''
-unflag_message: 'Autism regressing'
+unflag_message: ''
 unflag_denied_text: ''
 flag_type: 'entity:heartbeat'
 link_type: ajax_link
@@ -22,6 +24,6 @@ flagTypeConfig:
   show_as_field: true
   show_on_form: false
   show_contextual_link: false
-  extra_permissions:
-    owner: '0'
+  access_author: ''
+  extra_permissions: {  }
 linkTypeConfig: {  }

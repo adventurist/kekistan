@@ -1,0 +1,30 @@
+uuid: a61114e6-7b80-40f5-a644-88d5a956a7ed
+langcode: en
+status: true
+dependencies:
+  module:
+    - file
+    - image
+    - statusmessage
+id: status.field_image
+field_name: field_image
+entity_type: status
+type: image
+settings:
+  uri_scheme: public
+  default_image:
+    uuid: ''
+    alt: ''
+    title: ''
+    width: null
+    height: null
+  target_type: file
+  display_field: false
+  display_default: false
+module: image
+locked: false
+cardinality: 5
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

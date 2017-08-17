@@ -8,10 +8,12 @@ message_id: null
 description: 'Records a user posting a youtube video'
 mainentity: node
 bundle: youtube_video
-message: '!user posted a video'
+message: '!user posted a video: !title !body'
 weight: 0
 perms: -1
 group_type: '11'
-arguments: '{"!user":"[user:account-name]"}'
+arguments: '{"!user":"[user:account-name]","!title":"[node:title]","!body":"[node:body]"}'
 variables:
   - '[user:account-name]'
+  - '[node:title]'
+  - '[node:body]'
