@@ -16,8 +16,8 @@ features:
   favicon: true
 logo:
   use_default: false
-  path: 'public://kekflag4-1024x594.png'
+  path: 'public://flag_of_kekistan.png'
 favicon:
   use_default: false
-  path: 'public://favicon.ico'
+  path: 'public://favicon_0.ico'
   mimetype: image/vnd.microsoft.icon
