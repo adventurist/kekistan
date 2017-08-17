@@ -68,7 +68,7 @@
   display: inline-block;
 }
 
-.status-comment-share {
+.heartbeat-message .comment-body a.status-comment-share {
   text-decoration: none;
   color: #333;
 }
