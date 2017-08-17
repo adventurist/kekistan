@@ -7,6 +7,8 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\Comment\Entity\Comment;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\AppendCommand;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Drupal\statusmessage\MarkupGenerator;
 
 /**
  * Class HeartbeatCommentForm.
@@ -16,6 +18,20 @@ use Drupal\Core\Ajax\AppendCommand;
  */
 class HeartbeatCommentForm extends FormBase {
   protected $entityId;
+  protected $markupGenerator;
+
+
+    /**
+     * {@inheritdoc}
+     */
+  public static function create(ContainerInterface $container)
+  {
+    return new static(
+//      $container->get('status_type_service'),
+//      $container->get('statusservice'),
+      $container->get('markupgenerator'));
+  }
+
 
   /**
    * {@inheritdoc}
@@ -23,6 +39,11 @@ class HeartbeatCommentForm extends FormBase {
   public function getFormId() {
     return 'heartbeat_comment_form';
   }
+
+  public function __construct() {
+    $this->markupGenerator = new MarkupGenerator();
+  }
+
 
   /**
    * {@inheritdoc}
@@ -60,11 +81,18 @@ class HeartbeatCommentForm extends FormBase {
       $config = \Drupal::config('heartbeat_comment.settings');
 
       if (strlen(trim($commentBody)) > 1) {
+        $extraMarkup = null;
+        if (!empty($urls = $this->markupGenerator->validateUrl($commentBody))) {
+          $url = array_values($urls)[0];
+          $this->markupGenerator->parseMarkup($url);
+          $extraMarkup = $this->markupGenerator->generatePreview();
+        }
+
         $comment = Comment::create([
           'entity_type' => 'heartbeat',
           'entity_id' => $config->get('entity_id'),
           'field_name' => 'comment',
-          'comment_body' => $commentBody,
+          'comment_body' => ['value' => $commentBody . $extraMarkup, 'format' => 'basic_html'],
           'comment_type' => 'comment',
           'subject' => 'Heartbeat Comment',
           'uid' => \Drupal::currentUser()->id(),

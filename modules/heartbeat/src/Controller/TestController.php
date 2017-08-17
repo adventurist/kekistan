@@ -62,27 +62,6 @@ public function __construct(HeartbeatTypeServices $heartbeat_heartbeattype, Hear
     );
   }
 
-  /**
-   * Start.
-   *
-   * @return string
-   * @throws \InvalidArgumentException
-   * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
-   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
-   * @throws \Drupal\Core\Database\InvalidQueryException
-   *   Return Hello string.
-   */
-  public function start($arg) {
-
-    $statusTwitter = new StatusTwitter('https://twitter.com/lvd_drm/status/874429014684745728');
-    $nid = $statusTwitter->sendRequest();
-
-    return [
-      '#type' => 'markup',
-      '#markup' => $this->t('Implement method: start with parameter(s): ' . $arg),
-    ];
-  }
-
   public function saveHeartbeats() {
     $heartbeats = $this->entityQuery->get("heartbeat")->execute();
     $data = array();
@@ -103,6 +82,33 @@ public function __construct(HeartbeatTypeServices $heartbeat_heartbeattype, Hear
 
   }
 
+
+  /**
+   * Start.
+   *
+   * @return string
+   * @throws \InvalidArgumentException
+   * @throws \Drupal\Core\Database\IntegrityConstraintViolationException
+   * @throws \Drupal\Core\Database\DatabaseExceptionWrapper
+   * @throws \Drupal\Core\Database\InvalidQueryException
+   *   Return Hello string.
+   */
+  public function start($arg) {
+$jigga = 'what';
+
+    $stuff = file_get_contents('http://cointrx.com:6969/prices/latest');
+
+    $decoded = \json_decode($stuff);
+
+
+    return [
+      '#type' => 'markup',
+      '#markup' => $this->t('jizzla'),
+    ];
+
+
+  }
+
   public function getHeartbeats() {
 
     $data = file_get_contents("public://heartbeats.dat");
@@ -112,18 +118,36 @@ public function __construct(HeartbeatTypeServices $heartbeat_heartbeattype, Hear
       $heartbeats = array_reverse($heartbeats);
       foreach ($heartbeats as $heartbeat) {
 
-        $message = $heartbeat->getMessage();
-        $heartbeatActivity = Heartbeat::create([
-          'type' => $heartbeat->id(),
-          'uid' => $heartbeat->getOwnerId(),
-          'nid' => $heartbeat->getNid()->getValue()[0]['target_id'],
-          'name' => 'Dev Test',
-          'type' => $heartbeat->getType(),
-          'message' => $heartbeat->getMessage()->getValue()[0]['value']
-        ]);
+        if ($heartbeat instanceof \Drupal\heartbeat\Entity\Heartbeat) {
+//          try {
+//            $heartbeat->save();
+//          } catch (\Exception $e) {
+//            $message = $e->getMessage();
+//          }
+//        }
+          $nid = $heartbeat->get('nid')->getValue()[0]['target_id'];
+          $title = 'Dev Test';
+          $type = $type = $this->heartbeat_heartbeattype->load($heartbeat->get('type')->getValue()[0]['target_id']);
 
-        if (!$heartbeatActivity->save()) {
-          $errors = true;
+          if ($type->get('mainentity') == 'node') {
+            $node = $this->entityTypeManager()->getStorage('node')->load($nid);
+            if ($node !== null) {
+              $title = $node->getTitle();
+            }
+          }
+
+
+          $heartbeatActivity = Heartbeat::create([
+            'uid' => $heartbeat->getOwnerId(),
+            'nid' => $heartbeat->getNid()->getValue()[0]['target_id'],
+            'name' => $title,
+            'type' => $heartbeat->getType(),
+            'message' => $heartbeat->getMessage()->getValue()[0]['value']
+          ]);
+
+          if (!$heartbeatActivity->save()) {
+            $errors = true;
+          }
         }
       }
     }
@@ -135,13 +159,18 @@ public function __construct(HeartbeatTypeServices $heartbeat_heartbeattype, Hear
     ];
 
   }
-
+//
   public function deleteHeartbeats() {
     $entities = \Drupal::service("entity.query")->get("heartbeat")->execute();
     foreach($entities as $entity) {
       $heartbeat = \Drupal::service("entity_type.manager")->getStorage("heartbeat")->load($entity);
       $heartbeat->delete();
     }
+
+    return [
+      '#type' => 'markup',
+      '#markup' => $this->t('Deleting them Heartbeats')
+    ];
   }
 
 }

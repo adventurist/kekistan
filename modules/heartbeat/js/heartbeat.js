@@ -121,14 +121,13 @@
       let comment = comments[i];
       // console.dir(comment);
       comment.addEventListener('click', function() {
-        getParent(comment);
+          getParent(comment);
       })
     }
   }
 
   function getParent(node) {
-    console.dir(node);
-    if (node.classList.contains('heartbeat-comment')) {
+    if (node != null && node != undefined && node.classList != undefined && node.classList.contains('heartbeat-comment')) {
       let id = node.id.substr(node.id.indexOf('-') + 1);
       $.ajax({
         type: 'POST',
@@ -137,7 +136,9 @@
         }
       });
     } else {
-      getParent(node.parentNode);
+      if (node != null && node.nodeName !== 'body') {
+        getParent(node.parentNode);
+      }
     }
   }
 

@@ -257,56 +257,8 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
 }
 
 function updateFeeds() {
-  $configFactory = \Drupal::service('config.factory');
-  $updateFeedConfig = $configFactory->getEditable('heartbeat_update_feed.settings');
-  $feedConfig = $configFactory->get('heartbeat_feed.settings');
-
-//  $form = \Drupal::formBuilder()->getForm('\Drupal\heartbeat\Form\HeartbeatUpdateFeedForm');
-
-//  $form_state = new FormState();
-//  $form_state->set('timestamp', $updateFeedConfig->get('timestamp'));
-
-//  \Drupal::formBuilder()->submitForm('\Drupal\heartbeat\Form\HeartbeatUpdateFeedForm', $form_state);
-
-//  $errors = $form_state->getErrors();
-
-
-  //  $updateFeedConfig->set('update', true)->save();
-//  $feedUpdateConfig = new stdClass();
-//  $feedUpdateConfig->feed = $feedConfig->get('message');
-//  $feedUpdateConfig->update = true;
-//  $feedUpdateConfig->timestamp = $updateFeedConfig->get('timestamp');
-
-
-//  $curlQuery = '/heartbeat/update_feed/' . $updateFeedConfig->get('timestamp');
-  //Set options for the curl request
-
-
-
-//  $curlOptions = array(
-//    'headers' => array(
-//      'X-DataSource-Auth' => 'a',
-//      'method' => 'POST',
-//    ),
-//  );
-//  //Perform the request and decode the results
-//  $result = chr_curl_http_request($curlQuery, $curlOptions);
-
+//  $configFactory = \Drupal::service('config.factory');
 }
-//public function saveHeartbeatMessage($entity, $tokenService, $preparsedMessageString, $entities, $entityTypeId, $media) {
-//  $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
-//
-//
-//  $heartbeatActivity = Heartbeat::create([
-//    'type' => $heartbeatTypeEntity->id(),
-//    'uid' => $user->id(),
-//    'nid' => $entity->id(),
-//    'name' => 'Dev Test',
-//  ]);
-//
-//  $heartbeatActivity->setMessage($heartbeatMessage);
-//  $heartbeatActivity->save();
-//}
 
 
 /**
@@ -330,7 +282,6 @@ function heartbeat_entity_view(array &$build, \Drupal\Core\Entity\EntityInterfac
  * Implements hook_cron().
  */
 function heartbeat_cron() {
-  $friendship = false;
   //Iterate over the Heartbeat Types and ensure that the weight of bundle-specific types are lower than that of their
   //parent type. This will allow us to ensure Bundle specific types end up being published as opposed to
   //Types which represent all content types

@@ -177,7 +177,7 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
 
 
   public function updateFeed($hid) {
-    $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_more.settings');
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_more.settings');
     $myConfig->set('hid', $hid)->save();
 
     return BlockViewBuilder::lazyBuilder('heartbeatmoreblock', 'full');

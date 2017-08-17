@@ -9,6 +9,7 @@ use Drupal\Core\Form\FormBuilder;
 use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\flag\FlagService;
+use Drupal\heartbeat\Entity\Heartbeat;
 use Drupal\User\Entity\User;
 use Drupal\Flag\Entity\Flag;
 use Drupal\Core\Datetime\DateFormatter;
@@ -180,13 +181,9 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
     }
 
     $user = $heartbeat->getOwner();
-//      $rendered = $this->entityTypeManager->getViewBuilder('user')->view($user, 'full');
     $userView = user_view($user, 'compact');
-//      $flag = $this->flagService->getFlagById("friendship");
-//      $flagLink = $flag->getLinkTypePlugin()->getAsLink($flag, $user);
-//      $flagUrl = $flagLink->getUrl()->toString();
-//      $flagText = $flagLink->getText();
     $userPic = $user->get('user_picture')->getValue();
+
     if (!empty($userPic)) {
       $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
     }
@@ -219,16 +216,6 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
       $commentLink['#attributes'] = array('class' => array('button', 'button-action', 'use-ajax'));
 
       $comment = Comment::load($cid);
-      $commentLike = $this->flagService->getFlagById('heartbeat_like_comment');
-      $commentLikeKey = 'flag_' . $commentLike->id();
-      $commentLikeData = [
-        '#lazy_builder' => ['flag.link_builder:build', [
-          $comment->getEntityTypeId(),
-          $comment->id(),
-          $commentLike->id(),
-        ]],
-        '#create_placeholder' => TRUE,
-      ];
 
       $commentOwner = user_view($comment->getOwner(), 'comment');
 
@@ -257,17 +244,6 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
               break;
           }
 
-          $subCommentLike = $this->flagService->getFlagById('heartbeat_like_comment');
-          $subCommentLikeKey = 'flag_' . $subCommentLike->id();
-          $subCommentLikeData = [
-            '#lazy_builder' => ['flag.link_builder:build', [
-              $subComment->getEntityTypeId(),
-              $subComment->id(),
-              $subCommentLike->id(),
-            ]],
-            '#create_placeholder' => TRUE,
-          ];
-
           $subCommentOwner = user_view($subComment->getOwner(), 'comment');
           $subCommentTime = $this->timestamp - $subComment->getCreatedTime() < 172800 ? $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago': $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_medium');
           $subComments[] = [
@@ -276,7 +252,7 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
             'username' => $subComment->getAuthorName(),
             'owner' => $subCommentOwner,
             'timeAgo' => $subCommentTime,
-            'commentLike' => [$subCommentLikeKey => $subCommentLikeData],
+            'commentLike' => Heartbeat::flagAjaxMarkup('heartbeat_like_comment', $subComment, $this->flagService)
           ];
 
         }
@@ -302,7 +278,7 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
         'username' => $comment->getAuthorName(),
         'owner' => $commentOwner,
         'timeAgo' => $cTimeago,
-        'commentLike' => [$commentLikeKey => $commentLikeData],
+        'commentLike' => Heartbeat::flagAjaxMarkup('heartbeat_like_comment', $comment, $this->flagService),
         'reply' => $commentLink,
         'subComments' => $subComments
       ];
@@ -311,29 +287,6 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
 
     $form = \Drupal::service('form_builder')->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm', $heartbeat);
 
-    $likeFlag = $this->flagService->getFlagById('heartbeat_like');
-    $unlikeFlag = $this->flagService->getFlagById('jihad_flag');
-
-    $unlikeKey = 'flag_' . $unlikeFlag->id();
-    $unlikeData = [
-      '#lazy_builder' => ['flag.link_builder:build', [
-        $heartbeat->getEntityTypeId(),
-        $heartbeat->id(),
-        $unlikeFlag->id(),
-      ]],
-      '#create_placeholder' => TRUE,
-    ];
-
-    $likeKey = 'flag_' . $likeFlag->id();
-    $likeData = [
-      '#lazy_builder' => ['flag.link_builder:build', [
-        $heartbeat->getEntityTypeId(),
-        $heartbeat->id(),
-        $likeFlag->id(),
-      ]],
-      '#create_placeholder' => TRUE,
-    ];
-//TODO move this method as a static method on Heartbeat entity
     $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
       'userPicture' => $rendered,
       'userId' => $user->id(),
@@ -343,8 +296,8 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
       'user' => $userView,
       'commentForm' => $form,
       'comments' => $comments,
-      'likeFlag' => [$likeKey => $likeData],
-      'unlikeFlag' => [$unlikeKey => $unlikeData]
+      'likeFlag' => Heartbeat::flagAjaxMarkup('heartbeat_like', $heartbeat, $this->flagService),
+      'unlikeFlag' => Heartbeat::flagAjaxMarkup('jihad_flag', $heartbeat, $this->flagService)
     );
   }
 }
