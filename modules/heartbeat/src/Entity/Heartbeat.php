@@ -652,9 +652,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       $message .= $replacements;
 
     }
-    if (!strpos($message, '#') || strpos($message, '#') !== 1) {
-      $message = '#' . $message;
-    }
   }
 
 
