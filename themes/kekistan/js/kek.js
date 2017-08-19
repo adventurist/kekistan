@@ -73,7 +73,11 @@
         let video = videos[i];
         video.addEventListener('loadedmetadata', function () {
           video.loop = video.duration < 5;
-          video.volume = 0.2;
+          video.muted = true;
+
+          video.addEventListener('click', function() {
+            video.muted = false;
+          });
 
           window.addEventListener('scroll', checkScroll, false);
           window.addEventListener('resize', checkScroll, false);
@@ -100,6 +104,7 @@
 
           if (visible > fraction) {
             video.play();
+            console.log('play dat shit');
           } else {
             video.pause();
           }
@@ -121,14 +126,11 @@
 
   if (window.innerWidth < 415) {
     let header = document.getElementById('header');
-    let adminBar = document.getElementById('toolbar-bar');
     $(window).scroll(function () {
-      console.log(adminBar.scrollTop);
       if ($(window).scrollTop() >= 39) {
-        // header.style.top=
         header.style.top = '0';
       } else {
-        header.style.top = '39px';
+        header.style.top = 0.75 * (39 - $(window).scrollTop()) + 'px';
       }
     });
   }
