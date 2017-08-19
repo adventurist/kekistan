@@ -121,6 +121,7 @@
     }
   };
 
+  listenReplyLinks();
   hideCommentForms();
   commentFormListeners();
 
@@ -259,15 +260,44 @@
     }
   }
 
-  function listenReplyButtons() {
+  function listenReplyButtons() { //reply grey button to reply
     let replyButtons = document.querySelectorAll('.heartbeat-comment-form .form-submit, .heartbeat-sub-comment-form .form-submit');
 
     for (let m = 0; m < replyButtons.length; m++) {
-      replyButtons[m].addEventListener('click', function() {
+      replyButtons[m].addEventListener('click', function(event) {
         let replyText = replyButtons[m].parentNode.querySelector('textarea');
+        console.dir(replyText);
+        console.dir(event);
         replyText.value = '';
         replyText.innerText = '';
       })
+    }
+  }
+
+  /**
+   * to open a form by clicking reply hyperlink to sub-comment.
+   */
+  function listenReplyLinks() {
+    let replyLinks = document.querySelectorAll('.sub-comment a.button');
+
+    for (let i = 0; i < replyLinks.length; i++) {
+        replyLinks[i].addEventListener('click', function (event) {
+          if (
+            event.srcElement.parentElement.nextElementSibling !== null &&
+            event.srcElement.parentElement.nextElementSibling != undefined &&
+            event.srcElement.parentElement.nextElementSibling.childNodes != undefined &&
+            event.srcElement.parentElement.nextElementSibling.childNodes[0].classList.contains('heartbeat-sub-comment-form')
+          ) {
+            console.dir(commentForm);
+            //event.preventDefault();
+            //event.stopPropagation();
+            //event.stopImmediatePropagation();
+            replyLinks[i].removeListener();
+
+          } else {
+
+          }
+        });
     }
   }
 
