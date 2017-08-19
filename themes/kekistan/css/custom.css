@@ -397,6 +397,7 @@ iframe.kekistan-anthem-video {
   background-color: rgba(0, 0, 0, 0.05);
   color: rgba(0, 0, 0, 0.7);
   transition: background-color 1000ms linear;
+  margin-top: 47px;
 }
 
 .heartbeat-comment-button:hover {
