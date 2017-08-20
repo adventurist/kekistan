@@ -260,7 +260,7 @@ class StatusForm extends FormBase {
         //earlier in development, the implementation was centered around selectable feed
         //types rather than filtering a single feed
         //TODO decide on the use of feed selections
-        
+
         $feedConfig = \Drupal::config('heartbeat_feed.settings');
         $response = new AjaxResponse();
         $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));

@@ -437,8 +437,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return string|false
    *   The heartbeat type label or FALSE if the heartbeat type is not found.
    *
-   * @todo Add this as generic helper method for config entities representing
-   *   entity bundles.
    */
   public function heartbeat_get_type(HeartbeatInterface $heartbeat) {
     $type = HeartbeatType::load($heartbeat->bundle());
@@ -546,7 +544,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   }
 
   private static function mediaTag($type, $filePath) {
-    //TODO put this into new method
     if ($type == 'image') {
       $type = 'img';
       return '<' . $type . ' src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" class="heartbeat-image" / >';
@@ -953,9 +950,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return int
    *   The uid of the Heartbeat's user.
    */
-  public function getUid()
-  {
-    // TODO: Implement getUid() method.
+  public function getUid() {
+    return $this->get('uid');
   }
 
   /**
@@ -964,10 +960,11 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @param int uid
    *   The Heartbeat user.
    *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function setUid($uid)
   {
-    // TODO: Implement setUid() method.
+    $this->set('uid', $uid)->save();
   }
 
   /**

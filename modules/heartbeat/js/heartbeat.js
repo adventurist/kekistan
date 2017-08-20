@@ -114,12 +114,10 @@
   }
 
   function listenCommentPost() {
-    //TODO is drupal data selector enough? I doubt it.
     let comments = document.querySelectorAll('[data-drupal-selector]');
 
     for (let i = 0; i < comments.length; i++) {
       let comment = comments[i];
-      // console.dir(comment);
       comment.addEventListener('click', function() {
           getParent(comment);
       })

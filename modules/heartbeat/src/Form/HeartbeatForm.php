@@ -2,9 +2,15 @@
 
 namespace Drupal\heartbeat\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\heartbeat\Entity;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for Heartbeat edit forms.
@@ -17,9 +23,22 @@ class HeartbeatForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')
+    );
+  }
+
+
+  public function __construct(EntityManagerInterface $entity_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, EntityTypeManager $entity_type_manager) {
+    parent::__construct($entity_manager, $entity_type_bundle_info, $time);
+    $this->nodeManager = $entity_type_manager->getStorage('node');
+  }
+
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $this->nodeManager = \Drupal::service('entity_type.manager')->getStorage('node');
+//    $this->nodeManager = \Drupal::service('entity_type.manager')->getStorage('node');
     /* @var $entity \Drupal\heartbeat\Entity\Heartbeat */
     $form = parent::buildForm($form, $form_state);
     $entity = &$this->entity;

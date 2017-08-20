@@ -24,14 +24,6 @@ class HeartbeatCommentForm extends FormBase {
     /**
      * {@inheritdoc}
      */
-  public static function create(ContainerInterface $container)
-  {
-    return new static(
-//      $container->get('status_type_service'),
-//      $container->get('statusservice'),
-      $container->get('markupgenerator'));
-  }
-
 
   /**
    * {@inheritdoc}

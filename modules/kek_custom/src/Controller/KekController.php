@@ -18,7 +18,7 @@ class KekController extends ControllerBase {
    *   Return Hello string.
    */
   public function loginBlock() {
-    return BlockViewBuilder::lazyBuilder('kekloginblock', 'teaser');
+    return BlockViewBuilder::lazyBuilder('kekloginblock', 'full');
   }
 
 }
