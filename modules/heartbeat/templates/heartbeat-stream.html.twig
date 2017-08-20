@@ -43,6 +43,7 @@
           {{ message.unlikeFlag }}
         </div>
         <div class="heartbeat-comment" id="comment-{{ message.id }}">
+          {{ message.commentForm }}
           <div class="heartbeat-comments">
             {% for comment in message.comments %}
               <div id="heartbeat-comment-{{ comment.id }}">
@@ -66,7 +67,6 @@
               </div>
             {% endfor %}
           </div>
-          {{ message.commentForm }}
         </div>
       </div>
     </div>

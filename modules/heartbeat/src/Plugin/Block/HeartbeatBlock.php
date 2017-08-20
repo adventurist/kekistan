@@ -141,6 +141,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         $uids[] = $uid->uid;
       }
     }
+    if (\Drupal::service('path.matcher')->isFrontPage()) {
       if ($feed !== null && $this->heartbeatStreamServices) {
       $uids = count($uids) > 1 ? array_unique($uids) : $uids;
         if (!empty($uids)) {
@@ -158,21 +159,24 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
           $this->renderMessage($messages, $heartbeat);
         }
       }
-
-      return [
-        '#theme' => 'heartbeat_stream',
-        '#messages' => $messages,
-        '#attached' => array(
-          'library' => 'heartbeat/heartbeat',
-          'drupalSettings' => [
-            'activeFeed' => 'jigga',
-            'friendData' => $friendData,
-          ]
-        ),
-        '#cache' => array('max-age' => 0)
-      ];
-
+    } else {
+      $niburak = null;
     }
+
+    return [
+      '#theme' => 'heartbeat_stream',
+      '#messages' => $messages,
+      '#attached' => array(
+        'library' => 'heartbeat/heartbeat',
+        'drupalSettings' => [
+          'activeFeed' => 'jigga',
+          'friendData' => $friendData,
+        ]
+      ),
+      '#cache' => array('max-age' => 0)
+    ];
+
+  }
 
     private function renderMessage(array &$messages, $heartbeat) {
       $timeago = null;
@@ -304,7 +308,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         'userName' => $user->getAccountName(),
         'user' => $userView,
         'commentForm' => $form,
-        'comments' => $comments,
+        'comments' => array_reverse($comments),
         'likeFlag' => Heartbeat::flagAjaxMarkup('heartbeat_like', $heartbeat, $this->flagService),
         'unlikeFlag' => Heartbeat::flagAjaxMarkup('jihad_flag', $heartbeat, $this->flagService)
         );

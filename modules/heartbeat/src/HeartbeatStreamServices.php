@@ -149,6 +149,16 @@ class HeartbeatStreamServices {
         ->execute());
   }
 
+//  public function createStreamForRecipient($uid) {
+//    return $this->entityTypeManager->getStorage('heartbeat')->loadMultiple(
+//      $this->entityQuery->get(
+//        'heartbeat')
+//      ->condition('status', 1)
+//      ->orConditionGroup()->condition(
+//      )
+//    )
+//  }
+
   public function createStreamByType($type) {
     $stream = $this->entityTypeManager->getStorage(
       'heartbeat_stream')->load(array_values($this->loadStream($type))[0]);

@@ -282,17 +282,21 @@
 
     for (let i = 0; i < replyLinks.length; i++) {
         replyLinks[i].addEventListener('click', function (event) {
+          event.preventDefault();
+          event.stopPropagation();
+          event.stopImmediatePropagation();
           if (
             event.srcElement.parentElement.nextElementSibling !== null &&
             event.srcElement.parentElement.nextElementSibling != undefined &&
             event.srcElement.parentElement.nextElementSibling.childNodes != undefined &&
+            event.srcElement.parentElement.nextElementSibling.childNodes[0].classList != undefined &&
             event.srcElement.parentElement.nextElementSibling.childNodes[0].classList.contains('heartbeat-sub-comment-form')
           ) {
             console.dir(commentForm);
             //event.preventDefault();
             //event.stopPropagation();
             //event.stopImmediatePropagation();
-            replyLinks[i].removeListener();
+            // replyLinks[i].removeListener();
 
           } else {
 
@@ -358,6 +362,15 @@
 
     for (var b = 0; b < cFormButtons.length; b++) {
       cFormButtons[b].addEventListener('click', function(e) {
+
+        let commentBlock = e.srcElement.parentNode.parentNode.querySelector('.heartbeat-comments');
+
+        if (!commentBlock.classList.contains('heartbeat-comments-visible')) {
+          commentBlock.className += ' heartbeat-comments-visible';
+        } else {
+          commentBlock.classList.remove('heartbeat-comments-visible');
+        }
+
 
         if (loggedIn) {
 
