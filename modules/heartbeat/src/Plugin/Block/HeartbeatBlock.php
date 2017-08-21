@@ -141,26 +141,21 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         $uids[] = $uid->uid;
       }
     }
-    if (\Drupal::service('path.matcher')->isFrontPage()) {
-      if ($feed !== null && $this->heartbeatStreamServices) {
-      $uids = count($uids) > 1 ? array_unique($uids) : $uids;
-        if (!empty($uids)) {
-          foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
-            $this->renderMessage($messages, $heartbeat);
-          }
-        } else {
-          foreach ($this->heartbeatStreamServices->createStreamByType($feed) as $heartbeat) {
-            $this->renderMessage($messages, $heartbeat);
-          }
+    if ($feed !== null && $this->heartbeatStreamServices) {
+    $uids = count($uids) > 1 ? array_unique($uids) : $uids;
+      if (!empty($uids)) {
+        foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
+          $this->renderMessage($messages, $heartbeat);
         }
       } else {
-//        foreach ($this->heartbeatStreamServices->createStreamForUids($uids) as $heartbeat) {
-        foreach ($this->heartbeatStreamServices->loadAllStreams() as $heartbeat) {
+        foreach ($this->heartbeatStreamServices->createStreamByType($feed) as $heartbeat) {
           $this->renderMessage($messages, $heartbeat);
         }
       }
     } else {
-      $niburak = null;
+      foreach ($this->heartbeatStreamServices->loadAllStreams() as $heartbeat) {
+        $this->renderMessage($messages, $heartbeat);
+      }
     }
 
     return [
