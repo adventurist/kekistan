@@ -294,7 +294,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       }
 
       $form = \Drupal::service('form_builder')->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm', $heartbeat);
-
+      $commentCount = count($comments);
       $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
         'userPicture' => $rendered,
         'userId' => $user->id(),
@@ -304,6 +304,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         'user' => $userView,
         'commentForm' => $form,
         'comments' => array_reverse($comments),
+        'commentCount' => $commentCount > 0 ? $commentCount : '',
         'likeFlag' => Heartbeat::flagAjaxMarkup('heartbeat_like', $heartbeat, $this->flagService),
         'unlikeFlag' => Heartbeat::flagAjaxMarkup('jihad_flag', $heartbeat, $this->flagService)
         );
