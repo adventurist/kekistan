@@ -1,6 +1,52 @@
 /**
  * Created by logicp on 5/28/17.
  */
+
+const commentListen = function(e) {
+
+  let commentBlock = e.srcElement.parentNode.parentNode.querySelector('.heartbeat-comments');
+
+  if (!commentBlock.classList.contains('heartbeat-comments-visible')) {
+    commentBlock.className += ' heartbeat-comments-visible';
+  } else {
+    commentBlock.classList.remove('heartbeat-comments-visible');
+  }
+
+
+  if (drupalSettings.user.uid > 0) {
+
+    let childs = e.srcElement.parentNode.querySelectorAll('.form-submit, .js-form-type-textarea');
+    console.dir(childs);
+    for (let c = 0; c < childs.length; c++) {
+      toggleCommentElements(childs[c]);
+    }
+  } else {
+    // loginModal()
+    $.ajax({
+      type: 'GET',
+      url: '/user/modal/login',
+      success: function (response) {
+        mainContainer = document.getElementById('main');
+        loginBlock = document.createElement('div');
+        loginBlock.innerHTML = response;
+        loginBlock.className = 'kekistan-login-block';
+        loginBlock.id = 'kekistan-login-block';
+        closeBtn = document.createElement('div');
+        closeBtn.className =  'kekistan-login-block-close';
+        closeBtn.innerHTML = '✖';
+        loginBlock.appendChild(closeBtn);
+        mainContainer.appendChild(loginBlock);
+
+        closeBtn.addEventListener('click', function() {
+          loginBlock.innerHTML = '';
+          mainContainer.removeChild(loginBlock);
+        });
+
+      }
+    });
+  }
+};
+
 (function($, Drupal, drupalSettings) {
     Drupal.behaviors.heartbeat = {
         attach: function (context, settings) {
@@ -76,18 +122,23 @@
               });
             }
           };
-
-          let stream = document.querySelector('.heartbeat-stream');
-
-          let observer = new MutationObserver(function(mutations) {
-            listenImages();
-          });
-
-          let config = { attributes: true, childList: true, characterData: true };
-
-          observer.observe(stream, config);
         }
     };
+
+  commentFormListeners();
+  let stream = document.getElementById('block-heartbeatblock');
+
+  let observer = new MutationObserver(function(mutations) {
+    console.log('observer observes a change');
+    listenImages();
+    hideCommentForms();
+    commentFormListeners();
+  });
+
+  let config = { attributes: true, childList: true, characterData: true };
+
+  observer.observe(stream, config);
+  console.dir(observer);
 
 
   function updateFeed() {
@@ -245,3 +296,64 @@
 
 })(jQuery, Drupal, drupalSettings);
 
+function commentFormListeners() {
+  console.log('Comment Form Listeners');
+  let cFormButtons = document.querySelectorAll('.heartbeat-comment-button');
+
+
+  for (let b = 0; b < cFormButtons.length; b++) {
+    cFormButtons[b].removeEventListener('click', commentListen);
+    cFormButtons[b].addEventListener('click', commentListen);
+  }
+}
+
+
+
+/******** Load Login Block **********
+ ******** append to document ********
+ ******** Hover in middle of screen */
+
+function loginModal() {
+
+  $.ajax({
+    type: 'GET',
+    url: '/user/modal/login',
+    success: function (response) {
+      mainContainer = document.getElementById('main');
+      loginBlock = document.createElement('div');
+      loginBlock.innerHTML = response;
+      loginBlock.className = 'kekistan-login-block';
+      loginBlock.id = 'kekistan-login-block';
+      closeBtn = document.createElement('div');
+      closeBtn.className =  'kekistan-login-block-close';
+      closeBtn.innerHTML = '✖';
+      loginBlock.appendChild(closeBtn);
+      mainContainer.appendChild(loginBlock);
+
+      closeBtn.addEventListener('click', function() {
+        loginBlock.innerHTML = '';
+        mainContainer.removeChild(loginBlock);
+      });
+
+    }
+  });
+}
+
+function hideCommentForms() {
+  let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
+
+  for (let f = 0; f < forms.length; f++) {
+    forms[f].className += ' comment-form-hidden';
+  }
+}
+
+function toggleCommentElements(node) {
+
+  console.dir(node);
+  if (node.classList.contains('comment-form-hidden')) {
+    console.log('removing comment-form-hidden class from element');
+    node.classList.remove('comment-form-hidden');
+  } else {
+    node.className += ' comment-form-hidden';
+  }
+}

@@ -2,9 +2,10 @@
   drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
     attach: function (context, settings) {
-
+      console.dir(drupalSettings);
       let feedFilterBlock = document.getElementById('block-views-feed-filter-block');
       let terms = feedFilterBlock.querySelectorAll('a');
+
       //TODO Convert the following two event listeners to a more elegant syntax
       terms.forEach(function (term) {
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
@@ -112,7 +113,19 @@
         }
 
       }
-      // flagTooltips();
+
+      // let stream = document.querySelector('.heartbeat-stream');
+      //
+      // let observer = new MutationObserver(function(mutations) {
+      //   console.dir(mutations);
+      //   commentFormListeners();
+      // });
+      //
+      // let config = { attributes: true, childList: true, characterData: true };
+      //
+      // observer.observe(stream, config);
+      //
+      // console.dir(observer);
 
       flagToolListen();
       textareaAutoHeight();
@@ -123,7 +136,7 @@
 
   listenReplyLinks();
   hideCommentForms();
-  commentFormListeners();
+  // commentFormListeners();
 
   if (window.innerWidth < 415) {
     let header = document.getElementById('header');
@@ -182,6 +195,11 @@
         let tip = likeFlags[i].parentNode.querySelector('.praisetip');
         tip.style.display = "none";
       });
+      likeFlags[i].addEventListener('click', function() {
+        if (drupalSettings.user.uid < 1) {
+          loginModal();
+        }
+      });
     }
 
     for (let i = 0; i < jihadFlags.length; i++) {
@@ -201,6 +219,15 @@
         let tip = jihadFlags[i].parentNode.querySelector('.jihadtip');
         tip.style.display = "none";
       });
+      ['click', 'touchstart'].forEach(function(eventType) {
+        jihadFlags[i].addEventListener(event, function() {
+          if (drupalSettings.user.uid < 1) {
+            loginModal();
+          }
+        })
+      });
+
+
     }
   }
 
@@ -347,8 +374,6 @@
   }
 
   function hideCommentForms() {
-
-
     let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
 
     for (let f = 0; f < forms.length; f++) {
@@ -356,9 +381,10 @@
     }
   }
 
+
   function commentFormListeners() {
     let cFormButtons = document.querySelectorAll('.heartbeat-comment-button');
-    let loggedIn = drupalSettings.user.uid > 0;
+
 
     for (var b = 0; b < cFormButtons.length; b++) {
       cFormButtons[b].addEventListener('click', function(e) {
@@ -372,7 +398,7 @@
         }
 
 
-        if (loggedIn) {
+        if (drupalSettings.user.uid > 0) {
 
           let childs = e.srcElement.parentNode.querySelectorAll('.form-submit, .js-form-type-textarea');
           console.dir(childs);
@@ -380,37 +406,61 @@
             toggleCommentElements(childs[c]);
           }
         } else {
-          //Load Login Block
-          //append to document
-          //Hover in middle of screen
-
+          // loginModal()
           $.ajax({
             type: 'GET',
             url: '/user/modal/login',
             success: function (response) {
-                mainContainer = document.getElementById('main');
-                loginBlock = document.createElement('div');
-                loginBlock.innerHTML = response;
-                loginBlock.className = 'kekistan-login-block';
-                loginBlock.id = 'kekistan-login-block';
-                closeBtn = document.createElement('div');
-                closeBtn.className =  'kekistan-login-block-close';
-                closeBtn.innerHTML = '✖';
-                loginBlock.appendChild(closeBtn);
-                mainContainer.appendChild(loginBlock);
+              mainContainer = document.getElementById('main');
+              loginBlock = document.createElement('div');
+              loginBlock.innerHTML = response;
+              loginBlock.className = 'kekistan-login-block';
+              loginBlock.id = 'kekistan-login-block';
+              closeBtn = document.createElement('div');
+              closeBtn.className =  'kekistan-login-block-close';
+              closeBtn.innerHTML = '✖';
+              loginBlock.appendChild(closeBtn);
+              mainContainer.appendChild(loginBlock);
 
-                closeBtn.addEventListener('click', function() {
-                  loginBlock.innerHTML = '';
-                  mainContainer.removeChild(loginBlock);
-                });
+              closeBtn.addEventListener('click', function() {
+                loginBlock.innerHTML = '';
+                mainContainer.removeChild(loginBlock);
+              });
 
             }
           });
-
-
         }
       })
     }
+  }
+
+  /******** Load Login Block **********
+   ******** append to document ********
+   ******** Hover in middle of screen */
+  function loginModal() {
+
+    $.ajax({
+      type: 'GET',
+      url: '/user/modal/login',
+      success: function (response) {
+        mainContainer = document.getElementById('main');
+        loginBlock = document.createElement('div');
+        loginBlock.innerHTML = response;
+        loginBlock.className = 'kekistan-login-block';
+        loginBlock.id = 'kekistan-login-block';
+        closeBtn = document.createElement('div');
+        closeBtn.className =  'kekistan-login-block-close';
+        closeBtn.innerHTML = '✖';
+        loginBlock.appendChild(closeBtn);
+        mainContainer.appendChild(loginBlock);
+
+        closeBtn.addEventListener('click', function() {
+          loginBlock.innerHTML = '';
+          mainContainer.removeChild(loginBlock);
+        });
+
+      }
+    });
   }
 
   function ajaxRetrieveBlock(path, method, parent, arg = undefined) {
