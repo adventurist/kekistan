@@ -42,17 +42,17 @@
         <div class="heartbeat-unlike">
           {{ message.unlikeFlag }}
         </div>
+        <div class="heartbeat-comment-button">
+          {% if message.commentCount > 1 %}
+            {{ message.commentCount }} comments
+          {% elseif message.commentCount == 1 %}
+            {{ message.commentCount }} comment
+          {% else %}
+            Comment
+          {% endif %}
+        </div>
         <div class="heartbeat-comment" id="comment-{{ message.id }}">
           {{ message.commentForm }}
-            <div class="heartbeat-comment-button">
-              {% if message.commentCount > 1 %}
-                {{ message.commentCount }} comments
-              {% elseif message.commentCount == 1 %}
-                {{ message.commentCount }} comment
-              {% else %}
-                Comment
-              {% endif %}
-            </div>
           <div class="heartbeat-comments">
             {% for comment in message.comments %}
               <div id="heartbeat-comment-{{ comment.id }}">
