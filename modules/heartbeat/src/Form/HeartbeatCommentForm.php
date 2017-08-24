@@ -43,7 +43,6 @@ class HeartbeatCommentForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $form['comment_body'] = array(
       '#type' => 'textarea',
-      '#prefix' => '<div class="heartbeat-comment-button">Comment</div>',
       '#title' => $this->t('Comment Body'),
     );
 
