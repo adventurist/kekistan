@@ -10,6 +10,9 @@
       terms.forEach(function (term) {
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
         term.addEventListener("touchstart", function (event) {
+
+          $('#heartbeat-loader').show(225);
+
           drupalSettings.filterMode = true;
           event.preventDefault();
           event.stopPropagation();
@@ -33,11 +36,17 @@
                 feedBlock.appendChild(insertNode);
 
               }
+            },
+            complete: function() {
+              $('#heartbeat-loader').hide(225);
             }
           });
           return false;
         });
         term.addEventListener("click", function (event) {
+
+          $('#heartbeat-loader').show(225);
+
           drupalSettings.filterMode = true;
           event.preventDefault();
           event.stopPropagation();
@@ -61,6 +70,9 @@
                 feedBlock.appendChild(insertNode);
 
               }
+            },
+            complete: function() {
+              $('#heartbeat-loader').hide(225);
             }
           });
           return false;
@@ -320,13 +332,6 @@
             event.preventDefault();
             event.stopPropagation();
             event.stopImmediatePropagation();
-            //event.preventDefault();
-            //event.stopPropagation();
-            //event.stopImmediatePropagation();
-            // replyLinks[i].removeListener();
-
-          } else {
-
           }
         });
     }
