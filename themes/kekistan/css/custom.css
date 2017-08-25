@@ -298,7 +298,6 @@ iframe.kekistan-anthem-video {
 }
 
 
-
 .flag-heartbeat_like_comment a.use-ajax {
   min-height: 8px;
   padding-left: 24px;
@@ -373,6 +372,10 @@ iframe.kekistan-anthem-video {
   content: 'Jihad!';
   color: red;
   transition: all 0.5s ease;
+}
+
+#heartbeat-loader {
+  background: url('/sites/default/files/inline-images/lRq6T7n.gif')!important;
 }
 /***********************
 ***Heartbeat Comments***
