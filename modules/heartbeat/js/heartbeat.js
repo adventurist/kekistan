@@ -6,46 +6,23 @@
 
   const commentListen = function(e) {
 
-    let commentBlock = e.srcElement.parentNode.parentNode.querySelector('.heartbeat-comments');
-
-    if (!commentBlock.classList.contains('heartbeat-comments-visible')) {
-      commentBlock.className += ' heartbeat-comments-visible';
-    } else {
-      commentBlock.classList.remove('heartbeat-comments-visible');
-    }
-
-
     if (drupalSettings.user.uid > 0) {
 
+      let commentBlock = e.srcElement.parentNode.parentNode.querySelector('.heartbeat-comments');
+
+      if (!commentBlock.classList.contains('heartbeat-comments-visible')) {
+        commentBlock.className += ' heartbeat-comments-visible';
+      } else {
+        commentBlock.classList.remove('heartbeat-comments-visible');
+      }
+
       let childs = e.srcElement.parentNode.querySelectorAll('.form-submit, .js-form-type-textarea');
-      console.dir(childs);
+
       for (let c = 0; c < childs.length; c++) {
         toggleCommentElements(childs[c]);
       }
     } else {
-      // loginModal()
-      $.ajax({
-        type: 'GET',
-        url: '/user/modal/login',
-        success: function (response) {
-          mainContainer = document.getElementById('main');
-          loginBlock = document.createElement('div');
-          loginBlock.innerHTML = response;
-          loginBlock.className = 'kekistan-login-block';
-          loginBlock.id = 'kekistan-login-block';
-          closeBtn = document.createElement('div');
-          closeBtn.className =  'kekistan-login-block-close';
-          closeBtn.innerHTML = '✖';
-          loginBlock.appendChild(closeBtn);
-          mainContainer.appendChild(loginBlock);
-
-          closeBtn.addEventListener('click', function() {
-            loginBlock.innerHTML = '';
-            mainContainer.removeChild(loginBlock);
-          });
-
-        }
-      });
+      loginModal();
     }
   };
 
@@ -305,13 +282,15 @@
         cFormButtons[b].addEventListener('click', commentListen);
       }
     }
-  })
+  });
 
   /******** Load Login Block **********
    ******** append to document ********
    ******** Hover in middle of screen */
 
   function loginModal() {
+
+    $('#heartbeat-loader').show(225);
 
     $.ajax({
       type: 'GET',
@@ -333,6 +312,9 @@
           mainContainer.removeChild(loginBlock);
         });
 
+      },
+      complete: function() {
+        $('#heartbeat-loader').hide(225);
       }
     });
   }
