@@ -309,9 +309,7 @@
 
     for (let i = 0; i < replyLinks.length; i++) {
         replyLinks[i].addEventListener('click', function (event) {
-          event.preventDefault();
-          event.stopPropagation();
-          event.stopImmediatePropagation();
+
           if (
             event.srcElement.parentElement.nextElementSibling !== null &&
             event.srcElement.parentElement.nextElementSibling != undefined &&
@@ -319,7 +317,9 @@
             event.srcElement.parentElement.nextElementSibling.childNodes[0].classList != undefined &&
             event.srcElement.parentElement.nextElementSibling.childNodes[0].classList.contains('heartbeat-sub-comment-form')
           ) {
-            console.dir(commentForm);
+            event.preventDefault();
+            event.stopPropagation();
+            event.stopImmediatePropagation();
             //event.preventDefault();
             //event.stopPropagation();
             //event.stopImmediatePropagation();
