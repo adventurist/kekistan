@@ -47,16 +47,25 @@ const commentListen = function(e) {
   }
 };
 
+
 (function($, Drupal, drupalSettings) {
+
+  $(document).ready(function() {
+
+    const loader = document.createElement('div');
+    loader.id = 'heartbeat-loader';
+    const body = document.getElementsByTagName('body')[0];
+    body.appendChild(loader);
+
     Drupal.behaviors.heartbeat = {
         attach: function (context, settings) {
 
           if (drupalSettings.friendData != null) {
-            var divs = document.querySelectorAll('.flag-friendship a.use-ajax');
+            let divs = document.querySelectorAll('.flag-friendship a.use-ajax');
 
             for (let i = 0; i < divs.length; i++) {
               let anchor = divs[i];
-              var userId = anchor.href.substring(anchor.href.indexOf('friendship') + 11, anchor.href.indexOf('?destination'));
+              let userId = anchor.href.substring(anchor.href.indexOf('friendship') + 11, anchor.href.indexOf('?destination'));
               JSON.parse(drupalSettings.friendData).forEach(function (friendship) {
                 if (friendship.uid_target === userId && friendship.uid == drupalSettings.user.uid && friendship.status == 0) {
                   anchor.innerHTML = 'Friendship Pending';
@@ -125,23 +134,23 @@ const commentListen = function(e) {
         }
     };
 
-  commentFormListeners();
-  let stream = document.getElementById('block-heartbeatblock');
+    commentFormListeners();
+    let stream = document.getElementById('block-heartbeatblock');
 
-  let observer = new MutationObserver(function(mutations) {
+    let observer = new MutationObserver(function(mutations) {
     console.log('observer observes a change');
     listenImages();
     hideCommentForms();
     commentFormListeners();
-  });
+    });
 
-  let config = { attributes: true, childList: true, characterData: true };
+    let config = { attributes: true, childList: true, characterData: true };
 
-  observer.observe(stream, config);
-  console.dir(observer);
+    observer.observe(stream, config);
+    console.dir(observer);
 
 
-  function updateFeed() {
+    function updateFeed() {
 
     $.ajax({
       type: 'POST',
@@ -149,9 +158,9 @@ const commentListen = function(e) {
       success: function (response) {
       }
     })
-  }
+    }
 
-  function listenImages() {
+    function listenImages() {
     let cboxOptions = {
       maxWidth: '960px',
       maxHeight: '960px',
@@ -162,9 +171,9 @@ const commentListen = function(e) {
       let phid = parentClass.substring(parentClass.indexOf('hid') + 4);
       $(this).colorbox({rel: phid, href: $(this).attr('src'), cboxOptions});
     });
-  }
+    }
 
-  function listenCommentPost() {
+    function listenCommentPost() {
     let comments = document.querySelectorAll('[data-drupal-selector]');
 
     for (let i = 0; i < comments.length; i++) {
@@ -173,9 +182,9 @@ const commentListen = function(e) {
           getParent(comment);
       })
     }
-  }
+    }
 
-  function getParent(node) {
+    function getParent(node) {
     if (node != null && node != undefined && node.classList != undefined && node.classList.contains('heartbeat-comment')) {
       let id = node.id.substr(node.id.indexOf('-') + 1);
       $.ajax({
@@ -189,9 +198,9 @@ const commentListen = function(e) {
         getParent(node.parentNode);
       }
     }
-  }
+    }
 
-  function getScrollXY() {
+    function getScrollXY() {
     var scrOfX = 0, scrOfY = 0;
     if( typeof( window.pageYOffset ) == 'number' ) {
       //Netscape compliant
@@ -207,19 +216,19 @@ const commentListen = function(e) {
       scrOfX = document.documentElement.scrollLeft;
     }
     return [ scrOfX, scrOfY ];
-  }
+    }
 
-//taken from http://james.padolsey.com/javascript/get-document-height-cross-browser/
-  function getDocHeight() {
+    //taken from http://james.padolsey.com/javascript/get-document-height-cross-browser/
+    function getDocHeight() {
     var D = document;
     return Math.max(
       D.body.scrollHeight, D.documentElement.scrollHeight,
       D.body.offsetHeight, D.documentElement.offsetHeight,
       D.body.clientHeight, D.documentElement.clientHeight
     );
-  }
+    }
 
-  document.addEventListener("scroll", function (event) {
+    document.addEventListener("scroll", function (event) {
 
     if (drupalSettings.filterMode == false && (getScrollXY()[1] + window.innerHeight) / getDocHeight() > 0.99) {
 
@@ -237,24 +246,31 @@ const commentListen = function(e) {
 
             drupalSettings.lastHid = hid;
 
+            $('#heartbeat-loader').show(225);
+
             $.ajax({
               type: 'POST',
               url: '/heartbeat/update_feed/' + hid,
+
               success: function (response) {
 
                 feedBlock = document.getElementById('block-heartbeatblock');
                 insertNode = document.createElement('div');
                 insertNode.innerHTML = response;
-                feedBlock.appendChild(insertNode);
+                feedBlock.appendChild(insertNode)
+              },
+
+              complete: function() {
+                $('#heartbeat-loader').hide(225);
               }
             });
           }
         }
       }
     }
-  });
+    });
 
-  $(document).on('cbox_open', function() {
+    $(document).on('cbox_open', function() {
     $("#colorbox").swipe( {
       //Generic swipe handler for all directions
       swipeLeft:function(event, direction, distance, duration, fingerCount) {
@@ -292,8 +308,9 @@ const commentListen = function(e) {
     return true;
 
     }
-  );
+    );
 
+    })
 })(jQuery, Drupal, drupalSettings);
 
 function commentFormListeners() {
