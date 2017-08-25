@@ -2,53 +2,52 @@
  * Created by logicp on 5/28/17.
  */
 
-const commentListen = function(e) {
-
-  let commentBlock = e.srcElement.parentNode.parentNode.querySelector('.heartbeat-comments');
-
-  if (!commentBlock.classList.contains('heartbeat-comments-visible')) {
-    commentBlock.className += ' heartbeat-comments-visible';
-  } else {
-    commentBlock.classList.remove('heartbeat-comments-visible');
-  }
-
-
-  if (drupalSettings.user.uid > 0) {
-
-    let childs = e.srcElement.parentNode.querySelectorAll('.form-submit, .js-form-type-textarea');
-    console.dir(childs);
-    for (let c = 0; c < childs.length; c++) {
-      toggleCommentElements(childs[c]);
-    }
-  } else {
-    // loginModal()
-    $.ajax({
-      type: 'GET',
-      url: '/user/modal/login',
-      success: function (response) {
-        mainContainer = document.getElementById('main');
-        loginBlock = document.createElement('div');
-        loginBlock.innerHTML = response;
-        loginBlock.className = 'kekistan-login-block';
-        loginBlock.id = 'kekistan-login-block';
-        closeBtn = document.createElement('div');
-        closeBtn.className =  'kekistan-login-block-close';
-        closeBtn.innerHTML = '✖';
-        loginBlock.appendChild(closeBtn);
-        mainContainer.appendChild(loginBlock);
-
-        closeBtn.addEventListener('click', function() {
-          loginBlock.innerHTML = '';
-          mainContainer.removeChild(loginBlock);
-        });
-
-      }
-    });
-  }
-};
-
-
 (function($, Drupal, drupalSettings) {
+
+  const commentListen = function(e) {
+
+    let commentBlock = e.srcElement.parentNode.parentNode.querySelector('.heartbeat-comments');
+
+    if (!commentBlock.classList.contains('heartbeat-comments-visible')) {
+      commentBlock.className += ' heartbeat-comments-visible';
+    } else {
+      commentBlock.classList.remove('heartbeat-comments-visible');
+    }
+
+
+    if (drupalSettings.user.uid > 0) {
+
+      let childs = e.srcElement.parentNode.querySelectorAll('.form-submit, .js-form-type-textarea');
+      console.dir(childs);
+      for (let c = 0; c < childs.length; c++) {
+        toggleCommentElements(childs[c]);
+      }
+    } else {
+      // loginModal()
+      $.ajax({
+        type: 'GET',
+        url: '/user/modal/login',
+        success: function (response) {
+          mainContainer = document.getElementById('main');
+          loginBlock = document.createElement('div');
+          loginBlock.innerHTML = response;
+          loginBlock.className = 'kekistan-login-block';
+          loginBlock.id = 'kekistan-login-block';
+          closeBtn = document.createElement('div');
+          closeBtn.className =  'kekistan-login-block-close';
+          closeBtn.innerHTML = '✖';
+          loginBlock.appendChild(closeBtn);
+          mainContainer.appendChild(loginBlock);
+
+          closeBtn.addEventListener('click', function() {
+            loginBlock.innerHTML = '';
+            mainContainer.removeChild(loginBlock);
+          });
+
+        }
+      });
+    }
+  };
 
   $(document).ready(function() {
 
@@ -151,81 +150,80 @@ const commentListen = function(e) {
 
 
     function updateFeed() {
-
-    $.ajax({
-      type: 'POST',
-      url: '/heartbeat/form/heartbeat_update_feed',
-      success: function (response) {
-      }
-    })
+      $.ajax({
+        type: 'POST',
+        url: '/heartbeat/form/heartbeat_update_feed',
+        success: function (response) {
+        }
+      })
     }
 
     function listenImages() {
-    let cboxOptions = {
-      maxWidth: '960px',
-      maxHeight: '960px',
-    };
+      let cboxOptions = {
+        maxWidth: '960px',
+        maxHeight: '960px',
+      };
 
-    $('.heartbeat-content').find('img').each(function() {
-      let parentClass = $(this).parent().prop('className');
-      let phid = parentClass.substring(parentClass.indexOf('hid') + 4);
-      $(this).colorbox({rel: phid, href: $(this).attr('src'), cboxOptions});
-    });
+      $('.heartbeat-content').find('img').each(function() {
+        let parentClass = $(this).parent().prop('className');
+        let phid = parentClass.substring(parentClass.indexOf('hid') + 4);
+        $(this).colorbox({rel: phid, href: $(this).attr('src'), cboxOptions});
+      });
     }
 
     function listenCommentPost() {
-    let comments = document.querySelectorAll('[data-drupal-selector]');
+      let comments = document.querySelectorAll('[data-drupal-selector]');
 
-    for (let i = 0; i < comments.length; i++) {
-      let comment = comments[i];
-      comment.addEventListener('click', function() {
-          getParent(comment);
-      })
-    }
+      for (let i = 0; i < comments.length; i++) {
+        let comment = comments[i];
+        comment.addEventListener('click', function() {
+            getParent(comment);
+        })
+      }
     }
 
     function getParent(node) {
-    if (node != null && node != undefined && node.classList != undefined && node.classList.contains('heartbeat-comment')) {
-      let id = node.id.substr(node.id.indexOf('-') + 1);
-      $.ajax({
-        type: 'POST',
-        url:'/heartbeat/commentupdate/' + id,
-        success: function(response) {
+      if (node != null && node != undefined && node.classList != undefined && node.classList.contains('heartbeat-comment')) {
+        let id = node.id.substr(node.id.indexOf('-') + 1);
+        $.ajax({
+          type: 'POST',
+          url:'/heartbeat/commentupdate/' + id,
+          success: function(response) {
+          }
+        });
+      } else {
+        if (node != null && node.nodeName !== 'body') {
+          getParent(node.parentNode);
         }
-      });
-    } else {
-      if (node != null && node.nodeName !== 'body') {
-        getParent(node.parentNode);
       }
-    }
     }
 
     function getScrollXY() {
-    var scrOfX = 0, scrOfY = 0;
-    if( typeof( window.pageYOffset ) == 'number' ) {
-      //Netscape compliant
-      scrOfY = window.pageYOffset;
-      scrOfX = window.pageXOffset;
-    } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
-      //DOM compliant
-      scrOfY = document.body.scrollTop;
-      scrOfX = document.body.scrollLeft;
-    } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
-      //IE6 standards compliant mode
-      scrOfY = document.documentElement.scrollTop;
-      scrOfX = document.documentElement.scrollLeft;
-    }
-    return [ scrOfX, scrOfY ];
+      var scrOfX = 0, scrOfY = 0;
+      if( typeof( window.pageYOffset ) == 'number' ) {
+
+        scrOfY = window.pageYOffset;
+        scrOfX = window.pageXOffset;
+      } else if( document.body && ( document.body.scrollLeft || document.body.scrollTop ) ) {
+
+        scrOfY = document.body.scrollTop;
+        scrOfX = document.body.scrollLeft;
+      } else if( document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop ) ) {
+
+        scrOfY = document.documentElement.scrollTop;
+        scrOfX = document.documentElement.scrollLeft;
+      }
+      return [ scrOfX, scrOfY ];
     }
 
     //taken from http://james.padolsey.com/javascript/get-document-height-cross-browser/
     function getDocHeight() {
-    var D = document;
-    return Math.max(
-      D.body.scrollHeight, D.documentElement.scrollHeight,
-      D.body.offsetHeight, D.documentElement.offsetHeight,
-      D.body.clientHeight, D.documentElement.clientHeight
-    );
+      var D = document;
+      return Math.max(
+        D.body.scrollHeight, D.documentElement.scrollHeight,
+        D.body.offsetHeight, D.documentElement.offsetHeight,
+        D.body.clientHeight, D.documentElement.clientHeight
+      );
     }
 
     document.addEventListener("scroll", function (event) {
@@ -271,106 +269,92 @@ const commentListen = function(e) {
     });
 
     $(document).on('cbox_open', function() {
-    $("#colorbox").swipe( {
-      //Generic swipe handler for all directions
-      swipeLeft:function(event, direction, distance, duration, fingerCount) {
-        $.colorbox.prev();
-      },
-      swipeRight:function(event, direction, distance, duration, fingerCount) {
-        $.colorbox.next();
-      },
-      //Default is 75px, set to 0 for demo so any distance triggers swipe
-      threshold:25
-    });
-    let cboxCloseBtn = $('#cboxClose');
-    cboxCloseBtn.on('click touchstart', function() {
-      $.colorbox.close();
-    });
-    cboxCloseBtn.on('keyup', function(e) {
-      if (e.keyCode == 27) {
-        $.colorbox().close();
-      }
-    });
-
-    // let cboxClose = document.getElementById('cboxClose');
-    // cboxClose.addEventListener('click', function() {
-    //   $.colorbox.close();
-    // });
-    // cboxClose.addEventListener('touchstart', function() {
-    //   $.colorbox.close();
-    // });
-    // document.addEventListener('keyup', function(e) {
-    //   if (e.keyCode == 27) {
-    //     $.colorbox.close();
-    //   }
-    // })
-
-    return true;
-
-    }
-    );
-
-    })
-})(jQuery, Drupal, drupalSettings);
-
-function commentFormListeners() {
-  console.log('Comment Form Listeners');
-  let cFormButtons = document.querySelectorAll('.heartbeat-comment-button');
-
-
-  for (let b = 0; b < cFormButtons.length; b++) {
-    cFormButtons[b].removeEventListener('click', commentListen);
-    cFormButtons[b].addEventListener('click', commentListen);
-  }
-}
-
-
-
-/******** Load Login Block **********
- ******** append to document ********
- ******** Hover in middle of screen */
-
-function loginModal() {
-
-  $.ajax({
-    type: 'GET',
-    url: '/user/modal/login',
-    success: function (response) {
-      mainContainer = document.getElementById('main');
-      loginBlock = document.createElement('div');
-      loginBlock.innerHTML = response;
-      loginBlock.className = 'kekistan-login-block';
-      loginBlock.id = 'kekistan-login-block';
-      closeBtn = document.createElement('div');
-      closeBtn.className =  'kekistan-login-block-close';
-      closeBtn.innerHTML = '✖';
-      loginBlock.appendChild(closeBtn);
-      mainContainer.appendChild(loginBlock);
-
-      closeBtn.addEventListener('click', function() {
-        loginBlock.innerHTML = '';
-        mainContainer.removeChild(loginBlock);
+      $("#colorbox").swipe( {
+        //Generic swipe handler for all directions
+        swipeLeft:function(event, direction, distance, duration, fingerCount) {
+          $.colorbox.prev();
+        },
+        swipeRight:function(event, direction, distance, duration, fingerCount) {
+          $.colorbox.next();
+        },
+        //Default is 75px, set to 0 for demo so any distance triggers swipe
+        threshold:25
+      });
+      let cboxCloseBtn = $('#cboxClose');
+      cboxCloseBtn.on('click touchstart', function() {
+        $.colorbox.close();
+      });
+      cboxCloseBtn.on('keyup', function(e) {
+        if (e.keyCode == 27) {
+          $.colorbox().close();
+        }
       });
 
+      return true;
+
+      }
+    );
+
+    function commentFormListeners() {
+      console.log('Comment Form Listeners');
+      let cFormButtons = document.querySelectorAll('.heartbeat-comment-button');
+
+
+      for (let b = 0; b < cFormButtons.length; b++) {
+        cFormButtons[b].removeEventListener('click', commentListen);
+        cFormButtons[b].addEventListener('click', commentListen);
+      }
     }
-  });
-}
+  })
 
-function hideCommentForms() {
-  let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
+  /******** Load Login Block **********
+   ******** append to document ********
+   ******** Hover in middle of screen */
 
-  for (let f = 0; f < forms.length; f++) {
-    forms[f].className += ' comment-form-hidden';
+  function loginModal() {
+
+    $.ajax({
+      type: 'GET',
+      url: '/user/modal/login',
+      success: function (response) {
+        mainContainer = document.getElementById('main');
+        loginBlock = document.createElement('div');
+        loginBlock.innerHTML = response;
+        loginBlock.className = 'kekistan-login-block';
+        loginBlock.id = 'kekistan-login-block';
+        closeBtn = document.createElement('div');
+        closeBtn.className =  'kekistan-login-block-close';
+        closeBtn.innerHTML = '✖';
+        loginBlock.appendChild(closeBtn);
+        mainContainer.appendChild(loginBlock);
+
+        closeBtn.addEventListener('click', function() {
+          loginBlock.innerHTML = '';
+          mainContainer.removeChild(loginBlock);
+        });
+
+      }
+    });
   }
-}
 
-function toggleCommentElements(node) {
+  function hideCommentForms() {
+    let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
 
-  console.dir(node);
-  if (node.classList.contains('comment-form-hidden')) {
-    console.log('removing comment-form-hidden class from element');
-    node.classList.remove('comment-form-hidden');
-  } else {
-    node.className += ' comment-form-hidden';
+    for (let f = 0; f < forms.length; f++) {
+      forms[f].className += ' comment-form-hidden';
+    }
   }
-}
+
+  function toggleCommentElements(node) {
+
+    console.dir(node);
+    if (node.classList.contains('comment-form-hidden')) {
+      console.log('removing comment-form-hidden class from element');
+      node.classList.remove('comment-form-hidden');
+    } else {
+      node.className += ' comment-form-hidden';
+    }
+  }
+
+})(jQuery, Drupal, drupalSettings);
+
