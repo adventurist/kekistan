@@ -375,7 +375,8 @@ iframe.kekistan-anthem-video {
 }
 
 #heartbeat-loader {
-  background: url('/sites/default/files/inline-images/lRq6T7n.gif')!important;
+  background: url('/themes/kekistan/images/spinner.gif') no-repeat!important;
+  background-size: contain;
 }
 /***********************
 ***Heartbeat Comments***
