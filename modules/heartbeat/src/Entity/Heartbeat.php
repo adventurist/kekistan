@@ -329,10 +329,10 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         'type' => 'string',
         'weight' => -4,
       ))
-      ->setDisplayOptions('form', array(
-        'type' => 'string_textfield',
-        'weight' => -4,
-      ))
+//      ->setDisplayOptions('form', array(
+//        'type' => 'string_textfield',
+//        'weight' => -4,
+//      ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
@@ -346,6 +346,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         'type' => 'full_html',
         'weight' => -4,
       ))
+      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['comments'] = BaseFieldDefinition::create('comment')
@@ -842,9 +843,30 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     $options['query']['destination'] = 'node';
     $link->getUrl()->setOptions($options);
     $action = $flag->getLinkTypePlugin()->getAsFlagLink($flag, $entity)['#action'];
+//    if ($action) {
     $url = $link->getUrl()->toString();
 
-    return '<div class="flag flag-' . $flagId . '  flag-' . $flagId . '-' . $entity->id() . ' action-' . $action. '"><a href="' . $url . '" class="use-ajax" rel="nofollow"></a></div>';
+    return '<div class="flag flag-' . $flagId . '  flag-' . $flagId . '-' . $entity->id() . ' action-' . $action . '"><a href="' . $url . '" class="use-ajax" rel="nofollow"></a></div>';
+//    } else {
+//      return null;
+//    }
+  }
+
+  public static function flagAjaxBuilder($flagId, $entity, FlagService $flagService) {
+
+    $flag = $flagService->getFlagById($flagId);
+
+    $key = 'flag_' . $flag->id();
+    $data = [
+      '#lazy_builder' => ['flag.link_builder:build', [
+        $entity->getEntityTypeId(),
+        $entity->id(),
+        $flag->id(),
+      ]],
+      '#create_placeholder' => TRUE,
+    ];
+
+    return [$key => $data];
   }
 
   /**

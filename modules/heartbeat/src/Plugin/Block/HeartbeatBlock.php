@@ -120,57 +120,59 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
    */
   public function build() {
 
-    $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_feed.settings');
-    $friendData = \Drupal::config('heartbeat_friendship.settings')->get('data');
+    if (\Drupal::currentUser()->id() > 0) {
+      $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_feed.settings');
+      $friendData = \Drupal::config('heartbeat_friendship.settings')->get('data');
 
-    $feed = $myConfig->get('message');
-    $uids = null;
-    $messages = array();
+      $feed = $myConfig->get('message');
+      $uids = null;
+      $messages = array();
 
-    $query = Database::getConnection()->select('heartbeat_friendship', 'hf')
-      ->fields('hf',['uid', 'uid_target']);
-    $conditionOr = $query->orConditionGroup()
-      ->condition('hf.uid', \Drupal::currentUser()->id())
-      ->condition('hf.uid_target', \Drupal::currentUser()->id());
+      $query = Database::getConnection()->select('heartbeat_friendship', 'hf')
+        ->fields('hf', ['uid', 'uid_target']);
+      $conditionOr = $query->orConditionGroup()
+        ->condition('hf.uid', \Drupal::currentUser()->id())
+        ->condition('hf.uid_target', \Drupal::currentUser()->id());
 
-    $results = $query->condition($conditionOr)->execute();
-    if ($result = $results->fetchAll()) {
-      $uids = array();
-      foreach ($result as $uid) {
-        $uids[] = $uid->uid_target;
-        $uids[] = $uid->uid;
+      $results = $query->condition($conditionOr)->execute();
+      if ($result = $results->fetchAll()) {
+        $uids = array();
+        foreach ($result as $uid) {
+          $uids[] = $uid->uid_target;
+          $uids[] = $uid->uid;
+        }
       }
-    }
-    if ($feed !== null && $this->heartbeatStreamServices) {
-    $uids = count($uids) > 1 ? array_unique($uids) : $uids;
-      if (!empty($uids)) {
-        foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
-          $this->renderMessage($messages, $heartbeat);
+      if ($feed !== null && $this->heartbeatStreamServices) {
+        $uids = count($uids) > 1 ? array_unique($uids) : $uids;
+        if (!empty($uids)) {
+          foreach ($this->heartbeatStreamServices->createStreamForUidsByType($uids, $feed) as $heartbeat) {
+            $this->renderMessage($messages, $heartbeat);
+          }
+        } else {
+          foreach ($this->heartbeatStreamServices->createStreamByType($feed) as $heartbeat) {
+            $this->renderMessage($messages, $heartbeat);
+          }
         }
       } else {
-        foreach ($this->heartbeatStreamServices->createStreamByType($feed) as $heartbeat) {
+        foreach ($this->heartbeatStreamServices->loadAllStreams() as $heartbeat) {
           $this->renderMessage($messages, $heartbeat);
         }
       }
-    } else {
-      foreach ($this->heartbeatStreamServices->loadAllStreams() as $heartbeat) {
-        $this->renderMessage($messages, $heartbeat);
-      }
+
+      return [
+        '#theme' => 'heartbeat_stream',
+        '#messages' => $messages,
+        '#attached' => array(
+          'library' => 'heartbeat/heartbeat',
+          'drupalSettings' => [
+            'activeFeed' => 'jigga',
+            'friendData' => $friendData,
+          ]
+        ),
+        '#cache' => array('max-age' => 0)
+      ];
     }
-
-    return [
-      '#theme' => 'heartbeat_stream',
-      '#messages' => $messages,
-      '#attached' => array(
-        'library' => 'heartbeat/heartbeat',
-        'drupalSettings' => [
-          'activeFeed' => 'jigga',
-          'friendData' => $friendData,
-        ]
-      ),
-      '#cache' => array('max-age' => 0)
-    ];
-
+    return null;
   }
 
     private function renderMessage(array &$messages, $heartbeat) {
@@ -260,7 +262,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
               'username' => $subComment->getAuthorName(),
               'owner' => $subCommentOwner,
               'timeAgo' => $subCommentTime,
-              'commentLike' => Heartbeat::flagAjaxMarkup('heartbeat_like_comment', $subComment, $this->flagService)
+              'commentLike' => Heartbeat::flagAjaxBuilder('heartbeat_like_comment', $subComment, $this->flagService)
             ];
 
           }
@@ -286,7 +288,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
           'username' => $comment->getAuthorName(),
           'owner' => $commentOwner,
           'timeAgo' => $cTimeago,
-          'commentLike' => Heartbeat::flagAjaxMarkup('heartbeat_like_comment', $comment, $this->flagService),
+          'commentLike' => Heartbeat::flagAjaxBuilder('heartbeat_like_comment', $comment, $this->flagService),
           'reply' => $commentLink,
           'subComments' => $subComments
         ];
@@ -305,8 +307,8 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         'commentForm' => $form,
         'comments' => array_reverse($comments),
         'commentCount' => $commentCount > 0 ? $commentCount : '',
-        'likeFlag' => Heartbeat::flagAjaxMarkup('heartbeat_like', $heartbeat, $this->flagService),
-        'unlikeFlag' => Heartbeat::flagAjaxMarkup('jihad_flag', $heartbeat, $this->flagService)
+        'likeFlag' => Heartbeat::flagAjaxBuilder('heartbeat_like', $heartbeat, $this->flagService),
+        'unlikeFlag' => Heartbeat::flagAjaxBuilder('jihad_flag', $heartbeat, $this->flagService)
         );
     }
 }
