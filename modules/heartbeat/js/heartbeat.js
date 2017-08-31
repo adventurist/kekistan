@@ -4,6 +4,25 @@
 
 (function($, Drupal, drupalSettings) {
 
+  function hideCommentForms() {
+    let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
+
+    for (let f = 0; f < forms.length; f++) {
+      forms[f].className += ' comment-form-hidden';
+    }
+  }
+
+  function toggleCommentElements(node) {
+
+    console.dir(node);
+    if (node.classList.contains('comment-form-hidden')) {
+      console.log('removing comment-form-hidden class from element');
+      node.classList.remove('comment-form-hidden');
+    } else {
+      node.className += ' comment-form-hidden';
+    }
+  }
+  
   const commentListen = function(e) {
 
     if (drupalSettings.user.uid > 0) {
@@ -26,7 +45,9 @@
     }
   };
 
+
   $(document).ready(function() {
+
 
     const loader = document.createElement('div');
     loader.id = 'heartbeat-loader';
@@ -111,6 +132,32 @@
     };
 
     commentFormListeners();
+
+    const flagListen = function(e) {
+      console.dir(e.srcElement);
+      let stringWithHid = e.srcElement.href.substring(0, e.srcElement.href.indexOf('?destination'));
+      let hid = stringWithHid.substring(stringWithHid.lastIndexOf('/') + 1);
+      let flagId = stringWithHid.substring(stringWithHid.lastIndexOf('/flag/'), stringWithHid.lastIndexOf(hid) - 1);
+      flagId = flagId.substring(flagId.lastIndexOf('/') + 1);
+      console.dir(flagId);
+      console.log(hid);
+      $.ajax({
+        type: 'POST',
+        url:'/heartbeat/userflaggings',
+        data: {
+          entity_id: hid,
+          entity_type: 'heartbeat',
+          flag_id: flagId,
+          uid: drupalSettings.user.uid
+        },
+        success: function(response) {
+          console.dir(response);
+        }
+      });
+    };
+
+    flagListeners();
+
     let stream = document.getElementById('block-heartbeatblock');
 
     let observer = new MutationObserver(function (mutations) {
@@ -124,8 +171,21 @@
     let config = {attributes: true, childList: true, characterData: true};
 
     observer.observe(stream, config);
-    console.dir(observer);
 
+    let flagObserver = new MutationObserver(function(mutations) {
+      console.dir(mutations);
+      if (mutations[0].target !== null && mutations[0].target.children !== null && mutations[0].target.children.length > 0 && mutations[0].target.children[0].classList.contains('flag')) {
+        flagListeners(mutations[0].target.children[0]);
+      }
+    });
+
+    let flagObserveConfig = {subTree: true, childList: true};
+
+    let flags = Array.from(document.querySelectorAll('.heartbeat-like, .heartbeat-unlike'));
+
+    flags.forEach(function(flag) {
+      flagObserver.observe(flag, flagObserveConfig);
+    });
 
     function updateFeed() {
       $.ajax({
@@ -285,28 +345,30 @@
     }
 
     function flagListeners() {
-      let flags = document.querySelectorAll('.flag .use-ajax');
 
-      for (let f = 0; f < flags.length; f++) {
-        flags[f].addEventListener("click", function (e) {
-          let hid = e.srcElement.parentNode.className;
-          console.dir(e.srcElement.parentNode);
+      if (arguments[0] !== null && arguments.constructor !== Array) {
+        //noinspection JSValidateTypes
+        arguments = [arguments[0]];
+      }
 
-          //   $.ajax({
-          //       type: 'POST',
-          //       url:'/heartbeat/update_feed/' + response.timestamp,
-          //       data: {
-          //         entity_id: hid,
-          //         entity_type: 'heartbeat',
-          //         flag_id: 'flag_id_placeholder'
-          //         // uid: drupalSettings.
-          //       },
-          //     success: function(response) {
-          //
-          //
-          //     }
-          // });
+      let flags = arguments[0] == undefined ? document.querySelectorAll('.flag .use-ajax') : arguments[0];
+      console.log("Reloading FLAG LISTENERS");
+
+      if (flags.constructor === NodeList) {
+        for (let f = 0; f < flags.length; f++) {
+          flags[f].removeEventListener('click', flagListen);
+          flags[f].addEventListener('click', flagListen);
+        }
+      } else if (flags.constructor === Array && (flags[0].nodeType !== null && flags[0].nodeType > 0)) {
+        flags.forEach(function(node) {
+          node.removeEventListener('click', flagListen);
+          node.addEventListener('click', flagListen);
         });
+      } else if (flags.nodeName !== null && flags.nodeName !== undefined) {
+        flags.removeEventListener('click', flagListen);
+        flags.addEventListener('click', flagListen);
+      } else {
+        console.debug('FlagListen called with no flags available');
       }
     }
 
@@ -344,24 +406,5 @@
         }
       });
     }
-
-    function hideCommentForms() {
-      let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
-
-      for (let f = 0; f < forms.length; f++) {
-        forms[f].className += ' comment-form-hidden';
-      }
-    }
-
-    function toggleCommentElements(node) {
-
-      console.dir(node);
-      if (node.classList.contains('comment-form-hidden')) {
-        console.log('removing comment-form-hidden class from element');
-        node.classList.remove('comment-form-hidden');
-      } else {
-        node.className += ' comment-form-hidden';
-      }
-    };
   })
 })(jQuery, Drupal, drupalSettings);
