@@ -158,3 +158,16 @@ heartbeat.user_edit:
     _title: 'User Edit'
   requirements:
     _permission: 'access content'
+
+# In order to to create pages it is necessary to define routes for them.
+# A route maps a URL path to a controller. It defines what function
+# or method will be called when a URL is accessed.
+
+heartbeat.flag_controller:
+  path: '/heartbeat/userflaggings'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\FlagController::getUserFlaggings'
+    _title: 'getUserFlaggings'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
