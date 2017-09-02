@@ -11,71 +11,81 @@
         let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
         term.addEventListener("touchstart", function (event) {
 
-          $('#heartbeat-loader').show(225);
+          if (drupalSettings.user.uid > 0) {
 
-          drupalSettings.filterMode = true;
-          event.preventDefault();
-          event.stopPropagation();
+            $('#heartbeat-loader').show(225);
 
-          $.ajax({
-            type: 'GET',
-            url: '/heartbeat/filter-feed/' + tid,
-            success: function (response) {
+            drupalSettings.filterMode = true;
+            event.preventDefault();
+            event.stopPropagation();
 
-              feedElement = document.querySelector('.heartbeat-stream');
+            $.ajax({
+              type: 'GET',
+              url: '/heartbeat/filter-feed/' + tid,
+              success: function (response) {
 
-              if (feedElement != null) {
+                feedElement = document.querySelector('.heartbeat-stream');
 
-                feedElement.innerHTML = response;
+                if (feedElement != null) {
 
-              } else {
+                  feedElement.innerHTML = response;
 
-                feedBlock = document.getElementById('block-heartbeatblock');
-                insertNode = document.createElement('div');
-                insertNode.innerHTML = response;
-                feedBlock.appendChild(insertNode);
+                } else {
 
+                  feedBlock = document.getElementById('block-heartbeatblock');
+                  insertNode = document.createElement('div');
+                  insertNode.innerHTML = response;
+                  feedBlock.appendChild(insertNode);
+
+                }
+              },
+              complete: function () {
+                $('#heartbeat-loader').hide(225);
               }
-            },
-            complete: function() {
-              $('#heartbeat-loader').hide(225);
-            }
-          });
-          return false;
+            });
+            return false;
+          } else {
+            loginModal();
+          }
         });
         term.addEventListener("click", function (event) {
 
-          $('#heartbeat-loader').show(225);
+          if (drupalSettings.user.uid > 0) {
 
-          drupalSettings.filterMode = true;
-          event.preventDefault();
-          event.stopPropagation();
+            $('#heartbeat-loader').show(225);
 
-          $.ajax({
-            type: 'GET',
-            url: '/heartbeat/filter-feed/' + tid,
-            success: function (response) {
+            drupalSettings.filterMode = true;
+            event.preventDefault();
+            event.stopPropagation();
 
-              feedElement = document.querySelector('.heartbeat-stream');
+            $.ajax({
+              type: 'GET',
+              url: '/heartbeat/filter-feed/' + tid,
+              success: function (response) {
 
-              if (feedElement != null) {
+                feedElement = document.querySelector('.heartbeat-stream');
 
-                feedElement.innerHTML = response;
+                if (feedElement != null) {
 
-              } else {
+                  feedElement.innerHTML = response;
 
-                feedBlock = document.getElementById('block-heartbeatblock');
-                insertNode = document.createElement('div');
-                insertNode.innerHTML = response;
-                feedBlock.appendChild(insertNode);
+                } else {
 
+                  feedBlock = document.getElementById('block-heartbeatblock');
+                  insertNode = document.createElement('div');
+                  insertNode.innerHTML = response;
+                  feedBlock.appendChild(insertNode);
+
+                }
+              },
+              complete: function () {
+                $('#heartbeat-loader').hide(225);
               }
-            },
-            complete: function() {
-              $('#heartbeat-loader').hide(225);
-            }
-          });
-          return false;
+            });
+            return false;
+          } else {
+            loginModal();
+          }
         });
       });
 
@@ -100,7 +110,7 @@
 
       function checkScroll() {
 
-        console.log('scroll');
+
 
         for (var i = 0; i < videos.length; i++) {
 
@@ -115,7 +125,7 @@
 
           visible = visibleX * visibleY / (w * h);
 
-          if (visible > fraction) {
+          if (video.paused && video.visible > fraction) {
             video.play();
             console.log('play dat shit');
           } else {
