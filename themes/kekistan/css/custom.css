@@ -546,6 +546,13 @@ video.heartbeat-video,
   margin-right: 0em;
 }
 
+/*Remove button when file is attached*/
+#status-form .form-item-media .button {
+  max-height: 3em;
+  font-size: 14px;
+  max-width: 8em;
+}
+
 /*Feed Filter*/
 #block-views-feed-filter-block .field-content:hover {
   background: #1eac48;
