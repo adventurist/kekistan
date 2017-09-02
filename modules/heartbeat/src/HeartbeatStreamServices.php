@@ -114,11 +114,14 @@ class HeartbeatStreamServices {
 
     foreach ($this->getAllStreams() as $stream) {
       foreach ($stream->getTypes() as $type) {
-        if (strlen($type->getValue()[0]['target_id']) > 1) {
+        $type = $type->getValue();
+        $type = key($type) === 'target_id' ? $type : $type->getValue()[0];
+        if (strlen($type['target_id']) > 1) {
           $types[] = $type;
         }
       }
     }
+    $cleanTypes = array_column($types, 'target_id');
     return $this->entityTypeManager->getStorage(
       'heartbeat')->loadMultiple(
         $this->entityQuery->get(
@@ -126,6 +129,7 @@ class HeartbeatStreamServices {
           ->condition('status', 1)
           ->condition('type', array_column($types, 'target_id'), 'IN')
           ->sort('created', 'DESC')
+          ->range(0,25)
 
         ->execute());
   }

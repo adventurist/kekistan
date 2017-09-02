@@ -120,13 +120,14 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
    */
   public function build() {
 
+    $messages = array();
+
     if (\Drupal::currentUser()->id() > 0) {
       $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_feed.settings');
       $friendData = \Drupal::config('heartbeat_friendship.settings')->get('data');
 
       $feed = $myConfig->get('message');
       $uids = null;
-      $messages = array();
 
       $query = Database::getConnection()->select('heartbeat_friendship', 'hf')
         ->fields('hf', ['uid', 'uid_target']);
@@ -158,21 +159,25 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
           $this->renderMessage($messages, $heartbeat);
         }
       }
-
-      return [
-        '#theme' => 'heartbeat_stream',
-        '#messages' => $messages,
-        '#attached' => array(
-          'library' => 'heartbeat/heartbeat',
-          'drupalSettings' => [
-            'activeFeed' => 'jigga',
-            'friendData' => $friendData,
-          ]
-        ),
-        '#cache' => array('max-age' => 0)
-      ];
+    } else {
+      foreach ($this->heartbeatStreamServices->loadAllStreams() as $heartbeat) {
+        $this->renderMessage($messages, $heartbeat);
+      }
     }
-    return null;
+
+    return [
+      '#theme' => 'heartbeat_stream',
+      '#messages' => $messages,
+      '#attached' => array(
+        'library' => 'heartbeat/heartbeat',
+        'drupalSettings' => [
+          'activeFeed' => 'jigga',
+          'friendData' => $friendData,
+        ]
+      ),
+      '#cache' => array('max-age' => 0)
+    ];
+
   }
 
     private function renderMessage(array &$messages, $heartbeat) {
