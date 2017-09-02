@@ -10,20 +10,70 @@ namespace Drupal\Console\Command\Generate;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Command\ServicesTrait;
-use Drupal\Console\Command\ModuleTrait;
-use Drupal\Console\Command\FormTrait;
+use Drupal\Console\Command\Shared\ServicesTrait;
+use Drupal\Console\Command\Shared\ModuleTrait;
+use Drupal\Console\Command\Shared\FormTrait;
 use Drupal\Console\Generator\PluginRestResourceGenerator;
-use Drupal\Console\Command\ConfirmationTrait;
-use Drupal\Console\Command\GeneratorCommand;
-use Drupal\Console\Style\DrupalStyle;
+use Drupal\Console\Command\Shared\ConfirmationTrait;
+use Drupal\Console\Core\Command\Command;
+use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Extension\Manager;
+use Drupal\Console\Core\Utils\StringConverter;
+use Drupal\Console\Core\Utils\ChainQueue;
 
-class PluginRestResourceCommand extends GeneratorCommand
+/**
+ * Class PluginRestResourceCommand
+ *
+ * @package Drupal\Console\Command\Generate
+ */
+class PluginRestResourceCommand extends Command
 {
     use ServicesTrait;
     use ModuleTrait;
     use FormTrait;
     use ConfirmationTrait;
+
+    /**
+ * @var Manager
+*/
+    protected $extensionManager;
+
+    /**
+ * @var PluginRestResourceGenerator
+*/
+    protected $generator;
+
+    /**
+     * @var StringConverter
+     */
+    protected $stringConverter;
+
+    /**
+     * @var ChainQueue
+     */
+    protected $chainQueue;
+
+
+    /**
+     * PluginRestResourceCommand constructor.
+     *
+     * @param Manager                     $extensionManager
+     * @param PluginRestResourceGenerator $generator
+     * @param StringConverter             $stringConverter
+     * @param ChainQueue                  $chainQueue
+     */
+    public function __construct(
+        Manager $extensionManager,
+        PluginRestResourceGenerator $generator,
+        StringConverter $stringConverter,
+        ChainQueue $chainQueue
+    ) {
+        $this->extensionManager = $extensionManager;
+        $this->generator = $generator;
+        $this->stringConverter = $stringConverter;
+        $this->chainQueue = $chainQueue;
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -31,10 +81,10 @@ class PluginRestResourceCommand extends GeneratorCommand
             ->setName('generate:plugin:rest:resource')
             ->setDescription($this->trans('commands.generate.plugin.rest.resource.description'))
             ->setHelp($this->trans('commands.generate.plugin.rest.resource.help'))
-            ->addOption('module', '', InputOption::VALUE_REQUIRED, $this->trans('commands.common.options.module'))
+            ->addOption('module', null, InputOption::VALUE_REQUIRED, $this->trans('commands.common.options.module'))
             ->addOption(
                 'class',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.rest.resource.options.class')
             )
@@ -42,32 +92,33 @@ class PluginRestResourceCommand extends GeneratorCommand
                 'name',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                $this->trans('commands.generate.service.options.name')
+                $this->trans('commands.generate.service.options.service-name')
             )
             ->addOption(
                 'plugin-id',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.rest.resource.options.plugin-id')
             )
             ->addOption(
                 'plugin-label',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.rest.resource.options.plugin-label')
             )
             ->addOption(
                 'plugin-url',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                 $this->trans('commands.generate.plugin.rest.resource.options.plugin-url')
             )
             ->addOption(
                 'plugin-states',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                 $this->trans('commands.generate.plugin.rest.resource.options.plugin-states')
-            );
+            )
+            ->setAliases(['gprr']);
     }
 
     /**
@@ -77,9 +128,9 @@ class PluginRestResourceCommand extends GeneratorCommand
     {
         $io = new DrupalStyle($input, $output);
 
-        // @see use Drupal\Console\Command\ConfirmationTrait::confirmGeneration
+        // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmGeneration
         if (!$this->confirmGeneration($io)) {
-            return;
+            return 1;
         }
 
         $module = $input->getOption('module');
@@ -89,29 +140,29 @@ class PluginRestResourceCommand extends GeneratorCommand
         $plugin_url = $input->getOption('plugin-url');
         $plugin_states = $input->getOption('plugin-states');
 
-        $this->getGenerator()
-            ->generate($module, $class_name, $plugin_label, $plugin_id, $plugin_url, $plugin_states);
+        $this->generator->generate($module, $class_name, $plugin_label, $plugin_id, $plugin_url, $plugin_states);
 
-        $this->getChain()->addCommand('cache:rebuild', ['cache' => 'discovery']);
+        $this->chainQueue->addCommand('cache:rebuild', ['cache' => 'discovery']);
+
+        return 0;
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $io = new DrupalStyle($input, $output);
 
-        $stringUtils = $this->getStringHelper();
-
         // --module option
         $module = $input->getOption('module');
         if (!$module) {
-            // @see Drupal\Console\Command\ModuleTrait::moduleQuestion
-            $module = $this->moduleQuestion($output);
+            // @see Drupal\Console\Command\Shared\ModuleTrait::moduleQuestion
+            $module = $this->moduleQuestion($io);
             $input->setOption('module', $module);
         }
 
         // --class option
         $class_name = $input->getOption('class');
         if (!$class_name) {
+            $stringUtils = $this->stringConverter;
             $class_name = $io->ask(
                 $this->trans('commands.generate.plugin.rest.resource.questions.class'),
                 'DefaultRestResource',
@@ -131,7 +182,7 @@ class PluginRestResourceCommand extends GeneratorCommand
         if (!$plugin_id) {
             $plugin_id = $io->ask(
                 $this->trans('commands.generate.plugin.rest.resource.questions.plugin-id'),
-                $stringUtils->camelCaseToUnderscore($class_name)
+                $this->stringConverter->camelCaseToUnderscore($class_name)
             );
             $input->setOption('plugin-id', $plugin_id);
         }
@@ -141,7 +192,7 @@ class PluginRestResourceCommand extends GeneratorCommand
         if (!$plugin_label) {
             $plugin_label = $io->ask(
                 $this->trans('commands.generate.plugin.rest.resource.questions.plugin-label'),
-                $this->getStringHelper()->camelCaseToHuman($class_name)
+                $this->stringConverter->camelCaseToHuman($class_name)
             );
             $input->setOption('plugin-label', $plugin_label);
         }
@@ -158,7 +209,7 @@ class PluginRestResourceCommand extends GeneratorCommand
         // --plugin-states option
         $plugin_states = $input->getOption('plugin-states');
         if (!$plugin_states) {
-            $states = array('GET', 'PUT', 'POST', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS');
+            $states = ['GET', 'PUT', 'POST', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'];
             $plugin_states = $io->choice(
                 $this->trans('commands.generate.plugin.rest.resource.questions.plugin-states'),
                 $states,
@@ -168,10 +219,5 @@ class PluginRestResourceCommand extends GeneratorCommand
 
             $input->setOption('plugin-states', $plugin_states);
         }
-    }
-
-    protected function createGenerator()
-    {
-        return new PluginRestResourceGenerator();
     }
 }

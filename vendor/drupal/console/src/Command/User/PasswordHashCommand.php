@@ -10,13 +10,30 @@ namespace Drupal\Console\Command\User;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Command\ConfirmationTrait;
-use Drupal\Console\Command\ContainerAwareCommand;
-use Drupal\Console\Style\DrupalStyle;
+use Drupal\Console\Core\Command\Command;
+use Drupal\Core\Password\PasswordInterface;
+use Drupal\Console\Command\Shared\ConfirmationTrait;
+use Drupal\Console\Core\Style\DrupalStyle;
 
-class PasswordHashCommand extends ContainerAwareCommand
+class PasswordHashCommand extends Command
 {
     use ConfirmationTrait;
+
+    /**
+     * @var PasswordInterface
+     */
+    protected $password;
+
+    /**
+     * PasswordHashCommand constructor.
+     *
+     * @param PasswordInterface $password
+     */
+    public function __construct(PasswordInterface $password)
+    {
+        $this->password = $password;
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}
@@ -27,7 +44,12 @@ class PasswordHashCommand extends ContainerAwareCommand
             ->setName('user:password:hash')
             ->setDescription($this->trans('commands.user.password.hash.description'))
             ->setHelp($this->trans('commands.user.password.hash.help'))
-            ->addArgument('password', InputArgument::IS_ARRAY, $this->trans('commands.user.password.hash.options.password'));
+            ->addArgument(
+                'password',
+                InputArgument::IS_ARRAY,
+                $this->trans('commands.user.password.hash.options.password')
+            )
+            ->setAliases(['uph']);
     }
 
     /**
@@ -39,8 +61,6 @@ class PasswordHashCommand extends ContainerAwareCommand
 
         $passwords = $input->getArgument('password');
 
-        $passHandler = $this->getPassHandler();
-
         $tableHeader = [
             $this->trans('commands.user.password.hash.messages.password'),
             $this->trans('commands.user.password.hash.messages.hash'),
@@ -50,7 +70,7 @@ class PasswordHashCommand extends ContainerAwareCommand
         foreach ($passwords as $password) {
             $tableRows[] = [
                 $password,
-                $passHandler->hash($password),
+                $this->password->hash($password),
             ];
         }
 

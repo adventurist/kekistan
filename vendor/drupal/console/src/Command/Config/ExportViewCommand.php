@@ -11,18 +11,55 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Command\ContainerAwareCommand;
-use Drupal\Console\Command\ModuleTrait;
-use Drupal\Console\Style\DrupalStyle;
+use Drupal\Console\Core\Command\Command;
+use Drupal\Console\Command\Shared\ModuleTrait;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Config\CachedStorage;
+use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Command\Shared\ExportTrait;
+use Drupal\Console\Extension\Manager;
 
-class ExportViewCommand extends ContainerAwareCommand
+class ExportViewCommand extends Command
 {
     use ModuleTrait;
     use ExportTrait;
 
-    protected $entityManager;
-    protected $configStorage;
     protected $configExport;
+
+
+    /**
+     * @var EntityTypeManagerInterface
+     */
+    protected $entityTypeManager;
+
+    /**
+     * @var CachedStorage
+     */
+    protected $configStorage;
+
+    /**
+     * @var Manager
+     */
+    protected $extensionManager;
+
+    /**
+     * ExportViewCommand constructor.
+     *
+     * @param EntityTypeManagerInterface $entityTypeManager
+     * @param CachedStorage              $configStorage
+     * @param Manager                    $extensionManager
+     */
+    public function __construct(
+        EntityTypeManagerInterface $entityTypeManager,
+        CachedStorage $configStorage,
+        Manager $extensionManager
+    ) {
+        $this->entityTypeManager = $entityTypeManager;
+        $this->configStorage = $configStorage;
+        $this->extensionManager = $extensionManager;
+        parent::__construct();
+    }
+
 
     protected function configure()
     {
@@ -30,7 +67,7 @@ class ExportViewCommand extends ContainerAwareCommand
             ->setName('config:export:view')
             ->setDescription($this->trans('commands.config.export.view.description'))
             ->addOption(
-                'module', '',
+                'module', null,
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.common.options.module')
             )
@@ -41,16 +78,17 @@ class ExportViewCommand extends ContainerAwareCommand
             )
             ->addOption(
                 'optional-config',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.config.export.view.options.optional-config')
             )
             ->addOption(
                 'include-module-dependencies',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.config.export.view.options.include-module-dependencies')
-            );
+            )
+            ->setAliases(['cev']);
     }
 
     /**
@@ -63,7 +101,7 @@ class ExportViewCommand extends ContainerAwareCommand
         // --module option
         $module = $input->getOption('module');
         if (!$module) {
-            // @see Drupal\Console\Command\ModuleTrait::moduleQuestion
+            // @see Drupal\Console\Command\Shared\ModuleTrait::moduleQuestion
             $module = $this->moduleQuestion($io);
             $input->setOption('module', $module);
         }
@@ -71,8 +109,7 @@ class ExportViewCommand extends ContainerAwareCommand
         // view-id argument
         $viewId = $input->getArgument('view-id');
         if (!$viewId) {
-            $entityManager = $this->getEntityManager();
-            $views = $entityManager->getStorage('view')->loadMultiple();
+            $views = $this->entityTypeManager->getStorage('view')->loadMultiple();
 
             $viewList = [];
             foreach ($views as $view) {
@@ -109,20 +146,17 @@ class ExportViewCommand extends ContainerAwareCommand
     {
         $io = new DrupalStyle($input, $output);
 
-        $this->entityManager = $this->getEntityManager();
-        $this->configStorage = $this->getConfigStorage();
-
         $module = $input->getOption('module');
         $viewId = $input->getArgument('view-id');
         $optionalConfig = $input->getOption('optional-config');
         $includeModuleDependencies = $input->getOption('include-module-dependencies');
 
-        $viewTypeDefinition = $this->entityManager->getDefinition('view');
+        $viewTypeDefinition = $this->entityTypeManager->getDefinition('view');
         $viewTypeName = $viewTypeDefinition->getConfigPrefix() . '.' . $viewId;
 
         $viewNameConfig = $this->getConfiguration($viewTypeName);
 
-        $this->configExport[$viewTypeName] = array('data' => $viewNameConfig, 'optional' => $optionalConfig);
+        $this->configExport[$viewTypeName] = ['data' => $viewNameConfig, 'optional' => $optionalConfig];
 
         // Include config dependencies in export files
         if ($dependencies = $this->fetchDependencies($viewNameConfig, 'config')) {
@@ -136,6 +170,6 @@ class ExportViewCommand extends ContainerAwareCommand
             }
         }
 
-        $this->exportConfig($module, $io, $this->trans('commands.views.export.messages.view_exported'));
+        $this->exportConfigToModule($module, $io, $this->trans('commands.views.export.messages.view-exported'));
     }
 }

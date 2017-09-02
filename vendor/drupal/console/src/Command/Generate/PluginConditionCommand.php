@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\Console\Command\GeneratorPluginFieldFormatterCommand.
+ * Contains \Drupal\Console\Command\PluginConditionCommand.
  */
 
 namespace Drupal\Console\Command\Generate;
@@ -10,16 +10,70 @@ namespace Drupal\Console\Command\Generate;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Drupal\Console\Core\Command\Command;
+use Drupal\Core\Entity\EntityTypeRepository;
 use Drupal\Console\Generator\PluginConditionGenerator;
-use Drupal\Console\Command\ModuleTrait;
-use Drupal\Console\Command\ConfirmationTrait;
-use Drupal\Console\Command\GeneratorCommand;
-use Drupal\Console\Style\DrupalStyle;
+use Drupal\Console\Command\Shared\ModuleTrait;
+use Drupal\Console\Command\Shared\ConfirmationTrait;
+use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Extension\Manager;
+use Drupal\Console\Core\Utils\ChainQueue;
+use Drupal\Console\Core\Utils\StringConverter;
 
-class PluginConditionCommand extends GeneratorCommand
+/**
+ * Class PluginConditionCommand
+ *
+ * @package Drupal\Console\Command\Generate
+ */
+class PluginConditionCommand extends Command
 {
     use ModuleTrait;
     use ConfirmationTrait;
+
+    /**
+ * @var Manager
+*/
+    protected $extensionManager;
+
+    /**
+ * @var PluginConditionGenerator
+*/
+    protected $generator;
+
+    /**
+     * @var ChainQueue
+     */
+    protected $chainQueue;
+
+    /**
+     * @var StringConverter
+     */
+    protected $stringConverter;
+
+
+    /**
+     * PluginConditionCommand constructor.
+     *
+     * @param Manager                  $extensionManager
+     * @param PluginConditionGenerator $generator
+     * @param ChainQueue               $chainQueue
+     * @param EntityTypeRepository     $entitytyperepository
+     * @param StringConverter          $stringConverter
+     */
+    public function __construct(
+        Manager $extensionManager,
+        PluginConditionGenerator $generator,
+        ChainQueue $chainQueue,
+        EntityTypeRepository $entitytyperepository,
+        StringConverter $stringConverter
+    ) {
+        $this->extensionManager = $extensionManager;
+        $this->generator = $generator;
+        $this->chainQueue = $chainQueue;
+        $this->entitytyperepository = $entitytyperepository;
+        $this->stringConverter = $stringConverter;
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -27,43 +81,44 @@ class PluginConditionCommand extends GeneratorCommand
             ->setName('generate:plugin:condition')
             ->setDescription($this->trans('commands.generate.plugin.condition.description'))
             ->setHelp($this->trans('commands.generate.plugin.condition.help'))
-            ->addOption('module', '', InputOption::VALUE_REQUIRED, $this->trans('commands.common.options.module'))
+            ->addOption('module', null, InputOption::VALUE_REQUIRED, $this->trans('commands.common.options.module'))
             ->addOption(
                 'class',
-                '',
+                null,
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.plugin.condition.options.class')
             )
             ->addOption(
                 'label',
-                '',
+                null,
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.plugin.condition.options.label')
             )
             ->addOption(
                 'plugin-id',
-                '',
+                null,
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.plugin.condition.options.plugin-id')
             )
             ->addOption(
                 'context-definition-id',
-                '',
+                null,
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.plugin.condition.options.context-definition-id')
             )
             ->addOption(
                 'context-definition-label',
-                '',
+                null,
                 InputOption::VALUE_REQUIRED,
                 $this->trans('commands.generate.plugin.condition.options.context-definition-label')
             )
             ->addOption(
                 'context-definition-required',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.condition.options.context-definition-required')
-            );
+            )
+            ->setAliases(['gpco']);
     }
 
     /**
@@ -73,9 +128,9 @@ class PluginConditionCommand extends GeneratorCommand
     {
         $io = new DrupalStyle($input, $output);
 
-        // @see use Drupal\Console\Command\ConfirmationTrait::confirmGeneration
+        // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmGeneration
         if (!$this->confirmGeneration($io)) {
-            return;
+            return 1;
         }
 
         $module = $input->getOption('module');
@@ -87,25 +142,27 @@ class PluginConditionCommand extends GeneratorCommand
         $context_definition_required = $input->getOption('context-definition-required')?'TRUE':'FALSE';
 
         $this
-            ->getGenerator()
+            ->generator
             ->generate($module, $class_name, $label, $plugin_id, $context_definition_id, $context_definition_label, $context_definition_required);
 
-        $this->getChain()->addCommand('cache:rebuild', ['cache' => 'discovery']);
+        $this->chainQueue->addCommand('cache:rebuild', ['cache' => 'discovery']);
+
+        return 0;
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
     {
         $io = new DrupalStyle($input, $output);
 
-        $entity_manager = $this->getEntityManager();
+        $entityTypeRepository = $this->entitytyperepository;
 
-        $entity_types = $entity_manager->getEntityTypeLabels(true);
+        $entity_types = $entityTypeRepository->getEntityTypeLabels(true);
 
         // --module option
         $module = $input->getOption('module');
         if (!$module) {
-            // @see Drupal\Console\Command\ModuleTrait::moduleQuestion
-            $module = $this->moduleQuestion($output);
+            // @see Drupal\Console\Command\Shared\ModuleTrait::moduleQuestion
+            $module = $this->moduleQuestion($io);
         }
         $input->setOption('module', $module);
 
@@ -124,7 +181,7 @@ class PluginConditionCommand extends GeneratorCommand
         if (!$label) {
             $label = $io->ask(
                 $this->trans('commands.generate.plugin.condition.questions.label'),
-                $this->getStringHelper()->camelCaseToHuman($class)
+                $this->stringConverter->camelCaseToHuman($class)
             );
             $input->setOption('label', $label);
         }
@@ -134,14 +191,14 @@ class PluginConditionCommand extends GeneratorCommand
         if (!$pluginId) {
             $pluginId = $io->ask(
                 $this->trans('commands.generate.plugin.condition.questions.plugin-id'),
-                $this->getStringHelper()->camelCaseToUnderscore($class)
+                $this->stringConverter->camelCaseToUnderscore($class)
             );
             $input->setOption('plugin-id', $pluginId);
         }
 
         $context_definition_id = $input->getOption('context-definition-id');
         if (!$context_definition_id) {
-            $context_type = array('language' => 'Language', "entity" => "Entity");
+            $context_type = ['language' => 'Language', "entity" => "Entity"];
             $context_type_sel = $io->choice(
                 $this->trans('commands.generate.plugin.condition.questions.context-type'),
                 array_values($context_type)
@@ -190,10 +247,5 @@ class PluginConditionCommand extends GeneratorCommand
             );
             $input->setOption('context-definition-required', $context_definition_required);
         }
-    }
-
-    protected function createGenerator()
-    {
-        return new PluginConditionGenerator();
     }
 }

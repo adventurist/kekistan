@@ -10,15 +10,52 @@ namespace Drupal\Console\Command\User;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Command\ContainerAwareCommand;
-use Drupal\Console\Style\DrupalStyle;
+use Drupal\Console\Core\Command\Command;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryFactory;
+use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Utils\DrupalApi;
 
 /**
  * Class DeleteCommand
+ *
  * @package Drupal\Console\Command\User
  */
-class DeleteCommand extends ContainerAwareCommand
+class DeleteCommand extends Command
 {
+    /**
+     * @var EntityTypeManagerInterface
+     */
+    protected $entityTypeManager;
+
+    /**
+     * @var QueryFactory
+     */
+    protected $entityQuery;
+
+    /**
+     * @var DrupalApi
+     */
+    protected $drupalApi;
+
+    /**
+     * DeleteCommand constructor.
+     *
+     * @param EntityTypeManagerInterface $entityTypeManager
+     * @param QueryFactory               $entityQuery
+     * @param DrupalApi                  $drupalApi
+     */
+    public function __construct(
+        EntityTypeManagerInterface $entityTypeManager,
+        QueryFactory $entityQuery,
+        DrupalApi $drupalApi
+    ) {
+        $this->entityTypeManager = $entityTypeManager;
+        $this->entityQuery = $entityQuery;
+        $this->drupalApi = $drupalApi;
+        parent::__construct();
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -38,7 +75,7 @@ class DeleteCommand extends ContainerAwareCommand
                 null,
                 InputOption::VALUE_IS_ARRAY | InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.user.delete.options.roles')
-            );
+            )->setAliases(['ud']);
     }
 
     /**
@@ -59,8 +96,8 @@ class DeleteCommand extends ContainerAwareCommand
 
         $roles = $input->getOption('roles');
 
-        if (!$roles) {
-            $systemRoles = $this->getDrupalApi()->getRoles(false, false, false);
+        if (!$userId && !$roles) {
+            $systemRoles = $this->drupalApi->getRoles(false, false, false);
             $roles = $io->choice(
                 $this->trans('commands.user.delete.questions.roles'),
                 array_values($systemRoles),
@@ -96,11 +133,13 @@ class DeleteCommand extends ContainerAwareCommand
                 )
             );
 
-            return;
+            return 1;
         }
 
         if ($userId) {
-            $user = $this->getEntityManager()->getStorage('user')->load($userId);
+            $user = $this->entityTypeManager
+                ->getStorage('user')
+                ->load($userId);
 
             if (!$user) {
                 $io->error(
@@ -110,7 +149,7 @@ class DeleteCommand extends ContainerAwareCommand
                     )
                 );
 
-                return;
+                return 1;
             }
 
             try {
@@ -123,19 +162,17 @@ class DeleteCommand extends ContainerAwareCommand
                 );
             } catch (\Exception $e) {
                 $io->error($e->getMessage());
-            }
 
-            return;
+                return 1;
+            }
         }
 
         $roles = $input->getOption('roles');
 
         if ($roles) {
-            $entityManager = $this->getEntityManager();
-            $userStorage = $entityManager->getStorage('user');
-            $entityQuery = $this->getEntityQuery();
+            $userStorage = $this->entityTypeManager->getStorage('user');
 
-            $query = $entityQuery->get('user');
+            $query = $this->entityQuery->get('user');
             $query->condition('roles', is_array($roles)?$roles:[$roles], 'IN');
             $query->condition('uid', 1, '>');
             $results = $query->execute();
@@ -155,7 +192,8 @@ class DeleteCommand extends ContainerAwareCommand
                 } catch (\Exception $e) {
                     $tableRows['error'][] = [$userId, $user->getUsername()];
                     $io->error($e->getMessage());
-                    return;
+
+                    return 1;
                 }
             }
 

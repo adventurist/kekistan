@@ -10,20 +10,73 @@ namespace Drupal\Console\Command\Generate;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Command\ServicesTrait;
-use Drupal\Console\Command\ModuleTrait;
+use Drupal\Console\Command\Shared\ServicesTrait;
+use Drupal\Console\Command\Shared\ModuleTrait;
 use Drupal\Console\Generator\EventSubscriberGenerator;
-use Drupal\Console\Command\ConfirmationTrait;
-use Drupal\Console\Command\EventsTrait;
-use Drupal\Console\Command\GeneratorCommand;
-use Drupal\Console\Style\DrupalStyle;
+use Drupal\Console\Command\Shared\ConfirmationTrait;
+use Drupal\Console\Command\Shared\EventsTrait;
+use Drupal\Console\Core\Command\ContainerAwareCommand;
+use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Core\Utils\StringConverter;
+use Drupal\Console\Extension\Manager;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Drupal\Console\Core\Utils\ChainQueue;
 
-class EventSubscriberCommand extends GeneratorCommand
+class EventSubscriberCommand extends ContainerAwareCommand
 {
     use EventsTrait;
     use ServicesTrait;
     use ModuleTrait;
     use ConfirmationTrait;
+
+    /**
+     * @var Manager
+     */
+    protected $extensionManager;
+
+    /**
+     * @var EventSubscriberGenerator
+     */
+    protected $generator;
+
+    /**
+     * @var StringConverter
+     */
+    protected $stringConverter;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    protected $eventDispatcher;
+
+    /**
+     * @var ChainQueue
+     */
+    protected $chainQueue;
+
+    /**
+     * EventSubscriberCommand constructor.
+     *
+     * @param Manager                  $extensionManager
+     * @param EventSubscriberGenerator $generator
+     * @param StringConverter          $stringConverter
+     * @param EventDispatcherInterface $eventDispatcher
+     * @param ChainQueue               $chainQueue
+     */
+    public function __construct(
+        Manager $extensionManager,
+        EventSubscriberGenerator $generator,
+        StringConverter $stringConverter,
+        EventDispatcherInterface $eventDispatcher,
+        ChainQueue $chainQueue
+    ) {
+        $this->extensionManager = $extensionManager;
+        $this->generator = $generator;
+        $this->stringConverter = $stringConverter;
+        $this->eventDispatcher = $eventDispatcher;
+        $this->chainQueue = $chainQueue;
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}
@@ -39,7 +92,7 @@ class EventSubscriberCommand extends GeneratorCommand
                 'name',
                 null,
                 InputOption::VALUE_OPTIONAL,
-                $this->trans('commands.generate.service.options.name')
+                $this->trans('commands.generate.service.options.service-name')
             )
             ->addOption(
                 'class',
@@ -51,14 +104,15 @@ class EventSubscriberCommand extends GeneratorCommand
                 'events',
                 null,
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
-                $this->trans('commands.common.options.services')
+                $this->trans('commands.common.options.events')
             )
             ->addOption(
                 'services',
                 null,
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                 $this->trans('commands.common.options.services')
-            );
+            )
+            ->setAliases(['ges']);
     }
 
     /**
@@ -68,9 +122,9 @@ class EventSubscriberCommand extends GeneratorCommand
     {
         $io = new DrupalStyle($input, $output);
 
-        // @see use Drupal\Console\Command\ConfirmationTrait::confirmGeneration
+        // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmGeneration
         if (!$this->confirmGeneration($io)) {
-            return;
+            return 1;
         }
 
         $module = $input->getOption('module');
@@ -79,14 +133,12 @@ class EventSubscriberCommand extends GeneratorCommand
         $events = $input->getOption('events');
         $services = $input->getOption('services');
 
-        // @see Drupal\Console\Command\ServicesTrait::buildServices
+        // @see Drupal\Console\Command\Shared\ServicesTrait::buildServices
         $buildServices = $this->buildServices($services);
 
-        $this
-            ->getGenerator()
-            ->generate($module, $name, $class, $events, $buildServices);
+        $this->generator->generate($module, $name, $class, $events, $buildServices);
 
-        $this->getChain()->addCommand('cache:rebuild', ['cache' => 'all']);
+        $this->chainQueue->addCommand('cache:rebuild', ['cache' => 'all']);
     }
 
     /**
@@ -99,8 +151,8 @@ class EventSubscriberCommand extends GeneratorCommand
         // --module option
         $module = $input->getOption('module');
         if (!$module) {
-            // @see Drupal\Console\Command\ModuleTrait::moduleQuestion
-            $module = $this->moduleQuestion($output);
+            // @see Drupal\Console\Command\Shared\ModuleTrait::moduleQuestion
+            $module = $this->moduleQuestion($io);
             $input->setOption('module', $module);
         }
 
@@ -127,22 +179,17 @@ class EventSubscriberCommand extends GeneratorCommand
         // --events option
         $events = $input->getOption('events');
         if (!$events) {
-            // @see Drupal\Console\Command\ServicesTrait::servicesQuestion
-            $events = $this->eventsQuestion($output);
+            // @see Drupal\Console\Command\Shared\ServicesTrait::servicesQuestion
+            $events = $this->eventsQuestion($io);
             $input->setOption('events', $events);
         }
 
         // --services option
         $services = $input->getOption('services');
         if (!$services) {
-            // @see Drupal\Console\Command\ServicesTrait::servicesQuestion
+            // @see Drupal\Console\Command\Shared\ServicesTrait::servicesQuestion
             $services = $this->servicesQuestion($io);
             $input->setOption('services', $services);
         }
-    }
-
-    protected function createGenerator()
-    {
-        return new EventSubscriberGenerator();
     }
 }

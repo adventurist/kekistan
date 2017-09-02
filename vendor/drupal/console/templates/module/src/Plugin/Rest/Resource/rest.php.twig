@@ -38,12 +38,12 @@ class {{ class_name }} extends ResourceBase {% endblock %}
    * @var \Drupal\Core\Session\AccountProxyInterface
    */
   protected $currentUser;
-
 {% endblock %}
 
 {% block class_construct %}
+
   /**
-   * Constructs a Drupal\rest\Plugin\ResourceBase object.
+   * Constructs a new {{ class_name }} object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -69,10 +69,10 @@ class {{ class_name }} extends ResourceBase {% endblock %}
 
     $this->currentUser = $current_user;
   }
-
 {% endblock %}
 
 {% block class_create %}
+
   /**
    * {@inheritdoc}
    */
@@ -89,6 +89,7 @@ class {{ class_name }} extends ResourceBase {% endblock %}
 {% endblock %}
 {% block class_methods %}
 {% for state in plugin_states %}
+
   /**
    * Responds to {{ state }} requests.
    *
