@@ -12,6 +12,41 @@
     }
   }
 
+  /******** Load Login Block **********
+   ******** append to document ********
+   ******** Hover in middle of screen */
+
+  function loginModal() {
+
+    $('#heartbeat-loader').show(225);
+
+    $.ajax({
+      type: 'GET',
+      url: '/user/modal/login',
+      success: function (response) {
+        mainContainer = document.getElementById('main');
+        loginBlock = document.createElement('div');
+        loginBlock.innerHTML = response;
+        loginBlock.className = 'kekistan-login-block';
+        loginBlock.id = 'kekistan-login-block';
+        closeBtn = document.createElement('div');
+        closeBtn.className = 'kekistan-login-block-close';
+        closeBtn.innerHTML = '✖';
+        loginBlock.appendChild(closeBtn);
+        mainContainer.appendChild(loginBlock);
+
+        closeBtn.addEventListener('click', function () {
+          loginBlock.innerHTML = '';
+          mainContainer.removeChild(loginBlock);
+        });
+
+      },
+      complete: function () {
+        $('#heartbeat-loader').hide(225);
+      }
+    });
+  }
+
   function toggleCommentElements(node) {
 
     console.dir(node);
@@ -22,7 +57,7 @@
       node.className += ' comment-form-hidden';
     }
   }
-  
+
   const commentListen = function(e) {
 
     if (drupalSettings.user.uid > 0) {
@@ -175,7 +210,7 @@
     let flagObserver = new MutationObserver(function(mutations) {
       console.dir(mutations);
       if (mutations[0].target !== null && mutations[0].target.children !== null && mutations[0].target.children.length > 0 && mutations[0].target.children[0].classList.contains('flag')) {
-        flagListeners(mutations[0].target.children[0]);
+        flagListeners();
       }
     });
 
@@ -370,41 +405,6 @@
       } else {
         console.debug('FlagListen called with no flags available');
       }
-    }
-
-    /******** Load Login Block **********
-     ******** append to document ********
-     ******** Hover in middle of screen */
-
-    function loginModal() {
-
-      $('#heartbeat-loader').show(225);
-
-      $.ajax({
-        type: 'GET',
-        url: '/user/modal/login',
-        success: function (response) {
-          mainContainer = document.getElementById('main');
-          loginBlock = document.createElement('div');
-          loginBlock.innerHTML = response;
-          loginBlock.className = 'kekistan-login-block';
-          loginBlock.id = 'kekistan-login-block';
-          closeBtn = document.createElement('div');
-          closeBtn.className = 'kekistan-login-block-close';
-          closeBtn.innerHTML = '✖';
-          loginBlock.appendChild(closeBtn);
-          mainContainer.appendChild(loginBlock);
-
-          closeBtn.addEventListener('click', function () {
-            loginBlock.innerHTML = '';
-            mainContainer.removeChild(loginBlock);
-          });
-
-        },
-        complete: function () {
-          $('#heartbeat-loader').hide(225);
-        }
-      });
     }
   })
 })(jQuery, Drupal, drupalSettings);

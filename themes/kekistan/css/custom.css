@@ -10,17 +10,37 @@ nav#block-kekistan-account-menu {
 .kekistan-login-block {
   position: fixed;
   left: 0;
-  top: 20%;
-  padding: 50px;
+  top: 0;
+  padding: 2em 0 0 0;
   width: 100%;
   height: 100%;
   background-color: transparent;
 }
 
+.kekistan-login-block #main {
+  background-color: rgb(48, 76, 71);
+}
+
+.kekistan-login-block #content-area {
+  background-color: #e6ecec;
+}
+
+.kekistan-login-block #content-area div {
+  padding: 4px;
+}
+
+.kekistan-login-block #block-heartbeatblock {
+  /*margin-top: 15px;*/
+}
+
+.kekistan-login-block .heartbeat-stream .heartbeat-message:first-of-type {
+  margin-top: 32px!important;
+}
+
 .kekistan-login-block-close {
   position: absolute;
-  top: 3.5em;
-  right: 3.5em;
+  top: 6em;
+  right: 2.5em;
   border-radius: 1em;
   background-color: #EEEEEE;
   color: #49304c;
