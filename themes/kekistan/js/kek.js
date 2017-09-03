@@ -64,7 +64,7 @@ function statusPostListen() {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
-      alert('Please enter content before posting');
+      alert('Enter texts to submit a post.');
     }
   })
 }
