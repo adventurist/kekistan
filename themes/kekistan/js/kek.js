@@ -92,7 +92,6 @@
   };
 
   $(document).ready(function() {
-    let fraction = 0.65;
     let videos = document.getElementsByTagName('video');
     for (let i = videos.length - 1; i > -1; i--) {
       let video = videos[i];
@@ -114,6 +113,7 @@
     function checkScroll() {
 
       let videos = document.getElementsByTagName('video');
+      let fraction = 0.75;
 
       for (let i = 0; i < videos.length; i++) {
 
@@ -127,14 +127,20 @@
         visibleY = Math.max(0, Math.min(h, window.pageYOffset + window.innerHeight - y, b - window.pageYOffset));
 
         visible = visibleX * visibleY / (w * h);
-
-        if (video.paused && video.visible > fraction) {
-          video.play();
-          console.log('play dat shit');
+        let state = visible > fraction;
+        let paused = video.paused;
+        if (video.paused) {
+          if (visible > fraction) {
+            video.play();
+            console.log('play dat shit');
+          } else {
+            video.pause();
+          }
         } else {
-          video.pause();
+          if (visible < fraction) {
+            video.pause();
+          }
         }
-
       }
 
     }
