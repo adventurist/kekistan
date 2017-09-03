@@ -748,6 +748,30 @@ and (orientation : portrait) {
     float: right;
     font-size: 14px;
   }
+  .container {
+    display: -webkit-box;
+    display: -moz-box;
+    -webkit-box-orient: vertical;
+    -moz-box-orient: vertical;
+  }
+
+  /*.container #content {*/
+    /*-webkit-box-ordinal-group: 3;*/
+    /*-moz-box-ordinal-group: 3;*/
+  /*}*/
+
+  /*.container #sidebar-first {*/
+    /*-webkit-box-ordinal-group: 2;*/
+    /*-moz-box-ordinal-group: 2;*/
+  /*}*/
+
+  /*nav#block-kekistan-main-menu {*/
+    /*display: none;*/
+  /*}*/
+
+  /*#block-kekistan-search h2 {*/
+    /*display: none;*/
+  /*}*/
 }
 @media (max-width: 414px) {
 

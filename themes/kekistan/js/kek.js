@@ -56,6 +56,18 @@ function listenWindowScroll() {
   // window.addEventListener('resize', checkScroll, false);
 }
 
+function statusPostListen() {
+  let postSubmit = document.querySelector('#status-form #edit-post');
+  let textArea = document.querySelector('#status-form #edit-message');
+  postSubmit.addEventListener('click', function() {
+    if (textArea.innerHTML.length === 0) {
+      event.preventDefault();
+      event.stopPropagation();
+      event.stopImmediatePropagation();
+      alert('Please enter content before posting');
+    }
+  })
+}
 (function($, Drupal, drupalSettings) {
   drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
@@ -146,6 +158,7 @@ function listenWindowScroll() {
     textareaAutoHeight();
     listenReplyButtons();
     userMenuBehaviour();
+    statusPostListen();
 
     function checkScroll() {
 
