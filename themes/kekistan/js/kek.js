@@ -113,7 +113,7 @@
     function checkScroll() {
 
       let videos = document.getElementsByTagName('video');
-      let fraction = 0.75;
+      let fraction = 0.45;
 
       for (let i = 0; i < videos.length; i++) {
 
@@ -129,8 +129,9 @@
         visible = visibleX * visibleY / (w * h);
         let state = visible > fraction;
         let paused = video.paused;
+        
         if (video.paused) {
-          if (visible > fraction) {
+          if (visible > fraction && visible < (fraction * 1.1)) {
             video.play();
             console.log('play dat shit');
           } else {
