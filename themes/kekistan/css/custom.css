@@ -400,9 +400,11 @@ iframe.kekistan-anthem-video {
   color: #1da1f2;!important;
 }
 
+/*page loading throbber*/
 #heartbeat-loader {
   background: url('/themes/kekistan/images/spinner.gif') no-repeat!important;
   background-size: contain;
+  left: 58.5% !important;
 }
 /***********************
 ***Heartbeat Comments***
