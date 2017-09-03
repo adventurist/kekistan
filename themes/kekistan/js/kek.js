@@ -59,8 +59,9 @@ function listenWindowScroll() {
 function statusPostListen() {
   let postSubmit = document.querySelector('#status-form #edit-post');
   let textArea = document.querySelector('#status-form #edit-message');
+  console.dir(textArea);
   postSubmit.addEventListener('click', function() {
-    if (textArea.innerHTML.length === 0) {
+    if (textArea.value.length === 0) {
       event.preventDefault();
       event.stopPropagation();
       event.stopImmediatePropagation();
