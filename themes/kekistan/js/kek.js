@@ -1,3 +1,61 @@
+function checkScroll() {
+
+  let videos = document.getElementsByTagName('video');
+  let fraction = 0.45;
+
+  for (let i = 0; i < videos.length; i++) {
+    let video = videos[i];
+    console.dir(video);
+    let x = video.offsetLeft, y = video.offsetTop, w = video.offsetWidth, h = video.offsetHeight, r = x + w, //right
+      b = y + h, //bottom
+      visibleX, visibleY, visible;
+
+    visibleX = Math.max(0, Math.min(w, window.pageXOffset + window.innerWidth - x, r - window.pageXOffset));
+    visibleY = Math.max(0, Math.min(h, window.pageYOffset + window.innerHeight - y, b - window.pageYOffset));
+
+    visible = visibleX * visibleY / (w * h);
+    if (video.paused) {
+      if (visible > fraction && visible < (fraction * 1.1)) {
+        video.play();
+      } else {
+        video.pause();
+      }
+    } else {
+      if (visible < fraction) {
+        video.pause();
+      }
+    }
+  }
+}
+
+function listenVideos() {
+  let videos = document.getElementsByTagName('video');
+  for (var i = videos.length - 1; i >= 0; i--) {
+    let video = videos[i];
+    video.addEventListener('loadedmetadata', function () {
+      video.loop = video.duration < 5;
+      video.muted = true;
+
+      video.addEventListener('click', function() {
+        if (video.paused) {
+          video.muted = false;
+          video.play();
+        } else {
+          video.muted = true;
+          video.pause();
+        }
+      });
+    });
+  }
+}
+
+function listenWindowScroll() {
+  window.removeEventListener('scroll', checkScroll);
+  // window.removeEventListener('resize', checkScroll);
+  window.addEventListener('scroll', checkScroll, false);
+  // window.addEventListener('resize', checkScroll, false);
+}
+
 (function($, Drupal, drupalSettings) {
   drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
@@ -23,21 +81,16 @@
               type: 'GET',
               url: '/heartbeat/filter-feed/' + tid,
               success: function (response) {
+                let feedBlock = document.getElementById('block-heartbeatblock');
 
-                feedElement = document.querySelector('.heartbeat-stream');
-
-                if (feedElement != null) {
-
-                  feedElement.innerHTML = response;
-
-                } else {
-
-                  feedBlock = document.getElementById('block-heartbeatblock');
-                  insertNode = document.createElement('div');
-                  insertNode.innerHTML = response;
-                  feedBlock.appendChild(insertNode);
-
+                for (let h = heartbeatBlock.children; h > 0; h++) {
+                  feedBlock.children[h] = null;
                 }
+
+                feedBlock = document.getElementById('block-heartbeatblock');
+                let insertNode = document.createElement('div');
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
               },
               complete: function () {
                 $('#heartbeat-loader').hide(225);
@@ -62,21 +115,16 @@
               type: 'GET',
               url: '/heartbeat/filter-feed/' + tid,
               success: function (response) {
+                let feedBlock = document.getElementById('block-heartbeatblock');
 
-                feedElement = document.querySelector('.heartbeat-stream');
-
-                if (feedElement != null) {
-
-                  feedElement.innerHTML = response;
-
-                } else {
-
-                  feedBlock = document.getElementById('block-heartbeatblock');
-                  insertNode = document.createElement('div');
-                  insertNode.innerHTML = response;
-                  feedBlock.appendChild(insertNode);
-
+                for (let h = heartbeatBlock.children; h > 0; h++) {
+                  feedBlock.children[h] = null;
                 }
+
+                feedBlock = document.getElementById('block-heartbeatblock');
+                let insertNode = document.createElement('div');
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
               },
               complete: function () {
                 $('#heartbeat-loader').hide(225);
@@ -92,18 +140,7 @@
   };
 
   $(document).ready(function() {
-    let videos = document.getElementsByTagName('video');
-    for (let i = videos.length - 1; i > -1; i--) {
-      let video = videos[i];
-      video.addEventListener('loadedmetadata', function () {
-        video.loop = video.duration < 5;
-        video.muted = true;
-
-        video.addEventListener('click', function() {
-          video.muted = false;
-        });
-      });
-    }
+    listenVideos();
 
     flagToolListen();
     textareaAutoHeight();
@@ -129,7 +166,7 @@
         visible = visibleX * visibleY / (w * h);
         let state = visible > fraction;
         let paused = video.paused;
-        
+
         if (video.paused) {
           if (visible > fraction && visible < (fraction * 1.1)) {
             video.play();

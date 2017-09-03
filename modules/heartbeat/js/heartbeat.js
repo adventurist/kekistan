@@ -201,6 +201,8 @@
       hideCommentForms();
       commentFormListeners();
       flagListeners();
+      listenVideos();
+      listenWindowScroll();
     });
 
     let config = {attributes: true, childList: true, characterData: true};
