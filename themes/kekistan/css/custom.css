@@ -576,10 +576,13 @@ video.heartbeat-video,
 
 /*Remove button when file is attached*/
 #status-form .form-item-media .button {
-  max-height: 3em;
-  font-size: 14px;
-  max-width: 8em;
-  margin-left: 10px;
+  max-height: 1em;
+  font-size: 8px;
+  max-width: 1em;
+  margin-left: 0px;
+  background: transparent url(/themes/kekistan/images/icons/clear-button.png) no-repeat;
+  background-size: contain;
+  color: transparent;
 }
 
 /*Feed Filter*/

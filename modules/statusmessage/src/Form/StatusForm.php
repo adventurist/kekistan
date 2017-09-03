@@ -93,7 +93,6 @@ class StatusForm extends FormBase {
       '#type' => 'radios',
 //      '#description' => $this->t('User selectable feeds'),
       '#prefix' => '<div class="status-media-upload"></div>',
-
       '#options' => $this->mediaTabs,
       '#theme' => 'status-form-element',
 //      '#ajax' => [
@@ -108,6 +107,7 @@ class StatusForm extends FormBase {
     $form['media'] = [
       '#type' => 'managed_file',
       '#upload_location' => 'public://statusmessage/',
+//      '#multiple' => TRUE,
       '#states' => array(
         'visible' => array(
           ':input[name="File_type"]' => array('value' => t('Upload Your File')),
