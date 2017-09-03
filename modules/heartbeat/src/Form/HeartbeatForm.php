@@ -31,8 +31,8 @@ class HeartbeatForm extends ContentEntityForm {
   }
 
 
-  public function __construct(EntityManagerInterface $entity_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL, EntityTypeManager $entity_type_manager) {
-    parent::__construct($entity_manager, $entity_type_bundle_info, $time);
+  public function __construct(EntityTypeManager $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+//    parent::__construct($entity_type_bundle_info, $time);
     $this->nodeManager = $entity_type_manager->getStorage('node');
   }
 
