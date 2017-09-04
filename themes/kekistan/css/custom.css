@@ -484,8 +484,9 @@ iframe.kekistan-anthem-video {
 }
 
 .heartbeat-subcomment {
-  padding-left: 110px;
+  padding-left: 103px;
   display: flex;
+  margin-top: 10px;
 }
 
 .heartbeat-sub-comment-form,
