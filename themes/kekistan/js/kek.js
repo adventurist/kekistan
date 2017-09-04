@@ -101,6 +101,14 @@ function findSubCommentForm(e) {
   return search;
 }
 
+function hideCommentForms() {
+  let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
+
+  for (let f = 0; f < forms.length; f++) {
+    forms[f].className += ' comment-form-hidden';
+  }
+}
+
 (function($, Drupal, drupalSettings) {
   drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
@@ -191,9 +199,9 @@ function findSubCommentForm(e) {
     listenVideos();
     flagToolListen();
     textareaAutoHeight();
-    hideCommentForms();
     userMenuBehaviour();
-
+    hideCommentForms();
+    
     function checkScroll() {
 
       let videos = document.getElementsByTagName('video');
@@ -328,15 +336,6 @@ function findSubCommentForm(e) {
         }
       })
     }
-
-    function hideCommentForms() {
-      let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
-
-      for (let f = 0; f < forms.length; f++) {
-        forms[f].className += ' comment-form-hidden';
-      }
-    }
-
 
     function commentFormListeners() {
       let cFormButtons = document.querySelectorAll('.heartbeat-comment-button');
