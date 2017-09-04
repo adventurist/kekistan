@@ -260,7 +260,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
             }
 
             $subCommentOwner = user_view($subComment->getOwner(), 'comment');
-            $subCommentTime = $this->timestamp - $subComment->getCreatedTime() < 172800 ? $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago': $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_medium');
+            $subCommentTime = $this->timestamp - $subComment->getCreatedTime() < 172800 ? $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago': $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_short');
             $subComments[] = [
               'id' => $subCid,
               'body' => $subComment->get('comment_body')->value,
