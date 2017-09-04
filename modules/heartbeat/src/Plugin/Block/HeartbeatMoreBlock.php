@@ -176,7 +176,7 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
         $timeago = 'Yesterday at ' . $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_time');
         break;
       case ($diff >= 172800):
-        $timeago = $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_medium');
+        $timeago = $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_short');
         break;
     }
 
@@ -240,19 +240,19 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
               $timeago = 'Yesterday at ' . $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_time');
               break;
             case ($subDiff >= 172800):
-              $timeago = $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_medium');
+              $timeago = $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_short');
               break;
           }
 
           $subCommentOwner = user_view($subComment->getOwner(), 'comment');
-          $subCommentTime = $this->timestamp - $subComment->getCreatedTime() < 172800 ? $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago': $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_medium');
+          $subCommentTime = $this->timestamp - $subComment->getCreatedTime() < 172800 ? $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago': $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_short');
           $subComments[] = [
             'id' => $subCid,
             'body' => $subComment->get('comment_body')->value,
             'username' => $subComment->getAuthorName(),
             'owner' => $subCommentOwner,
             'timeAgo' => $subCommentTime,
-            'commentLike' => Heartbeat::flagAjaxMarkup('heartbeat_like_comment', $subComment, $this->flagService)
+            'commentLike' => Heartbeat::flagAjaxBuilder('heartbeat_like_comment', $subComment, $this->flagService)
           ];
 
         }
@@ -268,7 +268,7 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
           $cTimeago = 'Yesterday at ' . $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_time');
           break;
         case ($commentTimeDiff >= 172800):
-          $cTimeago = $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_medium');
+          $cTimeago = $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_short');
           break;
       }
 
@@ -278,7 +278,7 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
         'username' => $comment->getAuthorName(),
         'owner' => $commentOwner,
         'timeAgo' => $cTimeago,
-        'commentLike' => Heartbeat::flagAjaxMarkup('heartbeat_like_comment', $comment, $this->flagService),
+        'commentLike' => Heartbeat::flagAjaxBuilder('heartbeat_like_comment', $comment, $this->flagService),
         'reply' => $commentLink,
         'subComments' => $subComments
       ];
@@ -286,7 +286,7 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
     }
 
     $form = \Drupal::service('form_builder')->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm', $heartbeat);
-
+    $commentCount = count($comments);
     $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
       'userPicture' => $rendered,
       'userId' => $user->id(),
@@ -295,9 +295,10 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
       'userName' => $user->getAccountName(),
       'user' => $userView,
       'commentForm' => $form,
-      'comments' => $comments,
-      'likeFlag' => Heartbeat::flagAjaxMarkup('heartbeat_like', $heartbeat, $this->flagService),
-      'unlikeFlag' => Heartbeat::flagAjaxMarkup('jihad_flag', $heartbeat, $this->flagService)
+      'comments' => array_reverse($comments),
+      'commentCount' => $commentCount > 0 ? $commentCount : '',
+      'likeFlag' => Heartbeat::flagAjaxBuilder('heartbeat_like', $heartbeat, $this->flagService),
+      'unlikeFlag' => Heartbeat::flagAjaxBuilder('jihad_flag', $heartbeat, $this->flagService)
     );
   }
 }

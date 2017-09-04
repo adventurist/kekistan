@@ -191,7 +191,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
           $timeago = 'Yesterday at ' . $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_time');
           break;
         case ($diff >= 172800):
-          $timeago = $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_medium');
+          $timeago = $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_short');
           break;
       }
 
@@ -255,12 +255,12 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
                 $timeago = 'Yesterday at ' . $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_time');
                 break;
               case ($subDiff >= 172800):
-                $timeago = $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_medium');
+                $timeago = $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_short');
                 break;
             }
 
             $subCommentOwner = user_view($subComment->getOwner(), 'comment');
-            $subCommentTime = $this->timestamp - $subComment->getCreatedTime() < 172800 ? $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago': $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_medium');
+            $subCommentTime = $this->timestamp - $subComment->getCreatedTime() < 172800 ? $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago': $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_short');
             $subComments[] = [
               'id' => $subCid,
               'body' => $subComment->get('comment_body')->value,
@@ -283,7 +283,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
             $cTimeago = 'Yesterday at ' . $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_time');
             break;
           case ($commentTimeDiff >= 172800):
-            $cTimeago = $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_medium');
+            $cTimeago = $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_short');
             break;
         }
 

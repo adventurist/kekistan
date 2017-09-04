@@ -411,7 +411,7 @@ iframe.kekistan-anthem-video {
 ***********************/
 
 .heartbeat-comments {
-  font-size: 13px;
+  font-size: 12px;
   padding-top: 12px
 }
 
@@ -445,7 +445,7 @@ iframe.kekistan-anthem-video {
 }
 
 .comment-owner {
-  width: 25%;
+  width: 17%;
   font-size: 12px;
 }
 
@@ -484,7 +484,7 @@ iframe.kekistan-anthem-video {
 }
 
 .heartbeat-subcomment {
-  padding-left: 24px;
+  padding-left: 110px;
   display: flex;
 }
 
