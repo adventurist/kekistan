@@ -31,7 +31,7 @@ function listenVideos() {
   let videos = document.getElementsByTagName('video');
   for (var i = videos.length - 1; i >= 0; i--) {
     let video = videos[i];
-    video.addEventListener('loadedmetadata', function () {
+    video.addEventListener('loadedmetadata', function() {
       video.loop = video.duration < 5;
       video.muted = true;
 
@@ -53,6 +53,52 @@ function listenWindowScroll() {
   // window.removeEventListener('resize', checkScroll);
   window.addEventListener('scroll', checkScroll, false);
   // window.addEventListener('resize', checkScroll, false);
+}
+
+function listenReplyButtons() { //reply grey button to reply
+  let replyButtons = document.querySelectorAll('.heartbeat-comment-form .form-submit, .heartbeat-sub-comment-form .form-submit');
+
+  for (let m = 0; m < replyButtons.length; m++) {
+    replyButtons[m].addEventListener('click', function(event) {
+      let replyText = replyButtons[m].parentNode.querySelector('textarea');
+      console.dir(replyText);
+      console.dir(event);
+      replyText.value = '';
+      replyText.innerText = '';
+    })
+  }
+}
+
+/**
+ * to open a form by clicking reply hyperlink to sub-comment.
+ */
+function listenReplyLinks() {
+  let replyLinks = document.querySelectorAll('.sub-comment a.button');
+  for (let i = 0; i < replyLinks.length; i++) {
+    replyLinks[i].addEventListener('click', function(e) {
+      if (findSubCommentForm(e.srcElement.parentElement.parentElement)) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      }
+    });
+  }
+}
+
+function findSubCommentForm(e) {
+  let search = false;
+  for (let p = 0; p < e.children.length; p++) {
+    if (e.children[p].classList.contains('heartbeat-sub-comment-form')) {
+      search = true;
+    } else if (e.children[p].children !== null && e.children[p].children.length > 0) {
+      for (let c = 0; c < e.children[p].children.length; c++) {
+        if (e.children[p].children[c].classList.contains('heartbeat-sub-comment-form')) {
+          search = true;
+        }
+      }
+    }
+  }
+  return search;
 }
 
 (function($, Drupal, drupalSettings) {
@@ -138,12 +184,13 @@ function listenWindowScroll() {
     }
   };
 
+  listenReplyButtons();
+  listenReplyLinks();
+
   $(document).ready(function() {
     listenVideos();
     flagToolListen();
     textareaAutoHeight();
-    listenReplyButtons();
-    listenReplyLinks();
     hideCommentForms();
     userMenuBehaviour();
 
@@ -239,70 +286,6 @@ function listenWindowScroll() {
           }
         });
       }
-    }
-
-    function listenReplyButtons() { //reply grey button to reply
-      let replyButtons = document.querySelectorAll('.heartbeat-comment-form .form-submit, .heartbeat-sub-comment-form .form-submit');
-
-      for (let m = 0; m < replyButtons.length; m++) {
-        replyButtons[m].addEventListener('click', function(event) {
-          let replyText = replyButtons[m].parentNode.querySelector('textarea');
-          console.dir(replyText);
-          console.dir(event);
-          replyText.value = '';
-          replyText.innerText = '';
-        })
-      }
-    }
-
-    /**
-     * to open a form by clicking reply hyperlink to sub-comment.
-     */
-    function listenReplyLinks() {
-      let replyLinks = document.querySelectorAll('.sub-comment a.button');
-      console.log('Adding reply link listeners');
-      for (let i = 0; i < replyLinks.length; i++) {
-          replyLinks[i].addEventListener('click', function(e) {
-            // console.dir(event.srcElement);
-            // console.dir(event.srcElement.parentElement.nextElementSibling);
-            // console.dir(event.srcElement.parentElement.nextElementSibling);
-            // console.dir(event.srcElement.parentElement.nextElementSibling.childNodes);
-            // if (
-            //   event.srcElement.parentElement.nextElementSibling !== null &&
-            //   event.srcElement.parentElement.nextElementSibling != undefined &&
-            //   event.srcElement.parentElement.nextElementSibling.childNodes != undefined &&
-            //   event.srcElement.parentElement.nextElementSibling.childNodes[0].classList != undefined &&
-            //   event.srcElement.parentElement.nextElementSibling.childNodes[0].classList.contains('heartbeat-sub-comment-form')
-            // ) {
-            let search = findSubCommentForm(e.srcElement.parentElement.parentElement);
-            console.log(search);
-            if (findSubCommentForm(e.srcElement.parentElement.parentElement)) {
-              console.log('preventing default');
-              event.preventDefault();
-              event.stopPropagation();
-              event.stopImmediatePropagation();
-            }
-          });
-      }
-    }
-
-    function findSubCommentForm(e) {
-      let search = false;
-      console.dir(e.children);
-      for (let p = 0; p < e.children.length; p++) {
-        console.log(e.children[p].classList);
-        if (e.children[p].classList.contains('heartbeat-sub-comment-form')) {
-          search = true;
-        } else if (e.children[p].children !== null && e.children[p].children.length > 0) {
-          for (let c = 0; c < e.children[p].children.length; c++) {
-            console.log(e.children[p].children[c].classList.contains('heartbeat-sub-comment-form'));
-            if (e.children[p].children[c].classList.contains('heartbeat-sub-comment-form')) {
-              search = true;
-            }
-          }
-        }
-      }
-      return search;
     }
 
     function userMenuBehaviour() {
