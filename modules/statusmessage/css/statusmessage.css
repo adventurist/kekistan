@@ -72,3 +72,13 @@
   text-decoration: none;
   color: #333;
 }
+
+.ui-dialog {
+  font-size: 90%;
+}
+
+.ui-dialog-title {
+  background-size: contain;
+  background: url('/themes/kekistan/images/icons/alert.png') no-repeat;
+  padding: 2px 2.5em;
+}
