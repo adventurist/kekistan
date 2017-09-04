@@ -74,7 +74,7 @@ class HeartbeatSubCommentForm extends FormBase {
           $response = new AjaxResponse();
           $response->addCommand(new AppendCommand(
               '#heartbeat-comment-' . $config->get('cid') . ' .sub-comment',
-              '<div class="heartbeat-subcomment" id="sub-comment-' . $comment->id() . '"><span class="comment-owner"><span class="comment-username">' . \Drupal::currentUser()->getAccountName() . '</span>' . render($userview) . '<span class"comment-ago">1 sec ago</span></span><span class="comment-body">' . $commentBody . '</span><span class="sub-comment"><a href="/heartbeat/subcommentrequest/' . $cid . '" class="button button-action use-ajax">Reply</a></span></div>')
+              '<div class="heartbeat-subcomment" id="sub-comment-' . $comment->id() . '"><span class="comment-owner"><span class="comment-username">' . \Drupal::currentUser()->getAccountName() . '</span>' . render($userview) . '<span class"comment-ago">1 sec ago</span></span><span class="comment-body">' . $commentBody . '</span></div>')
           );
           return $response;
         }
