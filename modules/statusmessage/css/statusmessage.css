@@ -55,7 +55,8 @@
   background-size: contain;
 }
 
-#edit-media-upload {
+#edit-media-upload,
+#status-form .form-item-media, #status-form input.form-file{
   display: inline-block;
   max-width: 32px;
   min-height: 32px;
