@@ -1,5 +1,4 @@
 function checkScroll() {
-
   let videos = document.getElementsByTagName('video');
   let fraction = 0.45;
 
@@ -141,10 +140,11 @@ function listenWindowScroll() {
 
   $(document).ready(function() {
     listenVideos();
-
     flagToolListen();
     textareaAutoHeight();
     listenReplyButtons();
+    listenReplyLinks();
+    hideCommentForms();
     userMenuBehaviour();
 
     function checkScroll() {
@@ -185,10 +185,6 @@ function listenWindowScroll() {
 
     window.addEventListener('scroll', checkScroll, false);
     window.addEventListener('resize', checkScroll, false);
-
-    listenReplyLinks();
-    hideCommentForms();
-    // commentFormListeners();
 
     if (window.innerWidth < 415) {
       let header = document.getElementById('header');
@@ -264,23 +260,49 @@ function listenWindowScroll() {
      */
     function listenReplyLinks() {
       let replyLinks = document.querySelectorAll('.sub-comment a.button');
-
+      console.log('Adding reply link listeners');
       for (let i = 0; i < replyLinks.length; i++) {
-          replyLinks[i].addEventListener('click', function (event) {
-
-            if (
-              event.srcElement.parentElement.nextElementSibling !== null &&
-              event.srcElement.parentElement.nextElementSibling != undefined &&
-              event.srcElement.parentElement.nextElementSibling.childNodes != undefined &&
-              event.srcElement.parentElement.nextElementSibling.childNodes[0].classList != undefined &&
-              event.srcElement.parentElement.nextElementSibling.childNodes[0].classList.contains('heartbeat-sub-comment-form')
-            ) {
+          replyLinks[i].addEventListener('click', function(e) {
+            // console.dir(event.srcElement);
+            // console.dir(event.srcElement.parentElement.nextElementSibling);
+            // console.dir(event.srcElement.parentElement.nextElementSibling);
+            // console.dir(event.srcElement.parentElement.nextElementSibling.childNodes);
+            // if (
+            //   event.srcElement.parentElement.nextElementSibling !== null &&
+            //   event.srcElement.parentElement.nextElementSibling != undefined &&
+            //   event.srcElement.parentElement.nextElementSibling.childNodes != undefined &&
+            //   event.srcElement.parentElement.nextElementSibling.childNodes[0].classList != undefined &&
+            //   event.srcElement.parentElement.nextElementSibling.childNodes[0].classList.contains('heartbeat-sub-comment-form')
+            // ) {
+            let search = findSubCommentForm(e.srcElement.parentElement.parentElement);
+            console.log(search);
+            if (findSubCommentForm(e.srcElement.parentElement.parentElement)) {
+              console.log('preventing default');
               event.preventDefault();
               event.stopPropagation();
               event.stopImmediatePropagation();
             }
           });
       }
+    }
+
+    function findSubCommentForm(e) {
+      let search = false;
+      console.dir(e.children);
+      for (let p = 0; p < e.children.length; p++) {
+        console.log(e.children[p].classList);
+        if (e.children[p].classList.contains('heartbeat-sub-comment-form')) {
+          search = true;
+        } else if (e.children[p].children !== null && e.children[p].children.length > 0) {
+          for (let c = 0; c < e.children[p].children.length; c++) {
+            console.log(e.children[p].children[c].classList.contains('heartbeat-sub-comment-form'));
+            if (e.children[p].children[c].classList.contains('heartbeat-sub-comment-form')) {
+              search = true;
+            }
+          }
+        }
+      }
+      return search;
     }
 
     function userMenuBehaviour() {
