@@ -27,6 +27,10 @@
   display: none;
 }
 
+.heartbeat-comments > div {
+  margin-top: 4em;
+}
+
 .heartbeat-comments-visible {
   display: block!important;
 }

@@ -469,10 +469,13 @@ iframe.kekistan-anthem-video {
   height: 45px;
 }
 
-.heartbeat-comment-form .form-submit,
+.heartbeat-comment-form .form-submit {
+  float: right;
+  font-size: 13px;
+}
 .heartbeat-sub-comment-form .form-submit {
   float: right;
-  font-size: 14px;
+  font-size: 11px;
 }
 
 .heartbeat-sub-comment-form .form-submit {
@@ -484,8 +487,9 @@ iframe.kekistan-anthem-video {
 }
 
 .heartbeat-subcomment {
-  padding-left: 110px;
+  padding-left: 103px;
   display: flex;
+  margin-top: 10px;
 }
 
 .heartbeat-sub-comment-form,
@@ -569,7 +573,7 @@ video.heartbeat-video,
 #status-form #edit-post {
   float: right!important;
   max-width: 5em;
-  font-size: 14px;
+  font-size: 13px;
   max-height: 3em;
   margin-right: 0em;
 }
