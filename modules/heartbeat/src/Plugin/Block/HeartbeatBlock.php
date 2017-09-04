@@ -255,7 +255,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
                 $timeago = 'Yesterday at ' . $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_time');
                 break;
               case ($subDiff >= 172800):
-                $timeago = $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_medium');
+                $timeago = $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_short');
                 break;
             }
 
@@ -283,7 +283,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
             $cTimeago = 'Yesterday at ' . $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_time');
             break;
           case ($commentTimeDiff >= 172800):
-            $cTimeago = $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_medium');
+            $cTimeago = $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_short');
             break;
         }
 
