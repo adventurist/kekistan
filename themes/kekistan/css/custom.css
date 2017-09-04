@@ -336,13 +336,14 @@ iframe.kekistan-anthem-video {
   margin-left: -28px;
 }
 
-/*like button hover*/
+/*jihad button hover*/
 .action-unflag.flag-jihad_flag a {
   opacity: 0.3;
   background-size: contain;
-  padding: 8px;
+  margin-left: 10px;
+  padding: 2px;
   padding-left: 72px;
-  margin-left: -28px;
+  margin-left: -14px;
 }
 
 /*jihad button*/
@@ -352,14 +353,6 @@ iframe.kekistan-anthem-video {
   padding: 10px;
   margin-left: 20px;
 }
-
-/*jihad button hover*/
-.action-unflag.flag-jihad_flag a {
-  opacity: 0.3;
-  background-size: contain;
-  margin-left: 10px;
-}
-
 
 .flag-heartbeat_like span,
 .flag-jihad_flag span {
