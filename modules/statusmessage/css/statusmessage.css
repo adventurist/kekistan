@@ -59,13 +59,20 @@
 }
 
 #edit-media-upload,
-#status-form .form-item-media, #status-form input.form-file{
+#status-form input.form-file {
   display: inline-block;
   max-width: 32px;
   min-height: 32px;
   position: relative;
   transform: translate(-18px, -10px);
   opacity: 0;
+}
+
+#status-form .form-item-media {
+  display: inline-block;
+  min-height: 32px;
+  position: relative;
+  transform: translate(15px, -8px);
 }
 
 #edit-mediatabs + #ajax-wrapper {
