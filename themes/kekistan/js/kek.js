@@ -115,80 +115,98 @@ function hideCommentForms() {
     attach: function (context, settings) {
       console.dir(drupalSettings);
       let feedFilterBlock = document.getElementById('block-views-feed-filter-block');
-      let terms = feedFilterBlock.querySelectorAll('a');
 
-      //TODO Convert the following two event listeners to a more elegant syntax
-      terms.forEach(function (term) {
-        let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
-        term.addEventListener("touchstart", function (event) {
+      if (feedFilterBlock !== null) {
+        let terms = feedFilterBlock.querySelectorAll('a');
+        //TODO Convert the following two event listeners to a more elegant syntax
+        terms.forEach(function (term) {
+          let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
+          term.addEventListener("touchstart", function (event) {
 
-          if (drupalSettings.user.uid > 0) {
+            if (drupalSettings.user.uid > 0) {
 
-            $('#heartbeat-loader').show(225);
+              $('#heartbeat-loader').show(225);
 
-            drupalSettings.filterMode = true;
-            event.preventDefault();
-            event.stopPropagation();
+              drupalSettings.filterMode = true;
+              event.preventDefault();
+              event.stopPropagation();
 
-            $.ajax({
-              type: 'GET',
-              url: '/heartbeat/filter-feed/' + tid,
-              success: function (response) {
-                let feedBlock = document.getElementById('block-heartbeatblock');
+              $.ajax({
+                type: 'GET',
+                url: '/heartbeat/filter-feed/' + tid,
+                success: function (response) {
+                  let feedBlock = document.getElementById('block-heartbeatblock');
 
-                for (let h = heartbeatBlock.children; h > 0; h++) {
-                  feedBlock.children[h] = null;
+                  for (let h = heartbeatBlock.children; h > 0; h++) {
+                    feedBlock.children[h] = null;
+                  }
+
+                  feedBlock = document.getElementById('block-heartbeatblock');
+                  let insertNode = document.createElement('div');
+                  insertNode.innerHTML = response;
+                  feedBlock.appendChild(insertNode);
+                },
+                complete: function () {
+                  $('#heartbeat-loader').hide(225);
                 }
+              });
+              return false;
+            } else {
+              loginModal();
+            }
+          });
+          term.addEventListener("click", function (event) {
 
-                feedBlock = document.getElementById('block-heartbeatblock');
-                let insertNode = document.createElement('div');
-                insertNode.innerHTML = response;
-                feedBlock.appendChild(insertNode);
-              },
-              complete: function () {
-                $('#heartbeat-loader').hide(225);
-              }
-            });
-            return false;
-          } else {
-            loginModal();
-          }
-        });
-        term.addEventListener("click", function (event) {
+            if (drupalSettings.user.uid > 0) {
 
-          if (drupalSettings.user.uid > 0) {
+              $('#heartbeat-loader').show(225);
 
-            $('#heartbeat-loader').show(225);
+              drupalSettings.filterMode = true;
+              event.preventDefault();
+              event.stopPropagation();
 
-            drupalSettings.filterMode = true;
-            event.preventDefault();
-            event.stopPropagation();
+              $.ajax({
+                type: 'GET',
+                url: '/heartbeat/filter-feed/' + tid,
+                success: function (response) {
+                  let feedBlock = document.getElementById('block-heartbeatblock');
 
-            $.ajax({
-              type: 'GET',
-              url: '/heartbeat/filter-feed/' + tid,
-              success: function (response) {
-                let feedBlock = document.getElementById('block-heartbeatblock');
+                  for (let h = heartbeatBlock.children; h > 0; h++) {
+                    feedBlock.children[h] = null;
+                  }
 
-                for (let h = heartbeatBlock.children; h > 0; h++) {
-                  feedBlock.children[h] = null;
+                  feedBlock = document.getElementById('block-heartbeatblock');
+                  let insertNode = document.createElement('div');
+                  insertNode.innerHTML = response;
+                  feedBlock.appendChild(insertNode);
+                },
+                complete: function () {
+                  $('#heartbeat-loader').hide(225);
                 }
-
-                feedBlock = document.getElementById('block-heartbeatblock');
-                let insertNode = document.createElement('div');
-                insertNode.innerHTML = response;
-                feedBlock.appendChild(insertNode);
-              },
-              complete: function () {
-                $('#heartbeat-loader').hide(225);
-              }
-            });
-            return false;
-          } else {
-            loginModal();
-          }
+              });
+              return false;
+            } else {
+              loginModal();
+            }
+          });
         });
-      });
+      }
+      if (drupalSettings.admin) {
+        //Header offset behaviour to account for top menu
+        if (window.innerWidth < 415) {
+          let header = document.getElementById('header');
+          $(window).scroll(function () {
+            if ($(window).scrollTop() >= 39) {
+              header.style.top = 0;
+              console.log('greater');
+            } else {
+              console.log('less');
+              header.style.top = 0.75 * (39 - $(window).scrollTop()) + 'px';
+            }
+          });
+        }
+      }
+      flagToolListen();
     }
   };
 
@@ -197,11 +215,10 @@ function hideCommentForms() {
 
   $(document).ready(function() {
     listenVideos();
-    flagToolListen();
     textareaAutoHeight();
     userMenuBehaviour();
     hideCommentForms();
-    
+
     function checkScroll() {
 
       let videos = document.getElementsByTagName('video');
@@ -241,16 +258,6 @@ function hideCommentForms() {
     window.addEventListener('scroll', checkScroll, false);
     window.addEventListener('resize', checkScroll, false);
 
-    if (window.innerWidth < 415) {
-      let header = document.getElementById('header');
-      $(window).scroll(function () {
-        if ($(window).scrollTop() >= 39) {
-          header.style.top = '0';
-        } else {
-          header.style.top = 0.75 * (39 - $(window).scrollTop()) + 'px';
-        }
-      });
-    }
 
     function flagToolListen() {
 
