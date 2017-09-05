@@ -2,6 +2,30 @@
  * Created by logicp on 5/28/17.
  */
 
+function replyButtonListeners() {
+  //Place listener on comment reply button
+  //If status message is empty, prevent submit and alert the user
+  let replyButtons = document.querySelectorAll('.heartbeat-sub-comment-form .form-submit');
+  console.dir(replyButtons);
+  for (let i = 0; i < replyButtons.length; i++) {
+    let replyButton = replyButtons[i];
+
+    replyButton.addEventListener('click', function () {
+      let textBox = replyButton.parentElement.querySelector('.form-textarea');
+      console.dir(textBox);
+      comparison = textBox.value === 0;
+      console.log(comparison);
+      if (textBox.value.length === 0) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+      } else {
+        textBox.value = "";
+      }
+    });
+  }
+}
+
 (function($, Drupal, drupalSettings) {
 
   function hideCommentForms() {
@@ -203,6 +227,7 @@
       flagListeners();
       listenVideos();
       listenWindowScroll();
+      replyButtonListeners();
     });
 
     let config = {attributes: true, childList: true, characterData: true};
@@ -222,6 +247,19 @@
 
     flags.forEach(function(flag) {
       flagObserver.observe(flag, flagObserveConfig);
+    });
+
+    let replyButtonObserver = new MutationObserver(function(mutations) {
+      console.dir(mutations);
+      replyButtonListeners();
+    });
+
+    let replyBtnObserveConfig = {subTree: true, childList: true};
+
+    let replyButtons = Array.from(document.querySelectorAll('.sub-comment'));
+
+    replyButtons.forEach(function(replyButton) {
+      replyButtonObserver.observe(replyButton, replyBtnObserveConfig);
     });
 
     function updateFeed() {
@@ -408,5 +446,9 @@
         console.debug('FlagListen called with no flags available');
       }
     }
+
+    $(document).ready(function() {
+      replyButtonListeners();
+    });
   })
 })(jQuery, Drupal, drupalSettings);
