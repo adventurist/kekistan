@@ -109,6 +109,32 @@ function hideCommentForms() {
   }
 }
 
+function flagToolListen() {
+
+  let likeFlags = document.querySelectorAll('.flag-heartbeat_like');
+  let jihadFlags = document.querySelectorAll('.flag-jihad_flag');
+
+  for (let i = 0; i < likeFlags.length; i++) {
+    likeFlags[i].addEventListener('mouseover', function() {
+      likeFlags[i].className += ' selected';
+    });
+    likeFlags[i].addEventListener('mouseout', function() {
+      likeFlags[i].classList.remove('selected');
+    });
+  }
+
+  for (let i = 0; i < jihadFlags.length; i++) {
+
+    jihadFlags[i].addEventListener('mouseover', function() {
+      jihadFlags[i].className += ' selected';
+
+    });
+    jihadFlags[i].addEventListener('mouseout', function() {
+      jihadFlags[i].classList.remove('selected');
+    });
+  }
+}
+
 (function($, Drupal, drupalSettings) {
   drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
@@ -257,34 +283,6 @@ function hideCommentForms() {
 
     window.addEventListener('scroll', checkScroll, false);
     window.addEventListener('resize', checkScroll, false);
-
-
-    function flagToolListen() {
-
-      let likeFlags = document.querySelectorAll('.flag-heartbeat_like');
-      let jihadFlags = document.querySelectorAll('.flag-jihad_flag');
-
-      for (let i = 0; i < likeFlags.length; i++) {
-        likeFlags[i].addEventListener('mouseover', function() {
-          likeFlags[i].className += ' selected';
-        });
-        likeFlags[i].addEventListener('mouseout', function() {
-          likeFlags[i].classList.remove('selected');
-        });
-      }
-
-      for (let i = 0; i < jihadFlags.length; i++) {
-
-        jihadFlags[i].addEventListener('mouseover', function() {
-          jihadFlags[i].className += ' selected';
-
-        });
-        jihadFlags[i].addEventListener('mouseout', function() {
-          jihadFlags[i].classList.remove('selected');
-        });
-      }
-
-    }
 
 
     function textareaAutoHeight() {
