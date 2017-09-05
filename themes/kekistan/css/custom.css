@@ -65,8 +65,8 @@ nav#block-kekistan-account-menu {
   background-repeat: no-repeat!important;
   background-size: contain!important;
   float: left;
-  width: 24px;
-  height: 32px;
+  max-width: 24px;
+  /*height: 32px;*/
   color: transparent;
   margin: 0.7em 1em 0 1em;
   font-size: 12px;
