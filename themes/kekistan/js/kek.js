@@ -162,13 +162,16 @@ function flagToolListen() {
                 url: '/heartbeat/filter-feed/' + tid,
                 success: function (response) {
                   let feedBlock = document.getElementById('block-heartbeatblock');
+                  let feedElement = document.querySelector('.heartbeat-stream');
 
-                  for (let h = heartbeatBlock.children; h > 0; h++) {
-                    feedBlock.children[h] = null;
+                  if (feedElement != null) {
+
+                    feedBlock.removeChild(feedElement);
+
                   }
 
-                  feedBlock = document.getElementById('block-heartbeatblock');
                   let insertNode = document.createElement('div');
+                  insertNode.className = 'heartbeat-stream';
                   insertNode.innerHTML = response;
                   feedBlock.appendChild(insertNode);
                 },
@@ -196,13 +199,16 @@ function flagToolListen() {
                 url: '/heartbeat/filter-feed/' + tid,
                 success: function (response) {
                   let feedBlock = document.getElementById('block-heartbeatblock');
+                  let feedElement = document.querySelector('.heartbeat-stream');
 
-                  for (let h = heartbeatBlock.children; h > 0; h++) {
-                    feedBlock.children[h] = null;
+                  if (feedElement != null) {
+
+                    feedBlock.removeChild(feedElement);
+
                   }
-
-                  feedBlock = document.getElementById('block-heartbeatblock');
+                  
                   let insertNode = document.createElement('div');
+                  insertNode.className = 'heartbeat-stream';
                   insertNode.innerHTML = response;
                   feedBlock.appendChild(insertNode);
                 },
