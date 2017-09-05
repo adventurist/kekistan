@@ -65,8 +65,8 @@ nav#block-kekistan-account-menu {
   background-repeat: no-repeat!important;
   background-size: contain!important;
   float: left;
-  display: inline;
-  max-width: 24px;
+  width: 24px;
+  height: 32px;
   color: transparent;
   margin: 0.7em 1em 0 1em;
   font-size: 12px;
@@ -74,19 +74,38 @@ nav#block-kekistan-account-menu {
 
 /*account menu hover*/
 #block-kekistan-account-menu .menu .menu-item a.menu-item-visible {
-  color: grey!important;
+  color: #ffffff !important;
+  font-weight: 700;
 }
 
+#block-kekistan-account-menu .menu .menu-item a:hover {
+  opacity: 1!important;
+}
+
+#block-kekistan-account-menu .menu .menu-item {
+  display: inline-block;
+  padding: 3px;
+  background-size: 25px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#block-kekistan-account-menu .menu .menu-item:hover {
+  opacity: 0.5;
+}
 #block-kekistan-account-menu .menu .menu-item:first-of-type a {
   background: url(/themes/kekistan/images/icons/user.png);
+  display: inline-block;
 }
 
 #block-kekistan-account-menu .menu .menu-item:nth-of-type(2) a {
   background: url(/themes/kekistan/images/icons/settings.png);
+  display: inline-block;
 }
 
 #block-kekistan-account-menu .menu .menu-item:last-of-type a {
   background: url(/themes/kekistan/images/icons/login.png);
+  display: inline-block;
 }
 
 
