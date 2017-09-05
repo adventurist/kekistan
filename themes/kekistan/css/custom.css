@@ -628,7 +628,8 @@ footer#footer {
 }
 
 #block-kekistan-footer .menu-item a.about-footer,
-#block-kekistan-footer .menu-item:nth-of-type(2) a {
+#block-kekistan-footer .menu-item:nth-of-type(2) a,
+#block-kekistan-footer .menu-item:nth-of-type(3) a {
   color: white!important;
 }
 
