@@ -336,7 +336,6 @@ iframe.kekistan-anthem-video {
   padding-left: 48px;
 }
 
-
 .flag-heartbeat_like_comment a.use-ajax {
   min-height: 8px;
   padding-left: 24px;
@@ -346,23 +345,34 @@ iframe.kekistan-anthem-video {
   background-size: 45% !important;
 }
 
+/*Praise and jihad tooltip*/
+.praisetip, .jihadtip {
+  transition: all 0.5s ease;
+  position: absolute;
+  z-index: 1;
+}
+
+.flag-heartbeat_like.selected::after {
+  content: 'Praise';
+  color: rgb(0, 178, 0);
+  transition: all 0.5s ease;
+  position: absolute;
+}
+
+.flag-jihad_flag.selected::after {
+  content: 'Jihad!';
+  color: red;
+  transition: all 0.5s ease;
+  padding-left: 20px;
+}
+
 /*like button*/
 .flag-heartbeat_like a {
   background: url(/themes/kekistan/images/icons/okay.png) no-repeat center ;
   background-size: contain;
-  padding: 8px;
+  padding: 5px;
   padding-left: 72px;
   margin-left: -28px;
-}
-
-/*jihad button hover*/
-.action-unflag.flag-jihad_flag a {
-  opacity: 0.3;
-  background-size: contain;
-  margin-left: 10px;
-  padding: 2px;
-  padding-left: 72px;
-  margin-left: -14px;
 }
 
 /*jihad button*/
@@ -373,11 +383,13 @@ iframe.kekistan-anthem-video {
   margin-left: 20px;
 }
 
-.flag-jihad_flag.selected::after {
-  content: 'Jihad!';
-  color: red;
-  transition: all 0.5s ease;
-  padding-left: 20px;
+/*jihad button hover*/
+.action-unflag.flag-jihad_flag a {
+  opacity: 0.3;
+  background-size: contain;
+  margin-left: -11px;
+  padding: 2px;
+  padding-left: 72px;
 }
 
 .flag-heartbeat_like span,
@@ -387,20 +399,6 @@ iframe.kekistan-anthem-video {
 .flag-heartbeat_like span:first-of-type,
 .flag-jihad_flag span:first-of-type {
   display: inline;
-}
-
-.praisetip, .jihadtip {
-  transition: all 0.5s ease;
-  color: rgb(0, 178, 0);
-  position: absolute;
-  z-index: 1;
-}
-
-.flag-heartbeat_like.selected::after {
-  content: 'Praise';
-  color: rgb(0, 178, 0);
-  transition: all 0.5s ease;
-  position: absolute;
 }
 
 /*css for flag*/
