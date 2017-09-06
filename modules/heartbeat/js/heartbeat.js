@@ -5,7 +5,7 @@
 function replyButtonListeners() {
   //Place listener on comment reply button
   //If status message is empty, prevent submit and alert the user
-  let replyButtons = document.querySelectorAll('.heartbeat-sub-comment-form .form-submit');
+  let replyButtons = document.querySelectorAll('.heartbeat-sub-comment-form .form-item-comment-body .form-submit');
   console.dir(replyButtons);
   for (let i = 0; i < replyButtons.length; i++) {
     let replyButton = replyButtons[i];
@@ -27,10 +27,8 @@ function replyButtonListeners() {
 }
 
 (function($, Drupal, drupalSettings) {
-
   function hideCommentForms() {
     let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
-
     for (let f = 0; f < forms.length; f++) {
       forms[f].className += ' comment-form-hidden';
     }
@@ -41,9 +39,7 @@ function replyButtonListeners() {
    ******** Hover in middle of screen */
 
   function loginModal() {
-
     $('#heartbeat-loader').show(225);
-
     $.ajax({
       type: 'GET',
       url: '/user/modal/login',
@@ -63,7 +59,6 @@ function replyButtonListeners() {
           loginBlock.innerHTML = '';
           mainContainer.removeChild(loginBlock);
         });
-
       },
       complete: function () {
         $('#heartbeat-loader').hide(225);
@@ -72,7 +67,6 @@ function replyButtonListeners() {
   }
 
   function toggleCommentElements(node) {
-
     console.dir(node);
     if (node.classList.contains('comment-form-hidden')) {
       console.log('removing comment-form-hidden class from element');
@@ -83,9 +77,7 @@ function replyButtonListeners() {
   }
 
   const commentListen = function(e) {
-
     if (drupalSettings.user.uid > 0) {
-
       let commentBlock = e.srcElement.parentNode.parentNode.querySelector('.heartbeat-comments');
 
       if (!commentBlock.classList.contains('heartbeat-comments-visible')) {
@@ -95,7 +87,6 @@ function replyButtonListeners() {
       }
 
       let childs = e.srcElement.parentNode.querySelectorAll('.form-submit, .js-form-type-textarea');
-
       for (let c = 0; c < childs.length; c++) {
         toggleCommentElements(childs[c]);
       }
@@ -105,9 +96,8 @@ function replyButtonListeners() {
   };
 
 
+
   $(document).ready(function() {
-
-
     const loader = document.createElement('div');
     loader.id = 'heartbeat-loader';
     const body = document.getElementsByTagName('body')[0];
@@ -115,7 +105,6 @@ function replyButtonListeners() {
 
     Drupal.behaviors.heartbeat = {
       attach: function (context, settings) {
-
         if (drupalSettings.friendData != null) {
           let divs = document.querySelectorAll('.flag-friendship a.use-ajax');
 
@@ -131,13 +120,11 @@ function replyButtonListeners() {
         }
 
         feedElement = document.querySelector('.heartbeat-stream');
-
         if (drupalSettings.feedUpdate == true) {
           updateFeed();
         }
 
         Drupal.AjaxCommands.prototype.selectFeed = function (ajax, response, status) {
-
           $.ajax({
             type: 'POST',
             url: '/heartbeat/render_feed/' + response.feed,
@@ -218,7 +205,6 @@ function replyButtonListeners() {
     flagListeners();
 
     let stream = document.getElementById('block-heartbeatblock');
-
     let observer = new MutationObserver(function (mutations) {
       console.log('observer observes a change');
       listenImages();
@@ -242,7 +228,6 @@ function replyButtonListeners() {
     });
 
     let flagObserveConfig = {subTree: true, childList: true};
-
     let flags = Array.from(document.querySelectorAll('.heartbeat-like, .heartbeat-unlike'));
 
     flags.forEach(function(flag) {
@@ -255,12 +240,88 @@ function replyButtonListeners() {
     });
 
     let replyBtnObserveConfig = {subTree: true, childList: true};
-
     let replyButtons = Array.from(document.querySelectorAll('.sub-comment'));
-
     replyButtons.forEach(function(replyButton) {
       replyButtonObserver.observe(replyButton, replyBtnObserveConfig);
     });
+
+    // add listeners to all hashtags in heartbeat stream
+    function streamHashtagListeners() {
+      let hashtags = document.querySelectorAll('.heartbeat-stream a');
+      for (let h = 0; h < hashtags.length; h++) {
+        let hashTagID = hashtags[h].href.substring(hashtags[h].href.lastIndexOf('/') + 1);
+
+        //add listeners to all taxonomy (mobile)
+        hashtags[h].addEventListener("touchstart", function (event) {
+          console.dir(event.srcElement);
+          if (drupalSettings.user.uid > 0) {
+            $('#heartbeat-loader').show(225);
+            drupalSettings.filterMode = true;
+            event.preventDefault();
+            event.stopPropagation();
+
+            $.ajax({
+              type: 'GET',
+              url: '/heartbeat/filter-feed/' + hashTagID,
+              success: function (response) {
+                let feedBlock = document.getElementById('block-heartbeatblock');
+                let feedElement = document.querySelector('.heartbeat-stream');
+
+                if (feedElement != null) {
+                  feedBlock.removeChild(feedElement);
+                }
+
+                let insertNode = document.createElement('div');
+                insertNode.className = 'heartbeat-stream';
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
+              },
+              complete: function () {
+                $('#heartbeat-loader').hide(225);
+              }
+            });
+            return false;
+          } else {
+            loginModal();
+          }
+        });
+
+        //add listeners to all taxonomy (desktop)
+        hashtags[h].addEventListener("click", function (event) {
+          console.dir(event.srcElement);
+          if (drupalSettings.user.uid > 0) {
+            $('#heartbeat-loader').show(225);
+            drupalSettings.filterMode = true;
+            event.preventDefault();
+            event.stopPropagation();
+
+            $.ajax({
+              type: 'GET',
+              url: '/heartbeat/filter-feed/' + hashTagID,
+              success: function (response) {
+                let feedBlock = document.getElementById('block-heartbeatblock');
+                let feedElement = document.querySelector('.heartbeat-stream');
+
+                if (feedElement != null) {
+                  feedBlock.removeChild(feedElement);
+                }
+
+                let insertNode = document.createElement('div');
+                insertNode.className = 'heartbeat-stream';
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
+              },
+              complete: function () {
+                $('#heartbeat-loader').hide(225);
+              }
+            });
+            return false;
+          } else {
+            loginModal();
+          }
+        });
+      }
+    }
 
     function updateFeed() {
       $.ajax({
@@ -340,9 +401,7 @@ function replyButtonListeners() {
     }
 
     document.addEventListener("scroll", function (event) {
-
       if (drupalSettings.filterMode == false && (getScrollXY()[1] + window.innerHeight) / getDocHeight() > 0.99) {
-
         let streams = document.querySelectorAll('.heartbeat-stream');
         let stream = streams.length > 1 ? streams[streams.length - 1] : streams[0];
 
@@ -411,8 +470,6 @@ function replyButtonListeners() {
     function commentFormListeners() {
       console.log('Comment Form Listeners');
       let cFormButtons = document.querySelectorAll('.heartbeat-comment-button');
-
-
       for (let b = 0; b < cFormButtons.length; b++) {
         cFormButtons[b].removeEventListener('click', commentListen);
         cFormButtons[b].addEventListener('click', commentListen);
@@ -420,7 +477,6 @@ function replyButtonListeners() {
     }
 
     function flagListeners() {
-
       if (arguments[0] !== null && arguments.constructor !== Array) {
         //noinspection JSValidateTypes
         arguments = [arguments[0]];

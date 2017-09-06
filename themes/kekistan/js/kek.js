@@ -135,24 +135,109 @@ function flagToolListen() {
   }
 }
 
+
 (function($, Drupal, drupalSettings) {
+
+  // add listeners to all hashtags in heartbeat stream
+  function streamHashtagListeners() {
+    let hashtags = document.querySelectorAll('.heartbeat-stream a');
+    for (let h = 0; h < hashtags.length; h++) {
+      let hashTagID = hashtags[h].href.substring(hashtags[h].href.lastIndexOf('/') + 1);
+
+      //add listeners to all taxonomy (mobile)
+      hashtags[h].addEventListener("touchstart", function (event) {
+        console.dir(event.srcElement);
+
+        if (drupalSettings.user.uid > 0) {
+          $('#heartbeat-loader').show(225);
+          drupalSettings.filterMode = true;
+          event.preventDefault();
+          event.stopPropagation();
+
+          $.ajax({
+            type: 'GET',
+            url: '/heartbeat/filter-feed/' + hashTagID,
+            success: function (response) {
+              let feedBlock = document.getElementById('block-heartbeatblock');
+              let feedElement = document.querySelector('.heartbeat-stream');
+
+              if (feedElement != null) {
+                feedBlock.removeChild(feedElement);
+              }
+
+              let insertNode = document.createElement('div');
+              insertNode.className = 'heartbeat-stream';
+              insertNode.innerHTML = response;
+              feedBlock.appendChild(insertNode);
+            },
+            complete: function () {
+              $('#heartbeat-loader').hide(225);
+            }
+          });
+          return false;
+        } else {
+          loginModal();
+        }
+      });
+
+      //add listeners to all taxonomy (desktop)
+      hashtags[h].addEventListener("click", function (event) {
+        console.dir(event.srcElement);
+
+        if (drupalSettings.user.uid > 0) {
+          $('#heartbeat-loader').show(225);
+
+          drupalSettings.filterMode = true;
+          event.preventDefault();
+          event.stopPropagation();
+
+          $.ajax({
+            type: 'GET',
+            url: '/heartbeat/filter-feed/' + hashTagID,
+            success: function (response) {
+              let feedBlock = document.getElementById('block-heartbeatblock');
+              let feedElement = document.querySelector('.heartbeat-stream');
+
+              if (feedElement != null) {
+                feedBlock.removeChild(feedElement);
+              }
+
+              let insertNode = document.createElement('div');
+              insertNode.className = 'heartbeat-stream';
+              insertNode.innerHTML = response;
+              feedBlock.appendChild(insertNode);
+            },
+            complete: function () {
+              $('#heartbeat-loader').hide(225);
+            }
+          });
+          return false;
+        } else {
+          loginModal();
+        }
+      });
+    }
+  }
+
+
   drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
     attach: function (context, settings) {
       console.dir(drupalSettings);
-      let feedFilterBlock = document.getElementById('block-views-feed-filter-block');
 
+      streamHashtagListeners();
+
+      let feedFilterBlock = document.getElementById('block-views-feed-filter-block');
       if (feedFilterBlock !== null) {
         let terms = feedFilterBlock.querySelectorAll('a');
         //TODO Convert the following two event listeners to a more elegant syntax
         terms.forEach(function (term) {
           let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
+
+          //add listeners to all taxonomy (mobile)
           term.addEventListener("touchstart", function (event) {
-
             if (drupalSettings.user.uid > 0) {
-
               $('#heartbeat-loader').show(225);
-
               drupalSettings.filterMode = true;
               event.preventDefault();
               event.stopPropagation();
@@ -165,9 +250,7 @@ function flagToolListen() {
                   let feedElement = document.querySelector('.heartbeat-stream');
 
                   if (feedElement != null) {
-
                     feedBlock.removeChild(feedElement);
-
                   }
 
                   let insertNode = document.createElement('div');
@@ -184,10 +267,10 @@ function flagToolListen() {
               loginModal();
             }
           });
+
+          //add listeners to all taxonomy (desktop)
           term.addEventListener("click", function (event) {
-
             if (drupalSettings.user.uid > 0) {
-
               $('#heartbeat-loader').show(225);
 
               drupalSettings.filterMode = true;
@@ -202,11 +285,9 @@ function flagToolListen() {
                   let feedElement = document.querySelector('.heartbeat-stream');
 
                   if (feedElement != null) {
-
                     feedBlock.removeChild(feedElement);
-
                   }
-                  
+
                   let insertNode = document.createElement('div');
                   insertNode.className = 'heartbeat-stream';
                   insertNode.innerHTML = response;
