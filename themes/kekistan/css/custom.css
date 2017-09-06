@@ -745,6 +745,18 @@ form#contact-message-feedback-form label::after {
   background-color: white;
 }
 
+
+/*User Profiles*/
+
+.section-user article > div > img {
+  position: absolute;
+  left: 0;
+  right: 0;
+  margin: auto 0;
+  width: 100%;
+  max-height: 280px;
+}
+
 @media only screen
 and (min-device-width : 414px)
 and (max-device-width : 736px)
