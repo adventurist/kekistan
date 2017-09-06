@@ -747,6 +747,28 @@ input#edit-preview {
   background-color: white;
 }
 
+
+/*User Profiles*/
+
+.section-user article > div > img {
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: auto 0;
+  width: 100%;
+  max-height: 280px;
+}
+
+.section-user article > div > a > img {
+  max-height: 300px;
+  width: auto;
+  padding: 0.5em;
+}
+
+.section-user article > .form-item {
+  padding: 16px;
+}
+
 @media only screen
 and (min-device-width : 414px)
 and (max-device-width : 736px)
