@@ -736,9 +736,13 @@ form#contact-message-feedback-form label::after {
   content: ': ';
 }
 
+/*Contact page preview button*/
+input#edit-preview {
+  display: none;
+}
+
 
 /*Preview Generator*/
-
 .statusmessage-preview-iframe {
   min-height: 380px;
   width: 100%;
