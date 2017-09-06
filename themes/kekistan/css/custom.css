@@ -401,6 +401,11 @@ iframe.kekistan-anthem-video {
   display: inline;
 }
 
+.heartbeat-interaction-wrap .action-unflag a {
+  opacity: 0.5;
+}
+
+
 /*css for flag*/
 .flag a {
   border: none;
