@@ -140,10 +140,9 @@ function flagToolListen() {
 
   // add listeners to all hashtags in heartbeat stream
   function streamHashtagListeners() {
-    let hashtags = document.querySelectorAll('.heartbeat-stream a');
+    let hashtags = document.querySelectorAll('.heartbeat-stream .heartbeat-hashtag');
     for (let h = 0; h < hashtags.length; h++) {
       let hashTagID = hashtags[h].href.substring(hashtags[h].href.lastIndexOf('/') + 1);
-
       //add listeners to all taxonomy (mobile)
       hashtags[h].addEventListener("touchstart", function (event) {
         console.dir(event.srcElement);
