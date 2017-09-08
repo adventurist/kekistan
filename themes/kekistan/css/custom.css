@@ -765,9 +765,8 @@ input#edit-preview {
 }
 
 .section-user article > div > a > img {
-  max-height: 300px;
+  max-height: 230px;
   width: auto;
-  padding: 0.5em;
 }
 
 .section-user article > .form-item {
