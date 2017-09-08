@@ -1,0 +1,9 @@
+uuid: c86ef069-0984-4934-9d75-9cea1aab6ddf
+langcode: en
+status: true
+dependencies: {  }
+id: heartbeat_medium
+label: 'Heartbeat Medium'
+locked: false
+pattern: 'F d \a\t g:ia'
+

@@ -4,9 +4,13 @@ namespace Drupal\heartbeat\Controller;
 
 use Drupal\block\BlockViewBuilder;
 use Drupal\Component\Utility\Xss;
+use Drupal\Core\Ajax\AppendCommand;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
+use Drupal\Core\Render\Element\Ajax;
 use Drupal\Core\Url;
+use Drupal\Core\Ajax\AjaxResponse;
+use Drupal\heartbeat\Ajax\SubCommentCommand;
 use Drupal\heartbeat\Entity\HeartbeatInterface;
 
 /**
@@ -172,23 +176,45 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
   }
 
 
-  public function updateFeed($arg) {
-    \Drupal::logger('HeartbeatController::updater')->debug('Jigga what is %arg', ['%arg' => $arg]);
+  public function updateFeed($hid) {
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_more.settings');
+    $myConfig->set('hid', $hid)->save();
+
+    return BlockViewBuilder::lazyBuilder('heartbeatmoreblock', 'full');
   }
 
   public function filterFeed($tid) {
     $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_hashtag.settings');
     $myConfig->set('tid', $tid)->save();
-
+    $block = BlockViewBuilder::lazyBuilder('heartbeathashblock', 'teaser');
     return BlockViewBuilder::lazyBuilder('heartbeathashblock', 'teaser');
-
   }
 
   public function commentConfigUpdate($entity_id) {
     $commentConfig = \Drupal::configFactory()->getEditable('heartbeat_comment.settings');
     $commentConfig->set('entity_id', $entity_id)->save();
 
-    return true;
+    return [
+      '#type' => 'markup',
+      '#markup' => 'Success',
+    ];
+  }
+
+  public function subCommentRequest($cid) {
+    $subCommentConfig = \Drupal::configFactory()->getEditable('heartbeat_comment.settings');
+    $subCommentConfig->set('cid', $cid)->save();
+
+    $response = new AjaxResponse();
+    $response->addCommand(new AppendCommand('#heartbeat-comment-' . $cid,
+      BlockViewBuilder::lazyBuilder('heartbeatsubcommentblock', 'teaser')));
+    $response->addCommand(new SubCommentCommand($cid));
+
+    return $response;
+
+  }
+
+  public function subComment() {
+    return BlockViewBuilder::lazyBuilder('heartbeatsubcommentblock', 'teaser');
   }
 
 }

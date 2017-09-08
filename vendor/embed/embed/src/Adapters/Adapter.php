@@ -2,13 +2,14 @@
 
 namespace Embed\Adapters;
 
-use Embed\Http\Url;
-use Embed\Http\Response;
-use Embed\Http\ImageResponse;
-use Embed\Http\DispatcherInterface;
-use Embed\DataInterface;
-use Embed\Providers\Provider;
 use Embed\Bag;
+use Embed\DataInterface;
+use Embed\Http\DispatcherInterface;
+use Embed\Http\ImageResponse;
+use Embed\Http\Response;
+use Embed\Http\Url;
+use Embed\Providers\Provider;
+use Embed\Utils;
 
 /**
  * Base class extended by all adapters.
@@ -92,6 +93,7 @@ abstract class Adapter implements DataInterface
         if (method_exists($this, $method)) {
             return $this->$name = $this->$method();
         }
+        return null;
     }
 
     /**
@@ -255,7 +257,7 @@ abstract class Adapter implements DataInterface
         }
 
         if (empty($codes)) {
-            return;
+            return null;
         }
 
         //Use only html5 codes
@@ -276,20 +278,29 @@ abstract class Adapter implements DataInterface
         return $code['code'];
     }
 
+    /**
+     * Returns the code as DOMNodeList elements
+     *
+     * @return \DOMNodeList|null
+     */
     public function getHtml()
     {
         $code = $this->code;
+
+        if (empty($code)) {
+            return;
+        }
 
         $errors = libxml_use_internal_errors(true);
         $entities = libxml_disable_entity_loader(true);
 
         $dom = new \DOMDocument();
-        $dom->loadHTML(trim($code));
+        $dom->loadHTML($code);
 
         libxml_use_internal_errors($errors);
         libxml_disable_entity_loader($entities);
 
-        //var_dump($dom->documentElement);
+        return Utils::xpathQuery($dom, 'descendant-or-self::body/*', false);
     }
 
     /**
@@ -298,9 +309,19 @@ abstract class Adapter implements DataInterface
     public function getUrl()
     {
         $default = (string) $this->getResponse()->getUrl();
+        $blacklist = $this->getConfig('url_blacklist');
 
-        return $this->getFirstFromProviders(function (Provider $provider) {
-            return $provider->getUrl();
+        //some sites returns the homepage as canonical
+        $homeUrl = $this->getResponse()->getUrl()->getAbsolute('/');
+
+        return $this->getFirstFromProviders(function (Provider $provider) use ($blacklist, $homeUrl) {
+            $url = $provider->getUrl();
+
+            if ($homeUrl === $url || (!empty($blacklist) && Url::create($url)->match($blacklist))) {
+                return false;
+            }
+
+            return $url;
         }, $default);
     }
 
@@ -366,7 +387,7 @@ abstract class Adapter implements DataInterface
         $icons = $this->providerIcons;
 
         if (empty($icons)) {
-            return;
+            return null;
         }
 
         $sizes = [];
@@ -454,7 +475,7 @@ abstract class Adapter implements DataInterface
         });
 
         if (empty($images)) {
-            return;
+            return null;
         }
 
         reset($images);
@@ -540,6 +561,7 @@ abstract class Adapter implements DataInterface
          && $this->height !== null && (strpos($this->height, '%') === false)) {
             return round(($this->height / $this->width) * 100, 3);
         }
+        return null;
     }
 
     /**
@@ -629,6 +651,7 @@ abstract class Adapter implements DataInterface
      * Returns the first value of the providers
      *
      * @param callable $callable
+     * @param string|null $default
      *
      * @return string|null
      */
@@ -644,7 +667,7 @@ abstract class Adapter implements DataInterface
      *
      * @param callable $callable
      *
-     * @return string|null
+     * @return array
      */
     protected function getAllFromProviders(callable $callable)
     {

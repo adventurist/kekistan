@@ -6,7 +6,10 @@ use Drupal\comment\Entity\Comment;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormBuilder;
+use Drupal\Core\Link;
+use Drupal\Core\Url;
 use Drupal\flag\FlagService;
+use Drupal\heartbeat\Entity\Heartbeat;
 use Drupal\User\Entity\User;
 use Drupal\Flag\Entity\Flag;
 use Drupal\Core\Datetime\DateFormatter;
@@ -55,6 +58,9 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
   protected $flagService;
 
   protected $formBuilder;
+
+  protected $timestamp;
+
   /**
    * Construct.
    *
@@ -81,6 +87,7 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
     $this->dateFormatter = $date_formatter;
     $this->flagService = $flag_service;
     $this->formBuilder = $form_builder;
+    $this->timestamp = time();
   }
   /**
    * {@inheritdoc}
@@ -164,16 +171,24 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
     }
 
   private function renderMessage(array &$messages, $heartbeat) {
+    $timeago = null;
+    $diff = $this->timestamp - $heartbeat->getCreatedTime();
+    switch (true) {
+      case ($diff < 86400):
+        $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $heartbeat->getCreatedTime()) . ' ago';
+        break;
+      case ($diff >= 86400 && $diff < 172800):
+        $timeago = 'Yesterday at ' . $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_time');
+        break;
+      case ($diff >= 172800):
+        $timeago = $this->dateFormatter->format($heartbeat->getCreatedTime(), 'heartbeat_short');
+        break;
+    }
 
-    $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $heartbeat->getCreatedTime());
     $user = $heartbeat->getOwner();
-//      $rendered = $this->entityTypeManager->getViewBuilder('user')->view($user, 'full');
     $userView = user_view($user, 'compact');
-//      $flag = $this->flagService->getFlagById("friendship");
-//      $flagLink = $flag->getLinkTypePlugin()->getAsLink($flag, $user);
-//      $flagUrl = $flagLink->getUrl()->toString();
-//      $flagText = $flagLink->getText();
     $userPic = $user->get('user_picture')->getValue();
+
     if (!empty($userPic)) {
       $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
     }
@@ -193,47 +208,102 @@ class HeartbeatHashBlock extends BlockBase implements ContainerFactoryPluginInte
     $cids = \Drupal::entityQuery('comment')
       ->condition('entity_id', $heartbeat->id())
       ->condition('entity_type', 'heartbeat')
-      ->sort('cid', 'DESC')
+      ->sort('cid', 'ASC')
       ->execute();
 
     $comments = [];
 
     foreach($cids as $cid) {
 
-//        $comment = $this->entityTypeManager->getStorage('comment')->load($cid);
-      $comment = Comment::load($cid);
-//        $comment->delete();
+      $url = Url::fromRoute('heartbeat.sub_comment_request', array('cid' => $cid));
+      $commentLink = Link::fromTextAndUrl(t('Reply'), $url);
+      $commentLink = $commentLink->toRenderable();
+      $commentLink['#attributes'] = array('class' => array('button', 'button-action', 'use-ajax'));
 
-      $comments[] = $comment->get('comment_body')->value;
+      $comment = Comment::load($cid);
+
+      $commentOwner = user_view($comment->getOwner(), 'comment');
+
+      $subCids = \Drupal::entityQuery('comment')
+        ->condition('entity_id', $cid)
+        ->condition('entity_type', 'comment')
+        ->sort('cid', 'ASC')
+        ->execute();
+
+      $subComments = [];
+      if (count($subCids) > 0) {
+        foreach ($subCids as $subCid) {
+          $subComment = Comment::load($subCid);
+
+          $subDiff = $this->timestamp - $subComment->getCreatedTime();
+
+          switch (true) {
+            case ($subDiff < 86400):
+              $timeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago';
+              break;
+            case ($subDiff >= 86400 && $subDiff < 172800):
+              $timeago = 'Yesterday at ' . $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_time');
+              break;
+            case ($subDiff >= 172800):
+              $timeago = $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_short');
+              break;
+          }
+
+          $subCommentOwner = user_view($subComment->getOwner(), 'comment');
+          $subCommentTime = $this->timestamp - $subComment->getCreatedTime() < 172800 ? $this->dateFormatter->formatInterval(REQUEST_TIME - $subComment->getCreatedTime()) . ' ago': $this->dateFormatter->format($subComment->getCreatedTime(), 'heartbeat_short');
+          $subComments[] = [
+            'id' => $subCid,
+            'body' => $subComment->get('comment_body')->value,
+            'username' => $subComment->getAuthorName(),
+            'owner' => $subCommentOwner,
+            'timeAgo' => $subCommentTime,
+            'commentLike' => Heartbeat::flagAjaxBuilder('heartbeat_like_comment', $subComment, $this->flagService)
+          ];
+
+        }
+      }
+
+      $commentTimeDiff = $this->timestamp - $comment->getCreatedTime();
+
+      switch (true) {
+        case ($commentTimeDiff < 86400):
+          $cTimeago = $this->dateFormatter->formatInterval(REQUEST_TIME - $comment->getCreatedTime()) . ' ago';
+          break;
+        case ($commentTimeDiff >= 86400 && $commentTimeDiff < 172800):
+          $cTimeago = 'Yesterday at ' . $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_time');
+          break;
+        case ($commentTimeDiff >= 172800):
+          $cTimeago = $this->dateFormatter->format($comment->getCreatedTime(), 'heartbeat_short');
+          break;
+      }
+
+      $comments[] = [
+        'id' => $cid,
+        'body' => $comment->get('comment_body')->value,
+        'username' => $comment->getAuthorName(),
+        'owner' => $commentOwner,
+        'timeAgo' => $cTimeago,
+        'commentLike' => Heartbeat::flagAjaxBuilder('heartbeat_like_comment', $comment, $this->flagService),
+        'reply' => $commentLink,
+        'subComments' => $subComments
+      ];
+
     }
 
-//      $heartbeatCommentBlock = \Drupal\block\Entity\Block::load('heartbeatcommentblock');
-//      $commentForm = $this->entityTypeManager->getViewBuilder('block')
-//        ->view($heartbeatCommentBlock);
-
     $form = \Drupal::service('form_builder')->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm', $heartbeat);
-
-    $likeFlag = $this->flagService->getFlagById('heartbeat_like');
-
-    $flagKey = 'flag_' . $likeFlag->id();
-    $flagData = [
-      '#lazy_builder' => ['flag.link_builder:build', [
-        $heartbeat->getEntityTypeId(),
-        $heartbeat->id(),
-        $likeFlag->id(),
-      ]],
-      '#create_placeholder' => TRUE,
-    ];
-
+    $commentCount = count($comments);
     $messages[] = array('heartbeat' => $heartbeat->getMessage()->getValue()[0]['value'],
       'userPicture' => $rendered,
       'userId' => $user->id(),
       'timeAgo' => $timeago,
       'id' => $heartbeat->id(),
+      'userName' => $user->getAccountName(),
       'user' => $userView,
       'commentForm' => $form,
-      'comments' => $comments,
-      'likeFlag' => [$flagKey => $flagData],
+      'comments' => array_reverse($comments),
+      'commentCount' => $commentCount > 0 ? $commentCount : '',
+      'likeFlag' => Heartbeat::flagAjaxBuilder('heartbeat_like', $heartbeat, $this->flagService),
+      'unlikeFlag' => Heartbeat::flagAjaxBuilder('jihad_flag', $heartbeat, $this->flagService)
     );
   }
 }

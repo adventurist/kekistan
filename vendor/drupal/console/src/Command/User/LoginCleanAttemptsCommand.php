@@ -10,14 +10,31 @@ namespace Drupal\Console\Command\User;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Command\ConfirmationTrait;
-use Drupal\Console\Command\ContainerAwareCommand;
-use Drupal\Console\Style\DrupalStyle;
+use Drupal\Console\Command\Shared\ConfirmationTrait;
+use Drupal\Console\Core\Command\Command;
+use Drupal\Core\Database\Connection;
+use Drupal\Console\Core\Style\DrupalStyle;
 use Drupal\user\Entity\User;
 
-class LoginCleanAttemptsCommand extends ContainerAwareCommand
+class LoginCleanAttemptsCommand extends Command
 {
     use ConfirmationTrait;
+
+    /**
+     * @var Connection
+     */
+    protected $database;
+
+    /**
+     * LoginCleanAttemptsCommand constructor.
+     *
+     * @param Connection $database
+     */
+    public function __construct(Connection $database)
+    {
+        $this->database = $database;
+        parent::__construct();
+    }
 
     /**
      * {@inheritdoc}
@@ -28,7 +45,12 @@ class LoginCleanAttemptsCommand extends ContainerAwareCommand
         setName('user:login:clear:attempts')
             ->setDescription($this->trans('commands.user.login.clear.attempts.description'))
             ->setHelp($this->trans('commands.user.login.clear.attempts.help'))
-            ->addArgument('uid', InputArgument::REQUIRED, $this->trans('commands.user.login.clear.attempts.options.user-id'));
+            ->addArgument(
+                'uid',
+                InputArgument::REQUIRED,
+                $this->trans('commands.user.login.clear.attempts.options.user-id')
+            )
+            ->setAliases(['ulca']);
     }
 
     /**
@@ -93,7 +115,7 @@ class LoginCleanAttemptsCommand extends ContainerAwareCommand
                 )
             );
 
-            return;
+            return 1;
         }
 
         // Define event name and identifier.
@@ -103,11 +125,21 @@ class LoginCleanAttemptsCommand extends ContainerAwareCommand
         $identifier = "{$account->id()}-";
 
         // Retrieve current database connection.
-        $connection = $this->getDatabase();
+        $schema = $this->database->schema();
+        $flood = $schema->findTables('flood');
+
+        if (!$flood) {
+            $io->error(
+                $this->trans('commands.user.login.clear.attempts.errors.no-flood')
+            );
+
+            return 1;
+        }
+
         // Clear login attempts.
-        $connection->delete('flood')
+        $this->database->delete('flood')
             ->condition('event', $event)
-            ->condition('identifier', $connection->escapeLike($identifier) . '%', 'LIKE')
+            ->condition('identifier', $this->database->escapeLike($identifier) . '%', 'LIKE')
             ->execute();
 
         // Command executed successful.

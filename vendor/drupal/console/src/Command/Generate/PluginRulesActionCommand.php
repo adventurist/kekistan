@@ -11,19 +11,69 @@ use Drupal\Console\Generator\PluginRulesActionGenerator;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Drupal\Console\Command\ServicesTrait;
-use Drupal\Console\Command\ModuleTrait;
-use Drupal\Console\Command\FormTrait;
-use Drupal\Console\Command\ConfirmationTrait;
-use Drupal\Console\Command\GeneratorCommand;
-use Drupal\Console\Style\DrupalStyle;
+use Drupal\Console\Command\Shared\ServicesTrait;
+use Drupal\Console\Command\Shared\ModuleTrait;
+use Drupal\Console\Command\Shared\FormTrait;
+use Drupal\Console\Command\Shared\ConfirmationTrait;
+use Drupal\Console\Core\Command\Command;
+use Drupal\Console\Core\Style\DrupalStyle;
+use Drupal\Console\Extension\Manager;
+use Drupal\Console\Core\Utils\StringConverter;
+use Drupal\Console\Core\Utils\ChainQueue;
 
-class PluginRulesActionCommand extends GeneratorCommand
+/**
+ * Class PluginRulesActionCommand
+ *
+ * @package Drupal\Console\Command\Generate
+ */
+class PluginRulesActionCommand extends Command
 {
     use ServicesTrait;
     use ModuleTrait;
     use FormTrait;
     use ConfirmationTrait;
+
+    /**
+ * @var Manager
+*/
+    protected $extensionManager;
+
+    /**
+ * @var PluginRulesActionGenerator
+*/
+    protected $generator;
+
+    /**
+     * @var StringConverter
+     */
+    protected $stringConverter;
+
+    /**
+     * @var ChainQueue
+     */
+    protected $chainQueue;
+
+
+    /**
+     * PluginRulesActionCommand constructor.
+     *
+     * @param Manager                    $extensionManager
+     * @param PluginRulesActionGenerator $generator
+     * @param StringConverter            $stringConverter
+     * @param ChainQueue                 $chainQueue
+     */
+    public function __construct(
+        Manager $extensionManager,
+        PluginRulesActionGenerator $generator,
+        StringConverter $stringConverter,
+        ChainQueue $chainQueue
+    ) {
+        $this->extensionManager = $extensionManager;
+        $this->generator = $generator;
+        $this->stringConverter = $stringConverter;
+        $this->chainQueue = $chainQueue;
+        parent::__construct();
+    }
 
     protected function configure()
     {
@@ -31,38 +81,39 @@ class PluginRulesActionCommand extends GeneratorCommand
             ->setName('generate:plugin:rulesaction')
             ->setDescription($this->trans('commands.generate.plugin.rulesaction.description'))
             ->setHelp($this->trans('commands.generate.plugin.rulesaction.help'))
-            ->addOption('module', '', InputOption::VALUE_REQUIRED, $this->trans('commands.common.options.module'))
+            ->addOption('module', null, InputOption::VALUE_REQUIRED, $this->trans('commands.common.options.module'))
             ->addOption(
                 'class',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.rulesaction.options.class')
             )
             ->addOption(
                 'label',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.rulesaction.options.label')
             )
             ->addOption(
                 'plugin-id',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.rulesaction.options.plugin-id')
             )
-            ->addOption('type', '', InputOption::VALUE_REQUIRED, $this->trans('commands.generate.plugin.rulesaction.options.type'))
+            ->addOption('type', null, InputOption::VALUE_REQUIRED, $this->trans('commands.generate.plugin.rulesaction.options.type'))
             ->addOption(
                 'category',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL | InputOption::VALUE_IS_ARRAY,
                 $this->trans('commands.generate.plugin.rulesaction.options.category')
             )
             ->addOption(
                 'context',
-                '',
+                null,
                 InputOption::VALUE_OPTIONAL,
                 $this->trans('commands.generate.plugin.rulesaction.options.context')
-            );
+            )
+            ->setAliases(['gpra']);
     }
 
     /**
@@ -72,9 +123,9 @@ class PluginRulesActionCommand extends GeneratorCommand
     {
         $io = new DrupalStyle($input, $output);
 
-        // @see use Drupal\Console\Command\ConfirmationTrait::confirmGeneration
+        // @see use Drupal\Console\Command\Shared\ConfirmationTrait::confirmGeneration
         if (!$this->confirmGeneration($io)) {
-            return;
+            return 1;
         }
 
         $module = $input->getOption('module');
@@ -85,11 +136,11 @@ class PluginRulesActionCommand extends GeneratorCommand
         $category = $input->getOption('category');
         $context = $input->getOption('context');
 
-        $this
-            ->getGenerator()
-            ->generate($module, $class_name, $label, $plugin_id, $category, $context, $type);
+        $this->generator->generate($module, $class_name, $label, $plugin_id, $category, $context, $type);
 
-        $this->getChain()->addCommand('cache:rebuild', ['cache' => 'discovery']);
+        $this->chainQueue->addCommand('cache:rebuild', ['cache' => 'discovery']);
+
+        return 0;
     }
 
     protected function interact(InputInterface $input, OutputInterface $output)
@@ -99,8 +150,8 @@ class PluginRulesActionCommand extends GeneratorCommand
         // --module option
         $module = $input->getOption('module');
         if (!$module) {
-            // @see Drupal\Console\Command\ModuleTrait::moduleQuestion
-            $module = $this->moduleQuestion($output);
+            // @see Drupal\Console\Command\Shared\ModuleTrait::moduleQuestion
+            $module = $this->moduleQuestion($io);
             $input->setOption('module', $module);
         }
 
@@ -119,7 +170,7 @@ class PluginRulesActionCommand extends GeneratorCommand
         if (!$label) {
             $label = $io->ask(
                 $this->trans('commands.generate.plugin.rulesaction.options.label'),
-                $this->getStringHelper()->camelCaseToHuman($class_name)
+                $this->stringConverter->camelCaseToHuman($class_name)
             );
             $input->setOption('label', $label);
         }
@@ -129,7 +180,7 @@ class PluginRulesActionCommand extends GeneratorCommand
         if (!$plugin_id) {
             $plugin_id = $io->ask(
                 $this->trans('commands.generate.plugin.rulesaction.options.plugin-id'),
-                $this->getStringHelper()->camelCaseToUnderscore($class_name)
+                $this->stringConverter->camelCaseToUnderscore($class_name)
             );
             $input->setOption('plugin-id', $plugin_id);
         }
@@ -149,7 +200,7 @@ class PluginRulesActionCommand extends GeneratorCommand
         if (!$category) {
             $category = $io->ask(
                 $this->trans('commands.generate.plugin.rulesaction.options.category'),
-                $this->getStringHelper()->camelCaseToUnderscore($class_name)
+                $this->stringConverter->camelCaseToUnderscore($class_name)
             );
             $input->setOption('category', $category);
         }
@@ -159,14 +210,9 @@ class PluginRulesActionCommand extends GeneratorCommand
         if (!$context) {
             $context = $io->ask(
                 $this->trans('commands.generate.plugin.rulesaction.options.context'),
-                $this->getStringHelper()->camelCaseToUnderscore($class_name)
+                $this->stringConverter->camelCaseToUnderscore($class_name)
             );
             $input->setOption('context', $context);
         }
-    }
-
-    protected function createGenerator()
-    {
-        return new PluginRulesActionGenerator();
     }
 }

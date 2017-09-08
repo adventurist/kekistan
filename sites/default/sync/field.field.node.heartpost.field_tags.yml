@@ -1,0 +1,30 @@
+uuid: c483277e-3b3a-4c98-9568-beed43fa5f6a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_tags
+    - node.type.heartpost
+    - taxonomy.vocabulary.kekistan
+    - taxonomy.vocabulary.tags
+id: node.heartpost.field_tags
+field_name: field_tags
+entity_type: node
+bundle: heartpost
+label: Tags
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      kekistan: kekistan
+      tags: tags
+    sort:
+      field: _none
+    auto_create: false
+    auto_create_bundle: kekistan
+field_type: entity_reference

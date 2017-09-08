@@ -5,6 +5,10 @@
   Drupal.behaviors.status= {
     attach: function (context, settings) {
 
+      if (Drupal.AjaxCommands){
+        Drupal.AjaxCommands.prototype.viewsScrollTop = null;
+      }
+
       Drupal.AjaxCommands.prototype.generatePreview = function(ajax, response, status) {
 
         if (validateUrl(response.url)) {
@@ -24,18 +28,23 @@
                 let markup = document.createElement('div');
                 markup.innerHTML = response.data;
 
-                let statusBlock = document.getElementById('block-statusblock');
+                let statusTextBox = document.getElementById('edit-message');
                 let oldPreviewIframe = document.querySelector('.statusmessage-preview-iframe');
 
                 if (oldPreviewIframe !== null) {
                   oldPreviewIframe.parentNode.removeChild(oldPreviewIframe);
 
                 }
+                var cssLink = document.createElement("link")
+                cssLink.href = "/modules/statusmessage/css/preview.css";
+                cssLink .rel = "stylesheet";
+                cssLink .type = "text/css";
                 previewIframe = document.createElement('iframe');
                 previewIframe.classList.add('statusmessage-preview-iframe');
-                statusBlock.appendChild(previewIframe);
+                statusTextBox.parentNode.appendChild(previewIframe);
                 previewIframe.contentWindow.document.open();
                 previewIframe.contentWindow.document.appendChild(markup);
+                previewIframe.contentWindow.document.documentElement.appendChild(cssLink);
                 previewIframe.contentWindow.document.close();
               }
             }
@@ -56,10 +65,46 @@
             oldPreviewIframe.parentNode.removeChild(oldPreviewIframe);
           }
         }
-      }
-
+      };
     }
   };
+
+  $(document).ready(function() {
+    //Place listener on status post button
+    //If status message is empty, prevent submit and alert the user
+    let statusPostButton = document.getElementById('edit-post');
+
+    let alertDialog = document.createElement('div');
+    alertDialog.id = 'status-dialog';
+    alertDialog.title = 'Status Alert';
+    alertDialog.innerHTML = '<p>Enter a status message</p>';
+
+    statusPostButton.addEventListener('click', function() {
+      let textBox = document.getElementById('edit-message');
+      console.dir(textBox);
+      comparison = textBox.value === 0;
+      console.log(comparison);
+      if (textBox.value.length === 0) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        // alert('Enter a status message');
+        $(alertDialog).dialog();
+      } else {
+        textBox.value = "";
+      }
+    });
+  });
+  // let uploadButton = $('#edit-media-upload');
+  // uploadButton.hide();
+  // $('.status-media-upload').click(function() {
+  //   console.log('This is firing');
+  //   if (uploadButton.is(':visible')) {
+  //     uploadButton.hide();
+  //   } else {
+  //     uploadButton.show();
+  //   }
+  // });
 
 })(jQuery, Drupal, drupalSettings);
 

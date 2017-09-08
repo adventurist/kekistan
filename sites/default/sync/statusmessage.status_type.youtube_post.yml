@@ -1,8 +1,0 @@
-uuid: d07dfec6-799d-4eee-955d-8440fb662751
-langcode: en
-status: true
-dependencies: {  }
-id: youtube_post
-label: 'YouTube Post'
-media: true
-mime: image/jpeg

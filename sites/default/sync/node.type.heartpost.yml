@@ -1,0 +1,18 @@
+uuid: c42d5518-ebb6-4de8-b629-637259eba951
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Heartpost
+type: heartpost
+description: 'Generic type representing any shared content generated from another website'
+help: ''
+new_revision: true
+preview_mode: 1
+display_submitted: true

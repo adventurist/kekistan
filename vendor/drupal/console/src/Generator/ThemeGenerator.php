@@ -7,11 +7,30 @@
 
 namespace Drupal\Console\Generator;
 
+use Drupal\Console\Core\Generator\Generator;
+use Drupal\Console\Extension\Manager;
+
 /**
  *
  */
 class ThemeGenerator extends Generator
 {
+    /**
+     * @var Manager
+     */
+    protected $extensionManager;
+
+    /**
+     * AuthenticationProviderGenerator constructor.
+     *
+     * @param Manager $extensionManager
+     */
+    public function __construct(
+        Manager $extensionManager
+    ) {
+        $this->extensionManager = $extensionManager;
+    }
+
     public function generate(
         $theme,
         $machine_name,
@@ -21,6 +40,7 @@ class ThemeGenerator extends Generator
         $package,
         $base_theme,
         $global_library,
+        $libraries,
         $regions,
         $breakpoints
     ) {
@@ -35,7 +55,7 @@ class ThemeGenerator extends Generator
                 );
             }
             $files = scandir($dir);
-            if ($files != array('.', '..')) {
+            if ($files != ['.', '..']) {
                 throw new \RuntimeException(
                     sprintf(
                         'Unable to generate the bundle as the target directory "%s" is not empty.',
@@ -53,7 +73,7 @@ class ThemeGenerator extends Generator
             }
         }
 
-        $parameters = array(
+        $parameters = [
         'theme' => $theme,
         'machine_name' => $machine_name,
         'type' => 'theme',
@@ -62,9 +82,10 @@ class ThemeGenerator extends Generator
         'package' => $package,
         'base_theme' => $base_theme,
         'global_library' => $global_library,
+        'libraries' => $libraries,
         'regions' => $regions,
         'breakpoints' => $breakpoints,
-        );
+        ];
 
         $this->renderFile(
             'theme/info.yml.twig',
@@ -77,6 +98,14 @@ class ThemeGenerator extends Generator
             $dir . '/' . $machine_name . '.theme',
             $parameters
         );
+
+        if ($libraries) {
+            $this->renderFile(
+                'theme/libraries.yml.twig',
+                $dir . '/' . $machine_name . '.libraries.yml',
+                $parameters
+            );
+        }
 
         if ($breakpoints) {
             $this->renderFile(

@@ -5,6 +5,7 @@ namespace Drupal\statusmessage\Form;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\heartbeat\Ajax\ClearPreviewCommand;
+use Drupal\heartbeat\Entity\Heartbeat;
 use Drupal\statusmessage\Entity\Status;
 use Drupal\statusmessage\MarkupGenerator;
 use Drupal\statusmessage\StatusService;
@@ -15,6 +16,7 @@ use Drupal\statusmessage\StatusTwitter;
 use Drupal\statusmessage\StatusYoutube;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\heartbeat\Ajax\SelectFeedCommand;
+use Drupal\taxonomy\Entity\Term;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 
@@ -63,6 +65,7 @@ class StatusForm extends FormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     /* @var $entity \Drupal\statusmessage\Entity\Status */
 
+
     $form['#attached']['library'][] = 'statusmessage/status';
 
     if (\Drupal::moduleHandler()->moduleExists('heartbeat')) {
@@ -82,25 +85,11 @@ class StatusForm extends FormBase {
         'event' => 'change, paste, keyup',
         'callback' => '::generatePreview',
         'progress' => array(
-          'type' => 'throbber',
+          'type' => 'none',
           'message' => t('Generating preview'),
         ),
       ],
     );
-
-//    $form['mediatabs'] = [
-//      '#type' => 'radios',
-////      '#description' => $this->t('User selectable feeds'),
-//      '#options' => $this->mediaTabs,
-////      '#ajax' => [
-////        'callback' => '::updateFeed',
-//////        'event' => 'onclick',
-////        'progress' => array(
-////          'type' => 'none',
-//////        'message' => t('Fetching feed'),
-////        ),
-//      ];
-
 
     $form['post'] = array(
       '#type' => 'submit',
@@ -111,11 +100,37 @@ class StatusForm extends FormBase {
         'progress' => array(
           'type' => 'throbber',
           'message' => t('Posting Message'),
-          ),
+        ),
       ]
 
     );
-$stophere = null;
+    
+    $form['mediatabs'] = [
+      '#type' => 'radios',
+//      '#description' => $this->t('User selectable feeds'),
+      '#prefix' => '<div class="status-media-upload"></div>',
+      '#options' => $this->mediaTabs,
+      '#theme' => 'status-form-element',
+//      '#ajax' => [
+//        'callback' => '::updateFeed',
+////        'event' => 'onclick',
+//        'progress' => array(
+//          'type' => 'none',
+////        'message' => t('Fetching feed'),
+//        ),
+      ];
+
+    $form['media'] = [
+      '#type' => 'managed_file',
+      '#upload_location' => 'public://statusmessage/',
+//      '#multiple' => TRUE,
+      '#states' => array(
+        'visible' => array(
+          ':input[name="File_type"]' => array('value' => t('Upload Your File')),
+        ),
+      ),
+    ];
+
     return $form;
   }
 
@@ -180,115 +195,82 @@ $stophere = null;
       $response->addCommand(new ClientCommand($url[0]));
 
       return $response;
-
-
     }
-
-//    if (!empty($this->statusTypeService)) {
-//      foreach ($this->statusTypeService->loadAll() as $type) {
-//        if (!$type->getMedia()) {
-//
-//          $userViewed = \Drupal::routeMatch()->getParameters()->get('user') === null ? \Drupal::currentUser()->id() : \Drupal::routeMatch()->getParameters()->get('user')->id();
-//
-//          if ($userViewed !== null) {
-//
-//            $statusEntity = Status::create([
-//              'type' => $type->id(),
-//              'uid' => \Drupal::currentUser()->id(),
-//              'recipient' => $userViewed
-//            ]);
-//
-//            $statusEntity->setMessage($form_state->getValue('message'));
-//            $statusEntity->save();
-//
-//            if (\Drupal::service('module_handler')->moduleExists('heartbeat')) {
-//
-////              $configManager = \Drupal::service('config.manager');
-//              $feedConfig = \Drupal::config('heartbeat_feed.settings');
-////              $feedConfig = $feedConfig = $configManager->get('heartbeat_feed.settings');
-//              $response = new AjaxResponse();
-//              $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
-//
-//              return $response;
-//            }
-//            break;
-//          }
-//        }
-//      }
-//    }
+    return null;
   }
+
   public function statusAjaxSubmit(array &$form, FormStateInterface $form_state) {
     $message = $form_state->getValue('message');
+    $file = $form_state->getValue('media');
     if (strlen(trim($message)) > 1) {
       preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $message, $match);
 
       if ($this->markupgenerator !== NULL && !empty($match) && array_values($match)[0] !== NULL) {
-
         $url = is_array(array_values($match)[0]) ? array_values(array_values($match)[0])[0] : array_values($match)[0];
 
         if (strpos($message, 'twitter')) {
-
-
           $statusTwitter = new StatusTwitter($url);
           $nid = $statusTwitter->sendRequest();
 
         } else if (strpos($message, 'youtube') || strpos($message, 'youtu.be')) {
-
-          $statusYoutube = new StatusYoutube($url);
+          $statusYoutube = new StatusYoutube($url, $message);
           $nid = $statusYoutube->generateNode();
 
-        } else {
+        } else if ($url !== null) {
           $statusHeartPost = new StatusHeartPost($url, $message);
           $nid = $statusHeartPost->sendRequest();
 
         }
-
       }
 
-      if ($nid === NULL && !empty($this->statusTypeService)) {
-        $statusCreated = false;
+      if (null === $nid && !empty($this->statusTypeService)) {
+        $sTypes = $this->statusTypeService->loadAll();
         foreach ($this->statusTypeService->loadAll() as $type) {
-          if (!$statusCreated && !$type->getMedia()) {
+          $userViewed = \Drupal::routeMatch()
+            ->getParameters()
+            ->get('user') === NULL ? \Drupal::currentUser()
+            ->id() : \Drupal::routeMatch()
+            ->getParameters()
+            ->get('user')
+            ->id();
 
-            $userViewed = \Drupal::routeMatch()
-              ->getParameters()
-              ->get('user') === NULL ? \Drupal::currentUser()
-              ->id() : \Drupal::routeMatch()
-              ->getParameters()
-              ->get('user')
-              ->id();
+          if ($userViewed !== NULL) {
+            $statusEntity = Status::create([
+              'type' => $type->id(),
+              'uid' => \Drupal::currentUser()->id(),
+              'recipient' => $userViewed
+            ]);
 
-            if ($userViewed !== NULL) {
+            StatusHeartPost::parseHashtags($message);
 
-              $statusEntity = Status::create([
-                'type' => $type->id(),
-                'uid' => \Drupal::currentUser()->id(),
-                'recipient' => $userViewed
-              ]);
-
-              $statusEntity->setMessage($message);
-              if ($statusEntity->save()) {
-                $statusCreated = TRUE;
-              }
+            if ($type->getMedia() && $file !== null) {
+              $statusEntity->set('field_image', array_values($file)[0]);
             }
+            $statusEntity->setMessage($message);
+          }
+
+          if (!empty($statusEntity) && $statusEntity->save()) {
+            //TODO Log or error report
+            $statusCreated = TRUE;
           }
         }
       }
 
       if (\Drupal::service('module_handler')
-          ->moduleExists('heartbeat') && ($nid !== NULL || $statusEntity !== NULL)
-      ) {
+          ->moduleExists('heartbeat') && ($nid !== NULL || $statusEntity !== NULL)) {
+        //these config settings provide the chosen "Feed" with which to reload the stream
+        //earlier in development, the implementation was centered around selectable feed
+        //types rather than filtering a single feed
+        //TODO decide on the use of feed selections
 
-//              $configManager = \Drupal::service('config.manager');
         $feedConfig = \Drupal::config('heartbeat_feed.settings');
-//              $feedConfig = $feedConfig = $configManager->get('heartbeat_feed.settings');
         $response = new AjaxResponse();
         $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
         $response->addCommand(new ClearPreviewCommand(true));
 
-        $this->clearFormInput($form_state);
-        $form['message']['#default'] = '';
-        $form['message']['#value'] = '';
+//        $this->clearFormInput($form_state);
+//        $form['message']['#default'] = '';
+//        $form['message']['#value'] = '';
 
         return $response;
       }
@@ -332,6 +314,58 @@ $stophere = null;
     // Rebuild the form state values.
     $form_state->setRebuild();
     $form_state->setStorage([]);
+  }
+
+
+
+  public static function parseHashtags($message) {
+
+    $tids = array();
+    $i = 0;
+    $tagsArray = explode('#', $message);
+
+    unset($tagsArray[0]);
+
+    $num = count($tagsArray);
+
+
+    foreach ($tagsArray as $hashtag) {
+      if ($i === $num - 1) {
+        $lastTagArray = explode(' ', $hashtag);
+        if (strlen($lastTagArray[1]) > 1) {
+          $hashtag = trim($lastTagArray[0]);
+        }
+      }
+      $tid = \Drupal::entityQuery("taxonomy_term")
+        ->condition("name", trim($hashtag))
+        ->condition('vid', [
+          'twitter',
+          'tags',
+          'kekistan'
+        ], 'IN')
+        ->execute();
+
+      if (count($tid) > 0) {
+        if (\Drupal::moduleHandler()->moduleExists('heartbeat')) {
+          Heartbeat::updateTermUsage(array_values($tid)[0], 'tags');
+        }
+        $tids[] = array_values($tid)[0];
+      } else {
+        $term = Term::create([
+          'name' => trim($hashtag),
+          'vid' => 'tags',
+          'field_count' => 1
+        ]);
+        if ($term->save()) {
+          $tids[] = $term->id();
+          if (\Drupal::moduleHandler()->moduleExists('heartbeat')) {
+            Heartbeat::newTermUsage($term->id());
+          }
+        }
+      }
+      $i++;
+    }
+    return $tids;
   }
 
 }

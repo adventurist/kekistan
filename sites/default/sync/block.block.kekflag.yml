@@ -11,7 +11,7 @@ dependencies:
 id: kekflag
 theme: kekistan
 region: header
-weight: -6
+weight: -11
 provider: null
 plugin: 'block_content:ea5d3af3-0066-4cfc-93ae-9cee4b9ee56b'
 settings:

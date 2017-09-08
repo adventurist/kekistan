@@ -1,0 +1,17 @@
+
+# In order to to create pages it is necessary to define routes for them.
+# A route maps a URL path to a controller. It defines what function
+# or method will be called when a URL is accessed.
+# If the user accesses http://drupal8.dev//user/modal/login, the routing
+# system will look for a route with that path. In this case it will find a
+# match, and execute the _controller callback. In this case the callback is
+# defined as a classname
+# ("\Drupal\kek_custom\Controller\KekController")
+# and a method ("loginBlock").
+kek_custom.kek_controller_loginBlock:
+  path: '/user/modal/login'
+  defaults:
+    _controller: '\Drupal\kek_custom\Controller\KekController::loginBlock'
+    _title: 'login_block'
+  requirements:
+    _permission: 'access content'

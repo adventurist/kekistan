@@ -1,0 +1,13 @@
+uuid: 294dd370-5403-4321-8a64-523835971295
+langcode: en
+status: true
+dependencies:
+  module:
+    - flag
+id: flag_action.jihad_flag.unflag
+label: 'Truce ([flagcount:count])'
+type: heartbeat
+plugin: 'flag_action:jihad_flag.unflag'
+configuration:
+  flag_id: jihad_flag
+  flag_action: unflag

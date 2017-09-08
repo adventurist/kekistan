@@ -1,0 +1,15 @@
+uuid: db56582e-9e4f-4bc9-ad16-b6e8d3066c8f
+langcode: en
+status: true
+dependencies: {  }
+name: comment_user
+label: 'Comment User'
+effects:
+  14bded84-cda4-47ff-a88f-e1c11aa354f2:
+    uuid: 14bded84-cda4-47ff-a88f-e1c11aa354f2
+    id: image_scale
+    weight: 1
+    data:
+      width: 48
+      height: 48
+      upscale: false

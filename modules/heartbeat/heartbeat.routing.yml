@@ -97,7 +97,7 @@ heartbeat.render_feed:
     _permission: 'access content'
 
 heartbeat.update_feed:
-  path: '/heartbeat/update_feed/{arg}'
+  path: '/heartbeat/update_feed/{hid}'
   defaults:
     _controller: '\Drupal\heartbeat\Controller\HeartbeatController::updateFeed'
     _title: 'Update Feed'
@@ -127,3 +127,56 @@ heartbeat.heartbeat_comment_update:
     _title: 'Heartbeat Comment Config Update'
   requirements:
     _access: 'TRUE'
+
+#heartbeat.heartbeat_sub_comment_update:
+#  path: '/heartbeat/subcommentupdate/{cid}'
+#  defaults:
+#    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::subCommentConfigUpdate'
+#    _title: 'Heartbeat Sub Comment Config Update'
+#  requirements:
+#    _access: 'TRUE'
+
+heartbeat.sub_comment:
+  path: '/heartbeat/subcomment/{cid}'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::subComment'
+    _title: 'Sub Comment Block'
+  requirements:
+    _permission: 'access content'
+
+heartbeat.sub_comment_request:
+  path: '/heartbeat/subcommentrequest/{cid}'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::subCommentRequest'
+    _title: 'Sub Comment Block'
+  requirements:
+    _permission: 'access content'
+
+heartbeat.user_edit:
+  path: '/user/'
+  defaults:
+    _title: 'User Edit'
+  requirements:
+    _permission: 'access content'
+
+# In order to to create pages it is necessary to define routes for them.
+# A route maps a URL path to a controller. It defines what function
+# or method will be called when a URL is accessed.
+
+heartbeat.flag_controller:
+  path: '/heartbeat/userflaggings'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\FlagController::getUserFlaggings'
+    _title: 'getUserFlaggings'
+  methods: [POST]
+  requirements:
+    _permission: 'access content'
+
+heartbeat.friend_search_form:
+  path: '/heartbeat/form/friend_search'
+  defaults:
+    _form: '\Drupal\heartbeat\Form\FriendSearchForm'
+    _title: 'FriendSearchForm'
+  requirements:
+    _access: 'TRUE'
+  

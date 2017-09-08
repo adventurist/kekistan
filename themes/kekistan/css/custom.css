@@ -1,12 +1,115 @@
 /* Place the account to right and branding logo to left in header*/
 nav#block-kekistan-account-menu {
     float: right;
-    padding-top:50px;
+}
+
+#block-kekistan-account-menu .menu-item {
+  display: inline;
+}
+
+.kekistan-login-block {
+  position: fixed;
+  left: 0;
+  top: 0;
+  padding: 2em 0 0 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+
+.kekistan-login-block #main {
+  background-color: rgb(48, 76, 71);
+}
+
+.kekistan-login-block #content-area {
+  background-color: #e6ecec;
+}
+
+.kekistan-login-block #content-area div {
+  padding: 4px;
+}
+
+.kekistan-login-block #block-heartbeatblock {
+  /*margin-top: 15px;*/
+}
+
+.kekistan-login-block .heartbeat-stream .heartbeat-message:first-of-type {
+  margin-top: 32px!important;
+}
+
+.kekistan-login-block-close {
+  position: absolute;
+  top: 6em;
+  right: 2.5em;
+  border-radius: 1em;
+  background-color: #EEEEEE;
+  color: #49304c;
+  padding: 8px;
+  font-size: 17px;
+  transition: background-color 500ms linear;
+}
+
+.kekistan-login-block-close:hover {
+  background-color: #70a978;
+}
+
+#block-kekistan-local-tasks ul.tabs.primary li {
+  display: inline-block!important;
+}
+.kekistan-login-block #header,
+.kekistan-login-block #sidebar-first {
+  display: none;
+}
+/*account menu*/
+#block-kekistan-account-menu .menu-item a {
+  background-repeat: no-repeat!important;
+  background-size: contain!important;
+  float: left;
+  max-width: 24px;
+  /*height: 32px;*/
+  color: transparent;
+  margin: 0.7em 1em 0 1em;
+  font-size: 12px;
+}
+
+/*account menu hover*/
+#block-kekistan-account-menu .menu .menu-item a.menu-item-visible {
+  color: #ffffff !important;
+  font-weight: 700;
+}
+
+#block-kekistan-account-menu .menu .menu-item a:hover {
+  opacity: 1!important;
+}
+
+#block-kekistan-account-menu .menu .menu-item {
+  display: inline-block;
+  padding: 3px;
+  background-size: 25px;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+#block-kekistan-account-menu .menu .menu-item:hover {
+  opacity: 0.5;
+}
+#block-kekistan-account-menu .menu .menu-item:first-of-type a {
+  background: url(/themes/kekistan/images/icons/user.png);
+  display: inline-block;
+}
+
+#block-kekistan-account-menu .menu .menu-item:nth-of-type(2) a {
+  background: url(/themes/kekistan/images/icons/settings.png);
+  display: inline-block;
+}
+
+#block-kekistan-account-menu .menu .menu-item:last-of-type a {
+  background: url(/themes/kekistan/images/icons/login.png);
+  display: inline-block;
 }
 
 div#block-kekistan-branding {
   float: left;
-  margin-bottom: 15px;
   display: inline-block;
 }
 
@@ -17,27 +120,36 @@ div#block-kekistan-branding {
 
 /* Logo image*/
 #block-kekistan-branding img {
-  max-width: 110px;
+  max-width: 64px;
+  vertical-align: bottom;
 }
 
 /* Header background*/
 header#header {
   background: rgb(48, 76, 71);
+  max-height: 3em;
+  position: fixed;
+  z-index: 1;
+  width: 100%;
 }
 
 element.style {
   background-color: #c0c5be;
 }
 
-/* Republuc of kekistan*/
+/* Republic of kekistan*/
 .site-name a {
   color: rgba(255, 255, 255, 0.78) !important;
-  top: 28px !important;
+  font-size: 17px;
+  letter-spacing: 3px;
+  padding-left: 4px;
+  vertical-align: bottom;
   position: relative;
 }
 
 /* Free kekistan*/
 .site-slogan {
+  display: none;
   color: white;
   padding-top: 10px;
 }
@@ -46,10 +158,10 @@ element.style {
   color: #d6d5d5;
 }
 
-
 /* Left side menu bar*/
 nav#block-kekistan-main-menu {
   margin-top: 15px;
+  margin-bottom: 20px;
 }
 
 /* Left side menu*/
@@ -61,7 +173,16 @@ aside#sidebar-first {
 
 /* Left side menu - search*/
 div#block-kekistan-search {
-  margin-top: 30px;
+  margin-top: 25px;
+}
+
+#block-kekistan-search #edit-submit {
+  float: right!important;
+  max-height: 20px;
+  transform: translate(65%, -170%);
+  color: transparent;
+  background: url('/themes/kekistan/images/icons/search.png') no-repeat;
+  background-size: contain;
 }
 
 form#search-block-form {
@@ -77,14 +198,23 @@ div#block-kekistan-search h2 {
   margin-top: 15px;
 }
 
+/* Same hashtag searching in its own region*/
+.filter-container {
+  max-width: 75em;
+  margin-left: auto;
+  margin-right: auto;
+  margin-left: auto;
+  margin-right: auto;
+  width: auto;
+}
 
 /* Left side menu - anthemn title */
 div#block-kekistananthem {
   font-size: 10px;
-  padding-top: 30px;
+  padding-top: 60px;
 }
 
-/* Left side menu - anthemn video */
+/* Left side menu - anthemn video*/
 iframe.kekistan-anthem-video {
   max-width: 225px;
 }
@@ -97,8 +227,13 @@ iframe.kekistan-anthem-video {
 /*Offset main div to consider fixed footer*/
 #main {
   margin-bottom: 70px;
+  background: #e6ecec;
+  padding-top: 3em;
 }
 
+#sidebar-first {
+  background: #FFF;
+}
 
 /* Main content*/
 #content-area {
@@ -150,7 +285,16 @@ iframe.kekistan-anthem-video {
 
 .heartbeat-stream #main #content {
   margin-left: 0!important;
+  width: 100%!important;
+}
 
+#block-heartbeatblock #main .container {
+  margin-top: 40px;
+}
+
+/*keeping additional content the same width as parent*/
+.block-kekistan-content #content {
+  width: 100%!important;
 }
 
 .heartbeat-owner .time-ago {
@@ -164,12 +308,205 @@ iframe.kekistan-anthem-video {
 }
 
 .heartbeat-interaction-wrap {
-  width: 100%;
+  width: 75%;
   float: right;
+  padding-top: 12px;
+}
+
+@media (max-width: 768px) {
+  .heartbeat-interaction-wrap {
+    width: 100%;
+  }
+}
+
+.heartbeat-message a {
+  color: #1da1f2;
+  font-size: 15px;
+}
+
+.heartbeat-like, .heartbeat-unlike {
+  display: inline-block;
+}
+
+.heartbeat-unlike {
+  padding-left: 48px;
+}
+
+.flag-heartbeat_like_comment a.use-ajax {
+  min-height: 8px;
+  padding-left: 24px;
+  margin-left: 4px;
+  min-width: 8px;
+  background: url(/themes/kekistan/images/icons/okay.png) no-repeat center !important;
+  background-size: 45% !important;
+}
+
+/*Praise and jihad tooltip*/
+.praisetip, .jihadtip {
+  transition: all 0.5s ease;
+  position: absolute;
+  z-index: 1;
+}
+
+.flag-heartbeat_like.selected::after {
+  content: 'Praise';
+  color: rgb(0, 178, 0);
+  transition: all 0.5s ease;
+  position: absolute;
+}
+
+.flag-jihad_flag.selected::after {
+  content: 'Jihad!';
+  color: red;
+  transition: all 0.5s ease;
+  padding-left: 20px;
+}
+
+/*like button*/
+.flag-heartbeat_like a {
+  background: url(/themes/kekistan/images/icons/okay.png) no-repeat center ;
+  background-size: contain;
+  padding: 5px;
+  padding-left: 72px;
+  margin-left: -28px;
+}
+
+/*jihad button*/
+.flag-jihad_flag a {
+  background: url(/themes/kekistan/images/icons/bike-lock.png) no-repeat center ;
+  background-size: contain;
+  padding: 10px;
+  margin-left: 20px;
+}
+
+/*jihad button hover*/
+.action-unflag.flag-jihad_flag a {
+  opacity: 0.3;
+  background-size: contain;
+  margin-left: -11px;
+  padding: 2px;
+  padding-left: 72px;
+}
+
+.flag-heartbeat_like span,
+.flag-jihad_flag span {
+  display: none;
+}
+.flag-heartbeat_like span:first-of-type,
+.flag-jihad_flag span:first-of-type {
+  display: inline;
+}
+
+.heartbeat-interaction-wrap .action-unflag a {
+  opacity: 0.5;
+}
+
+/*css for flag*/
+.flag a {
+  border: none;
+  color: #1da1f2;!important;
+}
+
+/*page loading throbber*/
+#heartbeat-loader {
+  background: url('/themes/kekistan/images/spinner.gif') no-repeat!important;
+  background-size: contain;
+  left: 58.5% !important;
+}
+/***********************
+***Heartbeat Comments***
+***********************/
+
+.heartbeat-comments {
+  font-size: 12px;
+  padding-top: 12px
+}
+
+.heartbeat-comment-button {
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: normal;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-bottom: 0;
+  padding: 0 4rem;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  text-align: center;
+  margin-right: 0.1rem;
+  background-color: rgba(0, 0, 0, 0.05);
+  color: rgba(0, 0, 0, 0.7);
+  transition: background-color 1000ms linear;
+  margin-top: 47px;
+}
+
+.heartbeat-comment-button:hover {
+  background-color: #70a978;
+}
+
+.comment-form-hidden {
+  display: none!important;
+}
+
+.comment-owner, .comment-body {
+  display: inline-block;
+}
+
+.comment-owner {
+  width: 17%;
+  font-size: 12px;
+}
+
+.comment-owner .comment-username,
+.sub-comment-username {
+  font-weight: 700;
+}
+
+.comment-body {
+  vertical-align: top;
+  padding-top: 16px;
+  width: 73%;
+}
+
+.heartbeat-comment-form {
+  margin-bottom: 24px;
+}
+
+.heartbeat-comment-form textarea,
+.heartbeat-sub-comment-form textarea{
+  height: 45px;
+}
+
+.heartbeat-comment-form .form-submit {
+  float: right;
+  font-size: 13px;
+}
+.heartbeat-sub-comment-form .form-submit {
+  float: right;
+  font-size: 11px;
+}
+
+.heartbeat-sub-comment-form .form-submit {
+  margin-bottom: 10px;
 }
 
 .heartbeat-comment-form label {
   display: none;
+}
+
+/*reply button*/
+.heartbeat-subcomment {
+  padding-left: 103px;
+  display: flex;
+  margin-top: 10px;
+}
+
+.heartbeat-subcomment .sub-comment-body {
+  margin-top: 12px;
+}
+
+.heartbeat-sub-comment-form,
+.sub-comment a.button-action {
+  padding-left: 103px;
 }
 
 .heartbeat-message {
@@ -177,15 +514,17 @@ iframe.kekistan-anthem-video {
   word-wrap: break-word;
   float: left;
   width: 99%;
+  margin: 4px;
+  background: #FFF;
 }
 
-.heartbeat-message a {
-  color: #1da1f2;
+.heartbeat-stream .heartbeat-message:first-of-type {
+  margin-top: 0px;
 }
 
-heartbeat-message a.heartbeat-user {
-  color: green;
-}
+/*.heartbeat-message a.heartbeat-user {*/
+  /*color: green;*/
+/*}*/
 
 .heartbeat-hashtag,
 .heartbeat-username {
@@ -196,7 +535,8 @@ heartbeat-message a.heartbeat-user {
 .heartbeat-owner {
   display: inline-block;
   width: 25%;
-  float: left;}
+  float: left;
+}
 
 /*node main image and user image */
 a.heartbeat-node img {
@@ -206,7 +546,6 @@ a.heartbeat-node img {
 .heartbeat-content {
   display: inline-block;
   width: 75%;
-  padding-left: 4px;
   float: right;
 }
 
@@ -228,8 +567,6 @@ video.heartbeat-video,
   /*min-height: 240px;*/
 }
 
-
-
 /** Status Messages **/
 #edit-message--description {
   display: none;
@@ -237,12 +574,26 @@ video.heartbeat-video,
 
 /*post button on status message*/
 .status-post {
-  display: none;
+
 }
 
+#status-form #edit-post {
+  float: right!important;
+  max-width: 5em;
+  font-size: 13px;
+  max-height: 3em;
+  margin-right: 0em;
+}
 
-div#block-statusblock {
-    margin-bottom: 15px;
+/*Remove button when file is attached*/
+#status-form .form-item-media .button {
+  max-height: 1em;
+  font-size: 8px;
+  max-width: 1em;
+  margin-left: 0px;
+  background: transparent url(/themes/kekistan/images/icons/clear-button.png) no-repeat;
+  background-size: contain;
+  color: transparent;
 }
 
 /*Feed Filter*/
@@ -254,8 +605,9 @@ div#block-statusblock {
 
 /* Footer */
 footer#footer {
-  height: 60px; overflow:hidden;
-  padding-top: 10px;
+  height: 2em;
+  overflow:hidden;
+  padding: 2px;
   background-color: rgb(48, 76, 71);
   color: grey!important;
   position: fixed;
@@ -266,6 +618,7 @@ footer#footer {
 
 #block-kekistan-footer {
   text-align: center;
+  font-size: 13px;
 }
 
 #block-kekistan-footer .menu-item a {
@@ -273,7 +626,8 @@ footer#footer {
 }
 
 #block-kekistan-footer .menu-item a.about-footer,
-#block-kekistan-footer .menu-item:nth-of-type(2) a {
+#block-kekistan-footer .menu-item:nth-of-type(2) a,
+#block-kekistan-footer .menu-item:nth-of-type(3) a {
   color: white!important;
 }
 
@@ -301,10 +655,10 @@ footer#footer {
 #block-kekistan-footer li a {
   background-size: contain;
   background-repeat: no-repeat;
-  vertical-align: middle;
+  vertical-align: top;
   display: inline-block;
-  min-height: 35px;
-  margin-bottom:10px;
+  padding: 3px;
+  margin-top: 2px;
 }
 
 /*@media (min-width: 380px) {*/
@@ -380,14 +734,50 @@ form#contact-message-feedback-form label::after {
   content: ': ';
 }
 
-
-/*Preview Generator*/
-
-.statusmessage-preview-iframe {
-  min-height: 240px;
-  min-width: 465px;
+/*Contact page preview button*/
+input#edit-preview {
+  display: none;
 }
 
+
+/*Preview Generator*/
+.statusmessage-preview-iframe {
+  min-height: 380px;
+  width: 100%;
+  background-color: white;
+}
+
+
+/*User Profiles*/
+.section-user article > div > img {
+  position: relative;
+  left: 0;
+  right: 0;
+  margin: auto 0;
+  width: 100%;
+  max-height: 280px;
+}
+
+.section-user article > div > a > img {
+  max-height: 230px;
+  width: auto;
+}
+
+.section-user article > .form-item {
+  margin-top: 11px;
+}
+
+/****************
+FriendSearch Block
+*****************/
+
+/*Autocomplete*/
+
+.heartbeat-autocomplete-user {
+  font-size: 16px;
+  font-weight: 700;
+  color: #575757;
+}
 
 @media only screen
 and (min-device-width : 414px)
@@ -398,7 +788,6 @@ and (orientation : portrait) {
     width: 100%;
   }
 
-
 }
 
 @media (max-width: 768px) {
@@ -406,11 +795,76 @@ and (orientation : portrait) {
     float: right;
     font-size: 14px;
   }
+  /*.container {*/
+    /*display: -webkit-box;*/
+    /*display: -moz-box;*/
+    /*-webkit-box-orient: vertical;*/
+    /*-moz-box-orient: vertical;*/
+  /*}*/
+
+  /*.container #content {*/
+    /*-webkit-box-ordinal-group: 3;*/
+    /*-moz-box-ordinal-group: 3;*/
+  /*}*/
+
+  /*.container #sidebar-first {*/
+    /*-webkit-box-ordinal-group: 2;*/
+    /*-moz-box-ordinal-group: 2;*/
+  /*}*/
+
+  /*nav#block-kekistan-main-menu {*/
+    /*display: none;*/
+  /*}*/
+
+  /*#block-kekistan-search h2 {*/
+    /*display: none;*/
+  /*}*/
 }
 @media (max-width: 414px) {
-  footer#footer {
-    height: 50px;
+  #header {
+    max-height: 2.5em!important;
   }
+
+  #block-kekistan-branding {
+    max-width: 100%;
+  }
+
+  .site-name, .site-name a {
+    display: none;
+  }
+
+  #block-kekistan-search {
+    margin-left: 1em !important;
+    width: 44% !important;
+    display: inline-block !important;
+    margin-top: 15px !important;
+  }
+
+  #block-kekistan-account-menu {
+    /*padding-top: 12px!important;*/
+  }
+
+  /*search box*/
+  #block-kekistan-search #edit-keys {
+    width: 75%!important;
+    display: inline-block!important;
+    font-size: 12px!important;
+  }
+
+  #block-kekistan-branding img {
+    max-width: 64px;
+  }
+
+  .site-slogan {
+    font-size: 10px!important;
+  }
+
+  #block-kekistan-account-menu .menu .menu-item a {
+    height: 24px!important;
+    width: 36px!important;
+    padding-top: 30px!important;
+  }
+
   #block-kekistan-footer li.menu-item:first-child {
     padding-left: 5px;
   }
@@ -418,10 +872,28 @@ and (orientation : portrait) {
   #block-kekistan-footer .facebook-footer {
     max-width: 32px;
   }
+
+  .site-name {
+    display: none;
+  }
+
+  /*#sidebar-first {*/
+    /*position: fixed;*/
+    /*top: 1px;*/
+    /*text-align: center;*/
+    /*font-size: 12px;*/
+  /*}*/
+
+  #block-kekistananthem {
+    display: none;
+  }
+
+  #footer {
+    height: 32px;
+  }
 }
 
 @media (min-width: 1440px) {
-
   .heartbeat-youtube {
     min-height: 360px;
   }

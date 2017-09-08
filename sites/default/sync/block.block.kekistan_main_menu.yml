@@ -1,6 +1,6 @@
 uuid: 0737837b-2e8c-40f5-8229-38286c1e79ef
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.main
@@ -13,7 +13,7 @@ _core:
 id: kekistan_main_menu
 theme: kekistan
 region: sidebar_first
-weight: -8
+weight: -9
 provider: null
 plugin: 'system_menu_block:main'
 settings:

@@ -8,6 +8,7 @@
 
 use Drupal\Core\Routing\RouteMatchInterface;
 use Drupal\Core\Entity\EntityInterface;
+use Drupal\Core\Url;
 use Drupal\Core\Form\FormState;
 use Drupal\node\NodeInterface;
 use Drupal\Core\Session\AccountInterface;
@@ -129,7 +130,7 @@ function heartbeat_entity_insert(EntityInterface $entity) {
                 'type' => $heartbeatTypeEntity->id(),
                 'uid' => $user->id(),
                 'nid' => $entity->id(),
-                'name' => 'Dev Test',
+                'name' => $entity->getTitle(),
               ]);
               //TODO Find better fix than this str_replace
               $heartbeatActivity->setMessage(str_replace('&039;', "'", $heartbeatMessage));
@@ -147,7 +148,7 @@ function heartbeat_entity_insert(EntityInterface $entity) {
                 'type' => $heartbeatTypeEntity->id(),
                 'uid' => $user->id(),
                 'nid' => $entity->id(),
-                'name' => 'Dev Test',
+                'name' => $entity->getTitle(),
                 'status' => !$bundleSaved ? 1 : 0,
               ]);
 
@@ -219,7 +220,7 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
             'type' => $heartbeatTypeEntity->id(),
             'uid' => $user->id(),
             'nid' => $entity->id(),
-            'name' => 'Dev Test',
+            'name' => $entity->getTitle(),
           ]);
 
           $heartbeatActivity->setMessage($heartbeatMessage);
@@ -237,7 +238,7 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
             'type' => $heartbeatTypeEntity->id(),
             'uid' => $user->id(),
             'nid' => $entity->id(),
-            'name' => 'Dev Test',
+            'name' => $entity->getName(),
             'status' => !$bundleSaved ? 1 : 0,
           ]);
 
@@ -251,85 +252,36 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
       }
     }
   }
-  updateFeeds();
+//  updateFeeds();
 
 }
 
 function updateFeeds() {
-  $configFactory = \Drupal::service('config.factory');
-  $updateFeedConfig = $configFactory->getEditable('heartbeat_update_feed.settings');
-  $feedConfig = $configFactory->get('heartbeat_feed.settings');
-
-//  $form = \Drupal::formBuilder()->getForm('\Drupal\heartbeat\Form\HeartbeatUpdateFeedForm');
-
-//  $form_state = new FormState();
-//  $form_state->set('timestamp', $updateFeedConfig->get('timestamp'));
-
-//  \Drupal::formBuilder()->submitForm('\Drupal\heartbeat\Form\HeartbeatUpdateFeedForm', $form_state);
-
-//  $errors = $form_state->getErrors();
-
-
-  //  $updateFeedConfig->set('update', true)->save();
-//  $feedUpdateConfig = new stdClass();
-//  $feedUpdateConfig->feed = $feedConfig->get('message');
-//  $feedUpdateConfig->update = true;
-//  $feedUpdateConfig->timestamp = $updateFeedConfig->get('timestamp');
-
-
-//  $curlQuery = '/heartbeat/update_feed/' . $updateFeedConfig->get('timestamp');
-  //Set options for the curl request
-
-
-
-//  $curlOptions = array(
-//    'headers' => array(
-//      'X-DataSource-Auth' => 'a',
-//      'method' => 'POST',
-//    ),
-//  );
-//  //Perform the request and decode the results
-//  $result = chr_curl_http_request($curlQuery, $curlOptions);
-
+//  $configFactory = \Drupal::service('config.factory');
 }
-//public function saveHeartbeatMessage($entity, $tokenService, $preparsedMessageString, $entities, $entityTypeId, $media) {
-//  $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), $media);
-//
-//
-//  $heartbeatActivity = Heartbeat::create([
-//    'type' => $heartbeatTypeEntity->id(),
-//    'uid' => $user->id(),
-//    'nid' => $entity->id(),
-//    'name' => 'Dev Test',
-//  ]);
-//
-//  $heartbeatActivity->setMessage($heartbeatMessage);
-//  $heartbeatActivity->save();
-//}
 
 
 /**
- * Implements hook_ajax_render_alter().
+ * Implements hook_entity_view().
  */
-function heartbeat_ajax_render_alter(array &$data) {
+function heartbeat_entity_view(array &$build, \Drupal\Core\Entity\EntityInterface $entity, \Drupal\Core\Entity\Display\EntityViewDisplayInterface $display, $view_mode) {
 
-  $nullll = 'null';
-
-  $muhData = $data;
-
-  if ($data !== null) {
-
-    $saysomething = 'here';
-
-
+  if ($entity instanceof \Drupal\user\Entity\User) {
+    if (isset($build['flag_friendship']) && \Drupal::currentUser()->id() === $entity->id()) {
+      \Drupal::logger('heartbeat_friendship_entityView')->debug('IDs are %id1 and %id2', array(
+        '%id1' => \Drupal::currentUser()->id(),
+        '%id2' => $entity->id(),
+      ));
+      unset($build['flag_friendship']);
+    }
   }
 }
+
 
 /**
  * Implements hook_cron().
  */
 function heartbeat_cron() {
-  $friendship = false;
   //Iterate over the Heartbeat Types and ensure that the weight of bundle-specific types are lower than that of their
   //parent type. This will allow us to ensure Bundle specific types end up being published as opposed to
   //Types which represent all content types
@@ -524,10 +476,23 @@ function heartbeat_update_type_weight() {
  * Implements hook_page_attachments_alter().
  */
 function heartbeat_page_attachments_alter(array &$attachments) {
-
-  $jigganull  = 'naul';
-  $jiagganull  = 'naul';
-  $mattachments = $attachments;
-
   $attachments['#attached']['library'][] = 'heartbeat/heartbeat';
+}
+
+
+function heartbeat_link_alter(&$variables) {
+  if (!is_object($variables['text']) && $variables['text'] === 'Account Settings') {
+    $token_service = \Drupal::token();
+    $replacement = $token_service->replace($variables['url']->getUri(), [\Drupal::currentUser()]);
+    unset($variables['url']);
+    $url = Url::fromUserInput('/' . substr($replacement, 5));
+    $variables['url'] = $url;
+  }
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+function heartbeat_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+  $form['#attached']['drupalSettings']['admin'] = in_array('administrator', \Drupal::currentUser()->getRoles());
 }

@@ -24,6 +24,9 @@
   background: #500005;
 }
 
+.ui-dialog .ui-button-text {
+  height: 100%;
+}
 
 #edit-mediatabs input[type="radio"]:checked {
   background: #003b08;
@@ -39,4 +42,54 @@
   width: auto;
   padding-left: 20%;
   transform: translate(5%, -150%);
+}
+
+#edit-mediatabs {
+  display: none;
+}
+
+.status-media-upload {
+  display: inline-block;
+  min-width: 32px;
+  min-height: 32px;
+  content: "Jigga";
+  margin-left: 4px;
+  background: url(/themes/kekistan/images/icons/mountains-picture.png) no-repeat;
+  background-size: contain;
+}
+
+#edit-media-upload,
+#status-form input.form-file {
+  display: inline-block;
+  max-width: 32px;
+  min-height: 32px;
+  position: relative;
+  transform: translate(-18px, -10px);
+  opacity: 0;
+}
+
+#status-form .form-item-media {
+  display: inline-block;
+  min-height: 32px;
+  position: relative;
+  transform: translate(15px, -8px);
+}
+
+#edit-mediatabs + #ajax-wrapper {
+  display: inline-block;
+}
+
+.heartbeat-message .comment-body a.status-comment-share {
+  text-decoration: none;
+  color: #333;
+}
+
+.ui-dialog {
+  font-size: 90%;
+}
+
+.ui-dialog-title {
+  background-size: contain;
+  background: url('/themes/kekistan/images/icons/alert.png') no-repeat;
+  padding: 2px 2.5em;
 }

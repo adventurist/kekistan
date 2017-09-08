@@ -4,5 +4,5 @@ status: true
 dependencies: {  }
 id: status_message
 label: 'Status Message'
-media: false
-mime: '0'
+media: true
+mime: image/jpeg

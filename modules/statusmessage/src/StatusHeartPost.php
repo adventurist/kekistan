@@ -9,6 +9,7 @@
 namespace Drupal\statusmessage;
 
 
+use Drupal\Component\Utility\UrlHelper;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\heartbeat\Entity\Heartbeat;
@@ -46,8 +47,8 @@ class StatusHeartPost implements SharedContentInterface {
 
       $tags = $this->processTerms();
 
-      if ($fid = $this->getMedia()) {
-        $node->set('field_image', $fid);
+      if ($fids = $this->getMedia()) {
+        $node->set('field_image', $fids);
       }
 
       if (!empty($this->tags)) {
@@ -78,29 +79,28 @@ class StatusHeartPost implements SharedContentInterface {
     }
 
     return $this->generator->getTags();
-
   }
-
 
   private function setNodeData() {
 
     $append = FALSE;
-
+    $title = $this->generator->getTitle();
     $node = Node::create([
       'type' => 'heartpost',
-      'title' => $this->generator->getTitle(),
+      'title' => strlen($title) < 50 ? $title : substr($title, 0, 47) . '...',
       'status' => 1,
     ]);
 
+    $description = strlen($this->generator->getDescription()) <= 207 ? $this->generator->getDescription() : substr($this->generator->getDescription(), 0, 206);
 
-    if (strlen($this->generator->getDescription()) <= 255) {
-      $node->set('field_description', [
-        'value' => '<div class="status-heartpost-description"> ' . $this->generator->getDescription() . '</div>',
-        'format' => 'full_html'
-      ]);
-    } else {
+    if (strlen($this->generator->getDescription()) > 207) {
       $append = TRUE;
     }
+
+    $node->set('field_description', [
+      'value' => '<div class="status-heartpost-description"> ' . $description . '</div>',
+      'format' => 'full_html'
+    ]);
 
     if ($this->message) {
       $this->message = $append ? $this->message . ' ' . PHP_EOL . $this->generator->getDescription() : $this->message;
@@ -118,20 +118,55 @@ class StatusHeartPost implements SharedContentInterface {
 
 
   private function getMedia() {
+    $fids = array();
 
-    if ($this->generator->getImage()) {
+    if ($images = $this->generator->getImages()) {
+      $num = count($images) > 10 ? 10 : count($images);
 
-      $ext = strtolower(pathinfo($this->generator->getImage(), PATHINFO_EXTENSION));
-      $ext = strpos($ext, '?') ? substr($ext, 0, strpos($ext, '?')) : $ext;
-      $fileUrl = strlen($ext) > 0 ? substr($this->generator->getImage(), 0, strpos($this->generator->getImage(), $ext)) . $ext : $this->generator->getImage();
+      for ($i = 0; $i < $num; $i++) {
 
-      $mainImage = file_get_contents($fileUrl);
-      $file = file_save_data($mainImage, 'public://' . substr($fileUrl, strrpos($this->generator->getImage(), '/') + 1), FILE_EXISTS_REPLACE);
+        if ( // Try to skip iterating over duplicate images
+          $i > 0 &&
+          $images[$i]['width'] === $images[$i - 1]['width'] &&
+          $images[$i]['height'] === $images[$i - 1]['height'] &&
+          $images[$i]['size'] === $images[$i - 1]['size']
+        ) {
+          continue;
+        }
 
-      return $file->id();
+        if (count($fids) < 6 && $images[$i]['width'] > 400) {
+          $ext = strtolower(pathinfo($images[$i]['url'], PATHINFO_EXTENSION));
+
+          if (!$this->verifyExtension($ext)) {
+            $ext = explode($ext, $images[$i]['url']);
+            $ext = count($ext) > 1 ? $ext[1] : $ext[0];
+          }
+          $ext = strpos($ext, '?') ? substr($ext, 0, strpos($ext, '?')) : $ext;
+          $fileName = strlen($ext) > 0 ? substr($images[$i]['url'], 0, strpos($images[$i]['url'], $ext)) . $ext : $images[$i]['url'];
+
+          if (UrlHelper::isValid($images[$i]['url'])) {
+
+            $data = file_get_contents($images[$i]['url']);
+            $file = file_save_data($data, 'public://' . substr($fileName, strrpos($fileName, '/') + 1), FILE_EXISTS_REPLACE);
+            $fids[] = $file->id();
+          }
+        }
+      }
+    } else {
+
+      if ($this->generator->getImage()) {
+
+        $ext = strtolower(pathinfo($this->generator->getImage(), PATHINFO_EXTENSION));
+        $ext = strpos($ext, '?') ? substr($ext, 0, strpos($ext, '?')) : $ext;
+        $fileUrl = strlen($ext) > 0 ? substr($this->generator->getImage(), 0, strpos($this->generator->getImage(), $ext)) . $ext : $this->generator->getImage();
+
+        $mainImage = file_get_contents($fileUrl);
+        $file = file_save_data($mainImage, 'public://' . substr($fileUrl, strrpos($this->generator->getImage(), '/') + 1), FILE_EXISTS_REPLACE);
+
+        $fids[] = $file->id();
+      }
     }
-//    return $this->generator->getImages();
-
+    return $fids;
   }
 
 
@@ -140,9 +175,11 @@ class StatusHeartPost implements SharedContentInterface {
     $tids = array();
     $i = 0;
     $tagsArray = explode('#', $message);
-    $num = count($tagsArray);
 
     unset($tagsArray[0]);
+
+    $num = count($tagsArray);
+
 
     foreach ($tagsArray as $hashtag) {
       if ($i === $num - 1) {
@@ -181,5 +218,19 @@ class StatusHeartPost implements SharedContentInterface {
         $i++;
       }
     return $tids;
+  }
+
+  public function verifyExtension($string) {
+    return $this->strposMultiple($string, ['jpg', 'jpeg', 'png', 'gif', 'bmp', ]);
+  }
+
+  public function strposMultiple($string, $patterns) {
+    $patterns = is_array($patterns) ? $patterns : is_object($patterns) ? (array) $patterns : array($patterns);
+
+    foreach($patterns as $pattern) {
+      if (stripos($string, $pattern)) {
+        return true;
+      }
+    }
   }
 }

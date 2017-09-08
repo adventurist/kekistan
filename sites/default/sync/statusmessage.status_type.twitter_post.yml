@@ -1,8 +1,0 @@
-uuid: da62f693-a98a-4b9d-8bca-05a4dfb8776a
-langcode: en
-status: true
-dependencies: {  }
-id: twitter_post
-label: 'Twitter Post'
-media: false
-mime: '0'

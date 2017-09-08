@@ -2,9 +2,15 @@
 
 namespace Drupal\heartbeat\Form;
 
+use Drupal\Component\Datetime\TimeInterface;
+use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Entity\ContentEntityForm;
+use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
+use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\heartbeat\Entity;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for Heartbeat edit forms.
@@ -17,9 +23,22 @@ class HeartbeatForm extends ContentEntityForm {
   /**
    * {@inheritdoc}
    */
+
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('entity_type.manager')
+    );
+  }
+
+
+  public function __construct(EntityTypeManager $entity_type_manager, EntityTypeBundleInfoInterface $entity_type_bundle_info = NULL, TimeInterface $time = NULL) {
+//    parent::__construct($entity_type_bundle_info, $time);
+    $this->nodeManager = $entity_type_manager->getStorage('node');
+  }
+
   public function buildForm(array $form, FormStateInterface $form_state) {
 
-    $this->nodeManager = \Drupal::service('entity_type.manager')->getStorage('node');
+//    $this->nodeManager = \Drupal::service('entity_type.manager')->getStorage('node');
     /* @var $entity \Drupal\heartbeat\Entity\Heartbeat */
     $form = parent::buildForm($form, $form_state);
     $entity = &$this->entity;
@@ -35,16 +54,16 @@ class HeartbeatForm extends ContentEntityForm {
     $form['uid'] = array(
       '#type' => 'entity_autocomplete',
       '#target_type' => 'user',
-      '#default_value' => $entity->getOwner()->isAnonymous() ? NULL : $entity->getOwner(),
+      '#default_value' => $entity->getOwner(),
       // A comment can be made anonymous by leaving this field empty therefore
       // there is no need to list them in the autocomplete.
       '#selection_settings' => ['include_anonymous' => FALSE],
       '#title' => $this->t('Authored by'),
-      '#description' => $this->t('No cucks.')
+      '#description' => $this->t('The owner of the heartbeat')
     );
 
     $form['message'] = array(
-      '#type' => 'textarea',
+      '#type' => 'text_format',
       '#description' => t('The Heartbeat message'),
       '#title' => 'Message',
       '#default' => $entity->getMessage()->getValue()[0]['value'],
@@ -59,7 +78,7 @@ class HeartbeatForm extends ContentEntityForm {
       '#entity_type' => 'node',
       '#target_type' => 'node',
       '#selection_handler' => 'default',
-      '#default_value' => $nodeId > 0 ? null : $this->nodeManager->load($nodeId),
+      '#default_value' => $node,
       '#title' => 'Node',
       '#description' => t('The node referenced by this Heartbeat')
     );

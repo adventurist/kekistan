@@ -4,6 +4,7 @@ status: true
 dependencies:
   module:
     - search
+    - system
   theme:
     - kekistan
 _core:
@@ -11,12 +12,17 @@ _core:
 id: kekistan_search
 theme: kekistan
 region: sidebar_first
-weight: -7
+weight: -12
 provider: null
 plugin: search_form_block
 settings:
   id: search_form_block
   label: Search
   provider: search
-  label_display: visible
-visibility: {  }
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: "/about\r\n/contact\r\n/privacy\r\n/user/*"
+    negate: true
+    context_mapping: {  }

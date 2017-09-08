@@ -1,0 +1,48 @@
+uuid: 58060322-0078-4d97-a9d6-d08fe00604bd
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.status.status_message.field_image
+    - statusmessage.status_type.status_message
+  module:
+    - image
+    - text
+    - user
+id: status.status_message.default
+targetEntityType: status
+bundle: status_message
+mode: default
+content:
+  field_image:
+    weight: 1
+    label: above
+    settings:
+      image_style: ''
+      image_link: ''
+    third_party_settings: {  }
+    type: image
+    region: content
+  name:
+    label: above
+    type: string
+    weight: -4
+    region: content
+    settings:
+      link_to_entity: false
+    third_party_settings: {  }
+  recipient:
+    label: hidden
+    type: author
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  uid:
+    label: hidden
+    type: author
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

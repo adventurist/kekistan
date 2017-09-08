@@ -1,0 +1,26 @@
+uuid: f8fff1af-8a15-4b59-9dc9-11e8ee1db189
+langcode: en
+status: false
+dependencies:
+  module:
+    - heartbeat
+    - system
+  theme:
+    - kekistan
+id: heartbeatsubcommentblock
+theme: kekistan
+region: content
+weight: 0
+provider: null
+plugin: heartbeat_sub_comment_block
+settings:
+  id: heartbeat_sub_comment_block
+  label: 'Heartbeat sub comment block'
+  provider: heartbeat
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: "<front>\r\n/user/*"
+    negate: false
+    context_mapping: {  }

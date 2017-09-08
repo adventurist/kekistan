@@ -1,0 +1,26 @@
+uuid: 73fb6653-1862-47c9-83be-ba6416d105e0
+langcode: en
+status: false
+dependencies:
+  module:
+    - heartbeat
+    - system
+  theme:
+    - kekistan
+id: heartbeatmoreblock
+theme: kekistan
+region: content
+weight: -2
+provider: null
+plugin: heartbeat_more_block
+settings:
+  id: heartbeat_more_block
+  label: 'Heartbeat More block'
+  provider: heartbeat
+  label_display: '0'
+visibility:
+  request_path:
+    id: request_path
+    pages: '<front>'
+    negate: false
+    context_mapping: {  }

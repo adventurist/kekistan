@@ -2,6 +2,11 @@
 
 namespace Embed;
 
+use DOMDocument;
+use DOMElement;
+use DOMNodeList;
+use DOMXPath;
+
 /**
  * Some helpers methods used across the library.
  */
@@ -191,7 +196,7 @@ class Utils
     /**
      * Convert a string to utf-8.
      *
-     * @param string $content  The content to convert
+     * @param string $content The content to convert
      * @param string $charset The original charset
      *
      * @return string
@@ -215,5 +220,24 @@ class Utils
         }
 
         return $content;
+    }
+
+    /**
+     * Search and return the first element matching with a xpath
+     *
+     * @param DOMDocument $document
+     * @param string      $query
+     * @param bool        $returnFirst
+     *
+     * @return DOMElement|DOMNodeList|null
+     */
+    public static function xpathQuery(DOMDocument $document, $query, $returnFirst = true)
+    {
+        $xpath = new DOMXPath($document);
+        $entries = $xpath->query($query);
+
+        if ($entries->length) {
+            return $returnFirst ? $entries->item(0) : $entries;
+        }
     }
 }

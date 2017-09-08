@@ -11,6 +11,7 @@ use Drupal\Core\Utility\Token;
 use Drupal\Core\Url;
 use Drupal\Core\Link;
 use Drupal\Core\Database\Database;
+use Drupal\flag\FlagService;
 use Drupal\taxonomy\Entity\Term;
 use Drupal\user\Entity\User;
 use Drupal\user\UserInterface;
@@ -319,7 +320,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       ->setDescription(t('The name of the Heartbeat entity.'))
       ->setRevisionable(TRUE)
       ->setSettings(array(
-        'max_length' => 50,
+        'max_length' => 128,
         'text_processing' => 0,
       ))
       ->setDefaultValue('')
@@ -328,10 +329,10 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         'type' => 'string',
         'weight' => -4,
       ))
-      ->setDisplayOptions('form', array(
-        'type' => 'string_textfield',
-        'weight' => -4,
-      ))
+//      ->setDisplayOptions('form', array(
+//        'type' => 'string_textfield',
+//        'weight' => -4,
+//      ))
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
@@ -345,6 +346,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         'type' => 'full_html',
         'weight' => -4,
       ))
+      ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
     $fields['comments'] = BaseFieldDefinition::create('comment')
@@ -436,8 +438,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return string|false
    *   The heartbeat type label or FALSE if the heartbeat type is not found.
    *
-   * @todo Add this as generic helper method for config entities representing
-   *   entity bundles.
    */
   public function heartbeat_get_type(HeartbeatInterface $heartbeat) {
     $type = HeartbeatType::load($heartbeat->bundle());
@@ -499,6 +499,14 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       case $entityType === 'status':
 
         $parsedMessage = $tokenService->replace($preparsedMessage . '<a class="status-post" href="/admin/structure/' . $entityType . '/[' . $entityType . ':id]">', $entities);
+
+        if (strpos($parsedMessage, '#')) {
+          self::parseHashtags($parsedMessage);
+        }
+        if (strpos($parsedMessage, '@')) {
+          self::parseUsernames($parsedMessage);
+        }
+
         /** @noinspection NestedTernaryOperatorInspection */
         $message = $parsedMessage;
         $message .= $mediaData ? self::buildMediaMarkup($mediaData) : 'Post';
@@ -537,12 +545,11 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
   }
 
   private static function mediaTag($type, $filePath) {
-    //TODO put this into new method
     if ($type == 'image') {
       $type = 'img';
       return '<' . $type . ' src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" class="heartbeat-image" / >';
     } else if ($type == 'youtube') {
-      $filePath = str_replace('youtube://', 'http://www.youtube.com/embed/', $filePath);
+      $filePath = str_replace('youtube://', 'https://www.youtube.com/embed/', $filePath);
       return '<iframe class="heartbeat-youtube" width="auto" height="auto" src="' . $filePath . '" frameborder="0"></iframe>';
     } else if ($type == 'video') {
       return '<' . $type . ' controls src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" class="heartbeat-video"></' . $type . '>';
@@ -641,6 +648,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     $message = '';
     foreach ($tagsArray as $replacements) {
       $message .= $replacements;
+
     }
   }
 
@@ -745,28 +753,26 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
     foreach ($fields as $field) {
       if ($field instanceof \Drupal\file\Plugin\Field\FieldType\FileFieldItemList) {
-      $type = $field->getFieldDefinition()->getType();
         if ($field->getFieldDefinition()->getType() === 'image' ||
             $field->getFieldDefinition()->getType() === 'video' ||
             $field->getFieldDefinition()->getType() === 'audio') {
 
           $fieldValue = $field->getValue();
-          $fileId = $fieldValue[0]['target_id'];
-          $file = \Drupal::entityTypeManager()->getStorage('file')->load($fileId);
 
-          if ($file !== NULL && is_object($file)) {
-            $url = Url::fromUri($file->getFileUri());
-            $posfind = strpos($url->getUri(), 'youtube://');
-            if ($posfind !== 0 && $posfind === false) {
-              $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $url->getUri());
+          foreach ($fieldValue as $value) {
+            $file = \Drupal::entityTypeManager()->getStorage('file')->load($value['target_id']);
+            if ($file !== NULL && is_object($file)) {
+              $url = Url::fromUri($file->getFileUri());
+              $posfind = strpos($url->getUri(), 'youtube://');
+              if ($posfind !== 0 && $posfind === false) {
+                $mediaObject = self::createHeartbeatMedia($field->getFieldDefinition()->getType(), $url->getUri());
+              } else {
+                $mediaObject = self::createHeartbeatMedia('youtube', $url->getUri());
+              }
+              $types[] = $mediaObject;
             } else {
-
-              $mediaObject = self::createHeartbeatMedia('youtube', $url->getUri());
+              continue;
             }
-            $types[] = $mediaObject;
-
-          } else {
-            continue;
           }
         }
       }
@@ -827,6 +833,40 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       }
     }
     return $message;
+  }
+
+
+  public static function flagAjaxMarkup($flagId, $entity, FlagService $flagService) {
+    $flag = $flagService->getFlagById($flagId);
+    $link = $flag->getLinkTypePlugin()->getAsLink($flag, $entity);
+    $options = $link->getUrl()->getOptions();
+    $options['query']['destination'] = 'node';
+    $link->getUrl()->setOptions($options);
+    $action = $flag->getLinkTypePlugin()->getAsFlagLink($flag, $entity)['#action'];
+//    if ($action) {
+    $url = $link->getUrl()->toString();
+
+    return '<div class="flag flag-' . $flagId . '  flag-' . $flagId . '-' . $entity->id() . ' action-' . $action . '"><a href="' . $url . '" class="use-ajax" rel="nofollow"></a></div>';
+//    } else {
+//      return null;
+//    }
+  }
+
+  public static function flagAjaxBuilder($flagId, $entity, FlagService $flagService) {
+
+    $flag = $flagService->getFlagById($flagId);
+
+    $key = 'flag_' . $flag->id();
+    $data = [
+      '#lazy_builder' => ['flag.link_builder:build', [
+        $entity->getEntityTypeId(),
+        $entity->id(),
+        $flag->id(),
+      ]],
+      '#create_placeholder' => TRUE,
+    ];
+
+    return [$key => $data];
   }
 
   /**
@@ -932,9 +972,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @return int
    *   The uid of the Heartbeat's user.
    */
-  public function getUid()
-  {
-    // TODO: Implement getUid() method.
+  public function getUid() {
+    return $this->get('uid');
   }
 
   /**
@@ -943,10 +982,11 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
    * @param int uid
    *   The Heartbeat user.
    *
+   * @throws \Drupal\Core\Entity\EntityStorageException
    */
   public function setUid($uid)
   {
-    // TODO: Implement setUid() method.
+    $this->set('uid', $uid)->save();
   }
 
   /**

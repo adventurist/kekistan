@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.user.compact
+    - field.field.user.user.field_autism
     - field.field.user.user.field_cover_picture
     - field.field.user.user.user_picture
   module:
@@ -14,14 +15,11 @@ id: user.user.compact
 targetEntityType: user
 bundle: user
 mode: compact
-content:
-  flag_friendship:
-    weight: 0
-    region: content
-    settings: {  }
-    third_party_settings: {  }
+content: {  }
 hidden:
+  field_autism: true
   field_cover_picture: true
+  flag_friendship: true
   langcode: true
   member_for: true
   user_picture: true
