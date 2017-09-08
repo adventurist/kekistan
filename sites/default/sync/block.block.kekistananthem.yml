@@ -6,16 +6,13 @@ dependencies:
     - 'block_content:basic:7cd96c47-96e0-467b-8116-6a89b2959afd'
   module:
     - block_content
+    - system
   theme:
     - kekistan
 id: kekistananthem
 theme: kekistan
 region: sidebar_first
-<<<<<<< HEAD
-weight: -9
-=======
 weight: -10
->>>>>>> a800e68f87fd7c9a1ecbf173dec596581049b479
 provider: null
 plugin: 'block_content:7cd96c47-96e0-467b-8116-6a89b2959afd'
 settings:
@@ -26,4 +23,9 @@ settings:
   status: true
   info: ''
   view_mode: full
-visibility: {  }
+visibility:
+  request_path:
+    id: request_path
+    pages: '/user/*'
+    negate: true
+    context_mapping: {  }

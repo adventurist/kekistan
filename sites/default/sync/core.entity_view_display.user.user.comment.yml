@@ -19,7 +19,7 @@ bundle: user
 mode: comment
 content:
   field_autism:
-    weight: 2
+    weight: 1
     label: above
     settings:
       thousand_separator: ''
@@ -27,11 +27,6 @@ content:
     third_party_settings: {  }
     type: number_integer
     region: content
-  flag_friendship:
-    weight: 1
-    region: content
-    settings: {  }
-    third_party_settings: {  }
   user_picture:
     type: image
     weight: 0
@@ -43,5 +38,6 @@ content:
     label: hidden
 hidden:
   field_cover_picture: true
+  flag_friendship: true
   langcode: true
   member_for: true
