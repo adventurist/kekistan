@@ -14,3 +14,6 @@ permissions:
   - 'access site-wide contact form'
   - 'search content'
   - 'use text format restricted_html'
+  - 'view published heartbeat entities'
+  - 'view published heartbeat stream entities'
+  - 'view published status entities'

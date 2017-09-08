@@ -13,11 +13,7 @@ _core:
 id: kekistan_main_menu
 theme: kekistan
 region: sidebar_first
-<<<<<<< HEAD
-weight: -12
-=======
 weight: -9
->>>>>>> a800e68f87fd7c9a1ecbf173dec596581049b479
 provider: null
 plugin: 'system_menu_block:main'
 settings:

@@ -10,17 +10,10 @@ bundles: {  }
 entity_type: heartbeat
 global: false
 weight: 0
-<<<<<<< HEAD
-flag_short: 'Jihad ([flagcount:count])'
-flag_long: ''
-flag_message: ''
-unflag_short: 'Truce ([flagcount:count])'
-=======
 flag_short: '[flagcount:count]'
 flag_long: ''
 flag_message: ''
 unflag_short: '[flagcount:count]'
->>>>>>> a800e68f87fd7c9a1ecbf173dec596581049b479
 unflag_long: ''
 unflag_message: ''
 unflag_denied_text: ''
@@ -32,10 +25,6 @@ flagTypeConfig:
   show_on_form: false
   show_contextual_link: false
   access_author: ''
-<<<<<<< HEAD
-  extra_permissions: {  }
-=======
   extra_permissions:
     owner: '0'
->>>>>>> a800e68f87fd7c9a1ecbf173dec596581049b479
 linkTypeConfig: {  }

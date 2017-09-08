@@ -1,0 +1,8 @@
+uuid: 98b5cec1-2f1f-4e0d-8f29-fb26f3f8610d
+langcode: en
+status: true
+dependencies: {  }
+id: heartbeat_short
+label: 'heartbeat short'
+locked: false
+pattern: 'M.d G:i'

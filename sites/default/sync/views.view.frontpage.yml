@@ -28,41 +28,7 @@ display:
       cache:
         type: tag
         options: {  }
-      empty:
-        area_text_custom:
-          id: area_text_custom
-          table: views
-          field: area_text_custom
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: true
-          tokenize: false
-          content: ''
-          label: ''
-          plugin_id: text_custom
-        node_listing_empty:
-          admin_label: ''
-          empty: true
-          field: node_listing_empty
-          group_type: group
-          id: node_listing_empty
-          label: ''
-          relationship: none
-          table: node
-          plugin_id: node_listing_empty
-          entity_type: node
-        title:
-          id: title
-          table: views
-          field: title
-          relationship: none
-          group_type: group
-          admin_label: ''
-          empty: true
-          title: 'Public News Feeds'
-          label: ''
-          plugin_id: title
+      empty: {  }
       exposed_form:
         type: basic
         options:
