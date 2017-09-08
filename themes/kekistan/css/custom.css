@@ -770,7 +770,7 @@ input#edit-preview {
 }
 
 .section-user article > .form-item {
-  padding: 16px;
+  margin-top: 11px;
 }
 
 @media only screen
