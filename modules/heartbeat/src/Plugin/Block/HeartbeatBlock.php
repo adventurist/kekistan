@@ -127,7 +127,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $friendData = \Drupal::config('heartbeat_friendship.settings')->get('data');
       //TODO Use User IDs from friendData as conditions for heartbeats, rather than retrieving friendships in a separate query as is what follows in the lines ahead
       $feed = $myConfig->get('message');
-      $feed = $feed === null ? 'public' : $feed;
+      $feed = $feed === "null" || $feed === null ? 'public' : $feed;
       $uids = null;
 
       $query = Database::getConnection()->select('heartbeat_friendship', 'hf')
