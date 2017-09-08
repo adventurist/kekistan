@@ -34,3 +34,12 @@ function kek_custom_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $for
   }
 
 }
+
+/**
+ * Implements hook_preprocess().
+ */
+function kek_custom_preprocess(&$variables, $hook) {
+
+  $myVariable = $variables;
+
+}
