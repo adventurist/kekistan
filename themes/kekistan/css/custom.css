@@ -493,10 +493,15 @@ iframe.kekistan-anthem-video {
   display: none;
 }
 
+/*reply button*/
 .heartbeat-subcomment {
   padding-left: 103px;
   display: flex;
   margin-top: 10px;
+}
+
+.heartbeat-subcomment .sub-comment-body {
+  margin-top: 12px;
 }
 
 .heartbeat-sub-comment-form,
@@ -804,7 +809,6 @@ and (orientation : portrait) {
   /*}*/
 }
 @media (max-width: 414px) {
-
   #header {
     max-height: 2.5em!important;
   }
@@ -878,7 +882,6 @@ and (orientation : portrait) {
 }
 
 @media (min-width: 1440px) {
-
   .heartbeat-youtube {
     min-height: 360px;
   }
