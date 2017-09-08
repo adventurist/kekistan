@@ -138,11 +138,14 @@ function flagToolListen() {
 //TODO add username if viewing user profile
 function userPagePrintName() {
   if (window.location.pathname.indexOf('/user/') === 0) {
+    console.log('this is getting called');
+
     let userImgData = document.getElementById('block-kekistan-content').querySelector('article div a img');
     let userDom = document.createElement('h3');
     userDom.innerText = userImgData.alt.substring(25);
     userDom.className = 'kekistan-userprofile-username';
     userImgData.parentNode.appendChild(userDom);
+    console.dir(userImgData);
   }
 }
 (function($, Drupal, drupalSettings) {
