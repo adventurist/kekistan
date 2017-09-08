@@ -54,3 +54,16 @@ function kekistan_preprocess_field(&$variables, $hook) {
   // Make additional variables available to the template.
   $variables['bundle'] = $variables['element']['#bundle'];
 }
+
+function kekistan_preprocess_user(&$variables) {
+
+  foreach ($variables as $variable) {
+
+    $mynewvar = $variable;
+  }
+
+  $variables['content']['username'] = [
+    '#type' => 'item',
+    '#markup' => '<h3 class="kekistan-username">' . \Drupal::currentUser()->getAccountName() . '</h3>'
+    ];
+}
