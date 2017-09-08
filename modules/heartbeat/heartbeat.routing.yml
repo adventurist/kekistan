@@ -171,3 +171,12 @@ heartbeat.flag_controller:
   methods: [POST]
   requirements:
     _permission: 'access content'
+
+heartbeat.friend_search_form:
+  path: '/heartbeat/form/friend_search'
+  defaults:
+    _form: '\Drupal\heartbeat\Form\FriendSearchForm'
+    _title: 'FriendSearchForm'
+  requirements:
+    _access: 'TRUE'
+  

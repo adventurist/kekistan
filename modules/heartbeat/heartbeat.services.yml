@@ -15,9 +15,6 @@ services:
     class: Drupal\heartbeat\HeartbeatService
     arguments: ['@entity_type.manager', '@entity.query', '@heartbeatstream']
 
-#  friendship:
-#    class: Drupal\heartbeat\FriendshipService
-#    arguments:
 
   heartbeat.event:
     class: Drupal\heartbeat\EventSubscriber\HeartbeatEventSubscriber
@@ -29,3 +26,12 @@ services:
     class: Drupal\heartbeat\Routing\HeartbeatRouteSubscriber
     tags:
       - { name: event_subscriber }
+
+  heartbeat_autocomplete.route_subscriber:
+    class: Drupal\heartbeat\Routing\HeartbeatAutocompleteSubscriber
+    tags:
+      - { name: event_subscriber }
+
+  heartbeat_autocomplete.autocomplete_matcher:
+    class: Drupal\heartbeat\HeartbeatAutocompleteMatcher
+    arguments: ['@plugin.manager.entity_reference_selection']

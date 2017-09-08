@@ -506,5 +506,14 @@ function replyButtonListeners() {
     $(document).ready(function() {
       replyButtonListeners();
     });
-  })
+  });
+
+  $.fn.updateFriendView = function(somevar) {
+
+    console.log('this is called now');
+    console.dir(somevar);
+    event.preventDefault();
+    window.location.search = somevar;
+  }
 })(jQuery, Drupal, drupalSettings);
+

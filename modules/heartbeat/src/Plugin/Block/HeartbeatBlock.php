@@ -125,7 +125,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
     if (\Drupal::currentUser()->id() > 0) {
       $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_feed.settings');
       $friendData = \Drupal::config('heartbeat_friendship.settings')->get('data');
-
+      //TODO Use User IDs from friendData as conditions for heartbeats, rather than retrieving friendships in a separate query as is what follows in the lines ahead
       $feed = $myConfig->get('message');
       $uids = null;
 
@@ -200,7 +200,7 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
       $userPic = $user->get('user_picture')->getValue();
 
       if (!empty($userPic)) {
-        $profilePic = $user->get('user_picture')->getValue()[0]['target_id'];
+        $profilePic = $userPic[0]['target_id'];
       }
 
       if (NULL === $profilePic) {

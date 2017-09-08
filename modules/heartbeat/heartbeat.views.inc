@@ -173,24 +173,36 @@ function heartbeat_views_data() {
  */
 function heartbeat_views_query_alter(ViewExecutable $view, QueryPluginBase $query) {
 
-  $thisstuff = 'stuff';
 
-  if ($view->id() == 'heartbeat_friendship') {
-    $thisjigga = null;
-//
-//    LEFT JOIN {two} ON one.field_a = two.field_b
-//Use this configuration:
+  switch ($view->id()) {
+    case 'heartbeat_friendship':
 
-    $configuration = array(
-      'table' => 'users_field_data',
-      'field' => 'uid',
-      'left_table' => 'heartbeat_friendship',
-      'left_field' => 'uid_target',
-      'operator' => '=',
-    );
-    $join = Views::pluginManager('join')->createInstance('standard', $configuration);
-    $query->addRelationship('users_target', $join);
 
+      $configuration = array(
+        'table' => 'users_field_data',
+        'field' => 'uid',
+        'left_table' => 'heartbeat_friendship',
+        'left_field' => 'uid_target',
+        'operator' => '=',
+      );
+      $join = Views::pluginManager('join')->createInstance('standard', $configuration);
+      $query->addRelationship('users_target', $join);
+      break;
+
+    case 'user_friends':
+
+      $friendData = \json_decode(\Drupal::config('heartbeat_friendship.settings')->get('data'));
+      $friendUids = [];
+
+      foreach ($friendData as $data) {
+        $friendUids[] = $data->uid;
+        $friendUids[] = $data->uid_target;
+      }
+
+      $query->addWhere('AND', 'users_field_data.uid', \Drupal::currentUser()->id(), '!=');
+      $query->addWhere('AND', 'users_field_data.uid', array_unique($friendUids), 'IN');
+
+      break;
   }
 }
 

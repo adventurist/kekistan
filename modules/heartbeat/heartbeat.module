@@ -476,11 +476,6 @@ function heartbeat_update_type_weight() {
  * Implements hook_page_attachments_alter().
  */
 function heartbeat_page_attachments_alter(array &$attachments) {
-
-  $jigganull  = 'naul';
-  $jiagganull  = 'naul';
-  $mattachments = $attachments;
-
   $attachments['#attached']['library'][] = 'heartbeat/heartbeat';
 }
 
