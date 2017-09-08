@@ -138,10 +138,13 @@ function flagToolListen() {
 //TODO add username if viewing user profile
 function userPagePrintName() {
   if (window.location.pathname.indexOf('/user/') === 0) {
+    if (document.getElementById('kekistan-userprofile-username')) {
+      document.getElementById('kekistan-userprofile-username').remove();
+    }
     let userImgData = document.getElementById('block-kekistan-content').querySelector('article div a img');
     let userDom = document.createElement('h3');
     userDom.innerText = userImgData.alt.substring(25);
-    userDom.className = 'kekistan-userprofile-username';
+    userDom.id = 'kekistan-userprofile-username';
     userImgData.parentNode.appendChild(userDom);
   }
 }
@@ -328,6 +331,7 @@ function userPagePrintName() {
         }
       }
       flagToolListen();
+      userPagePrintName();
     }
   };
 
@@ -340,7 +344,6 @@ function userPagePrintName() {
     textareaAutoHeight();
     userMenuBehaviour();
     hideCommentForms();
-    userPagePrintName();
 
     function checkScroll() {
 
