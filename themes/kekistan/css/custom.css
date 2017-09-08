@@ -377,7 +377,7 @@ iframe.kekistan-anthem-video {
 
 /*jihad button*/
 .flag-jihad_flag a {
-  background: url(/themes/kekistan/images/icons/bomb.png) no-repeat center ;
+  background: url(/themes/kekistan/images/icons/bike-lock.png) no-repeat center ;
   background-size: contain;
   padding: 10px;
   margin-left: 20px;
@@ -772,6 +772,18 @@ input#edit-preview {
 
 .section-user article > .form-item {
   padding: 16px;
+}
+
+/****************
+FriendSearch Block
+*****************/
+
+/*Autocomplete*/
+
+.heartbeat-autocomplete-user {
+  font-size: 16px;
+  font-weight: 700;
+  color: #575757;
 }
 
 @media only screen
