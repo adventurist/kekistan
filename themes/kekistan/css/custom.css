@@ -108,8 +108,6 @@ nav#block-kekistan-account-menu {
   display: inline-block;
 }
 
-
-
 div#block-kekistan-branding {
   float: left;
   display: inline-block;
@@ -210,7 +208,6 @@ div#block-kekistan-search h2 {
   width: auto;
 }
 
-
 /* Left side menu - anthemn title */
 div#block-kekistananthem {
   font-size: 10px;
@@ -237,7 +234,6 @@ iframe.kekistan-anthem-video {
 #sidebar-first {
   background: #FFF;
 }
-
 
 /* Main content*/
 #content-area {
@@ -297,7 +293,6 @@ iframe.kekistan-anthem-video {
 }
 
 /*keeping additional content the same width as parent*/
-
 .block-kekistan-content #content {
   width: 100%!important;
 }
@@ -326,6 +321,7 @@ iframe.kekistan-anthem-video {
 
 .heartbeat-message a {
   color: #1da1f2;
+  font-size: 15px;
 }
 
 .heartbeat-like, .heartbeat-unlike {
@@ -404,7 +400,6 @@ iframe.kekistan-anthem-video {
 .heartbeat-interaction-wrap .action-unflag a {
   opacity: 0.5;
 }
-
 
 /*css for flag*/
 .flag a {
@@ -522,8 +517,6 @@ iframe.kekistan-anthem-video {
   margin-top: 0px;
 }
 
-
-
 /*.heartbeat-message a.heartbeat-user {*/
   /*color: green;*/
 /*}*/
@@ -537,7 +530,8 @@ iframe.kekistan-anthem-video {
 .heartbeat-owner {
   display: inline-block;
   width: 25%;
-  float: left;}
+  float: left;
+}
 
 /*node main image and user image */
 a.heartbeat-node img {
@@ -547,7 +541,6 @@ a.heartbeat-node img {
 .heartbeat-content {
   display: inline-block;
   width: 75%;
-  padding-left: 4px;
   float: right;
 }
 
@@ -569,8 +562,6 @@ video.heartbeat-video,
   /*min-height: 240px;*/
 }
 
-
-
 /** Status Messages **/
 #edit-message--description {
   display: none;
@@ -580,7 +571,6 @@ video.heartbeat-video,
 .status-post {
 
 }
-
 
 #status-form #edit-post {
   float: right!important;
@@ -754,7 +744,6 @@ input#edit-preview {
 
 
 /*User Profiles*/
-
 .section-user article > div > img {
   position: relative;
   left: 0;
@@ -781,7 +770,6 @@ and (orientation : portrait) {
   video.heartbeat-video, .heartbeat-message video {
     width: 100%;
   }
-
 
 }
 
@@ -864,7 +852,6 @@ and (orientation : portrait) {
   #block-kekistan-footer li.menu-item:first-child {
     padding-left: 5px;
   }
-
 
   #block-kekistan-footer .facebook-footer {
     max-width: 32px;
