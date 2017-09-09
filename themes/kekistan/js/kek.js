@@ -143,16 +143,20 @@ function userPagePrintName() {
     }
     let userImgData = document.getElementById('block-kekistan-content').querySelector('article div a img');
     let userDom = document.createElement('h3');
-    userDom.innerText = userImgData.alt.substring(25);
-    userDom.id = 'kekistan-userprofile-username';
-    userImgData.parentNode.appendChild(userDom);
+    console.dir(userImgData);
+    if (userImgData !== null) {
+      userDom.innerText = userImgData.alt.substring(25);
+      userDom.id = 'kekistan-userprofile-username';
+      userImgData.parentNode.appendChild(userDom);
+    }
   }
 }
 (function($, Drupal, drupalSettings) {
 
   // add listeners to all hashtags in heartbeat stream
   function streamHashtagListeners() {
-    let hashtags = document.querySelectorAll('.heartbeat-stream .heartbeat-hashtag');
+    let hashtags = document.querySelectorAll('.heartbeat-message .heartbeat-hashtag a');
+    console.dir(hashtags);
     for (let h = 0; h < hashtags.length; h++) {
       let hashTagID = hashtags[h].href.substring(hashtags[h].href.lastIndexOf('/') + 1);
       //add listeners to all taxonomy (mobile)
