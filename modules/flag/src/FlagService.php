@@ -308,9 +308,9 @@ class FlagService implements FlagServiceInterface {
             ->condition("entity_type", $entity->getEntityTypeId(), "=")
             ->condition("entity_id", $entity->id())
             ->condition("uid", $account->id(), "=")
-            ->execute() > 0;
+            ->execute();
 
-        if ($altFlagged) {
+        if (!empty($altFlagged)) {
           return new AjaxResponse(new AlertCommand('Zilla'));
         }
       }
