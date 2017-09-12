@@ -93,3 +93,8 @@
   background: url('/themes/kekistan/images/icons/alert.png') no-repeat;
   padding: 2px 2.5em;
 }
+
+#status-form .ajax-progress.ajax-progress-throbber {
+  position: absolute;
+  margin-left: 44px;
+}
