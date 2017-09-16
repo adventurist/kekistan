@@ -187,6 +187,7 @@ function userPagePrintName() {
             },
             complete: function () {
               $('#heartbeat-loader').hide(225);
+              Drupal.attachBehaviors()
             }
           });
           return false;
@@ -224,6 +225,7 @@ function userPagePrintName() {
             },
             complete: function () {
               $('#heartbeat-loader').hide(225);
+              Drupal.attachBehaviors()
             }
           });
           return false;
@@ -275,6 +277,7 @@ function userPagePrintName() {
                 },
                 complete: function () {
                   $('#heartbeat-loader').hide(225);
+                  Drupal.attachBehaviors()
                 }
               });
               return false;
@@ -310,6 +313,7 @@ function userPagePrintName() {
                 },
                 complete: function () {
                   $('#heartbeat-loader').hide(225);
+                  Drupal.attachBehaviors()
                 }
               });
               return false;
@@ -522,7 +526,7 @@ function userPagePrintName() {
             loginBlock.innerHTML = '';
             mainContainer.removeChild(loginBlock);
           });
-
+          Drupal.attachBehaviors()
         }
       });
     }
