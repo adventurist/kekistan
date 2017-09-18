@@ -203,9 +203,76 @@ div#block-kekistan-search h2 {
   max-width: 75em;
   margin-left: auto;
   margin-right: auto;
-  margin-left: auto;
-  margin-right: auto;
   width: auto;
+}
+
+#kekfilter-block {
+  display: -moz-box;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -moz-box-orient: vertical;
+  -webkit-box-orient: vertical;
+  -webkit-flex-flow: column;
+  -ms-flex-direction: column;
+  flex-flow: column;
+}
+
+.kekfilter-tags {
+  -moz-box-ordinal-group: 1;
+  -webkit-box-ordinal-group: 1;
+  -webkit-order: 1;
+  -ms-flex-order: 1;
+  order: 1;
+}
+
+.kekfilter-tag, .kek-filter-left, .kek-filter-right {
+  cursor: pointer;
+}
+
+.kekfilter-tid, .kekfilter-count {
+  display: none;
+}
+
+#kekfilter-control {
+  -moz-box-ordinal-group: 2;
+  -webkit-box-ordinal-group: 2;
+  -webkit-order: 2;
+  -ms-flex-order: 2;
+  order: 2;
+  padding-top: 16px;
+}
+
+.kek-filter-left {
+  display: inline-block;
+  color: transparent;
+  padding: 16px;
+  background: url(/themes/kekistan/images/icons/backward.png) no-repeat;
+  background-size: contain;
+  float: left;
+  transition: background-color 1000ms linear;
+}
+.kek-filter-right {
+  display: inline-block;
+  color: transparent;
+  padding: 16px;
+  background: url(/themes/kekistan/images/icons/forward.png) no-repeat;
+  background-size: contain;
+  float: right;
+  transition: background-color 1000ms linear;
+}
+
+.kek-filter-left:hover,
+.kek-filter-right:hover {
+  background-color: #70a978;
+}
+.pager__item:nth-of-type(3) a {
+  display: inline-block;
+  color: transparent;
+  padding: 4px;
+  background: url(/themes/kekistan/images/icons/forward.png) no-repeat;
+  background-size: contain;
 }
 
 /* Left side menu - anthemn title */
