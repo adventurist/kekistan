@@ -153,10 +153,203 @@ function userPagePrintName() {
 }
 (function($, Drupal, drupalSettings) {
 
+  let listenNavLeft = function() {
+    drupalSettings.filterPageEnd = false;
+    if (drupalSettings.filterPage !== 0) {
+      let currentIndexStart = (drupalSettings.filterPage + 1) * 10 - 10;
+      let currentIndexEnd = (drupalSettings.filterPage + 1) * 10;
+
+      let replacementTerms = drupalSettings.hashtags.slice(currentIndexStart - 10, currentIndexEnd - 10);
+
+      console.log('Moving range to ' + (currentIndexStart - 10) + ' to ' + (currentIndexEnd - 10));
+      let displayedTags = document.querySelectorAll('.kekfilter-tag');
+      for (let i = 0; i < 10 ; i++) {
+        let replaceWrap = document.createElement('div');
+        replaceWrap.className = 'kekfilter-tag';
+        if (replacementTerms[i] !== undefined) {
+          replaceWrap.innerHTML = '#' + replacementTerms[i].name;
+          let replaceTid = document.createElement('span');
+          replaceTid.className = 'kekfilter-tid';
+          replaceTid.textContent = replacementTerms[i].tid;
+          replaceWrap.appendChild(replaceTid);
+        }
+        displayedTags[i].parentNode.appendChild(replaceWrap);
+        displayedTags[i].parentNode.removeChild(displayedTags[i]);
+      }
+      drupalSettings.filterPage--;
+      kekfilterListeners();
+    }
+  };
+  let listenNavRight = function() {
+    if (!drupalSettings.filterPageEnd) {
+      let currentIndexStart = (drupalSettings.filterPage + 1) * 10 - 10;
+      let currentIndexEnd = (drupalSettings.filterPage + 1) * 10;
+
+      let replacementTerms = drupalSettings.hashtags.slice(currentIndexStart + 10, currentIndexEnd + 10);
+      // console.dir(replacementTerms);
+
+      let end = (currentIndexEnd + 10) > drupalSettings.hashtags.length;
+      let modifier = end ? replacementTerms.length : 10;
+
+      console.log('Moving range to ' + (currentIndexStart + 10) + ' to ' + (currentIndexEnd + 10));
+      let displayedTags = document.querySelectorAll('.kekfilter-tag');
+      let i = 0;
+      for (let f = ((drupalSettings.filterPage + 1 ) * 10) - 10; f < ((drupalSettings.filterPage + 1) * 10) - 10 + modifier; f++) {
+        let replaceWrap = document.createElement('div');
+        replaceWrap.className = 'kekfilter-tag';
+        if (replacementTerms[i] !== undefined) {
+          replaceWrap.innerHTML = '#' + replacementTerms[i].name;
+          let replaceTid = document.createElement('span');
+          replaceTid.className = 'kekfilter-tid';
+          replaceTid.textContent = replacementTerms[i].tid;
+          replaceWrap.appendChild(replaceTid);
+        }
+        displayedTags[i].parentNode.appendChild(replaceWrap);
+        displayedTags[i].parentNode.removeChild(displayedTags[i]);
+        i++;
+      }
+      drupalSettings.filterPage++;
+      drupalSettings.filterPageEnd = end;
+      kekfilterListeners();
+    }
+  };
+
+  function listenNav() {
+    let navLeft = document.querySelector('.kek-filter-left');
+    let navRight = document.querySelector('.kek-filter-right');
+    navLeft.removeEventListener('click', listenNavLeft);
+    navRight.removeEventListener('click', listenNavRight);
+    navLeft.addEventListener('click', listenNavLeft);
+    navRight.addEventListener('click', listenNavRight);
+  }
+
+  const termListen = function(event) {
+    if (drupalSettings.user.uid > 0) {
+      $('#heartbeat-loader').show(225);
+      drupalSettings.filterMode = true;
+      event.preventDefault();
+      event.stopPropagation();
+
+      $.ajax({
+        type: 'GET',
+        url: '/heartbeat/filter-feed/' + tid,
+        success: function (response) {
+          let feedBlock = document.getElementById('block-heartbeatblock');
+          let feedElement = document.querySelector('.heartbeat-stream');
+
+          if (feedElement != null) {
+            feedBlock.removeChild(feedElement);
+          }
+
+          let insertNode = document.createElement('div');
+          insertNode.className = 'heartbeat-stream';
+          insertNode.innerHTML = response;
+          feedBlock.appendChild(insertNode);
+        },
+        complete: function () {
+          $('#heartbeat-loader').hide(225);
+          Drupal.attachBehaviors()
+        }
+      });
+      return false;
+    } else {
+      loginModal();
+    }
+  };
+  function kekfilterListeners() {
+    let feedFilterBlock = document.getElementById('kekfilter-block');
+    console.dir(feedFilterBlock);
+    if (feedFilterBlock !== null) {
+      let terms = feedFilterBlock.querySelectorAll('.kekfilter-tag');
+
+      //TODO Convert the following two event listeners to a more elegant syntax
+      terms.forEach(function (term) {
+        console.dir(term);
+        let tid = term.querySelector('.kekfilter-tid').textContent;
+        //add listeners to all taxonomy (mobile)
+        term.addEventListener("touchstart", function (event) {
+          if (drupalSettings.user.uid > 0) {
+            $('#heartbeat-loader').show(225);
+            drupalSettings.filterMode = true;
+            event.preventDefault();
+            event.stopPropagation();
+
+            $.ajax({
+              type: 'GET',
+              url: '/heartbeat/filter-feed/' + tid,
+              success: function (response) {
+                let feedBlock = document.getElementById('block-heartbeatblock');
+                let feedElement = document.querySelector('.heartbeat-stream');
+
+                if (feedElement != null) {
+                  feedBlock.removeChild(feedElement);
+                }
+
+                let insertNode = document.createElement('div');
+                insertNode.className = 'heartbeat-stream';
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
+              },
+              complete: function () {
+                $('#heartbeat-loader').hide(225);
+                Drupal.attachBehaviors()
+              }
+            });
+            return false;
+          } else {
+            loginModal();
+          }
+        });
+
+        //add listeners to all taxonomy (desktop)
+        term.addEventListener("click", function (event) {
+          console.log('term clicked');
+          if (drupalSettings.user.uid > 0) {
+            $('#heartbeat-loader').show(225);
+
+            drupalSettings.filterMode = true;
+            event.preventDefault();
+            event.stopPropagation();
+
+            $.ajax({
+              type: 'GET',
+              url: '/heartbeat/filter-feed/' + tid,
+              success: function (response) {
+                let feedBlock = document.getElementById('block-heartbeatblock');
+                console.dir(feedBlock);
+                let feedElement = document.querySelector('.heartbeat-stream');
+
+                if (feedElement != null) {
+                  if (feedBlock === null) {
+                    feedBlock = document.getElementById('block-heartbeatmoreblock');
+                    if (feedBlock === null) {
+                      feedBlock = document.getElementById('block-heartbeat')
+                    }
+                  }
+                  feedBlock.removeChild(feedElement);
+                }
+
+                let insertNode = document.createElement('div');
+                insertNode.className = 'heartbeat-stream';
+                insertNode.innerHTML = response;
+                feedBlock.appendChild(insertNode);
+              },
+              complete: function () {
+                $('#heartbeat-loader').hide(225);
+                Drupal.attachBehaviors()
+              }
+            });
+            return false;
+          } else {
+            loginModal();
+          }
+        });
+      });
+    }
+  }
   // add listeners to all hashtags in heartbeat stream
   function streamHashtagListeners() {
     let hashtags = document.querySelectorAll('.heartbeat-message .heartbeat-hashtag a');
-    console.dir(hashtags);
     for (let h = 0; h < hashtags.length; h++) {
       let hashTagID = hashtags[h].href.substring(hashtags[h].href.lastIndexOf('/') + 1);
       //add listeners to all taxonomy (mobile)
@@ -214,7 +407,7 @@ function userPagePrintName() {
               let feedBlock = document.getElementById('block-heartbeatblock');
               let feedElement = document.querySelector('.heartbeat-stream');
 
-              if (feedElement != null) {
+              if (feedElement != null && feedBlock.contains(feedElement)) {
                 feedBlock.removeChild(feedElement);
               }
 
@@ -240,89 +433,12 @@ function userPagePrintName() {
   drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
     attach: function (context, settings) {
-      console.dir(drupalSettings);
-
-      streamHashtagListeners();
-
-      let feedFilterBlock = document.getElementById('block-views-feed-filter-block');
-      if (feedFilterBlock !== null) {
-        let terms = feedFilterBlock.querySelectorAll('a');
-        //TODO Convert the following two event listeners to a more elegant syntax
-        terms.forEach(function (term) {
-          let tid = term.href.substring(term.href.lastIndexOf('/') + 1);
-
-          //add listeners to all taxonomy (mobile)
-          term.addEventListener("touchstart", function (event) {
-            if (drupalSettings.user.uid > 0) {
-              $('#heartbeat-loader').show(225);
-              drupalSettings.filterMode = true;
-              event.preventDefault();
-              event.stopPropagation();
-
-              $.ajax({
-                type: 'GET',
-                url: '/heartbeat/filter-feed/' + tid,
-                success: function (response) {
-                  let feedBlock = document.getElementById('block-heartbeatblock');
-                  let feedElement = document.querySelector('.heartbeat-stream');
-
-                  if (feedElement != null) {
-                    feedBlock.removeChild(feedElement);
-                  }
-
-                  let insertNode = document.createElement('div');
-                  insertNode.className = 'heartbeat-stream';
-                  insertNode.innerHTML = response;
-                  feedBlock.appendChild(insertNode);
-                },
-                complete: function () {
-                  $('#heartbeat-loader').hide(225);
-                  Drupal.attachBehaviors()
-                }
-              });
-              return false;
-            } else {
-              loginModal();
-            }
-          });
-
-          //add listeners to all taxonomy (desktop)
-          term.addEventListener("click", function (event) {
-            if (drupalSettings.user.uid > 0) {
-              $('#heartbeat-loader').show(225);
-
-              drupalSettings.filterMode = true;
-              event.preventDefault();
-              event.stopPropagation();
-
-              $.ajax({
-                type: 'GET',
-                url: '/heartbeat/filter-feed/' + tid,
-                success: function (response) {
-                  let feedBlock = document.getElementById('block-heartbeatblock');
-                  let feedElement = document.querySelector('.heartbeat-stream');
-
-                  if (feedElement != null) {
-                    feedBlock.removeChild(feedElement);
-                  }
-
-                  let insertNode = document.createElement('div');
-                  insertNode.className = 'heartbeat-stream';
-                  insertNode.innerHTML = response;
-                  feedBlock.appendChild(insertNode);
-                },
-                complete: function () {
-                  $('#heartbeat-loader').hide(225);
-                  Drupal.attachBehaviors()
-                }
-              });
-              return false;
-            } else {
-              loginModal();
-            }
-          });
-        });
+      if (context === document) {
+        streamHashtagListeners();
+        kekfilterListeners();
+        listenNav();
       }
+
       if (drupalSettings.admin) {
         //Header offset behaviour to account for top menu
         if (window.innerWidth < 415) {
@@ -352,6 +468,8 @@ function userPagePrintName() {
     textareaAutoHeight();
     userMenuBehaviour();
     hideCommentForms();
+    drupalSettings.filterPage = 0;
+    drupalSettings.filterPageEnd = false;
 
     function checkScroll() {
 

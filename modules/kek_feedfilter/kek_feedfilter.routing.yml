@@ -1,0 +1,8 @@
+
+kek_feedfilter.kek_filter_controller_getFilterBlock:
+  path: '/kek/filter/get-block'
+  defaults:
+    _controller: '\Drupal\kek_feedfilter\Controller\KekFilterController::getFilterBlock'
+    _title: 'Filter Block'
+  requirements:
+    _permission: 'access content'

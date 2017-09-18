@@ -1,0 +1,12 @@
+feedfilter:
+  version: 1.x
+  css:
+    theme:
+      css/feedfilter.css: {}
+  js:
+    js/feedfilter.js: {}
+  dependencies:
+    - core/jquery
+    - core/jquery.once
+    - core/drupal
+    - core/drupalSettings

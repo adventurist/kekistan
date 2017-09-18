@@ -119,3 +119,11 @@ heartbeat_comment.config:
     cid:
       type: integer
       label: 'The ID of the Comment being commented on'
+
+heartbeat_friend_interact.config:
+  type: config_object
+  label: 'Friend Interaction Configuration'
+  mapping:
+    uid:
+      type: integer
+      label: 'The ID of the user being interacted with'

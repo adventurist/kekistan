@@ -1,0 +1,13 @@
+<div id="kekfilter-block" class="kekfilter-block">
+  {% if tags %}
+    <div class="kekfilter-tags">
+      {% for tag in tags %}
+        <div class="kekfilter-tag">#{{ tag.name }}
+          <span class="kekfilter-count">{{ tag.count }}</span>
+          <span class="kekfilter-tid">{{ tag.tid}}</span>
+        </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+  <div id="kekfilter-control"><span class="kek-filter-left"></span><span class="kek-filter-right"></span></div>
+</div>

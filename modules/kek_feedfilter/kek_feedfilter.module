@@ -26,6 +26,18 @@ function kek_feedfilter_help($route_name, RouteMatchInterface $route_match) {
   }
 }
 
+function kek_feedfilter_theme() {
+  return [
+
+    'kekfilter' => [
+      'template' => 'kekfilter',
+      'variables' => [
+        'tags' => null
+      ]
+    ],
+  ];
+}
+
 //TODO find out solution for View pulling in results for unpublished heartbeats whose referenced nodes are hit by the query
 
 /**

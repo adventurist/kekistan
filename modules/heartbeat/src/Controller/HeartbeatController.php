@@ -5,13 +5,17 @@ namespace Drupal\heartbeat\Controller;
 use Drupal\block\BlockViewBuilder;
 use Drupal\Component\Utility\Xss;
 use Drupal\Core\Ajax\AppendCommand;
+use Drupal\Core\Block\BlockManager;
 use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Render\Element\Ajax;
+use Drupal\Core\Render\Renderer;
+use Drupal\Core\Routing\RoutingEvents;
 use Drupal\Core\Url;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\heartbeat\Ajax\SubCommentCommand;
 use Drupal\heartbeat\Entity\HeartbeatInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Class HeartbeatController.
@@ -20,8 +24,32 @@ use Drupal\heartbeat\Entity\HeartbeatInterface;
  *
  * @package Drupal\heartbeat\Controller
  */
-class HeartbeatController extends ControllerBase implements ContainerInjectionInterface {
+class HeartbeatController extends ControllerBase {
 
+  private $renderer;
+  private $blockManager;
+
+  /**
+   * @param ContainerInterface $container
+   * @return static
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('renderer'),
+      $container->get('plugin.manager.block')
+    );
+  }
+
+  /**
+   * HeartbeatController constructor.
+   * @param Renderer $renderer
+   * @param BlockManager $block_manager
+   */
+
+  public function __construct(Renderer $renderer, BlockManager $block_manager) {
+    $this->renderer = $renderer;
+    $this->blockManager = $block_manager;
+  }
   /**
    * Displays a Heartbeat  revision.
    *
@@ -177,17 +205,21 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
 
 
   public function updateFeed($hid) {
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_more.settings');
+    $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_more.settings');
     $myConfig->set('hid', $hid)->save();
-
-    return BlockViewBuilder::lazyBuilder('heartbeatmoreblock', 'full');
+    $block = $this->blockManager->createInstance('heartbeat_more_block')->build();
+    return $this->renderer->render($block);
   }
 
   public function filterFeed($tid) {
     $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_hashtag.settings');
     $myConfig->set('tid', $tid)->save();
-    $block = BlockViewBuilder::lazyBuilder('heartbeathashblock', 'teaser');
-    return BlockViewBuilder::lazyBuilder('heartbeathashblock', 'teaser');
+    $block = $this->blockManager->createInstance('heartbeat_hash_block')->build();
+
+    return [
+      '#type' => 'markup',
+      '#markup' => $this->renderer->render($block)
+      ];
   }
 
   public function commentConfigUpdate($entity_id) {
@@ -217,4 +249,14 @@ class HeartbeatController extends ControllerBase implements ContainerInjectionIn
     return BlockViewBuilder::lazyBuilder('heartbeatsubcommentblock', 'teaser');
   }
 
+  public function friendInteract($uid) {
+    $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_friend_interact.settings');
+    $myConfig->set('uid', $uid)->save();
+//    $block = BlockViewBuilder::lazyBuilder('friendinteractblock', 'full');
+    $block = \Drupal::service('plugin.manager.block');
+    $block = $block->createInstance('friend_interact_block')->build();
+    $blockMarkup = \Drupal::service('renderer')->render($block);
+
+    return ['#type' => 'markup', '#markup' => $blockMarkup];
+  }
 }

@@ -1,0 +1,7 @@
+kek_feed_filter_config:
+  type: config_entity
+  label: 'Hashtag configuration'
+  mapping:
+    tag_data:
+      type: blob
+      label: 'Top 100 Hashtags'

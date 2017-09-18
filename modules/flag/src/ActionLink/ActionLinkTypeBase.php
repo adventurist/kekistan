@@ -14,6 +14,7 @@ use Drupal\Core\Session\AccountInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\flag\FlagInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\HttpFoundation;
 
 /**
  * Provides a base class for all link types.
@@ -157,6 +158,13 @@ abstract class ActionLinkTypeBase extends PluginBase implements ActionLinkTypePl
 
     if (isset($route_params['destination'])) {
       return $route_params['destination'];
+    }
+
+    if (strpos(\Drupal::request()->getRequestUri(), '/heartbeat') !== false) {
+
+      //TODO This needs to be replaced with a value provided from config object (re-use method for Comment Forms)
+      return Url::fromUri('internal:/node')->getInternalPath();
+
     }
 
     return $current_url->getInternalPath();
