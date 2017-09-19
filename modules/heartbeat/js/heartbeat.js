@@ -118,15 +118,12 @@
   function getScrollXY() {
     let scrOfX = 0, scrOfY = 0;
     if (typeof( window.pageYOffset ) == 'number') {
-
       scrOfY = window.pageYOffset;
       scrOfX = window.pageXOffset;
     } else if (document.body && ( document.body.scrollLeft || document.body.scrollTop )) {
-
       scrOfY = document.body.scrollTop;
       scrOfX = document.body.scrollLeft;
     } else if (document.documentElement && ( document.documentElement.scrollLeft || document.documentElement.scrollTop )) {
-
       scrOfY = document.documentElement.scrollTop;
       scrOfX = document.documentElement.scrollLeft;
     }
@@ -286,6 +283,7 @@
       }
       listenImages();
       listenCommentPost();
+      commentFormListeners();
       feedElement = document.querySelector('.heartbeat-stream');
 
       if (drupalSettings.feedUpdate == true) {
@@ -301,7 +299,6 @@
     const body = document.getElementsByTagName('body')[0];
     body.appendChild(loader);
 
-    commentFormListeners();
     flagListeners();
 
     let stream = document.getElementById('block-heartbeatblock');
@@ -313,7 +310,6 @@
       commentFormListeners();
       flagListeners();
       listenVideos();
-      listenWindowScroll();
     });
 
     let config = {attributes: true, childList: true, characterData: true};
@@ -337,7 +333,7 @@
 
 
 
-    document.addEventListener("scroll", function (event) {
+    document.addEventListener("scroll", function () {
 
       if (drupalSettings.filterMode == false && (getScrollXY()[1] + window.innerHeight) / getDocHeight() > 0.99) {
 

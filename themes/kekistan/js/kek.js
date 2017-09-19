@@ -1,25 +1,25 @@
-(function($, Drupal, drupalSettings) {
+function listenVideos() {
+  let videos = document.getElementsByTagName('video');
+  for (let i = videos.length - 1; i >= 0; i--) {
+    let video = videos[i];
+    video.addEventListener('loadedmetadata', function() {
+      video.loop = video.duration < 5;
+      video.muted = true;
 
-  function listenVideos() {
-    let videos = document.getElementsByTagName('video');
-    for (var i = videos.length - 1; i >= 0; i--) {
-      let video = videos[i];
-      video.addEventListener('loadedmetadata', function() {
-        video.loop = video.duration < 5;
-        video.muted = true;
-
-        video.addEventListener('click', function() {
-          if (video.paused) {
-            video.muted = false;
-            video.play();
-          } else {
-            video.muted = true;
-            video.pause();
-          }
-        });
+      video.addEventListener('click', function() {
+        if (video.paused) {
+          video.muted = false;
+          video.play();
+        } else {
+          video.muted = true;
+          video.pause();
+        }
       });
-    }
+    });
   }
+}
+
+(function($, Drupal, drupalSettings) {
 
   function listenReplyButtons() { //reply grey button to reply
     let replyButtons = document.querySelectorAll('.heartbeat-comment-form .form-submit, .heartbeat-sub-comment-form .form-submit');
@@ -461,6 +461,7 @@
   drupalSettings.filterMode = false;
   Drupal.behaviors.custom= {
     attach: function (context, settings) {
+
       if (context === document) {
         streamHashtagListeners();
         kekfilterListeners();
