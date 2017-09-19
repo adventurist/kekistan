@@ -247,7 +247,7 @@ div#block-kekistan-search h2 {
 .kek-filter-left {
   display: inline-block;
   color: transparent;
-  padding: 16px;
+  padding: 10px;
   background: url(/themes/kekistan/images/icons/backward.png) no-repeat;
   background-size: contain;
   float: left;
@@ -256,7 +256,7 @@ div#block-kekistan-search h2 {
 .kek-filter-right {
   display: inline-block;
   color: transparent;
-  padding: 16px;
+  padding: 10px;
   background: url(/themes/kekistan/images/icons/forward.png) no-repeat;
   background-size: contain;
   float: right;
@@ -300,6 +300,11 @@ iframe.kekistan-anthem-video {
 
 #sidebar-first {
   background: #FFF;
+}
+
+/*top 10 trends*/
+div#block-kekfilterblock h2 {
+  font-size: 20px;
 }
 
 /* Main content*/
