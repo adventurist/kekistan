@@ -227,21 +227,20 @@ div#block-kekistan-search h2 {
   order: 1;
 }
 
+/*hashtags in the side bar*/
 .kekfilter-tag {
-  color: #1dbea1;
+  color: #cb2db6;
+  font-size: 15px;
   line-height: 1.8;
-  font-weight: 700;
+  margin-left: 10px;
+}
+
+.kekfilter-tag:hover {
+  color: #555;
 }
 
 .kekfilter-tag, .kek-filter-left, .kek-filter-right {
   cursor: pointer;
-}
-
-.kekfilter-tag:hover {
-
-  color: #00ff09;
-  -moz-text-decoration-line: underline;
-  text-decoration-style: solid;
 }
 
 .kekfilter-tid, .kekfilter-count {
