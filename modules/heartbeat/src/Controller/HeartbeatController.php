@@ -222,6 +222,19 @@ class HeartbeatController extends ControllerBase {
       ];
   }
 
+
+  public function userFilterFeed($tid) {
+    $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_username.settings');
+    $myConfig->set('tid', $tid)->save();
+    $block = $this->blockManager->createInstance('heartbeat_username_block')->build();
+
+    return [
+      '#type' => 'markup',
+      '#markup' => $this->renderer->render($block)
+    ];
+  }
+
+
   public function commentConfigUpdate($entity_id) {
     $commentConfig = \Drupal::configFactory()->getEditable('heartbeat_comment.settings');
     $commentConfig->set('entity_id', $entity_id)->save();

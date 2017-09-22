@@ -101,6 +101,14 @@ heartbeat_hashtag.config:
       type: integer
       label: 'The Taxonomy term to be used when filtering a Heartbeat Stream'
 
+heartbeat_username.config:
+  type: config_object
+  label: 'Username selections'
+  mapping:
+    tid:
+      type: integer
+      label: 'The Taxonomy term to be used when filtering a Heartbeat Stream'
+
 heartbeat_more.config:
   type: config_object
   label: 'Parameter for fetching more heartbeats'

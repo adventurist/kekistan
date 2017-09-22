@@ -337,4 +337,49 @@ class HeartbeatStreamServices {
         ->execute());
   }
 
+  public function createUsernameStreamForUidsByType($uids, $feed, $tid) {
+    $query = $this->database->query('
+      SELECT coalesce(hr.id)
+      FROM heartbeat_field_revision hr
+      LEFT JOIN node__field_username un
+      ON un.entity_id = hr.nid
+      LEFT JOIN node__field_users u
+      ON u.entity_id = hr.nid 
+      WHERE u.field_users_target_id = :tid
+      OR un.field_username_target_id = :tid', array(
+        ':tid' => $tid
+      )
+    );
+    $hids = array();
+    foreach ($query->fetchAllKeyed() as $id => $row) {
+      $hids[] = $id;
+    }
+
+    if (!empty($hids)) {
+      $beats = $this->entityTypeManager->getStorage('heartbeat')
+        ->loadMultiple(
+          $this->entityQuery->get('heartbeat')
+            ->condition('status', 1)
+            ->condition('uid', $uids, 'IN')
+            ->condition('id', $hids, 'IN')
+            ->sort('created', 'DESC')
+
+            ->execute());
+
+      if (count($beats) > 0) {
+        $this->lastId = call_user_func('end', array_keys($beats));
+
+        $this->configFactory->getEditable('heartbeat_update_feed.settings')
+          ->set('lastId', $this->lastId)
+          ->set('update', FALSE)
+          ->set('timestamp', array_values($beats)[0]->getRevisionCreationTime())
+          ->save();
+
+        return $beats;
+      }
+    }
+    return null;
+
+  }
+
 }

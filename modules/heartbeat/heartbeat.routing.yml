@@ -95,7 +95,7 @@ heartbeat.render_feed:
     _title: 'Render Feed'
   requirements:
     _permission: 'access content'
-
+#This should probably be associated with the word more or add
 heartbeat.update_feed:
   path: '/heartbeat/update_feed/{hid}'
   defaults:
@@ -117,6 +117,15 @@ heartbeat.heartbeat_filter_feed:
   defaults:
     _controller: '\Drupal\heartbeat\Controller\HeartbeatController::filterFeed'
     _title: 'Heartbeat Filter Feed'
+  requirements:
+    _access: 'TRUE'
+
+
+heartbeat.heartbeat_user_filter_feed:
+  path: '/heartbeat/filter-feed/username/{tid}'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::userFilterFeed'
+    _title: 'Heartbeat User Filter Feed'
   requirements:
     _access: 'TRUE'
 
@@ -179,4 +188,11 @@ heartbeat.friend_search_form:
     _title: 'FriendSearchForm'
   requirements:
     _access: 'TRUE'
-  
+
+heartbeat.friend_interact:
+  path: '/heartbeat/friend_interact/{uid}'
+  defaults:
+    _controller: '\Drupal\heartbeat\Controller\HeartbeatController::friendInteract'
+    _title: 'Interact with a potential friend'
+  requirements:
+    _permission: 'access content'
