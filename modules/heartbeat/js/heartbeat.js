@@ -41,8 +41,6 @@
     let cboxOptions = { maxWidth: '960px', maxHeight: '960px' };
     let images = document.querySelectorAll('.heartbeat-content img');
 
-    console.dir(images);
-
     $('.heartbeat-content').find('img').each(function () {
       let parentClass = $(this).parent().prop('className');
       let phid = parentClass.substring(parentClass.indexOf('hid') + 4);
@@ -62,7 +60,6 @@
   }
 
   function commentFormListeners() {
-    console.log('Comment Form Listeners');
     let cFormButtons = document.querySelectorAll('.heartbeat-comment-button');
 
     for (let b = 0; b < cFormButtons.length; b++) {
@@ -155,6 +152,7 @@
           insertNode.innerHTML = response;
           feedBlock.appendChild(insertNode);
         }
+        Drupal.attachBehaviors();
       }
     });
   };
@@ -192,7 +190,10 @@
     let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
 
     for (let f = 0; f < forms.length; f++) {
-      forms[f].className += ' comment-form-hidden';
+      console.log('adding hidden class to comment form');
+      if (!forms[f].classList.contains('comment-form-hidden')) {
+        forms[f].className += ' comment-form-hidden';
+      }
     }
   }
 
@@ -305,11 +306,12 @@
 
     let observer = new MutationObserver(function (mutations) {
       console.log('observer observes a change');
-      listenImages();
+      // Drupal.attachBehaviors();
+      // listenImages();
       hideCommentForms();
-      commentFormListeners();
-      flagListeners();
-      listenVideos();
+      // commentFormListeners();
+      // flagListeners();
+      // listenVideos();
     });
 
     let config = {attributes: true, childList: true, characterData: true};
@@ -317,7 +319,7 @@
     observer.observe(stream, config);
 
     let flagObserver = new MutationObserver(function(mutations) {
-      console.dir(mutations);
+      console.log('observer observes a change');
       if (mutations[0].target !== null && mutations[0].target.children !== null && mutations[0].target.children.length > 0 && mutations[0].target.children[0].classList.contains('flag')) {
         flagListeners();
       }
@@ -330,7 +332,6 @@
     flags.forEach(function(flag) {
       flagObserver.observe(flag, flagObserveConfig);
     });
-
 
 
     document.addEventListener("scroll", function () {

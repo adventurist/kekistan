@@ -104,7 +104,7 @@ class StatusForm extends FormBase {
       ]
 
     );
-    
+
     $form['mediatabs'] = [
       '#type' => 'radios',
 //      '#description' => $this->t('User selectable feeds'),
@@ -266,13 +266,17 @@ class StatusForm extends FormBase {
         $feedConfig = \Drupal::config('heartbeat_feed.settings');
         $response = new AjaxResponse();
         $response->addCommand(new SelectFeedCommand($feedConfig->get('message')));
-        $response->addCommand(new ClearPreviewCommand(true));
+//        $response->addCommand(new ClearPreviewCommand(true));
 
 //        $this->clearFormInput($form_state);
 //        $form['message']['#default'] = '';
 //        $form['message']['#value'] = '';
 
         return $response;
+//        return [
+//          '#type' => 'markup',
+//          '#markup' => 'Status submitted'
+//        ];
       }
     }
     return null;

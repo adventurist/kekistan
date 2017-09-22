@@ -5,10 +5,6 @@
   Drupal.behaviors.status= {
     attach: function (context, settings) {
 
-      if (Drupal.AjaxCommands){
-        Drupal.AjaxCommands.prototype.viewsScrollTop = null;
-      }
-
       Drupal.AjaxCommands.prototype.generatePreview = function(ajax, response, status) {
 
         if (validateUrl(response.url)) {

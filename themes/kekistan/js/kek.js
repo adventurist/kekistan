@@ -135,7 +135,11 @@ function listenVideos() {
           let replaceTid = document.createElement('span');
           replaceTid.className = 'kekfilter-tid';
           replaceTid.textContent = replacementTerms[i].tid;
+          let replaceCount = document.createElement('span');
+          replaceCount.className = 'kekfilter-count';
+          replaceCount.textContent = replaceTerms[i].count;
           replaceWrap.appendChild(replaceTid);
+          replaceWrap.appendChild(replaceCount);
         }
         displayedTags[i].parentNode.appendChild(replaceWrap);
         displayedTags[i].parentNode.removeChild(displayedTags[i]);
