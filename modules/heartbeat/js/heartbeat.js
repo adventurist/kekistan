@@ -137,54 +137,56 @@
     );
   }
 
-  Drupal.AjaxCommands.prototype.selectFeed = function (ajax, response, status) {
-    $.ajax({
-      type: 'POST',
-      url: '/heartbeat/render_feed/' + response.feed,
-      success: function (response) {
-        feedElement = document.querySelector('.heartbeat-stream');
-
-        if (feedElement != null) {
-          feedElement.innerHTML = response;
-        } else {
-          feedBlock = document.getElementById('block-heartbeatblock');
-          insertNode = document.createElement('div');
-          insertNode.innerHTML = response;
-          feedBlock.appendChild(insertNode);
-        }
-        Drupal.attachBehaviors();
-      }
-    });
-  };
-
-  Drupal.AjaxCommands.prototype.updateFeed = function (ajax, response, status) {
-    if (response.update) {
+  if (!drupalSettings.path.currentPathIsAdmin) {
+    Drupal.AjaxCommands.prototype.selectFeed = function (ajax, response, status) {
       $.ajax({
         type: 'POST',
-        url: '/heartbeat/update_feed/' + response.timestamp,
+        url: '/heartbeat/render_feed/' + response.feed,
         success: function (response) {
+          feedElement = document.querySelector('.heartbeat-stream');
 
+          if (feedElement != null) {
+            feedElement.innerHTML = response;
+          } else {
+            feedBlock = document.getElementById('block-heartbeatblock');
+            insertNode = document.createElement('div');
+            insertNode.innerHTML = response;
+            feedBlock.appendChild(insertNode);
+          }
+          Drupal.attachBehaviors();
         }
       });
-    }
-  };
+    };
 
-  Drupal.AjaxCommands.prototype.myfavouritemethodintheworld = function (ajax, response, status) {
-    console.dir(response);
-    if (response.cid) {
-      console.log('this shit is getting called again');
-      let parentComment = document.getElementById('heartbeat-comment-' + response.cid);
-      let text = parentComment.querySelector('.form-textarea');
+    Drupal.AjaxCommands.prototype.updateFeed = function (ajax, response, status) {
+      if (response.update) {
+        $.ajax({
+          type: 'POST',
+          url: '/heartbeat/update_feed/' + response.timestamp,
+          success: function (response) {
 
-      text.addEventListener('keydown', function (e) {
-        console.dir(e);
-        if (e.keyCode === 13) {
-          let submitBtn = parentComment.querySelector('.form-submit');
-          submitBtn.click();
-        }
-      });
-    }
-  };
+          }
+        });
+      }
+    };
+
+    Drupal.AjaxCommands.prototype.myfavouritemethodintheworld = function (ajax, response, status) {
+      console.dir(response);
+      if (response.cid) {
+        console.log('this shit is getting called again');
+        let parentComment = document.getElementById('heartbeat-comment-' + response.cid);
+        let text = parentComment.querySelector('.form-textarea');
+
+        text.addEventListener('keydown', function (e) {
+          console.dir(e);
+          if (e.keyCode === 13) {
+            let submitBtn = parentComment.querySelector('.form-submit');
+            submitBtn.click();
+          }
+        });
+      }
+    };
+  }
 
   function hideCommentForms() {
     let forms = document.querySelectorAll('.heartbeat-comment-form .js-form-type-textarea, .heartbeat-comment-form .form-submit');
@@ -304,19 +306,20 @@
 
     let stream = document.getElementById('block-heartbeatblock');
 
-    let observer = new MutationObserver(function (mutations) {
-      console.log('observer observes a change');
-      // Drupal.attachBehaviors();
-      // listenImages();
-      hideCommentForms();
-      // commentFormListeners();
-      // flagListeners();
-      // listenVideos();
-    });
+    if (stream !== null) {
+      let observer = new MutationObserver(function (mutations) {
+        console.log('observer observes a change');
+        // Drupal.attachBehaviors();
+        // listenImages();
+        hideCommentForms();
+        // commentFormListeners();
+        // flagListeners();
+        // listenVideos();
+      });
 
-    let config = {attributes: true, childList: true, characterData: true};
-
-    observer.observe(stream, config);
+      let config = {attributes: true, childList: true, characterData: true};
+      observer.observe(stream, config);
+    }
 
     let flagObserver = new MutationObserver(function(mutations) {
       console.log('observer observes a change');
