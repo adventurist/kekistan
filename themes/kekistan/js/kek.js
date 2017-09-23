@@ -529,20 +529,28 @@ function listenVideos() {
       type: 'GET',
       url: '/user/modal/login',
       success: function (response) {
-        mainContainer = document.getElementById('main');
-        loginBlock = document.createElement('div');
-        loginBlock.innerHTML = response;
-        loginBlock.className = 'kekistan-login-block';
-        loginBlock.id = 'kekistan-login-block';
-        closeBtn = document.createElement('div');
-        closeBtn.className =  'kekistan-login-block-close';
-        closeBtn.innerHTML = '✖';
-        loginBlock.appendChild(closeBtn);
-        mainContainer.appendChild(loginBlock);
+        console.dir(response);
+        let mainContainer = document.getElementById('main');
+        let loginBlock = document.getElementById('kekistan-login-block');
+        if (loginBlock === null) {
+          loginBlock = document.createElement('div');
+          loginBlock.innerHTML = response;
+          loginBlock.className = 'kekistan-login-block';
+          loginBlock.id = 'kekistan-login-block';
+          let closeBtn = document.createElement('div');
+          closeBtn.className = 'kekistan-login-block-close';
+          closeBtn.innerHTML = '✖';
+          loginBlock.appendChild(closeBtn);
+        }
 
+        closeBtn = loginBlock.querySelector('.kekistan-login-block-close');
+        mainContainer.appendChild(loginBlock);
         closeBtn.addEventListener('click', function() {
-          loginBlock.innerHTML = '';
-          mainContainer.removeChild(loginBlock);
+          // loginBlock.innerHTML = '';
+          if (loginBlock !== null && loginBlock.parentNode !== null) {
+            loginBlock.parentNode.removeChild(loginBlock);
+            loginBlock = null;
+          }
         });
         Drupal.attachBehaviors()
       }
