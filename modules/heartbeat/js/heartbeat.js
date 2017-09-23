@@ -137,7 +137,7 @@
     );
   }
 
-  if (!drupalSettings.path.currentPathIsAdmin) {
+  if (drupalSettings.user.uid > 0 && !drupalSettings.path.currentPathIsAdmin) {
     Drupal.AjaxCommands.prototype.selectFeed = function (ajax, response, status) {
       $.ajax({
         type: 'POST',
