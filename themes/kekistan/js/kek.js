@@ -226,6 +226,7 @@ function listenVideos() {
                 feedBlock.appendChild(insertNode);
               },
               complete: function () {
+                $('body').animate({scrollTop: '0px'}, 500);
                 $('#heartbeat-loader').hide(225);
                 Drupal.attachBehaviors()
               }
@@ -270,6 +271,7 @@ function listenVideos() {
                 feedBlock.appendChild(insertNode);
               },
               complete: function () {
+                $('body').animate({scrollTop: '0px'}, 500);
                 $('#heartbeat-loader').hide(225);
                 Drupal.attachBehaviors()
               }
@@ -314,6 +316,7 @@ function listenVideos() {
               feedBlock.appendChild(insertNode);
             },
             complete: function () {
+              $('body').animate({scrollTop: '0px'}, 500);
               $('#heartbeat-loader').hide(225);
               Drupal.attachBehaviors()
             }
@@ -352,6 +355,7 @@ function listenVideos() {
               feedBlock.appendChild(insertNode);
             },
             complete: function () {
+              $('body').animate({scrollTop: '0px'}, 500);
               $('#heartbeat-loader').hide(225);
               Drupal.attachBehaviors()
             }
@@ -395,6 +399,7 @@ function listenVideos() {
               feedBlock.appendChild(insertNode);
             },
             complete: function () {
+              $('body').animate({scrollTop: '0px'}, 500);
               $('#heartbeat-loader').hide(225);
               Drupal.attachBehaviors()
             }
@@ -433,6 +438,7 @@ function listenVideos() {
               feedBlock.appendChild(insertNode);
             },
             complete: function () {
+              $('body').animate({scrollTop: '0px'}, 500);
               $('#heartbeat-loader').hide(225);
               Drupal.attachBehaviors()
             }
