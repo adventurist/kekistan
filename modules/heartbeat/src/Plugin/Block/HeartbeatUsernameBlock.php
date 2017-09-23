@@ -2,9 +2,12 @@
 
 namespace Drupal\heartbeat\Plugin\Block;
 
+use Drupal\comment\Entity\Comment;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Database\Database;
+use Drupal\Core\Link;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\heartbeat\Entity\Heartbeat;
 use Symfony\Component\DependencyInjection\ContainerInterface;
