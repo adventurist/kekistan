@@ -208,7 +208,10 @@ class HeartbeatController extends ControllerBase {
     $myConfig = \Drupal::service('config.factory')->getEditable('heartbeat_more.settings');
     $myConfig->set('hid', $hid)->save();
     $block = $this->blockManager->createInstance('heartbeat_more_block')->build();
-    return $this->renderer->render($block);
+    return [
+      '#type' => 'markup',
+      '#markup' => $this->renderer->render($block)
+    ];
   }
 
   public function filterFeed($tid) {

@@ -137,7 +137,7 @@ function listenVideos() {
           replaceTid.textContent = replacementTerms[i].tid;
           let replaceCount = document.createElement('span');
           replaceCount.className = 'kekfilter-count';
-          replaceCount.textContent = replaceTerms[i].count;
+          replaceCount.textContent = replacementTerms[i].count;
           replaceWrap.appendChild(replaceTid);
           replaceWrap.appendChild(replaceCount);
         }
@@ -170,7 +170,17 @@ function listenVideos() {
           let replaceTid = document.createElement('span');
           replaceTid.className = 'kekfilter-tid';
           replaceTid.textContent = replacementTerms[i].tid;
+          let replaceCount = document.createElement('span');
+          replaceCount.className = 'kekfilter-count';
+          replaceCount.textContent = replacementTerms[i].count;
           replaceWrap.appendChild(replaceTid);
+          replaceWrap.appendChild(replaceCount);
+          replaceWrap.addEventListener('mouseover', function() {
+            replaceCount.style.display = 'inline-block';
+          })
+          replaceWrap.addEventListener('mouseout', function() {
+            replaceCount.style.display = 'none';
+          })
         }
         displayedTags[i].parentNode.appendChild(replaceWrap);
         displayedTags[i].parentNode.removeChild(displayedTags[i]);
@@ -193,13 +203,11 @@ function listenVideos() {
 
   function kekfilterListeners() {
     let feedFilterBlock = document.getElementById('kekfilter-block');
-    console.dir(feedFilterBlock);
     if (feedFilterBlock !== null) {
       let terms = feedFilterBlock.querySelectorAll('.kekfilter-tag');
 
       //TODO Convert the following two event listeners to a more elegant syntax
       terms.forEach(function (term) {
-        console.dir(term);
         let tid = term.querySelector('.kekfilter-tid').textContent;
         //add listeners to all taxonomy (mobile)
         term.addEventListener("touchstart", function (event) {
@@ -254,7 +262,6 @@ function listenVideos() {
                 let feedBlock = document.getElementById('block-heartbeatblock');
                 console.dir(feedBlock);
                 let feedElement = document.querySelector('.heartbeat-stream');
-
                 if (feedElement != null) {
                   if (feedBlock === null) {
                     feedBlock = document.getElementById('block-heartbeatmoreblock');
@@ -262,7 +269,9 @@ function listenVideos() {
                       feedBlock = document.getElementById('block-heartbeat')
                     }
                   }
-                  feedBlock.removeChild(feedElement);
+                  if (feedBlock !== null && feedBlock.parentNode !== null) {
+                    feedBlock.parentNode.removeChild(feedBlock);
+                  }
                 }
 
                 let insertNode = document.createElement('div');
@@ -285,6 +294,7 @@ function listenVideos() {
     }
   }
   // add listeners to all hashtags in heartbeat stream
+  //TODO streamHashTagListeners and streamUsernameLIsteners need to be merged into one reusable method
   function streamHashtagListeners() {
     let hashtags = document.querySelectorAll('.heartbeat-message .heartbeat-hashtag a');
     for (let h = 0; h < hashtags.length; h++) {
@@ -304,10 +314,23 @@ function listenVideos() {
             url: '/heartbeat/filter-feed/' + hashTagID,
             success: function (response) {
               let feedBlock = document.getElementById('block-heartbeatblock');
+              let feedElements = document.querySelectorAll('.heartbeat-stream');
+              //Unfortunately, since Drupal sends containers around blocks we request, we need to iterate over the parent
+              //and remove any duplicate heartbeatstreams
+              for (let e = 0; e < feedElements.length; e++) {
+                if (feedElements[e].parentNode !== null) {
+                  feedElements[e].parentNode.removeChild(feedElements[e]);
+                }
+              }
+              for (let b = 0; b < feedBlock.children.length; b++) {
+                if (!feedBlock.children[b].classList.contains('contextual') && !feedBlock.children[b].classList.contains('heartbeat-stream')) {
+                  feedBlock.removeChild(feedBlock.children[b]);
+                }
+              }
               let feedElement = document.querySelector('.heartbeat-stream');
 
-              if (feedElement != null) {
-                feedBlock.removeChild(feedElement);
+              if (feedElement != null && feedElement.parentNode.contains(feedElement)) {
+                feedElement.parentNode.removeChild(feedElement);
               }
 
               let insertNode = document.createElement('div');
@@ -343,10 +366,23 @@ function listenVideos() {
             url: '/heartbeat/filter-feed/' + hashTagID,
             success: function (response) {
               let feedBlock = document.getElementById('block-heartbeatblock');
+              let feedElements = document.querySelectorAll('.heartbeat-stream');
+              //Unfortunately, since Drupal sends containers around blocks we request, we need to iterate over the parent
+              //and remove any duplicate heartbeatstreams
+              for (let e = 0; e < feedElements.length; e++) {
+                if (feedElements[e].parentNode !== null) {
+                  feedElements[e].parentNode.removeChild(feedElements[e]);
+                }
+              }
+              for (let b = 0; b < feedBlock.children.length; b++) {
+                if (!feedBlock.children[b].classList.contains('contextual') && !feedBlock.children[b].classList.contains('heartbeat-stream')) {
+                  feedBlock.removeChild(feedBlock.children[b]);
+                }
+              }
               let feedElement = document.querySelector('.heartbeat-stream');
 
-              if (feedElement != null && feedBlock.contains(feedElement)) {
-                feedBlock.removeChild(feedElement);
+              if (feedElement != null && feedElement.parentNode.contains(feedElement)) {
+                feedElement.parentNode.removeChild(feedElement);
               }
 
               let insertNode = document.createElement('div');
@@ -387,10 +423,23 @@ function listenVideos() {
             url: '/heartbeat/filter-feed/username/' + userNameID,
             success: function (response) {
               let feedBlock = document.getElementById('block-heartbeatblock');
+              let feedElements = document.querySelectorAll('.heartbeat-stream');
+              //Unfortunately, since Drupal sends containers around blocks we request, we need to iterate over the parent
+              //and remove any duplicate heartbeatstreams
+              for (let e = 0; e < feedElements.length; e++) {
+                if (feedElements[e].parentNode !== null) {
+                  feedElements[e].parentNode.removeChild(feedElements[e]);
+                }
+              }
+              for (let b = 0; b < feedBlock.children.length; b++) {
+                if (!feedBlock.children[b].classList.contains('contextual') && !feedBlock.children[b].classList.contains('heartbeat-stream')) {
+                  feedBlock.removeChild(feedBlock.children[b]);
+                }
+              }
               let feedElement = document.querySelector('.heartbeat-stream');
 
-              if (feedElement != null) {
-                feedBlock.removeChild(feedElement);
+              if (feedElement != null && feedElement.parentNode.contains(feedElement)) {
+                feedElement.parentNode.removeChild(feedElement);
               }
 
               let insertNode = document.createElement('div');
@@ -426,10 +475,23 @@ function listenVideos() {
             url: '/heartbeat/filter-feed/username/' + userNameID,
             success: function (response) {
               let feedBlock = document.getElementById('block-heartbeatblock');
+              let feedElements = document.querySelectorAll('.heartbeat-stream');
+              //Unfortunately, since Drupal sends containers around blocks we request, we need to iterate over the parent
+              //and remove any duplicate heartbeatstreams
+              for (let e = 0; e < feedElements.length; e++) {
+                if (feedElements[e].parentNode !== null) {
+                  feedElements[e].parentNode.removeChild(feedElements[e]);
+                }
+              }
+              for (let b = 0; b < feedBlock.children.length; b++) {
+                if (!feedBlock.children[b].classList.contains('contextual') && !feedBlock.children[b].classList.contains('heartbeat-stream')) {
+                  feedBlock.removeChild(feedBlock.children[b]);
+                }
+              }
               let feedElement = document.querySelector('.heartbeat-stream');
 
-              if (feedElement != null && feedBlock.contains(feedElement)) {
-                feedBlock.removeChild(feedElement);
+              if (feedElement != null && feedElement.parentNode.contains(feedElement)) {
+                feedElement.parentNode.removeChild(feedElement);
               }
 
               let insertNode = document.createElement('div');

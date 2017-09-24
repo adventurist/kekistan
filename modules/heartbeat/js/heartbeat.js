@@ -3,6 +3,7 @@
  */
 
 (function($, Drupal, drupalSettings) {
+  drupalSettings.requestInProgress = false;
 
   const flagListen = function(e) {
 
@@ -27,6 +28,48 @@
     });
   };
 
+  const addWindowScrollListener = function() {
+    if (drupalSettings.filterMode == false &&
+      (getScrollXY()[1] + window.innerHeight) / getDocHeight() > 0.99 &&
+      !drupalSettings.requestInProgress) {
+
+      drupalSettings.requestInProgress = true;
+      let streams = document.querySelectorAll('.heartbeat-stream');
+      let stream = streams.length > 1 ? streams[streams.length - 1] : streams[0];
+
+      if (stream !== null) {
+        let lastHeartbeat = stream.lastElementChild;
+
+        if (lastHeartbeat !== null) {
+
+          let hid = lastHeartbeat.id.substring(lastHeartbeat.id.indexOf('-') + 1);
+          if (drupalSettings.lastHid !== hid) {
+            drupalSettings.lastHid = hid;
+            $('#heartbeat-loader').show(225);
+
+            $.ajax({
+              type: 'POST',
+              url: '/heartbeat/update_feed/' + hid,
+
+              success: function (response) {
+                feedBlock = document.getElementById('block-heartbeatblock')
+                insertNode = document.createElement('div')
+                insertNode.innerHTML = response
+                feedBlock.appendChild(insertNode)
+                Drupal.attachBehaviors()
+              },
+
+              complete: function () {
+                $('#heartbeat-loader').hide(225);
+                drupalSettings.requestInProgress = false;
+              }
+            });
+          }
+        }
+      }
+    }
+  };
+
   function updateFeed() {
     $.ajax({
       type: 'POST',
@@ -39,7 +82,6 @@
 
   function listenImages() {
     let cboxOptions = { maxWidth: '960px', maxHeight: '960px' };
-    let images = document.querySelectorAll('.heartbeat-content img');
 
     $('.heartbeat-content').find('img').each(function () {
       let parentClass = $(this).parent().prop('className');
@@ -70,13 +112,7 @@
 
   function flagListeners() {
 
-    if (arguments[0] !== null && arguments.constructor !== Array) {
-      //noinspection JSValidateTypes
-      arguments = [arguments[0]];
-    }
-
     let flags = arguments[0] == undefined ? document.querySelectorAll('.flag .use-ajax') : arguments[0];
-    console.log("Reloading FLAG LISTENERS");
 
     if (flags.constructor === NodeList) {
       for (let f = 0; f < flags.length; f++) {
@@ -336,51 +372,8 @@
       flagObserver.observe(flag, flagObserveConfig);
     });
 
-
-    document.addEventListener("scroll", function () {
-
-      if (drupalSettings.filterMode == false && (getScrollXY()[1] + window.innerHeight) / getDocHeight() > 0.99) {
-
-        let streams = document.querySelectorAll('.heartbeat-stream');
-        let stream = streams.length > 1 ? streams[streams.length - 1] : streams[0];
-
-        if (stream !== null) {
-          console.dir(stream);
-          let lastHeartbeat = stream.lastElementChild;
-
-          if (lastHeartbeat !== null) {
-
-            let hid = lastHeartbeat.id.substring(lastHeartbeat.id.indexOf('-') + 1);
-            if (drupalSettings.lastHid !== hid) {
-
-              drupalSettings.lastHid = hid;
-
-              $('#heartbeat-loader').show(225);
-
-              //For Reference -> this is how you can trigger an ajax request via the Drupal Ajax api
-              // Drupal.ajax({url: '/heartbeat/update_feed/' + hid}).execute();
-
-              $.ajax({
-                type: 'POST',
-                url: '/heartbeat/update_feed/' + hid,
-
-                success: function (response) {
-                  feedBlock = document.getElementById('block-heartbeatblock')
-                  insertNode = document.createElement('div')
-                  insertNode.innerHTML = response
-                  feedBlock.appendChild(insertNode)
-                  Drupal.attachBehaviors()
-                },
-
-                complete: function () {
-                  $('#heartbeat-loader').hide(225);
-                }
-              });
-            }
-          }
-        }
-      }
-    });
+    document.removeEventListener('scroll', addWindowScrollListener);
+    document.addEventListener('scroll', addWindowScrollListener);
 
     $(document).on('cbox_open', function () {
         $("#colorbox").swipe({
