@@ -269,14 +269,20 @@ function listenVideos() {
                       feedBlock = document.getElementById('block-heartbeat')
                     }
                   }
-                  if (feedBlock !== null && feedBlock.parentNode !== null) {
-                    feedBlock.parentNode.removeChild(feedBlock);
+                  if (feedElement !== null && feedElement.parentNode !== null) {
+                    feedElement.parentNode.removeChild(feedElement);
                   }
                 }
 
                 let insertNode = document.createElement('div');
                 insertNode.className = 'heartbeat-stream';
                 insertNode.innerHTML = response;
+                if (feedBlock === null) {
+                  feedBlock = document.createElement('div');
+                  feedBlock.id = 'block-heartbeatblock';
+                  let body = document.getElementsByTagName('body');
+                  body.querySelector('#main #content').appendChild(feedBlock);
+                }
                 feedBlock.appendChild(insertNode);
               },
               complete: function () {
@@ -324,6 +330,7 @@ function listenVideos() {
               }
               for (let b = 0; b < feedBlock.children.length; b++) {
                 if (!feedBlock.children[b].classList.contains('contextual') && !feedBlock.children[b].classList.contains('heartbeat-stream')) {
+                  console.dir(feedBlock.children[b]);
                   feedBlock.removeChild(feedBlock.children[b]);
                 }
               }
