@@ -201,6 +201,59 @@ function listenVideos() {
     navRight.addEventListener('click', listenNavRight);
   }
 
+  const termListener = function(event) {
+
+    if (drupalSettings.user.uid > 0) {
+      $('#heartbeat-loader').show(225);
+      let tid = event.srcElement.querySelector('.kekfilter-tid').textContent;
+      drupalSettings.filterMode = true;
+      event.preventDefault();
+      event.stopPropagation();
+
+      $.ajax({
+        type: 'GET',
+        url: '/heartbeat/filter-feed/' + tid,
+        success: function (response) {
+          let feedBlock = document.getElementById('block-heartbeatblock');
+          console.dir(feedBlock);
+          let feedElements = document.querySelectorAll('.heartbeat-stream');
+          if (feedElements != null) {
+            for (let f = 0; f < feedElements.length; f++) {
+              if (feedElements[f] !== null && feedElements[f].parentNode !== null) {
+                feedElements[f].parentNode.removeChild(feedElements[f]);
+              }
+            }
+            if (feedBlock === null) {
+              feedBlock = document.getElementById('block-heartbeatmoreblock');
+              if (feedBlock === null) {
+                feedBlock = document.getElementById('block-heartbeat')
+              }
+            }
+          }
+
+          let insertNode = document.createElement('div');
+          insertNode.className = 'heartbeat-stream';
+          insertNode.innerHTML = response;
+          if (feedBlock === null) {
+            feedBlock = document.createElement('div');
+            feedBlock.id = 'block-heartbeatblock';
+            let body = document.getElementsByTagName('body');
+            body.querySelector('#main #content').appendChild(feedBlock);
+          }
+          feedBlock.appendChild(insertNode);
+        },
+        complete: function () {
+          $('body').animate({scrollTop: '0px'}, 500);
+          $('#heartbeat-loader').hide(225);
+          Drupal.attachBehaviors()
+        }
+      });
+      return false;
+    } else {
+      loginModal();
+    }
+  }
+
   function kekfilterListeners() {
     let feedFilterBlock = document.getElementById('kekfilter-block');
     if (feedFilterBlock !== null) {
@@ -211,7 +264,11 @@ function listenVideos() {
         let tid = term.querySelector('.kekfilter-tid').textContent;
         //add listeners to all taxonomy (mobile)
         term.addEventListener("touchstart", function (event) {
+          console.dir(event.srcElement);
+          possibleTid = event.srcElement.querySelector('.kekfilter-tid').textContent;
+          console.dir(possibleTid);
           if (drupalSettings.user.uid > 0) {
+            let tid = term.querySelector('.kekfilter-tid').textContent;
             $('#heartbeat-loader').show(225);
             drupalSettings.filterMode = true;
             event.preventDefault();
@@ -246,56 +303,57 @@ function listenVideos() {
         });
 
         //add listeners to all taxonomy (desktop)
-        term.addEventListener("click", function (event) {
-          console.log('term clicked');
-          if (drupalSettings.user.uid > 0) {
-            $('#heartbeat-loader').show(225);
-
-            drupalSettings.filterMode = true;
-            event.preventDefault();
-            event.stopPropagation();
-
-            $.ajax({
-              type: 'GET',
-              url: '/heartbeat/filter-feed/' + tid,
-              success: function (response) {
-                let feedBlock = document.getElementById('block-heartbeatblock');
-                console.dir(feedBlock);
-                let feedElement = document.querySelector('.heartbeat-stream');
-                if (feedElement != null) {
-                  if (feedBlock === null) {
-                    feedBlock = document.getElementById('block-heartbeatmoreblock');
-                    if (feedBlock === null) {
-                      feedBlock = document.getElementById('block-heartbeat')
-                    }
-                  }
-                  if (feedElement !== null && feedElement.parentNode !== null) {
-                    feedElement.parentNode.removeChild(feedElement);
-                  }
-                }
-
-                let insertNode = document.createElement('div');
-                insertNode.className = 'heartbeat-stream';
-                insertNode.innerHTML = response;
-                if (feedBlock === null) {
-                  feedBlock = document.createElement('div');
-                  feedBlock.id = 'block-heartbeatblock';
-                  let body = document.getElementsByTagName('body');
-                  body.querySelector('#main #content').appendChild(feedBlock);
-                }
-                feedBlock.appendChild(insertNode);
-              },
-              complete: function () {
-                $('body').animate({scrollTop: '0px'}, 500);
-                $('#heartbeat-loader').hide(225);
-                Drupal.attachBehaviors()
-              }
-            });
-            return false;
-          } else {
-            loginModal();
-          }
-        });
+        term.removeEventListener('click', termListener);
+        term.addEventListener('click', termListener);
+        // term.addEventListener("click", function (event) {
+        //   if (drupalSettings.user.uid > 0) {
+        //     $('#heartbeat-loader').show(225);
+        //
+        //     drupalSettings.filterMode = true;
+        //     event.preventDefault();
+        //     event.stopPropagation();
+        //
+        //     $.ajax({
+        //       type: 'GET',
+        //       url: '/heartbeat/filter-feed/' + tid,
+        //       success: function (response) {
+        //         let feedBlock = document.getElementById('block-heartbeatblock');
+        //         console.dir(feedBlock);
+        //         let feedElement = document.querySelector('.heartbeat-stream');
+        //         if (feedElement != null) {
+        //           if (feedBlock === null) {
+        //             feedBlock = document.getElementById('block-heartbeatmoreblock');
+        //             if (feedBlock === null) {
+        //               feedBlock = document.getElementById('block-heartbeat')
+        //             }
+        //           }
+        //           if (feedElement !== null && feedElement.parentNode !== null) {
+        //             feedElement.parentNode.removeChild(feedElement);
+        //           }
+        //         }
+        //
+        //         let insertNode = document.createElement('div');
+        //         insertNode.className = 'heartbeat-stream';
+        //         insertNode.innerHTML = response;
+        //         if (feedBlock === null) {
+        //           feedBlock = document.createElement('div');
+        //           feedBlock.id = 'block-heartbeatblock';
+        //           let body = document.getElementsByTagName('body');
+        //           body.querySelector('#main #content').appendChild(feedBlock);
+        //         }
+        //         feedBlock.appendChild(insertNode);
+        //       },
+        //       complete: function () {
+        //         $('body').animate({scrollTop: '0px'}, 500);
+        //         $('#heartbeat-loader').hide(225);
+        //         Drupal.attachBehaviors()
+        //       }
+        //     });
+        //     return false;
+        //   } else {
+        //     loginModal();
+        //   }
+        // });
       });
     }
   }
