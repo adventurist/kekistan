@@ -61,6 +61,14 @@ function heartbeat_theme() {
       'zilla' => 2,
     )
   ];
+  $theme['friend_interaction'] = [
+    'variables' => array(
+      'user' => NULL,
+      'flag' => NULL,
+      'userPic' => NULL,
+      'testing' => 'testing yo',
+    )
+  ];
   return $theme;
 }
 
@@ -167,6 +175,7 @@ function heartbeat_entity_insert(EntityInterface $entity) {
 
       break;
     case $entity instanceof \Drupal\flag\Entity\Flag:
+
       break;
 
     case $entity instanceof \Drupal\statusmessage\Entity\Status:
@@ -242,7 +251,7 @@ function heartbeat_handle_entity($entity, $tokenService, $heartbeatTypeService, 
             'status' => !$bundleSaved ? 1 : 0,
           ]);
 
-          $heartbeatActivity->setMessage($heartbeatMessage);
+          $heartbeatActivity->setMessage(str_replace('&039;', "'", $heartbeatMessage));
           $heartbeatActivity->save();
 
         } else {
