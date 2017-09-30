@@ -290,8 +290,8 @@ class HeartbeatStreamServices {
       )
     );
     $hids = array();
-    foreach ($query->fetchAllKeyed() as $id => $row) {
-      $hids[] = $id;
+    foreach ($query->fetchAll() as $id) {
+      $hids[] = $id->id;
     }
 
     if (!empty($hids)) {
@@ -341,7 +341,7 @@ class HeartbeatStreamServices {
     $query = $this->database->query('
       SELECT coalesce(hr.id)
       FROM heartbeat_field_revision hr
-      LEFT JOIN node__field_username un
+      INNER  JOIN node__field_username un
       ON un.entity_id = hr.nid
       LEFT JOIN node__field_users u
       ON u.entity_id = hr.nid 
