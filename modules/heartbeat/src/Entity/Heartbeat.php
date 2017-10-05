@@ -478,8 +478,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
     switch (true) {
 
       case $entityType === 'node':
-
-//        $parsedMessage = $tokenService->replace($preparsedMessage . '<a class="heartbeat-node" href="/node/[node:nid]">', $entities);
         $parsedMessage = $tokenService->replace($preparsedMessage, $entities);
 
         if (strpos($parsedMessage, '#')) {
@@ -491,7 +489,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         /** @noinspection NestedTernaryOperatorInspection */
         $message = $parsedMessage;
         $message .= $mediaData ? self::buildMediaMarkup($mediaData) : '';
-//        $message .= '</a>';
 
         return $message;
         break;
@@ -513,7 +510,6 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         $message .= '</a>';
 
         return $message;
-
         break;
 
       case $entityType === 'user':
@@ -525,11 +521,8 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
         $returnMessage = self::handleMultipleEntities($tokenService, $preparsedMessage, $entities);
 
         return strlen($returnMessage) > 0 ? $returnMessage : "Error creating message";
-
         break;
-
     }
-
   }
 
 
@@ -627,10 +620,10 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
             $remainder .= ' ' . $lastTagArray[$x];
           }
         }
-
       }
+      $realHashtag = strpos($hashtag, ' ') ? substr($hashtag, 0, strpos($hashtag, ' ')) : $hashtag;
       $tid = \Drupal::entityQuery("taxonomy_term")
-        ->condition("name", trim($hashtag))
+        ->condition("name", trim($realHashtag))
         ->condition('vid', [
           'twitter', 'tags', 'kekistan'
         ], 'IN')
@@ -638,9 +631,12 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
       if (count($tid) > 0) {
         $term = Term::load(array_values($tid)[0]);
-        $link = Link::fromTextAndUrl('#' . $hashtag, $term->toUrl());
+        $link = Link::fromTextAndUrl('#' . $realHashtag, $term->toUrl());
+        $lenComparison = strlen($hashtag) === strlen($realHashtag);
+        $textToAddBack = $link->toString() . str_replace($realHashtag, '', $hashtag);
+
         $tagsArray[$i] = '<div class="heartbeat-hashtag">';
-        $tagsArray[$i] .= !$lastRow ? $link->toString() . ' </div>' : $link->toString() . '</div>' . $remainder;
+        $tagsArray[$i] .= !$lastRow ? $textToAddBack . ' </div>' : $textToAddBack . '</div>' . $remainder;
       }
       $i++;
 
