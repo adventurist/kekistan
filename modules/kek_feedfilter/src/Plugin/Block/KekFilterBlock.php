@@ -70,7 +70,7 @@ class KekFilterBlock extends BlockBase implements ContainerFactoryPluginInterfac
       INNER JOIN taxonomy_term_field_data t
       ON t.tid = ft.field_tags_target_id
       INNER JOIN node_field_data n
-      ON n.nid = ft.entity_id WHERE n.created::int > (extract(epoch from now()) - 2419200)::int
+      ON n.nid = ft.entity_id WHERE n.created::int > (extract(epoch from now()) - 9676800)::int
       GROUP BY ft.field_tags_target_id, t.name, ft.field_tags_target_id
       ORDER BY count(ft.field_tags_target_id) DESC limit 100';
 
