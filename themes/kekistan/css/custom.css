@@ -417,12 +417,10 @@ div#block-kekfilterblock h2 {
 }
 
 .flag-heartbeat_like_comment a.use-ajax {
-  min-height: 8px;
-  padding-left: 24px;
-  margin-left: 4px;
+  padding: 0 14px 14px;
   min-width: 8px;
   background: url(/themes/kekistan/images/icons/okay.png) no-repeat center !important;
-  background-size: 45% !important;
+  background-size: 100% !important;
 }
 
 /*Praise and jihad tooltip*/
