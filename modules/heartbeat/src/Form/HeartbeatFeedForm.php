@@ -9,7 +9,7 @@ use Drupal\Core\Render\Element\Ajax;
 use Drupal\heartbeat\Ajax\SelectFeedCommand;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\heartbeat\HeartbeatService;
-use Drupal\heartbeat\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatTypeService;
 use Drupal\heartbeat\HeartbeatStreamServices;
 use Drupal\Core\Ajax\AjaxResponse;
 
@@ -28,9 +28,9 @@ class HeartbeatFeedForm extends FormBase {
    */
   protected $heartbeatService;
   /**
-   * Drupal\heartbeat\HeartbeatTypeServices definition.
+   * Drupal\heartbeat\HeartbeatTypeService definition.
    *
-   * @var \Drupal\heartbeat\HeartbeatTypeServices
+   * @var \Drupal\heartbeat\HeartbeatTypeService
    */
   protected $typeService;
   /**
@@ -51,7 +51,7 @@ class HeartbeatFeedForm extends FormBase {
 
   public function __construct(
     HeartbeatService $heartbeat,
-    HeartbeatTypeServices $heartbeat_heartbeattype,
+    HeartbeatTypeService $heartbeat_heartbeattype,
     HeartbeatStreamServices $heartbeatstream
   ) {
     $this->heartbeatService = $heartbeat;

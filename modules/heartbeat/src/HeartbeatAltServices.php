@@ -5,7 +5,7 @@ use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeManager;
 use Drupal\Core\Entity\EntityTypeRepository;
-use Drupal\heartbeat\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatTypeService;
 
 /**
  * Class HeartbeatAltServices.
@@ -39,15 +39,15 @@ class HeartbeatAltServices {
 //   */
 //  protected $;
 //  /**
-//   * Drupal\heartbeat\HeartbeatTypeServices definition.
+//   * Drupal\heartbeat\HeartbeatTypeService definition.
 //   *
-//   * @var \Drupal\heartbeat\HeartbeatTypeServices
+//   * @var \Drupal\heartbeat\HeartbeatTypeService
 //   */
 //  protected $;
 //  /**
 //   * Constructor.
 //   */
-//  public function __construct(QueryFactory $entity_query, EntityManager $entity_manager, EntityTypeManager $entity_type_manager, EntityTypeRepository $entity_type_repository, HeartbeatTypeServices $heartbeat_heartbeattype) {
+//  public function __construct(QueryFactory $entity_query, EntityManager $entity_manager, EntityTypeManager $entity_type_manager, EntityTypeRepository $entity_type_repository, HeartbeatTypeService $heartbeat_heartbeattype) {
 //    $this-> = $entity_query;
 //    $this-> = $entity_manager;
 //    $this-> = $entity_type_manager;

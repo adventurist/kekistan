@@ -6,7 +6,7 @@ use Drupal\Component\Plugin\Derivative\DeriverBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Plugin\Discovery\ContainerDeriverInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\heartbeat\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatTypeService;
 use Drupal\heartbeat\HeartbeatStreamServices;
 use Drupal\heartbeat\HeartbeatService;
 
@@ -17,9 +17,9 @@ use Drupal\heartbeat\HeartbeatService;
 class HeartbeatBlockDeriver extends DeriverBase implements ContainerDeriverInterface {
 
   /**
-   * Drupal\heartbeat\HeartbeatTypeServices definition.
+   * Drupal\heartbeat\HeartbeatTypeService definition.
    *
-   * @var \Drupal\heartbeat\HeartbeatTypeServices
+   * @var \Drupal\heartbeat\HeartbeatTypeService
    */
   protected $heartbeatTypeService;
   /**
@@ -46,7 +46,7 @@ protected $heartbeatService;
    */
   public function __construct(
     $plugin_id,
-    HeartbeatTypeServices $heartbeat_heartbeattype,
+    HeartbeatTypeService $heartbeat_heartbeattype,
     HeartbeatStreamServices $heartbeatstream,
     HeartbeatService $heartbeat
   ) {

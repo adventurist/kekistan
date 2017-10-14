@@ -17,7 +17,7 @@ use Drupal\file\Entity\File;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Database;
-use Drupal\heartbeat\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatTypeService;
 use Drupal\heartbeat\HeartbeatStreamServices;
 use Drupal\heartbeat\HeartbeatService;
 
@@ -33,11 +33,11 @@ use Drupal\heartbeat\HeartbeatService;
 class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Drupal\heartbeat\HeartbeatTypeServices definition.
+   * Drupal\heartbeat\HeartbeatTypeService definition.
    *
-   * @var \Drupal\heartbeat\HeartbeatTypeServices
+   * @var \Drupal\heartbeat\HeartbeatTypeService
    */
-  protected $heartbeatTypeServices;
+  protected $heartbeatTypeService;
   /**
    * Drupal\heartbeat\HeartbeatStreamServices definition.
    *
@@ -75,12 +75,12 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        HeartbeatTypeServices $heartbeat_heartbeattype,
+        HeartbeatTypeService $heartbeat_heartbeattype,
 	HeartbeatStreamServices $heartbeatstream,
 	HeartbeatService $heartbeat, EntityTypeManager $entity_type_manager, DateFormatter $date_formatter, FlagService $flag_service, FormBuilder $form_builder
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->heartbeatTypeServices = $heartbeat_heartbeattype;
+    $this->heartbeatTypeService = $heartbeat_heartbeattype;
     $this->heartbeatStreamServices = $heartbeatstream;
     $this->heartbeatService = $heartbeat;
     $this->entityTypeManager = $entity_type_manager;
@@ -118,6 +118,7 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
     $friendData = \Drupal::config('heartbeat_friendship.settings')->get('data');
 
     $hid = $myConfig->get('hid');
+    //TODO This naming convention should be changed to something more specific, like last Heartbeat ID
     $feed = $feedConfig->get('message');
 
     $uids = null;
@@ -298,7 +299,7 @@ class HeartbeatMoreBlock extends BlockBase implements ContainerFactoryPluginInte
       'comments' => array_reverse($comments),
       'commentCount' => $commentCount > 0 ? $commentCount : '',
       'likeFlag' => Heartbeat::flagAjaxBuilder('heartbeat_like', $heartbeat, $this->flagService),
-      'unlikeFlag' => Heartbeat::flagAjaxBuilder('jihad_flag', $heartbeat, $this->flagService)
+      'unlikeFlag' => Heartbeat::flagAjaxBuilder('heartbeat_unlike', $heartbeat, $this->flagService)
     );
   }
 }

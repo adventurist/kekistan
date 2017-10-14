@@ -19,7 +19,60 @@ function listenVideos() {
   }
 }
 
+
+
 (function($, Drupal, drupalSettings) {
+
+  function addFriendListeners() {
+    drupalSettings.friendTarget = 0;
+    // let friendActionBlock = $('#heartbeat-friendship-action');
+    // let users = Array.from(document.querySelectorAll('.heartbeat-owner a img'));
+    // users.forEach(function (user) {
+    //   user.addEventListener('mouseover', function(e) {
+    //     uid = e.srcElement.parentNode.href.substring(e.srcElement.parentNode.href.lastIndexOf('/') + 1);
+    //     if (drupalSettings.friendTarget !== uid) {
+    //       drupalSettings.friendTarget = uid;
+    //       $.ajax({
+    //         type: 'GET',
+    //         url: '/heartbeat/friend_interact/' + uid,
+    //         success: function (response) {
+    //           let friendActionHandlerElem = document.createElement('div');
+    //           friendActionHandlerElem.innerHTML = response;
+    //           let friendActionContent = friendActionHandlerElem.querySelector('#heartbeat-friend-interact-wrap');
+    //           friendActionBlock.html(friendActionContent.innerHTML);
+    //           friendActionBlock.css({top: e.clientY});
+    //           friendActionBlock.show('225');
+    //           Drupal.attachBehaviors();
+    //         }
+    //       });
+    //     } else {
+    //       if (!friendActionBlock.is(':visible')) {
+    //         console.log('make visible');
+    //         // friendActionBlock.css({top: e.clientY - 40});
+    //         friendActionBlock.show('225');
+    //         friendActionBlock.focus();
+    //       }
+    //     }
+    //   });
+    //   // user.addEventListener('mouseout', function() {
+    //   //   friendActionBlock.hide('225');
+    //   // })
+    // });
+    // friendActionBlock.on('mouseenter', function() {
+    //
+    //     friendActionBlock.off('mouseout', friendActionMouseLeave);
+    //     friendActionBlock.on('mouseout', friendActionMouseLeave);
+    // });
+  }
+
+  const friendActionMouseLeave = function(event) {
+    // let e = event.toElement || event.relatedTarget;
+    // if (e.parentNode == this || e == this) {
+    //   return;
+    // }
+    $('#heartbeat-friendship-action').hide('1500');
+  };
+
 
   function listenReplyButtons() { //reply grey button to reply
     let replyButtons = document.querySelectorAll('.heartbeat-comment-form .form-submit, .heartbeat-sub-comment-form .form-submit');
@@ -77,7 +130,7 @@ function listenVideos() {
   function flagToolListen() {
 
     let likeFlags = document.querySelectorAll('.flag-heartbeat_like');
-    let jihadFlags = document.querySelectorAll('.flag-jihad_flag');
+    let heartbeatUnlikeFlags = document.querySelectorAll('.flag-heatbeat_unlike');
 
     for (let i = 0; i < likeFlags.length; i++) {
       likeFlags[i].addEventListener('mouseover', function() {
@@ -88,14 +141,14 @@ function listenVideos() {
       });
     }
 
-    for (let i = 0; i < jihadFlags.length; i++) {
+    for (let i = 0; i < heartbeatUnlikeFlags.length; i++) {
 
-      jihadFlags[i].addEventListener('mouseover', function() {
-        jihadFlags[i].className += ' selected';
+      heartbeatUnlikeFlags[i].addEventListener('mouseover', function() {
+        heartbeatUnlikeFlags[i].className += ' selected';
 
       });
-      jihadFlags[i].addEventListener('mouseout', function() {
-        jihadFlags[i].classList.remove('selected');
+      heartbeatUnlikeFlags[i].addEventListener('mouseout', function() {
+        heartbeatUnlikeFlags[i].classList.remove('selected');
       });
     }
   }
@@ -723,6 +776,7 @@ function listenVideos() {
       userMenuBehaviour();
       hideCommentForms();
       streamUsernameListeners();
+      addFriendListeners();
       window.removeEventListener('scroll', checkScroll);
       window.removeEventListener('resize', checkScroll);
       window.addEventListener('scroll', checkScroll, false);

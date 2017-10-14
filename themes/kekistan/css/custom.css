@@ -441,7 +441,7 @@ div#block-kekfilterblock h2 {
   position: absolute;
 }
 
-.flag-jihad_flag.selected::after {
+.flag-heartbeat_unlike.selected::after {
   content: 'Jihad!';
   color: red;
   transition: all 0.5s ease;
@@ -458,7 +458,7 @@ div#block-kekfilterblock h2 {
 }
 
 /*jihad button*/
-.flag-jihad_flag a {
+.flag-heartbeat_unlike a {
   background: url(/themes/kekistan/images/icons/bike-lock.png) no-repeat center ;
   background-size: contain;
   padding: 10px;
@@ -466,7 +466,7 @@ div#block-kekfilterblock h2 {
 }
 
 /*jihad button hover*/
-.action-unflag.flag-jihad_flag a {
+.action-unflag.flag-heartbeat_unlike a {
   opacity: 0.3;
   background-size: contain;
   margin-left: -11px;
@@ -475,11 +475,11 @@ div#block-kekfilterblock h2 {
 }
 
 .flag-heartbeat_like span,
-.flag-jihad_flag span {
+.flag-heartbeat_unlike span {
   display: none;
 }
 .flag-heartbeat_like span:first-of-type,
-.flag-jihad_flag span:first-of-type {
+.flag-heartbeat_unlike span:first-of-type {
   display: inline;
 }
 

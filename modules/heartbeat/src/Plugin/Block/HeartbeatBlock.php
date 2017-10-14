@@ -2,6 +2,7 @@
 
 namespace Drupal\heartbeat\Plugin\Block;
 
+use Drupal\Core\Render\Renderer;
 use Drupal\heartbeat\Entity\Heartbeat;
 use Drupal\Core\Block\BlockBase;
 use Drupal\Core\Config\ConfigFactory;
@@ -11,14 +12,12 @@ use Drupal\Core\Link;
 use Drupal\Core\Url;
 use Drupal\flag\FlagService;
 use Drupal\comment\Entity\Comment;
-use Drupal\User\Entity\User;
-use Drupal\Flag\Entity\Flag;
 use Drupal\Core\Datetime\DateFormatter;
 use Drupal\file\Entity\File;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\Core\Database\Database;
-use Drupal\heartbeat\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatTypeService;
 use Drupal\heartbeat\HeartbeatStreamServices;
 use Drupal\heartbeat\HeartbeatService;
 use Drupal\heartbeat\Plugin\Block\HeartbeatCommentBlock;
@@ -36,11 +35,11 @@ use Drupal\heartbeat\Plugin\Block\HeartbeatCommentBlock;
 class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Drupal\heartbeat\HeartbeatTypeServices definition.
+   * Drupal\heartbeat\HeartbeatTypeService definition.
    *
-   * @var \Drupal\heartbeat\HeartbeatTypeServices
+   * @var \Drupal\heartbeat\HeartbeatTypeService
    */
-  protected $heartbeatTypeServices;
+  protected $heartbeatTypeService;
   /**
    * Drupal\heartbeat\HeartbeatStreamServices definition.
    *
@@ -80,12 +79,12 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         array $configuration,
         $plugin_id,
         $plugin_definition,
-        HeartbeatTypeServices $heartbeat_heartbeattype,
+        HeartbeatTypeService $heartbeat_heartbeattype,
 	HeartbeatStreamServices $heartbeatstream,
 	HeartbeatService $heartbeat, EntityTypeManager $entity_type_manager, DateFormatter $date_formatter, FlagService $flag_service, FormBuilder $form_builder, ConfigFactory $configFactory
   ) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->heartbeatTypeServices = $heartbeat_heartbeattype;
+    $this->heartbeatTypeService = $heartbeat_heartbeattype;
     $this->heartbeatStreamServices = $heartbeatstream;
     $this->heartbeatService = $heartbeat;
     $this->entityTypeManager = $entity_type_manager;
@@ -318,9 +317,67 @@ class HeartbeatBlock extends BlockBase implements ContainerFactoryPluginInterfac
         'comments' => array_reverse($comments),
         'commentCount' => $commentCount > 0 ? $commentCount : '',
         'likeFlag' => Heartbeat::flagAjaxBuilder('heartbeat_like', $heartbeat, $this->flagService),
-        'unlikeFlag' => Heartbeat::flagAjaxBuilder('jihad_flag', $heartbeat, $this->flagService)
+        'unlikeFlag' => Heartbeat::flagAjaxBuilder('heartbeat_unlike', $heartbeat, $this->flagService)
         );
     }
+
+    public static function renderOneHeartbeat(Heartbeat $heartbeat) {
+        $timeago = 'Just now';
+
+        $user = $heartbeat->getOwner();
+        $userView = user_view($user, 'compact');
+        $userPic = $user->get('user_picture')->getValue();
+
+        if (!empty($userPic)) {
+          $profilePic = $userPic[0]['target_id'];
+        }
+
+        if (NULL === $profilePic) {
+          $profilePic = 86;
+        }
+
+        $pic = File::load($profilePic);
+
+        if ($pic !== NULL) {
+          $style = \Drupal::entityTypeManager()->getStorage('image_style')
+            ->load('thumbnail');
+          $rendered = $style->buildUrl($pic->getFileUri());
+        }
+
+        $flagService = \Drupal::service('flag');
+        $form = \Drupal::service('form_builder')->getForm('\Drupal\heartbeat\Form\HeartbeatCommentForm', $heartbeat);
+
+        return '<div class="heartbeat-message" id="heartbeat-' . $heartbeat->id() . '">
+      <div class="heartbeat-message-wrap">
+        <div class="heartbeat-owner">
+          <a href="/user/' . $user->id() . '"><img src="' . $rendered . '" />
+            ' . $user->getAccountName() . '
+          </a>
+          ' . \Drupal::service('renderer')->render($userView)->__toString() . '
+          <div class="time-ago"> . ' . $timeago . '</div>
+        </div>
+        <div class="heartbeat-content hid-' . $heartbeat->id() . '">
+        ' . $heartbeat->getMessage()->getValue()[0]['value'] . '
+        </div>
+      </div>
+      <div class="heartbeat-interaction-wrap">
+        <div class="heartbeat-like">
+           ' . \Drupal::service('renderer')->renderplain(Heartbeat::flagAjaxBuilder('heartbeat_like', $heartbeat, $flagService))->__toString() . '
+        </div>
+        <div class="heartbeat-unlike">
+          ' . \Drupal::service('renderer')->renderplain(Heartbeat::flagAjaxBuilder('heartbeat_unlike', $heartbeat, $flagService))->__toString() . '
+        </div>
+        <div class="heartbeat-comment-button">
+          Comment
+        </div>
+        <div class="heartbeat-comment" id="comment-' . $heartbeat->id() . '">
+        ' . \Drupal::service('renderer')->renderplain($form)->__toString() . '
+        <div class="heartbeat-comments"></div>
+        </div>
+      </div>
+    </div>';
+    }
+
 }
 
 

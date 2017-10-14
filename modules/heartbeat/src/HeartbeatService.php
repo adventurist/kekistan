@@ -52,5 +52,21 @@ class HeartbeatService {
   public function loadByTypes($types) {
     return $this->entityTypeManager->getStorage("heartbeat")->loadMultiple($this->entityQuery->get('heartbeat')->condition('type', $types, 'IN')->sort('created', 'DESC')->execute());
   }
+
+  public function loadByNid($nid) {
+    return $this->entityTypeManager->getStorage('heartbeat')->load($this->entityQuery->get('heartbeat')->condition('nid', $nid)->sort('created', 'DESC')->execute());
+  }
+
+  public function loadByUid($uid) {
+    $hid = $this->entityQuery->get('heartbeat')
+      ->condition('uid', $uid)
+      ->condition('status', 1)
+      ->sort('created', 'DESC')
+      ->range(0,1)
+
+      ->execute();
+
+    return $this->entityTypeManager->getStorage('heartbeat')->load(array_values($hid)[0]);
+  }
 }
 

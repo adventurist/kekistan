@@ -1,0 +1,11 @@
+name : Heartbeat Like Comment
+type: module
+description : "Allows you to like Heartbeat Comments"
+dependencies:
+  - flag
+  - token
+  - heartbeat
+  - statusmessage
+
+core: '8.x'
+project: 'Heartbeat'

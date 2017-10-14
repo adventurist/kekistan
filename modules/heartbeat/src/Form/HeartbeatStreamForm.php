@@ -5,7 +5,7 @@ namespace Drupal\heartbeat\Form;
 use Drupal\Component\Datetime\TimeInterface;
 use Drupal\Core\Entity\EntityManager;
 use Drupal\Core\Entity\EntityTypeBundleInfoInterface;
-use Drupal\heartbeat\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatTypeService;
 use Drupal\heartbeat\Entity\HeartbeatStream;
 use Drupal\heartbeat\Entity\HeartbeatType;
 use Drupal\Core\Database\Database;
@@ -59,7 +59,7 @@ class HeartbeatStreamForm extends ContentEntityForm {
    * @param Renderer $renderer
    * @throws \Exception
    */
-  public function __construct(HeartbeatTypeServices $heartbeatTypeService, EntityManager $entityManager) {
+  public function __construct(HeartbeatTypeService $heartbeatTypeService, EntityManager $entityManager) {
     parent::__construct($entityManager);
     $this->heartbeatTypeService = $heartbeatTypeService;
 

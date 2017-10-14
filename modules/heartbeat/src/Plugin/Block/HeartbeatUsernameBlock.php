@@ -11,7 +11,7 @@ use Drupal\Core\Url;
 use Drupal\file\Entity\File;
 use Drupal\heartbeat\Entity\Heartbeat;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\heartbeat\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatTypeService;
 use Drupal\heartbeat\HeartbeatStreamServices;
 use Drupal\heartbeat\HeartbeatService;
 use Drupal\Core\Entity\EntityTypeManager;
@@ -29,11 +29,11 @@ use Drupal\flag\FlagService;
 class HeartbeatUsernameBlock extends BlockBase implements ContainerFactoryPluginInterface {
 
   /**
-   * Drupal\heartbeat\HeartbeatTypeServices definition.
+   * Drupal\heartbeat\HeartbeatTypeService definition.
    *
-   * @var \Drupal\heartbeat\HeartbeatTypeServices
+   * @var \Drupal\heartbeat\HeartbeatTypeService
    */
-  protected $heartbeatTypeServices;
+  protected $heartbeatTypeService;
   /**
    * Drupal\heartbeat\HeartbeatStreamServices definition.
    *
@@ -71,7 +71,7 @@ class HeartbeatUsernameBlock extends BlockBase implements ContainerFactoryPlugin
     array $configuration,
     $plugin_id,
     $plugin_definition,
-    HeartbeatTypeServices $heartbeat_heartbeattype,
+    HeartbeatTypeService $heartbeat_heartbeattype,
     HeartbeatStreamServices $heartbeatstream,
     HeartbeatService $heartbeat,
     EntityTypeManager $entity_type_manager,
@@ -305,7 +305,7 @@ class HeartbeatUsernameBlock extends BlockBase implements ContainerFactoryPlugin
       'comments' => array_reverse($comments),
       'commentCount' => $commentCount > 0 ? $commentCount : '',
       'likeFlag' => Heartbeat::flagAjaxBuilder('heartbeat_like', $heartbeat, $this->flagService),
-      'unlikeFlag' => Heartbeat::flagAjaxBuilder('jihad_flag', $heartbeat, $this->flagService)
+      'unlikeFlag' => Heartbeat::flagAjaxBuilder('heartbeat_unlike', $heartbeat, $this->flagService)
     );
   }
 }

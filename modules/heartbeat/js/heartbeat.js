@@ -24,6 +24,8 @@
       },
       success: function(response) {
         console.dir(response);
+        // let heartbeatLikeFlag = document.querySelector('.flag-heartbeat_like-1111 a.use-ajax');
+        // heartbeatLikeFlag.click();
       }
     });
   };
@@ -173,55 +175,57 @@
     );
   }
 
-  if (drupalSettings.user.uid > 0 && !drupalSettings.path.currentPathIsAdmin) {
-    Drupal.AjaxCommands.prototype.selectFeed = function (ajax, response, status) {
-      $.ajax({
-        type: 'POST',
-        url: '/heartbeat/render_feed/' + response.feed,
-        success: function (response) {
-          feedElement = document.querySelector('.heartbeat-stream');
-
-          if (feedElement != null) {
-            feedElement.innerHTML = response;
-          } else {
-            feedBlock = document.getElementById('block-heartbeatblock');
-            insertNode = document.createElement('div');
-            insertNode.innerHTML = response;
-            feedBlock.appendChild(insertNode);
-          }
-          Drupal.attachBehaviors();
-        }
-      });
-    };
-
-    Drupal.AjaxCommands.prototype.updateFeed = function (ajax, response, status) {
-      if (response.update) {
+  if (Drupal.AjaxCommands) {
+    if (drupalSettings.user.uid > 0 && !drupalSettings.path.currentPathIsAdmin) {
+      Drupal.AjaxCommands.prototype.selectFeed = function (ajax, response, status) {
         $.ajax({
           type: 'POST',
-          url: '/heartbeat/update_feed/' + response.timestamp,
+          url: '/heartbeat/render_feed/' + response.feed,
           success: function (response) {
+            feedElement = document.querySelector('.heartbeat-stream');
 
+            if (feedElement != null) {
+              feedElement.innerHTML = response;
+            } else {
+              feedBlock = document.getElementById('block-heartbeatblock');
+              insertNode = document.createElement('div');
+              insertNode.innerHTML = response;
+              feedBlock.appendChild(insertNode);
+            }
+            Drupal.attachBehaviors();
           }
         });
-      }
-    };
+      };
 
-    Drupal.AjaxCommands.prototype.myfavouritemethodintheworld = function (ajax, response, status) {
-      console.dir(response);
-      if (response.cid) {
-        console.log('this shit is getting called again');
-        let parentComment = document.getElementById('heartbeat-comment-' + response.cid);
-        let text = parentComment.querySelector('.form-textarea');
+      Drupal.AjaxCommands.prototype.updateFeed = function (ajax, response, status) {
+        if (response.update) {
+          $.ajax({
+            type: 'POST',
+            url: '/heartbeat/update_feed/' + response.timestamp,
+            success: function (response) {
 
-        text.addEventListener('keydown', function (e) {
-          console.dir(e);
-          if (e.keyCode === 13) {
-            let submitBtn = parentComment.querySelector('.form-submit');
-            submitBtn.click();
-          }
-        });
-      }
-    };
+            }
+          });
+        }
+      };
+
+      Drupal.AjaxCommands.prototype.myfavouritemethodintheworld = function (ajax, response, status) {
+        console.dir(response);
+        if (response.cid) {
+          console.log('this shit is getting called again');
+          let parentComment = document.getElementById('heartbeat-comment-' + response.cid);
+          let text = parentComment.querySelector('.form-textarea');
+
+          text.addEventListener('keydown', function (e) {
+            console.dir(e);
+            if (e.keyCode === 13) {
+              let submitBtn = parentComment.querySelector('.form-submit');
+              submitBtn.click();
+            }
+          });
+        }
+      };
+    }
   }
 
   function hideCommentForms() {
@@ -273,9 +277,7 @@
 
   function toggleCommentElements(node) {
 
-    console.dir(node);
     if (node.classList.contains('comment-form-hidden')) {
-      console.log('removing comment-form-hidden class from element');
       node.classList.remove('comment-form-hidden');
     } else {
       node.className += ' comment-form-hidden';
@@ -307,6 +309,9 @@
   Drupal.behaviors.heartbeat = {
     attach: function (context, settings) {
 
+      // Drupal.AjaxCommands.prototype.viewsScrollTop = null;
+      // console.dir(Drupal.AjaxCommands.prototype);
+
       if (drupalSettings.friendData != null) {
         let divs = document.querySelectorAll('.flag-friendship a.use-ajax');
 
@@ -324,10 +329,11 @@
       listenCommentPost();
       commentFormListeners();
       feedElement = document.querySelector('.heartbeat-stream');
+      flagListeners();
 
-      if (drupalSettings.feedUpdate == true) {
-        updateFeed();
-      }
+      // if (drupalSettings.feedUpdate == true) {
+      //   updateFeed();
+      // }
     }
   };
 
@@ -338,39 +344,39 @@
     const body = document.getElementsByTagName('body')[0];
     body.appendChild(loader);
 
-    flagListeners();
-
-    let stream = document.getElementById('block-heartbeatblock');
-
-    if (stream !== null) {
-      let observer = new MutationObserver(function (mutations) {
-        console.log('observer observes a change');
-        // Drupal.attachBehaviors();
-        // listenImages();
-        hideCommentForms();
-        // commentFormListeners();
-        // flagListeners();
-        // listenVideos();
-      });
-
-      let config = {attributes: true, childList: true, characterData: true};
-      observer.observe(stream, config);
-    }
-
-    let flagObserver = new MutationObserver(function(mutations) {
-      console.log('observer observes a change');
-      if (mutations[0].target !== null && mutations[0].target.children !== null && mutations[0].target.children.length > 0 && mutations[0].target.children[0].classList.contains('flag')) {
-        flagListeners();
-      }
-    });
-
-    let flagObserveConfig = {subTree: true, childList: true};
-
-    let flags = Array.from(document.querySelectorAll('.heartbeat-like, .heartbeat-unlike'));
-
-    flags.forEach(function(flag) {
-      flagObserver.observe(flag, flagObserveConfig);
-    });
+    // flagListeners();
+    //
+    // let stream = document.getElementById('block-heartbeatblock');
+    //
+    // if (stream !== null) {
+    //   let observer = new MutationObserver(function (mutations) {
+    //     console.log('observer observes a change');
+    //     // Drupal.attachBehaviors();
+    //     // listenImages();
+    //     hideCommentForms();
+    //     // commentFormListeners();
+    //     // flagListeners();
+    //     // listenVideos();
+    //   });
+    //
+    //   let config = {attributes: true, childList: true, characterData: true};
+    //   observer.observe(stream, config);
+    // }
+    //
+    // let flagObserver = new MutationObserver(function(mutations) {
+    //   console.log('observer observes a change');
+    //   if (mutations[0].target !== null && mutations[0].target.children !== null && mutations[0].target.children.length > 0 && mutations[0].target.children[0].classList.contains('flag')) {
+    //     flagListeners();
+    //   }
+    // });
+    //
+    // let flagObserveConfig = {subTree: true, childList: true};
+    //
+    // let flags = Array.from(document.querySelectorAll('.heartbeat-like, .heartbeat-unlike'));
+    //
+    // flags.forEach(function(flag) {
+    //   flagObserver.observe(flag, flagObserveConfig);
+    // });
 
     document.removeEventListener('scroll', addWindowScrollListener);
     document.addEventListener('scroll', addWindowScrollListener);

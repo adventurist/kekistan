@@ -1,0 +1,11 @@
+name : Heartbeat Unlike Flag
+type: module
+description : "A flag to express dislike for a posted Heartbeat"
+dependencies:
+  - flag
+  - token
+  - heartbeat
+  - statusmessage
+
+core: 8.x
+project: Heartbeat
