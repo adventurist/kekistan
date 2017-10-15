@@ -1,0 +1,9 @@
+name: StatusMessage
+type: module
+description: Status Messages for Users
+core: 8.x
+package: Heartbeat
+dependencies:
+  - flag
+  - token
+  - heartbeat

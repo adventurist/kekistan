@@ -1,0 +1,31 @@
+# Status menu items definition
+entity.status.collection:
+  title: 'Status Message'
+  route_name: entity.status.collection
+  description: 'List Status entities'
+  parent: system.admin_structure
+  weight: 100
+
+# Status type menu items definition
+entity.status_type.collection:
+  title: 'Status Message type'
+  route_name: entity.status_type.collection
+  description: 'List Status type (bundles)'
+  parent: system.admin_structure
+  weight: 99
+
+# Configuration for Twitter API OAUTH Authentication
+config.statusmessage.twitter:
+  title: Twitter API Settings
+  description: 'Configure Authentication tokens for Twitter API'
+  route_name: statusmessage.twitter_api_form
+  parent: entity.status.collection
+
+# Configuration for Instagram API OAUTH Authentication
+config.statusmessage.instagram:
+  title: Instagram API Settings
+  description: 'Configure Authentication tokens for Instagram API'
+  route_name: statusmessage.instagram_api_form
+  parent: entity.status.collection
+
+

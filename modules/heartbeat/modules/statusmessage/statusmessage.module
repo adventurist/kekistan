@@ -1,0 +1,82 @@
+<?php
+
+/**
+ * @file
+ * Contains statusmessage.module..
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function statusmessage_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the statusmessage module.
+    case 'help.page.statusmessage':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('Status Messages for Users') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+/**
+ * Implements hook_theme().
+ */
+function statusmessage_theme() {
+  $theme = [];
+  $theme['status'] = [
+    'render element' => 'elements',
+    'file' => 'status.page.inc',
+    'template' => 'status',
+  ];
+  $theme['status_content_add_list'] = [
+    'render element' => 'content',
+    'variables' => ['content' => NULL],
+    'file' => 'status.page.inc',
+  ];
+//  $theme['status-form'] = [
+//    'variables' => array(
+//      'messages' => NULL,
+//      'zilla' => 2,
+//    )
+//  ];
+//  $theme['status-form-element'] = [
+//    'render element' => 'element'
+//  ];
+//    'template' => 'status-form',
+
+
+  return $theme;
+}
+
+/**
+ * Implements hook_form_alter().
+ */
+//function statusmessage_form_alter(&$form, \Drupal\Core\Form\FormStateInterface $form_state, $form_id) {
+//  if ($form_id == 'status_form') {
+//    $form['#theme'] = ['status-form'];
+//  }
+//
+//}
+
+/**
+* Implements hook_theme_suggestions_HOOK().
+*/
+function statusmessage_theme_suggestions_status(array $variables) {
+  $suggestions = array();
+  $entity = $variables['elements']['#status'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'status__' . $sanitized_view_mode;
+  $suggestions[] = 'status__' . $entity->bundle();
+  $suggestions[] = 'status__' . $entity->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'status__' . $entity->id();
+  $suggestions[] = 'status__' . $entity->id() . '__' . $sanitized_view_mode;
+  return $suggestions;
+}
+
+

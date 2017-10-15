@@ -1,0 +1,59 @@
+
+statusmessage.status_form:
+  path: '/statusmessage/form/default'
+  defaults:
+    _form: '\Drupal\statusmessage\Form\DefaultForm'
+    _title: 'DefaultForm'
+  requirements:
+    _access: 'TRUE'
+
+
+#statusmessage.status_preview_controller_generate:
+#  path: '/statusmessage/generate/preview/{url}'
+#  defaults:
+#    _controller: '\Drupal\statusmessage\Controller\StatusPreviewController::generate'
+#    _title: 'Preview Generator'
+#  requirements:
+#    _permission: 'access content'
+
+statusmessage.status_preview_controller_generate_35:
+  path: '/statusmessage/generate-preview/{url}'
+  defaults:
+    _controller: '\Drupal\statusmessage\Controller\StatusPreviewController::generate'
+    _title: 'Generate'
+  requirements:
+    _permission: 'access content'
+
+statusmessage.twitter_api_form:
+  path: '/statusmessage/form/twitter_api'
+  defaults:
+    _form: '\Drupal\statusmessage\Form\TwitterApiForm'
+    _title: 'TwitterApiForm'
+  requirements:
+    _access: 'TRUE'
+
+statusmessage.instagram_api_form:
+  path: '/statusmessage/form/instagram_api'
+  defaults:
+    _form: '\Drupal\statusmessage\Form\InstagramApiForm'
+    _title: 'InstagramApiForm'
+  requirements:
+    _access: 'TRUE'
+
+
+statusmessage.content_controller_info:
+  path: '/statusmessage/info'
+  defaults:
+    _controller: '\Drupal\statusmessage\Controller\ContentController::info'
+    _title: 'info'
+  requirements:
+    _permission: 'access content'
+
+
+statusmessage.delete:
+  path: '/statusmessage/delete'
+  defaults:
+    _controller: '\Drupal\statusmessage\Controller\ContentController::deleteStatusMessages'
+    _title: 'info'
+  requirements:
+    _permission: 'access content'
