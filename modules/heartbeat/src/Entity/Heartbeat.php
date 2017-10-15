@@ -848,19 +848,19 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
 
   public static function flagAjaxBuilder($flagId, $entity, FlagService $flagService) {
 
-    $flag = $flagService->getFlagById($flagId);
-
-    $key = 'flag_' . $flag->id();
-    $data = [
-      '#lazy_builder' => ['flag.link_builder:build', [
-        $entity->getEntityTypeId(),
-        $entity->id(),
-        $flag->id(),
-      ]],
-      '#create_placeholder' => TRUE,
-    ];
-
-    return [$key => $data];
+    if ($flag = $flagService->getFlagById($flagId)) {
+      $key = 'flag_' . $flag->id();
+      $data = [
+        '#lazy_builder' => ['flag.link_builder:build', [
+          $entity->getEntityTypeId(),
+          $entity->id(),
+          $flag->id(),
+        ]],
+        '#create_placeholder' => TRUE,
+      ];
+      return [$key => $data];
+    }
+    return null;
   }
 
   /**
