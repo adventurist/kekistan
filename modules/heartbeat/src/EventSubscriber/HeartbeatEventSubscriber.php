@@ -6,9 +6,10 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\EventDispatcher\Event;
 use Drupal\Core\Database\Database;
 use Drupal\flag\FlagService;
+use Drupal\flag\Entity\Flagging;
 use Drupal\user\Entity\User;
 use Drupal\heartbeat\Entity\Heartbeat;
-use Drupal\heartbeat\HeartbeatTypeServices;
+use Drupal\heartbeat\HeartbeatTypeService;
 use Drupal\heartbeat\HeartbeatStreamServices;
 use Drupal\heartbeat\HeartbeatService;
 
@@ -30,9 +31,9 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
    */
   protected $flagService;
   /**
-   * Drupal\heartbeat\HeartbeatTypeServices definition.
+   * Drupal\heartbeat\HeartbeatTypeService definition.
    *
-   * @var \Drupal\heartbeat\HeartbeatTypeServices
+   * @var \Drupal\heartbeat\HeartbeatTypeService
    */
   protected $heartbeatTypeService;
   /**
@@ -51,7 +52,7 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
   /**
    * Constructor.
    */
-  public function __construct(FlagService $flag, HeartbeatTypeServices $heartbeat_heartbeattype, HeartbeatStreamServices $heartbeatstream, HeartbeatService $heartbeat) {
+  public function __construct(FlagService $flag, HeartbeatTypeService $heartbeat_heartbeattype, HeartbeatStreamServices $heartbeatstream, HeartbeatService $heartbeat) {
     $this->flagService = $flag;
     $this->heartbeatTypeService = $heartbeat_heartbeattype;
     $this->heartbeatStreamService = $heartbeatstream;
@@ -79,82 +80,96 @@ class HeartbeatEventSubscriber implements EventSubscriberInterface {
     $friendStatus = NOT_FRIEND;
     $flagging = $event->getFlagging();
 
-    if ($flagging->getFlagId() === 'friendship') {
-      $entity = $this->flagService->getFlagById($flagging->getFlagId());
+    if ($flagging instanceof Flagging) {
 
-      $user = $flagging->getOwner();
+      $flagId = $flagging->getFlagId();
 
-      if ($entity->id() && $user->isAuthenticated()) {
+      if ($flagId === 'friendship') {
+        $entity = $this->flagService->getFlagById($flagging->getFlagId());
 
-        $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
-        $tokenService = \Drupal::service('token');
+        $user = $flagging->getOwner();
 
-        foreach ($heartbeatTypeService->getTypes() as $type) {
+        if ($entity->id() && $user->isAuthenticated()) {
 
-          $heartbeatTypeEntity = $heartbeatTypeService->load($type);
+          $heartbeatTypeService = \Drupal::service('heartbeat.heartbeattype');
+          $tokenService = \Drupal::service('token');
 
-          if ($heartbeatTypeEntity->getMainEntity() === "flagging") {
+          foreach ($heartbeatTypeService->getTypes() as $type) {
 
-            $arguments = json_decode($heartbeatTypeEntity->getArguments());
-            $user2 = User::load($flagging->getFlaggableId());
-            $targetUserFriendships = $this->flagService->getFlagFlaggings($entity, $user2);
+            $heartbeatTypeEntity = $heartbeatTypeService->load($type);
 
-            foreach ($targetUserFriendships as $friendship) {
-              if ($friendship->getFlaggableId() === $user->id()) {
-                $friendStatus = FRIEND;
-                break;
+            if ($heartbeatTypeEntity->getMainEntity() === "flagging") {
+
+              $arguments = json_decode($heartbeatTypeEntity->getArguments());
+              $user2 = User::load($flagging->getFlaggableId());
+              $targetUserFriendships = $this->flagService->getFlagFlaggings($entity, $user2);
+
+              foreach ($targetUserFriendships as $friendship) {
+                if ($friendship->getFlaggableId() === $user->id()) {
+                  $friendStatus = FRIEND;
+                  break;
+                }
               }
+
+              $friendStatus = $friendStatus == FRIEND ? FRIEND : PENDING;
+
+              foreach ($arguments as $key => $argument) {
+                $variables[$key] = $argument;
+              }
+
+              Heartbeat::updateFriendship($user->id(), $user2->id(), time(), $friendStatus);
+
+              $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
+              $entitiesObj = new \stdClass();
+              $entitiesObj->type = 'user';
+              $entitiesObj->entities = [$user, $user2];
+              $entities = array(
+                'flagging' => $entity,
+                'user' => $entitiesObj,
+              );
+
+              $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), null);
+
+              $heartbeatActivity = Heartbeat::create([
+                'type' => $heartbeatTypeEntity->id(),
+                'uid' => $user->id(),
+                'nid' => $entity->id(),
+                'name' => 'Dev Test',
+              ]);
+
+              $heartbeatActivity->setMessage($heartbeatMessage);
+              $heartbeatActivity->save();
+
             }
-
-            $friendStatus = $friendStatus == FRIEND ? FRIEND : PENDING;
-
-            foreach ($arguments as $key => $argument) {
-              $variables[$key] = $argument;
-            }
-
-            Heartbeat::updateFriendship($user->id(), $user2->id(), time(), $friendStatus);
-
-            $preparsedMessageString = strtr($heartbeatTypeEntity->getMessage(), $variables);
-            $entitiesObj = new \stdClass();
-            $entitiesObj->type = 'user';
-            $entitiesObj->entities = [$user, $user2];
-            $entities = array(
-              'flagging' => $entity,
-              'user' => $entitiesObj,
-            );
-
-            $heartbeatMessage = Heartbeat::buildMessage($tokenService, $preparsedMessageString, $entities, $entity->getEntityTypeId(), null);
-
-            $heartbeatActivity = Heartbeat::create([
-              'type' => $heartbeatTypeEntity->id(),
-              'uid' => $user->id(),
-              'nid' => $entity->id(),
-              'name' => 'Dev Test',
-            ]);
-
-            $heartbeatActivity->setMessage($heartbeatMessage);
-            $heartbeatActivity->save();
-
           }
         }
+        $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
+          ->fields('hf', array('status', 'uid', 'uid_target'))
+          ->execute();
+
+        $friendData = $friendships->fetchAll();
+
+        $friendConfig = \Drupal::configFactory()->getEditable('heartbeat_friendship.settings');
+
+        $friendConfig->set('data', json_encode($friendData))->save();
       }
-      $friendships = Database::getConnection()->select("heartbeat_friendship", "hf")
-        ->fields('hf', array('status', 'uid', 'uid_target'))
-        ->execute();
-
-      $friendData = $friendships->fetchAll();
-
-      $friendConfig = \Drupal::configFactory()->getEditable('heartbeat_friendship.settings');
-
-      $friendConfig->set('data', json_encode($friendData))->save();
+//      if ($flagging->getFlaggableType() === 'heartbeat') {
+//        $oppositeFlag = null;
+//        if ($flagging->getFlagId() === 'heartbeat_like') {
+//          $oppositeFlag = $this->flagService->getFlagById('heartbeat_unlike');
+//        } elseif ($flagging->getFlagId() === 'heartbeat_unlike') {
+//          $oppositeFlag = $this->flagService->getFlagById('heartbeat_unlike');
+//        }
+//        if ($oppositeFlag) {
+//          $entity = $flagging->getFlaggable();
+//          $user = \Drupal::currentUser()->getAccount();
+//          $oppositeFlagging = $this->flagService->getFlagging($oppositeFlag, $entity, $user);
+//          if ($oppositeFlagging) {
+//            $this->flagService->unflag($oppositeFlag, $entity, $user);
+//          }
+//        }
+//      }
     }
-    if ($flagging->getFlagId() === 'heartbeat_like') {
-
-    }
-    if ($flagging->getFlagId() === 'jihad_flag') {
-
-    }
-
   }
 
   /**

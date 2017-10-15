@@ -6,3 +6,7 @@ package: Heartbeat
 dependencies:
   - token
   - flag
+  - statusmessage
+  - heartbeat_like
+  - heartbeat_unlike
+  - heartbeat_like_comment
