@@ -70,7 +70,6 @@ function kek_feedfilter_views_query_alter(ViewExecutable $view, QueryPluginBase 
     $join = Drupal::service('plugin.manager.views.join')->createInstance('standard', $definition);
 
     $query->addRelationship('heartbeat_field_data', $join, 'heartbeat');
-//    $query->condition('heartbeat_field_data.status', 1, '=');
     $query->addWhere(0, 'heartbeat_field_data.status', 1, '=');
 
   }
