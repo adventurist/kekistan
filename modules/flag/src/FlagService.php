@@ -291,31 +291,31 @@ class FlagService implements FlagServiceInterface {
     $flag_id = $flag->id();
 
 
-    if ($flag_id === 'heartbeat_like' || $flag_id === 'jihad_flag') {
-      $alt_flag_id = $flag_id === 'heartbeat_like' ? 'jihad_flag' : 'heartbeat_like';
-      $flagged =
-        \Drupal::entityQuery("flagging")
-          ->condition("flag_id", $flag_id, "=")
-          ->condition("entity_type", $entity->getEntityTypeId(), "=")
-          ->condition("entity_id", $entity->id())
-          ->condition("uid", $account->id(), "=")
-          ->execute();
-
-      if (empty($flagged)) {
-        $altFlagged =
-          \Drupal::entityQuery("flagging")
-            ->condition("flag_id", $alt_flag_id, "=")
-            ->condition("entity_type", $entity->getEntityTypeId(), "=")
-            ->condition("entity_id", $entity->id())
-            ->condition("uid", $account->id(), "=")
-            ->execute();
-
-        if (!empty($altFlagged)) {
-          return new AjaxResponse(new AlertCommand('Zilla'));
-        }
-      }
-
-    }
+//    if ($flag_id === 'heartbeat_like' || $flag_id === 'jihad_flag') {
+//      $alt_flag_id = $flag_id === 'heartbeat_like' ? 'jihad_flag' : 'heartbeat_like';
+//      $flagged =
+//        \Drupal::entityQuery("flagging")
+//          ->condition("flag_id", $flag_id, "=")
+//          ->condition("entity_type", $entity->getEntityTypeId(), "=")
+//          ->condition("entity_id", $entity->id())
+//          ->condition("uid", $account->id(), "=")
+//          ->execute();
+//
+//      if (empty($flagged)) {
+//        $altFlagged =
+//          \Drupal::entityQuery("flagging")
+//            ->condition("flag_id", $alt_flag_id, "=")
+//            ->condition("entity_type", $entity->getEntityTypeId(), "=")
+//            ->condition("entity_id", $entity->id())
+//            ->condition("uid", $account->id(), "=")
+//            ->execute();
+//
+//        if (!empty($altFlagged)) {
+//          return new AjaxResponse(new AlertCommand('Zilla'));
+//        }
+//      }
+//
+//    }
 
     $flagging = $this->entityTypeManager->getStorage('flagging')->create([
       'uid' => $account->id(),
