@@ -461,8 +461,8 @@ div#block-kekfilterblock h2 {
 .flag-heartbeat_unlike a {
   background: url(/themes/kekistan/images/icons/bike-lock.png) no-repeat center ;
   background-size: contain;
-  padding: 10px;
-  margin-left: 20px;
+  margin-left: -11px;
+  padding: 2px 2px 2px 72px;
 }
 
 /*jihad button hover*/
@@ -470,8 +470,7 @@ div#block-kekfilterblock h2 {
   opacity: 0.3;
   background-size: contain;
   margin-left: -11px;
-  padding: 2px;
-  padding-left: 72px;
+  padding: 2px 2px 2px 72px;
 }
 
 .flag-heartbeat_like span,
