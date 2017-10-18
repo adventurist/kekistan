@@ -228,12 +228,12 @@ function listenVideos() {
           replaceCount.textContent = replacementTerms[i].count;
           replaceWrap.appendChild(replaceTid);
           replaceWrap.appendChild(replaceCount);
-          replaceWrap.addEventListener('mouseover', function() {
-            replaceCount.style.display = 'inline-block';
-          })
-          replaceWrap.addEventListener('mouseout', function() {
-            replaceCount.style.display = 'none';
-          })
+          // replaceWrap.addEventListener('mouseover', function() {
+          //   replaceCount.style.display = 'inline-block';
+          // })
+          // replaceWrap.addEventListener('mouseout', function() {
+          //   replaceCount.style.display = 'none';
+          // })
         }
         displayedTags[i].parentNode.appendChild(replaceWrap);
         displayedTags[i].parentNode.removeChild(displayedTags[i]);
