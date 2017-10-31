@@ -543,7 +543,7 @@ class Heartbeat extends RevisionableContentEntityBase implements HeartbeatInterf
       return '<' . $type . ' src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" class="heartbeat-image" / >';
     } else if ($type == 'youtube') {
       $filePath = str_replace('youtube://', 'https://www.youtube.com/embed/', $filePath);
-      return '<iframe class="heartbeat-youtube" width="auto" height="auto" src="' . $filePath . '" frameborder="0"></iframe>';
+      return '<iframe class="heartbeat-youtube" width="auto" height="auto" src="' . $filePath . '" frameborder="0" allowfullscreen="allowfullscreen"></iframe>';
     } else if ($type == 'video') {
       return '<' . $type . ' controls src="' . str_replace('public://', '/sites/default/files/', $filePath) . '" class="heartbeat-video"></' . $type . '>';
     }
